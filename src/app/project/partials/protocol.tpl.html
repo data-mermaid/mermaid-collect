@@ -1,0 +1,156 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+  <div class="row fixed">
+    <!-- <big-breadcrumbs items="['Sites', 'New Site']" icon="fa fa-edit"
+    class="col-xs-12 col-sm-8 col-md-8 col-lg-5"></big-breadcrumbs> -->
+  </div>
+  <div class="row">
+    <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+  </div>
+
+  <div class="alert alert-info" ng-if="isOutdated">
+    <strong>
+      Validations are out of date. Revalidate.
+    </strong>
+  </div>
+
+  <div
+    offlinehide
+    ng-if="hasValidated"
+    ng-repeat="error_validation in validations.errors track by $index"
+  >
+    <validation-alert
+      identifier="error_validation.identifier"
+      messages="error_validation.messages"
+      status="'error'"
+      record="record"
+    >
+      <validationwizard ng-if="$parent.$parent.isDisabled !== true">
+        <validation-wizard
+          record-instance="record"
+          identifier="error_validation.identifier"
+          config="wizardConfig"
+          update-fx="saveValidate"
+          ignore-fx="ignoreSave"
+          close-callback="modalClose"
+        ></validation-wizard>
+      </validationwizard>
+    </validation-alert>
+  </div>
+
+
+  <div ng-hide="isOutdated">
+    <div
+      offlinehide
+      ng-if="hasValidated"
+      ng-repeat="warn_validation in validations.warnings track by $index">
+      <validation-alert
+        identifier="warn_validation.identifier"
+        messages="warn_validation.messages"
+        status="'warning'"
+        record="record"
+      >
+        <validationwizard ng-if="$parent.$parent.isDisabled !== true">
+          <validation-wizard
+            record-instance="record"
+            identifier="warn_validation.identifier"
+            config="wizardConfig"
+            update-fx="saveValidate"
+            ignore-fx="ignoreSave"
+            close-callback="modalClose"
+          ></validation-wizard>
+        </validationwizard>
+      </validation-alert>
+    </div>
+
+    <div ng-if="ignoreWarningsPresent">
+      <div class="alert alert-block alert-info validation-alert">
+        <div class="alert-section icon">
+          <span><i class="fa fa-comment-o"></i></span>
+        </div>
+        <div class="alert-section">
+          There may be validations which have been ignored:
+        </div>
+        <div class="alert-section"></div>
+          <reset-link
+            reset-fx="reset"
+          ></reset-link>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+
+    <div ng-if="isValid && !ignoreWarningsPresent">
+      <div class="alert alert-block alert-info validation-alert">
+        <div class="alert-section icon">
+          <span><i class="fa fa-comment-o"></i></span>
+        </div>
+        <div class="alert-section">
+          There appear to be no warnings or errors.
+        </div>
+        <div class="alert-section"></div>
+        <reset-link  reset-fx="reset"></reset-link>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <section widget-grid id="widget-grid-collectrecords">
+    <keyboardsave save-function="save()"></keyboardsave>
+    <save-alert form="form"></save-alert>
+    <form name="form" novalidate>
+
+      <div class="row">
+        <article class="col-sm-12">
+          <div jarvis-widget id="wid-id-protocol-edit1" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" >
+            <header>
+              <h2></h2>
+            </header>
+            <div>
+              <div class="widget-body no-padding">
+                <div ng-include="protocolSampleUnitDetailsForm"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- OBSERVERS -->
+      <div class="row">
+        <article class="col-sm-12">
+          <div jarvis-widget id="wid-id-protocol-edit2" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" >
+            <header>
+              <h2>Observers</h2>
+            </header>
+            <div>
+              <div class="widget-body no-padding">
+                <div class="col-xs-12 note input-validation-alert-wrap">
+                  <input-validation-alert
+                    identifier="observers"
+                    identifier-validations="record.validations.results.observers"
+                  ></input-validation-alert>
+                </div>
+                <observer-list
+                  observers="record.data.observers",
+                  form="form"
+                  project_profiles="project_profiles"
+                  is-disabled="isDisabled"
+                ></observer-list>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- OBSERVATIONS -->
+      <div ng-include="protocolObservationsForm"></div>
+
+      <!-- DELETE BUTTON -->
+      <delete-button
+        is-disabled="!(record.data.created_on || record.created_on)"
+        record="record"
+        state="(record.validations === null || record.validations.status === 'error' || record.validations.status === 'warning' || record.validations.status === 'ok')?'app.project.records':'app.project.submittedtransects'"
+      ></delete-button>
+    </form>
+  </section>
+</div>

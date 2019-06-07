@@ -1,0 +1,6 @@
+<div>
+  <div>Number of quadrats <span class="pull-right">{{num_quadrats}}</span></div>
+  <div ng-class="{true: 'error-color', false: ''}[avg_hard_coral > 100 || avg_hard_coral < 0]">Average Hard coral (% cover) <span class="pull-right">{{avg_hard_coral | number: 1 | null_value}}%</span></div>
+  <div ng-class="{true: 'error-color', false: ''}[avg_soft_coral > 100 || avg_soft_coral < 0]">Average Soft coral (% cover) <span class="pull-right">{{avg_soft_coral | number: 1 | null_value}}%</span></div>
+  <div ng-class="{true: 'error-color', false: ''}[avg_macroalgae > 100 || avg_macroalgae < 0]">Average Macroalgae (% cover) <span class="pull-right">{{avg_macroalgae | number: 1 | null_value}}%</span></div>
+</div>

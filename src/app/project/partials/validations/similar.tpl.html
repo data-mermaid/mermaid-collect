@@ -1,0 +1,15 @@
+<span>
+  <span>{{validationResult.message}}</span>
+  <ol>
+    <li ng-repeat="match in validationResult.result.matches">
+      <a
+        ng-if="validationResult.field === 'site'"
+        data-ui-sref="app.project.site({id: match.id, project_id: match.project})"
+      >{{match.name}}</a>
+      <a
+        ng-if="validationResult.field === 'management'"
+        data-ui-sref="app.project.management({id: match.id, project_id: match.project})"
+      >{{match.name}}</a>
+    </li>
+  </ol>
+</span>

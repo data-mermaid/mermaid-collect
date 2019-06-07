@@ -1,0 +1,58 @@
+<div class="smart-form">
+  <table class="table" style="border-collapse: separate;">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Interval<span class="required"> *</span></th>
+        <th>Habitat Complexity Score<span class="required"> *</span></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody ng-if="obsHabitatComplexitys.length > 0">
+      <tr ng-repeat="obs in obsHabitatComplexitys track by obs.$$uid">
+        <td class="observation__row-number">
+          <div><small>{{::($index + 1)}}</small></div>
+        </td>
+        <td class="observation__row-interval">
+          <input
+            type="hidden"
+            ng-model="obs"
+          >
+          <div>{{obs.interval | null_value}}m</div>
+        </td>
+        <td>
+          <div
+            class="complexity-score"
+            ddlinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="score"
+            ng-model="obs"
+            widget-mode="single"
+            widget-choices="choices.habitatcomplexityscores"
+            widget-required="true"
+            widget-required-hide="true"
+            ng-keydown="addRow($event, obs)"
+          ></div>
+        </td>
+        <td style="padding-top: 20px;">
+          <btn
+            icon="fa-times"
+            classes="btn-xs btn-danger"
+            tab-index="-1"
+            click="deleteRow(obs)"
+            is-disabled="isDisabled"
+          ></btn>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3">
+          <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
+          <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

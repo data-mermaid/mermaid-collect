@@ -1,0 +1,6 @@
+src/build
+src/standalone_libs
+src/*.js
+src/build/app_version.js
+src/app/_common/**/*.js
+src/app/layout/**/*.js

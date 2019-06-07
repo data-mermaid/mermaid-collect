@@ -1,0 +1,10 @@
+# Ignore all Json files
+*.json
+*.html
+package.json
+package-lock.json
+
+
+!src/build/**
+!src/bower_components/**
+!src/docs/**

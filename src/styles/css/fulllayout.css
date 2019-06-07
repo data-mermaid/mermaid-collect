@@ -1,0 +1,13 @@
+.fulllayout {
+    margin-left: 0 !important;
+    width: 100%;
+}
+
+.fulllayout .wrapper {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.fulllayout-header #hide-menu{
+    display: none;
+}

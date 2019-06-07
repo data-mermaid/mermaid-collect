@@ -1,0 +1,11 @@
+<div class="table-toolbar">
+  <div class="btn-group">
+    <label
+      ng-if="!config.toolbar.isDisabled()"
+      type="button" class="btn btn-default" ng-click="config.toolbar.newSite()"><i class="fa fa-plus"></i> New site</label>
+    <label
+      ng-if="!config.toolbar.isDisabled()"
+      offlinehide type="button" class="btn btn-default" ng-click="config.toolbar.copySites()"><i class="fa fa-copy"></i> Copy sites from other projects</label>
+    <label offlinehide type="button" class="btn btn-default" ng-click="config.toolbar.exportSites()"><i class="fa fa-download"></i> Export sites</label>
+  </div>
+</div>

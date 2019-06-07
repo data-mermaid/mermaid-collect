@@ -1,0 +1,22 @@
+<div>
+  <autocompleteinput
+    widget-disabled="isDisabled"
+    widget-name="tag"
+    widget-label="Organizations"
+    widget-type="text"
+    ng-model="organization"
+    widget-lazy-choices="getTags"
+    widget-callback="addTag(organization.tag)"
+    widget-new-record-label="Suggest a new organization to MERMAID..."
+    widget-new-record-modal-config="modalConfig"
+    widget-modal-trigger="modalTrigger(organization)"
+    widget-ignore-dirty="true"
+  ></autocompleteinput>
+  <ul class="tag-group">
+    <li class="tag-item" ng-repeat="tag in tags track by $index">
+      <span ng-click="removeTag(tag)" class="tag-item-remove">
+        <i class="fa fa-times"> </i>
+      </span> {{tag}}
+    </li>
+  </ul>
+</div>

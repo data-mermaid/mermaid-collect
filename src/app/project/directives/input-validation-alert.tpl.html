@@ -1,0 +1,12 @@
+<div id="validation-identifier-{{identifier}}">
+  <div ng-repeat="message in validations.errors track by $index">
+    <span
+      class="input-validation-alert-error"
+    >{{message}}</span>
+  </div>
+  <div ng-repeat="message in validations.warnings track by $index">
+    <span
+      class="input-validation-alert-warning"
+    >{{message}}</span>
+  </div>
+</div>

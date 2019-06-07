@@ -1,0 +1,61 @@
+<aside id="left-panel">
+    <nav>
+        <!-- NOTE: Notice the gaps after each icon usage <i></i>..
+      Please note that these links work a bit different than
+      traditional href="" links. See documentation for details.
+      -->
+
+        <ul data-smart-menu>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="app.reference.home" title="Home"><i class="icon-home nav-icon-adj"></i>
+                    <span class="menu-item-parent reference-item-position"> {{getWord('Home')}}</span></a>
+            </li>
+
+            <li data-menu-collapse>
+                <a href="#" title="Fish Names"><i class="icon-fish nav-icon-adj"></i> <span class="menu-item-parent reference-item-position">
+                        {{getWord('Fish Names')}}</span></a>
+                <ul>
+                    <!-- ul.hidden: Used for reversing navigation  -->
+                    <ul class="hidden">
+                        <li data-ui-sref-active="active">
+                            <a data-ui-sref="app.reference.fishfamily">
+                                <i class="fa fa-chevron-right reduce-font-70"></i> {{getWord('Fish Family')}}</a>
+                        </li>
+                        <li data-ui-sref-active="active">
+                            <a data-ui-sref="app.reference.fishgenus">
+                                <i class="fa fa-chevron-right reduce-font-70"></i> {{getWord('Fish Genus')}}</a>
+                        </li>
+                        <li data-ui-sref-active="active">
+                            <a data-ui-sref="app.reference.fishspecies">
+                                <i class="fa fa-chevron-right reduce-font-70"></i> {{getWord('Fish Species')}}</a>
+                        </li>
+                    </ul>
+                    <li data-ui-sref-active="active">
+                        <a data-ui-sref="app.reference.fishfamilies">
+                            <i class="fa fa-chevron-right reduce-font-70"></i> <span>{{getWord('Family')}}</span>
+                        </a>
+                    </li>
+                    <li data-ui-sref-active="active">
+                        <a data-ui-sref="app.reference.fishgenera">
+                            <i class="fa fa-chevron-right reduce-font-70"></i> <span>{{getWord('Genera')}}</span></a>
+                    </li>
+                    <li data-ui-sref-active="active">
+                        <a data-ui-sref="app.reference.fishspeciess">
+                            <i class="fa fa-chevron-right reduce-font-70"></i> <span>{{getWord('Species')}}</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="app.reference.benthicattributes" title="Benthic Attributes"><i class="icon-coral nav-icon-adj"></i>
+                    <span class="menu-item-parent reference-item-position"> {{getWord('Benthic Attributes')}}</span></a>
+            </li>
+        </ul>
+
+        <span class="minifyme" data-action="minifyMenu" minify-menu>
+            <i class="fa fa-arrow-circle-left hit"></i>
+        </span>
+    </nav>
+
+
+</aside>

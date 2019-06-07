@@ -1,0 +1,39 @@
+<div class="smart-form">
+  <fieldset>
+    <div
+      textinput
+      widget-label="Email"
+      widget-name="email"
+      widget-type="email"
+      ng-model="profile"
+      widget-required="true"
+      widget-help="For MERMAID notifications only and can be different from username"
+    ></div>
+
+    <div
+      textinput
+      widget-form="form"
+      widget-label="First Name"
+      widget-name="first_name"
+      ng-model="profile"
+      widget-required="false"
+    ></div>
+
+    <div
+      textinput
+      widget-form="form"
+      widget-label="Last Name"
+      widget-name="last_name"
+      ng-model="profile"
+      widget-required="false"
+    ></div>
+  </fieldset>
+
+  <div class="underline"></div>
+
+  <div class="row">
+    <div class="col-xs-12 text-center">
+      <button type="button" class="btn btn-lg btn-primary" ng-click="sendChangePasswordEmail()">Send Change Password Email</button>
+    </div>
+  </div>
+</div>

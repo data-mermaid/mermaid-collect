@@ -1,0 +1,153 @@
+<form name="form" novalidate>
+  <div>
+    <div class="widget-body no-padding">
+      <div class="smart-form">
+        <fieldset>
+          <div class="clearfix">
+            <div
+              textinput
+              widget-disabled="isDisabled"
+              widget-form="form"
+              widget-label="Name"
+              widget-name="name"
+              ng-model="site"
+              widget-required="true"
+              widget-maxlength="255"
+            ></div>
+
+            <div ng-if="isOnline" class="row vertical-align">
+              <div class="col-xs-12 col-sm-3">
+                <div
+                  ddlinput
+                  widget-disabled="isDisabled"
+                  widget-form="form"
+                  widget-label="Country"
+                  widget-name="country"
+                  ng-model="site"
+                  widget-required="true"
+                  widget-choices="choices.countries"
+                ></div>
+                <div
+                  numberinput
+                  widget-disabled="isDisabled"
+                  widget-form="form"
+                  widget-label="Latitude"
+                  widget-name="latitude"
+                  widget-help="Decimal degrees; N is positive, S is negative. Example: 17.809 S => -17.809"
+                  ng-model="site"
+                  widget-required="true"
+                  widget-validators="latitude"
+                  ></div>
+                <div
+                  numberinput
+                  widget-disabled="isDisabled"
+                  widget-form="form"
+                  widget-label="Longitude"
+                  widget-name="longitude"
+                  widget-help="Decimal degrees; E is positive, W is negative. Example: 178.720 E => 178.720"
+                  ng-model="site"
+                  widget-required="true"
+                  widget-validators="longitude"
+                ></div>
+              </div>
+
+              <div class="col-sm-1"></div>
+
+              <div class="col-xs-12 col-sm-7">
+                <div
+                  geopoint
+                  widget-disabled="isDisabled"
+                  widget-form="form"
+                  widget-lat="site.latitude"
+                  widget-lng="site.longitude"
+                ></div>
+              </div>
+            </div>
+
+            <div ng-if="isOnline !== true">
+                <div class="clearfix"></div>
+                  <div
+                    ddlinput
+                    widget-disabled="isDisabled"
+                    widget-form="form"
+                    widget-label="Country"
+                    widget-name="country"
+                    ng-model="site"
+                    widget-required="true"
+                    widget-choices="choices.countries"
+                  ></div>
+                  <div
+                    numberinput
+                    widget-disabled="isDisabled"
+                    widget-form="form"
+                    widget-label="Latitude"
+                    widget-name="latitude"
+                    ng-model="site"
+                    widget-required="true"
+                    widget-validators="latitude"
+                    ></div>
+                  <div
+                    numberinput
+                    widget-disabled="isDisabled"
+                    widget-form="form"
+                    widget-label="Longitude"
+                    widget-name="longitude"
+                    ng-model="site"
+                    widget-required="true"
+                    widget-validators="longitude"
+                  ></div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div
+              ddlinput
+              widget-disabled="isDisabled"
+              widget-form="form"
+              widget-label="Exposure"
+              widget-name="exposure"
+              ng-model="site"
+              widget-required="true"
+              widget-choices="choices.reefexposures"
+            ></div>
+            <div
+              ddlinput
+              widget-disabled="isDisabled"
+              widget-form="form"
+              widget-label="Reef Type"
+              widget-name="reef_type"
+              ng-model="site"
+              widget-required="true"
+              widget-choices="choices.reeftypes"
+            ></div>
+            <div
+              ddlinput
+              widget-disabled="isDisabled"
+              widget-form="form"
+              widget-label="Reef Zone"
+              widget-name="reef_zone"
+              ng-model="site"
+              widget-required="true"
+              widget-choices="choices.reefzones"
+            ></div>
+            <div class="clearfix"></div>
+          </fieldset>
+          <fieldset>
+            <div
+              textareainput
+              widget-disabled="isDisabled"
+              widget-form="form"
+              widget-label="Notes"
+              widget-name="notes"
+              ng-model="site"
+            ></div>
+            </div>
+          </fieldset>
+      </div>
+    </div>
+    <delete-button
+      is-disabled="!site.created_on"
+      record="site"
+      state="'app.project.sites'"
+    ></delete-button>
+  </div>
+</form>

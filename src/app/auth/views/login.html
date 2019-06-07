@@ -1,0 +1,49 @@
+<header id="header">
+    <div id="logo-group">
+        <span id="logo"> <img src="styles/img/logo.png" alt="SmartAdmin"> </span>
+    </div>
+</header>
+<div id="main" role="main">
+
+    <div id="content" class="container">
+        <div class="row">
+            <h1>&nbsp;</h1>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 col-md-offset-4 col-lg-offset-4">
+                <div class="well no-padding">
+                    <form name="login-form" class="smart-form client-form">
+                        <header>
+                            Sign In
+                        </header>
+
+                        <fieldset>
+                            <section>
+                                <label class="label">E-mail</label>
+                                <label class="input"> <i class="icon-append fa fa-user"></i>
+                                    <input type="text" ng-model="email">
+                                    <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter email address</b></label>
+                            </section>
+
+                            <section>
+                                <label class="label">Password</label>
+                                <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                    <input type="password" ng-model="password">
+                                    <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b> </label>
+                                <div class="note">
+                                    <!-- <a href="#/forgot-password">Forgot password?</a> -->
+                                </div>
+                            </section>
+                        </fieldset>
+                        <footer>
+                            <button type="submit" ng-click="signin()" class="btn btn-primary">
+                                Sign in
+                            </button>
+                            <div ng-show="error" class="error">{{error}}</div>
+                        </footer>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

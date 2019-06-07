@@ -1,0 +1,103 @@
+<form name="form" novalidate>
+  <div>
+    <div class="widget-body no-padding">
+      <div class="smart-form">
+        <fieldset>
+          <div class="clearfix">
+            <div class="col-md-8">
+              <div
+                textinput
+                class="multi-widget-row"
+                widget-disabled="isDisabled"
+                widget-form="form"
+                widget-label="Name"
+                widget-name="name"
+                ng-model="management"
+                widget-required="true"
+                widget-maxlength="255"
+                ></div>
+              <div
+                textinput
+                class="multi-widget-row"
+                widget-disabled="isDisabled"
+                widget-form="form"
+                widget-label="Secondary Name"
+                widget-name="name_secondary"
+                ng-model="management"
+                widget-required="false"
+                widget-maxlength="255"
+                ></div>
+              <div numberinput
+                class="multi-widget-row"
+                widget-disabled="isDisabled"
+                widget-form="form"
+                widget-label="Year Established"
+                widget-name="est_year"
+                ng-model="management"
+                widget-required="false"
+                widget-validators="minvalue='1970:t',maxyear,positive-small-integer"
+              ></div>
+              <div numberinput
+                class="multi-widget-row"
+                widget-disabled="isDisabled"
+                widget-form="form"
+                widget-label="Area"
+                widget-name="size"
+                ng-model="management"
+                widget-required="false"
+                widget-append="ha"
+                widget-validators="decimal='12:3',positive"
+                ></div>
+              <div ddlinput
+                class="multi-widget-row"
+                widget-disabled="isDisabled"
+                widget-form="form"
+                widget-label="Parties"
+                widget-name="parties"
+                ng-model="management"
+                widget-required="false"
+                widget-choices="choices.managementparties"
+                widget-mode="multiple"
+                widget-help="Hold down 'Control', or 'Command' on a Mac, to select or deselect more than one."
+              ></div>
+              <div ddlinput
+                class="multi-widget-row"
+                widget-disabled="isDisabled"
+                widget-form="form"
+                widget-label="Compliance"
+                widget-name="compliance"
+                ng-model="management"
+                widget-required="false"
+                widget-choices="choices.managementcompliances"
+                widget-help="Optional estimate of level of compliance associated with this management regime"
+              ></div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <management-rules-input management="management" is-disabled="isDisabled"></management-rules-input>
+        </fieldset>
+
+        <fieldset>
+          <div class="clearfix"></div>
+            <div
+              textareainput
+              widget-disabled="isDisabled"
+              widget-form="form"
+              widget-label="Notes"
+              widget-name="notes"
+              ng-model="management"
+              widget-required="false"
+            ></div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <delete-button
+      is-disabled="!management.created_on"
+      record="management"
+      state="'app.project.managements'"
+    ></delete-button>
+  </div>
+</form>

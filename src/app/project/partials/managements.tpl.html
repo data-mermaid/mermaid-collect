@@ -1,0 +1,27 @@
+<div id="content">
+  <div class="row">
+    <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+  </div>
+  <section widget-grid id="widget-grid">
+    <div class="row">
+      <article class="col-sm-12">
+          <div>
+              <validation-duplicate-managements-warning>
+                <resolve-duplicate-obj
+                  table="projectObjectsTable"
+                  controller="ResolveDuplicateMRsCtrl"
+                ></resolve-duplicate-obj>
+              </validation-duplicate-managements-warning>
+              <div class="widget-body">
+                <div
+                    paginatedtable
+                    resource="resource"
+                    config="tableConfig"
+                    control="tableControl"
+                ></div>
+              </div>
+          </div>
+      </article>
+    </div>
+  </section>
+</div>

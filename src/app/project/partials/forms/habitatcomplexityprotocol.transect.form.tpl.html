@@ -1,0 +1,108 @@
+<div class="smart-form">
+  <fieldset>
+    <div ng-include="'app/project/partials/forms/sample_event.required.tpl.html'"></div>
+  </fieldset>
+  <fieldset>
+    <div class="clearfix">
+      <div
+        class="col-xs-5"
+        numberinput
+        widget-disabled="isDisabled"
+        widget-form="form"
+        widget-name="number"
+        ng-model="record.data.benthic_transect"
+        widget-label="Transect Number"
+        widget-required="true"
+        widget-validators='positive-small-integer'
+      >
+        <validations>
+          <input-validation-alert
+            identifier="number"
+            identifier-validations="record.validations.results.number"
+          ></input-validation-alert>
+        </validations>
+      </div>
+
+      <div class="col-xs-1"></div>
+
+      <div
+        class="col-xs-5"
+        textinput
+        widget-disabled="isDisabled"
+        widget-form="form"
+        widget-name="label"
+        ng-model="record.data.benthic_transect"
+        widget-label="Label"
+        widget-required="false"
+      ></div>
+    </div>
+
+    <div class="clearfix">
+      <div
+        class="col-xs-5"
+        numberinput
+        widget-disabled="isDisabled"
+        widget-form="form"
+        widget-name="len_surveyed"
+        ng-model="record.data.benthic_transect"
+        widget-label="Transect length surveyed"
+        widget-required="true"
+        widget-append="m"
+        widget-validators='positive-small-integer'
+      >
+        <validations>
+          <input-validation-alert
+            identifier="len_surveyed"
+            identifier-validations="record.validations.results.len_surveyed"
+          ></input-validation-alert>
+        </validations>
+      </div>
+
+      <div class="col-xs-1"></div>
+
+      <div
+        class="col-xs-5"
+        numberinput
+        widget-disabled="isDisabled"
+        widget-form="form"
+        widget-name="interval_size"
+        ng-model="record.data"
+        widget-label="Interval size"
+        widget-required="true"
+        widget-append="m"
+        widget-validators="decimal='4:2',minvalue='0',maxvalue='10:true'"
+      >
+        <validations>
+          <input-validation-alert
+            identifier="interval_size"
+            identifier-validations="record.validations.results.interval_size"
+          ></input-validation-alert>
+        </validations>
+      </div>
+    </div>
+
+    <div class="clearfix">
+      <div
+        class="col-xs-5"
+        ddlinput
+        widget-disabled="isDisabled"
+        widget-form="form"
+        widget-label="Reef Slope"
+        widget-name="reef_slope"
+        ng-model="record.data.benthic_transect"
+        widget-choices="choices.reefslopes"
+      >
+        <validations>
+          <input-validation-alert
+            identifier="reef_slope"
+            identifier-validations="record.validations.results.reef_slope"
+          ></input-validation-alert>
+        </validations>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <div ng-include="'app/project/partials/forms/sample_event.non_required.tpl.html'"></div>
+  </fieldset>
+
+</div>

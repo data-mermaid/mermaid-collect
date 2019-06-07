@@ -1,0 +1,15 @@
+<div class="modal-header" ng-if="hideHeader !== true">
+    <h3 class="modal-title" id="modal-title">{{modalTitle}}</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <div ng-include="bodyTemplateUrl"></div>
+</div>
+<div class="modal-footer">
+    <button 
+        ng-repeat="btn in $modalButtons"
+        offlinehide="{{btn.onlineOnly === true}}"
+        class="btn {{btn.classes  || 'btn-primary'}}"
+        ng-click="btn.click()" ng-show="btn.visible"
+        ng-disabled="!btn.enabled"
+    ><i class="{{btn.icon}}" /> {{btn.name}}</button>
+</div>

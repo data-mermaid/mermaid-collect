@@ -1,0 +1,45 @@
+<section class="input-widget number-input" ng-show="widgetIf === true" ng-class="{false: '', true: 'col col-3'}[widgetType != null && widgetType == inlineInputs]">
+  <label class="label" ng-if="widgetType !== 'hidden'">
+    {{ widgetLabel }}
+    <span ng-show="widgetRequired === true && widgetRequiredHide !== true" class="required" title="Required"> *</span>
+  </label>
+  <label class="{{ checkSymbol }}" ng-class="{false: 'state-error', true: ''}[widgetForm[widgetName].$valid || widgetForm[widgetName].$pristine]">
+    <span class="input-group-addon" ng-if="widgetPrepend!==null">{{ widgetPrepend }}</span>
+    <input
+      type="number"
+      name="{{ widgetName }}"
+      ng-model="ngModel[widgetName]"
+      ng-model-options="{ updateOn: 'default blur', debounce: {default: 500, blur: 0}, allowInvalid: widgetAllowInvalid }"
+      ng-required="widgetRequired"
+      ng-disabled="widgetDisabled"
+      ng-readonly="widgetReadonly"
+      placeholder="{{ widgetPlaceholder }}"
+      ng-maxlength="widgetMaxlength"
+      ng-minlength="widgetMinlength"
+      ng-blur="widgetBlur"
+      ng-change="widgetChange()"
+      ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
+      focusinput
+    />
+    <span class="input-group-addon" ng-if="widgetAppend!==null" ng-bind-html="widgetAppend"></span>
+  </label>
+  <div class="note">{{ widgetHelp }}</div>
+  <div class="note note-error ng-cloak">
+    <span class="error ng-cloak" ng-if="widgetForm[widgetName].$error.number">Value must be a number</span>
+    <span ng-if="widgetRequired === true && widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.required==true" class="error ng-cloak"> Required</span>
+    <span ng-if="widgetMinlength && widgetForm[widgetName].$error.minlength" class="error ng-cloak">Minimum characters is {{ widgetMinlength }}</span>
+    <span ng-if="widgetMaxlength && widgetForm[widgetName].$error.maxlength" class="error ng-cloak">Maximum characters is {{ widgetMaxlength }}</span>
+    <span ng-repeat="(key, value) in widgetForm[widgetName].$error | validators track by $index" class="error" ng-show="value" ng-bind-html="widgetForm[widgetName].validator_messages[key]"></span>
+  </div>
+  <div class="note ng-cloak">
+    <span
+      class="error ng-cloak"
+      ng-repeat="(error, obj) in widgetForm[widgetName].$validations.errors"
+    > {{obj.message}}</span>
+    <span
+      class="warn ng-cloak"
+      ng-repeat="(warning, obj) in widgetForm[widgetName].$validations.warnings"
+    > {{obj.message}}</span>
+    <div ng-transclude="validations"></div>
+  </div>
+</section>

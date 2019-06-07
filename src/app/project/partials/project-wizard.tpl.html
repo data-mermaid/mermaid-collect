@@ -1,0 +1,216 @@
+<div id="content" class="project-wizard">
+  <div class="row" offlinehide>
+    <save-alert form="form"></save-alert>
+    <form name="form" novalidate="novalidate">
+      <div class="col-sm-12" mermaid-smart-wizard current-step="currentStep">
+        <div class="form-bootstrapWizard clearfix">
+          <ul class="bootstrapWizard">
+            <li data-smart-wizard-tab="1">
+              <a href="#">
+                <span class="step">1</span>
+                <span class="title">Details</span>
+              </a>
+            </li>
+            <li data-smart-wizard-tab="2"> 
+              <a href="#">
+                <span class="step">2</span>
+                <span class="title">Add users</span>
+              </a>
+            </li>
+            <li data-smart-wizard-tab="3">
+              <a href="#" ng-click="invalidateMap()">
+                <span class="step">3</span>
+                <span class="title">Select Sites</span>
+              </a>
+            </li>
+            <li data-smart-wizard-tab="4">
+              <a href="#">
+                <span class="step">4</span>
+                <span class="title">Select Management</span>
+              </a>
+            </li>
+            <li data-smart-wizard-tab="5">
+              <a href="#">
+                <span class="step">5</span>
+                <span class="title">Data Sharing</span>
+              </a>
+            </li>
+            <li data-smart-wizard-tab="6" ng-click="summary()">
+              <a href="#">
+                <span class="step">6</span>
+                <span class="title">Review</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="tab-content">
+          <div class="tab-pane" data-smart-wizard-pane="1" >
+            <div class="smart-form">
+              <div ng-include="'app/project/partials/forms/project.form.tpl.html'"></div>
+            </div>
+          </div>
+          <div class="tab-pane" data-smart-wizard-pane="2" >
+            <div class="widget-body">
+              <div
+              paginatedtable
+              resource="profilesResource"
+              config="profilesTableConfig"
+              control="profilesTableControl"
+              ></div>
+            </div>
+          </div>
+          <div class="tab-pane" data-smart-wizard-pane="3">
+            <div class="widget-body">
+              <paginatedtable
+              resource="copySiteResource"
+              config="copySiteConfig"
+              control="copySiteControl"
+              ></paginatedtable>
+              <div class="map-body">
+                <div class="row" style="height: 400px;">
+                    <leaflet-map
+                    map="map"
+                    records="selectedSiteRecords"
+                    mapopts="mapopts"
+                    ></leaflet-map>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab-pane" data-smart-wizard-pane="4" >
+              <div class="widget-body">
+                <paginatedtable
+                resource="copyManagementResource"
+                config="copyManagementConfig"
+                control="copyManagementControl"
+                ></paginatedtable>
+              </div>
+            </div>
+
+            <div class="tab-pane" data-smart-wizard-pane="5">
+              <div class="smart-form">
+                <div ng-include="'app/project/partials/forms/datasharing.form.tpl.html'"></div>
+              </div>
+            </div>
+
+          <div class="tab-pane wizard-summary" data-smart-wizard-pane="6" >
+            <h2>Summary for {{project.name}}</h2>
+            <div class="row">
+              <div class="col-sm-12">
+                <h4>Organizations</h4>
+                <ul class="tag-group">
+                  <li class="tag-item" ng-repeat="tag in project.tags track by $index">
+                    {{tag}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="row" style="padding-bottom: 30px;">
+              <div class="col-sm-5">
+                  <h4>Project Users</h4>
+                  <ul class="dd-list">
+                    <li ng-repeat="profile in profiles track by $index" class="dd-item dd-handle">
+                      {{profile.profile_name}}
+                      <btn
+                        ng-show="profile.profile !== currentUser.id"
+                        classes="btn btn-xs btn-danger pull-right"
+                        click="removeUser(profile);"
+                        icon="fa-times"></btn>
+                    </li>
+                  </ul>
+              </div>
+              <div class="col-sm-2"></div>
+              <div class="col-sm-5">
+                <h4>Data Sharing</h4>
+                <ul class="dd-list">
+                  <li class="policy-name">
+                    Fish Belt:
+                  </li>  
+                  <li class="dd-item dd-handle">
+                     {{fishbeltPolicy}}
+                  </li>
+                  <li class="policy-name">
+                    Benthic: LIT, PIT, and Habitat Complexity:
+                  </li>
+                  <li class="dd-item dd-handle">
+                     {{benthicsPolicy}}
+                  </li>
+                  <li class="policy-name">
+                    Bleaching:
+                  </li>  
+                  <li class="dd-item dd-handle">
+                     {{bleachingPolicy}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-5">
+                <h4>Sites</h4>
+                <ul class="dd-list">
+                  <li ng-repeat="site in sites track by $index" class="dd-item dd-handle">
+                    {{site.name}}
+                    <btn classes="btn btn-xs btn-danger pull-right" click="removeSite(site);" icon="fa-times"></btn>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-sm-2"></div>
+              <div class="col-sm-5">
+                  <h4>Management Regimes</h4>
+                  <ul class="dd-list">
+                    <li ng-repeat="management in managements track by $index" class="dd-item dd-handle">
+                      {{management.name}}
+                      <btn classes="btn btn-xs btn-danger pull-right" click="removeManagement(management);" icon="fa-times"></btn>
+                    </li>
+                  </ul>
+                </div>
+            </div>
+
+            <div class="row" ng-show="formerrors">
+              <div class="underline"></div>
+              <div class="col-sm-12 note note-error">
+                <div class="col-sm-12 error" ng-bind-html="formerrors"></div>
+              </div>
+           </div>
+          </div>
+
+          <div class="form-actions">
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="pager wizard no-margin">
+                  <li class="pull-left">
+                    <a href="#" class="btn btn-lg btn-default"> Cancel </a>
+                  </li>
+                  <li class="previous" data-smart-wizard-prev ng-hide="currentStep == 1">
+                    <a href="#" class="btn btn-lg btn-default"> Back </a>
+                  </li>
+                  <li class="next" data-smart-wizard-next ng-click="invalidateMap()" ng-show="currentStep == 1 || currentStep == 2 || currentStep == 5">
+                    <a href="#" class="btn btn-lg btn-success txt-color-white"> Next </a>
+                  </li>
+                  <li class="pull-right disabled" ng-show="(currentStep == 3 && selectedSiteRecords.length === 0) || (currentStep == 4 && selectedManagementRecords.length === 0)">
+                    <a class="btn btn-lg btn-default"> Copy selected to project </a>
+                  </li>
+                  <li class="pull-right" data-smart-wizard-next ng-show="currentStep == 3 && selectedSiteRecords.length > 0" ng-click="copySelectedSites()">
+                    <a class="btn btn-lg btn-default"> Copy selected to project </a>
+                  </li>
+                  <li class="pull-right" data-smart-wizard-next ng-show="currentStep == 4 && selectedManagementRecords.length > 0" ng-click="copySelectedManagements()">
+                    <a class="btn btn-lg btn-default"> Copy selected to project </a>
+                  </li>
+                  <li class="next" data-smart-wizard-next ng-click="invalidateMap()" ng-show="currentStep == 3 || currentStep == 4">
+                    <a href="#" class="btn btn-lg bg-color-blueDark txt-color-white"> Skip </a>
+                  </li>
+                  <li class="pull-right" ng-show="project.name != null && isCreating !== true && currentStep == 6">
+                    <a href="#" class="btn btn-lg txt-color-white" ng-click="createProject($event)" ng-class="{true: 'btn-success', false: ''}[currentStep === 6]"> Create project </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <not-available-offline></not-available-offline>
+</div>

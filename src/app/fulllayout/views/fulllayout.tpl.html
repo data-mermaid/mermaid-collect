@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="/styles/css/fulllayout.css" />
+<!-- HEADER -->
+<div data-smart-include="app/layout/partials/header.tpl.html" class="placeholder-header fulllayout-header"></div>
+
+<!-- END HEADER -->
+<!-- END NAVIGATION -->
+
+<!-- MAIN PANEL -->
+<div id="main" role="main" class="fulllayout">
+  <!-- RIBBON -->
+  <div id="ribbon" class="fulllayout-ribbon wrapper">
+    <div data-smart-include="app/_mermaid_common/layout/partials/ribbon-content.tpl.html"></div>
+  </div>
+  <!-- END RIBBON -->
+  <offline-notification></offline-notification>
+  <div class="wrapper">
+
+    <div data-ui-view="content" data-autoscroll="false"></div>
+
+  </div>
+
+</div>
+<!-- END MAIN PANEL -->
+
+<!-- PAGE FOOTER -->
+<div class="fullfooter" data-smart-include="app/layout/partials/footer.tpl.html"></div>
+
+<div data-smart-include="app/layout/shortcut/shortcut.tpl.html"></div>
+
+<!-- END PAGE FOOTER -->

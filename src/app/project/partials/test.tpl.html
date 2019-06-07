@@ -1,0 +1,201 @@
+<div id="content">
+  <div class="row">
+    <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+  </div>
+  <section widget-grid id="widget-grid">
+    <div class="row">
+      <article class="col-sm-12">
+        <div jarvis-widget id="dataentry-widget" data-widget-editbutton="false">
+          <header>
+            <span class="widget-icon"> <i class="fa fa-file-text"></i> </span>
+            <h2>Test</h2>
+          </header>
+          <div>
+            <div class="widget-body no-padding">
+              <form name="form" class="smart-form">
+                <fieldset>
+
+                  <div
+                    textinput
+                    widget-form="form"
+                    widget-name="name"
+                    ng-model="project"
+                    widget-label="Name"
+                    widget-help=""
+                    widget-required="true"
+                    widget-disabled="false"
+                    widget-placeholder=""
+                    widget-maxlength="15"
+                    widget-minlength="0"
+                  ></div>
+
+                  <div
+                    textareainput
+                    widget-form="form"
+                    widget-name="notes"
+                    ng-model="project"
+                    widget-label="Notes"
+                    widget-help=""
+                    widget-required="false"
+                  ></div>
+
+                  <div
+                    textinput
+                    widget-form="form"
+                    widget-name="site"
+                    ng-model="test"
+                    widget-label="Site"
+                    widget-help=""
+                    widget-required="true"
+                    widget-disabled= "false"
+                    widget-allow-invalid="true"
+                    widget-placeholder=""
+                    widget-maxlength="15"
+                    widget-minlength="0"
+                  ></div>
+
+                  <div
+                    textareainput
+                    widget-form="form"
+                    widget-name="comments"
+                    ng-model="test"
+                    widget-label="Comments"
+                    widget-help=""
+                    widget-required="true"
+                  ></div>
+
+                  <div
+                    numberinput
+                    widget-form="form"
+                    widget-name="year"
+                    ng-model="test"
+                    widget-label="Year"
+                    widget-help=""
+                    widget-required="true"
+                    widget-disabled="false"
+                    widget-allow-invalid="false"
+                    widget-blur="true"
+                    widget-change="onChange()"
+                    widget-maxlength="4"
+                    widget-minlength="4"
+                    widget-validators="integer"
+                  ></div>
+
+                  <div
+                    numberinput
+                    widget-form="form"
+                    widget-name="latitude"
+                    ng-model="test"
+                    widget-label="Latitude"
+                    widget-help="Format: 52.556806"
+                    widget-append="&#176;"
+                    widget-validators="latitude"
+                  ></div>
+
+                  <div
+                    numberinput
+                    widget-form="form"
+                    widget-name="longitude"
+                    ng-model="test"
+                    widget-label="Longitude"
+                    widget-help="Format: -119.214444"
+                    widget-append="&#176;"
+                    widget-validators="longitude"
+                  ></div>
+
+                  <div
+                    yesnoddlinput
+                    widget-form="form"
+                    widget-name="tagged"
+                    ng-model="test"
+                    widget-label="Tagged"
+                    widget-help=""
+                    widget-required="true"
+                    widget-change="onChange()"
+                  ></div>
+
+                  <div
+                    ddlinput
+                    widget-form="form"
+                    widget-name="method"
+                    ng-model="test"
+                    widget-mode="multiple"
+                    widget-choices="test.choices"
+                    widget-label="Method"
+                    widget-help=""
+                    widget-disabled="false"
+                    widget-include-blank="true"
+                    widget-change="onChange()"
+                    widget-choice-value=""
+                  ></div>
+
+                  <div
+                    dateinput
+                    widget-form="form"
+                    widget-name="date"
+                    ng-model="test"
+                    widget-label="Test Date"
+                    widget-help=""
+                    widget-format="yy-dd-mm"
+                    widget-mask="99/99/9999"
+                  ></div>
+
+                  <div
+                    timeinput
+                    widget-form="form"
+                    widget-name="time"
+                    ng-model="test"
+                    widget-label="Test Time"
+                    widget-required="true"
+                  ></div>
+
+                  <div
+                    autocompleteinput
+                    widget-form="form"
+                    widget-name="methodauto"
+                    ng-model="test"
+                    widget-label="Method"
+                    widget-disabled="false"
+                    widget-allow-invalid="true"
+                    widget-placeholder="placeholder"
+                    widget-choices="test.choices"
+                    widget-callback="onChange()"
+                  ></div>
+
+                  <div
+                    calcsectioninput
+                    widget-form="form"
+                    widget-name="calc"
+                    widget-label="CalcSection"
+                    widget-units="m<sup>3</sup>/ha"
+                    widget-calc=""
+                  ></div>
+
+                  <div
+                    checkboxinput
+                    widget-form="form"
+                    widget-name="check"
+                    ng-model="test"
+                    widget-label="Checkbox"
+                  ></div>
+
+                  <div
+                    readonlyinput
+                    widget-form="form"
+                    widget-name="read"
+                    ng-model="test"
+                    widget-label="Read only"
+                  ></div>
+
+                  <button style="padding:5px" class="btn btn-primary" ng-click="form.$valid && onSubmit()">Submit</button>
+
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>

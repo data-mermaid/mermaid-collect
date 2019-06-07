@@ -1,0 +1,40 @@
+<div>
+  <div class="pull-left pagename">
+    <div ng-if="$state.current.data.breadcrumbsTemplate" ng-include="$state.current.data.breadcrumbsTemplate"></div>
+  </div>
+  <span class="ribbon-button-alignment pull-right ng-cloak">
+    <button ng-repeat="gbtn in GlobalButtons" ng-show="gbtn.visible"
+            ng-class="{true: '', false: 'disabled'}[gbtn.enabled]" class="btn btn-ribbon {{gbtn.classes}}"
+            title="{{gbtn.name}}" ng-click="gbtn.click()" ng-disabled="!gbtn.enabled">
+      <i class="fa {{gbtn.icon}}" ng-class="{true: 'fa-warning', false: '{{gbtn.icon}}'}[!gbtn.isvalid]"></i>
+      {{gbtn.name}}</button>
+  </span>
+
+  <span class="pull-right page-button-toolbar" style="padding: 10px 0;">
+    <ul class="page-button-list pull-right">
+      <li class="page-button-item" ng-repeat="btn in PageHeaderButtons track by $index">
+        <div offlinehide="{{btn.onlineOnly === true}}" ng-if="btn.type === 'state-group'" ng-include="btn.templateUrl"></div>
+
+        <button offlinehide="{{btn.onlineOnly === true}}" ng-if="btn.type !== 'state-group' && (!btn.buttons || btn.buttons.length === 0)" class="btn btn-lg {{btn.classes  || 'btn-primary'}}"
+                ng-click="btn.click()" ng-show="btn.visible" ng-disabled="!btn.enabled"><i class="fa {{btn.icon}}"/>
+          {{btn.name}}</button>
+
+        <div offlinehide="{{btn.onlineOnly === true}}" class="btn-group" ng-if="btn.type !== 'state-group' && btn.buttons && btn.buttons.length > 0">
+          <button ng-show="btn.visible" class="btn btn-lg {{btn.classes || 'btn-primary'}} dropdown-toggle"
+                  data-toggle="dropdown" ng-disabled="!btn.enabled">
+            <i class="fa {{btn.icon}}"></i>
+            {{btn.name }}
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+              <li ng-show="list_btn.visible" ng-repeat="list_btn in btn.buttons track by $index" class="transect-buttons" ng-disabled="!list_btn.enabled">
+              <a href="javascript:void(0);" ng-click="list_btn.click()" ng-disabled="!list_btn.enabled">
+                {{list_btn.name}}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </span>
+</div>

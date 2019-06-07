@@ -1,0 +1,24 @@
+<div class="btn-group">
+  <button
+    class="btn btn-lg btn btn-lg {{btn.classes  || 'btn-primary'}}"
+    ng-click="btn.buttons[0].click()"
+    ng-show="btn.visible"
+    ng-disabled="!btn.enabled"
+  >
+    <i class="fa fa-check"></i>
+    {{btn.buttons[0].name}}
+  </button>
+  <button
+    class="btn btn-lg btn btn-lg {{btn.classes  || 'btn-primary'}} dropdown-toggle"
+    ng-show="btn.visible"
+    ng-disabled="!btn.enabled"
+    data-toggle="dropdown"
+  >
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li ng-repeat="menuBtn in btn.buttons.slice(1)">
+      <a href ng-click="menuBtn.click()">{{menuBtn.name}}</a>
+    </li>
+  </ul>
+</div>

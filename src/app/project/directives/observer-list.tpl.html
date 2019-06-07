@@ -1,0 +1,56 @@
+<div class="smart-form">
+  <fieldset>
+    <section class="col-xs-6">
+      <label class="label">Add observer <span class="required"> *</span></label>
+      <label
+        class="select"
+        ng-class="{true: 'state-error', false: ''}[form.observers.$invalid]"
+      >
+        <select
+          name="observers"
+          ng-required="false"
+          ng-model="obs"
+          ng-change="addObserver(obs); obs = null;"
+          ng-class="{true: 'pristine', false: ''}[form.observers.$valid && (!observers || observers.length === 0)]"
+          ng-disabled="isDisabled"
+        >
+          <option ng-disabled="observers_selected[pp.profile]" value="{{pp.id}}" ng-repeat="pp in projectProfiles">
+            {{pp.profile_name}}
+          </option>
+        </select>
+      </label>
+      <div class="note note-error ng-cloak">
+        <span
+          class="error ng-cloak"
+          ng-show="form.$dirty && form.observers.$error.$required"
+        > Must have at least 1 observer</span>
+        <span
+          class="error ng-cloak"
+          ng-repeat="(error, obj) in form['observers'].$validations.errors"
+        > {{obj.message}}</span>
+        <span
+          class="warn ng-cloak"
+          ng-repeat="(warning, obj) in form['observers'].$validations.warnings"
+        > {{obj.message}}</span>
+      </div>
+    </section>
+  </fieldset>
+  <table class="table">
+    <thead></thead>
+    <tbody>
+    <tr ng-repeat="observer in observers track by $index">
+      <td>{{observer.profile_name}}</td>
+      <td>{{observer.role | matchchoice: choices.roles}}</td>
+      <td>
+        <btn
+          click="removeObserver(observer)"
+          classes="btn-xs btn-danger"
+          is-disabled="isDisabled"
+          icon="fa-times"
+          tab-index="-1"
+        ></btn>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

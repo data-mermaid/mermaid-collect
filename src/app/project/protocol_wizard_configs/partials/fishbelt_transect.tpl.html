@@ -1,0 +1,41 @@
+<div>
+  <div
+    class="col-xs-7"
+    ddlinput
+    widget-name="site"
+    widget-form="validationWizardForm"
+    ng-model="record.data.sample_event"
+    widget-label="Site"
+    widget-required="true"
+    widget-choices="sites"
+  ></div>
+  <div
+    class="col-xs-7"
+    textinput
+    widget-form="validationWizardForm"
+    widget-name="number"
+    ng-model="record.data.fishbelt_transect"
+    widget-label="Transect Number"
+    widget-required="true"
+  ></div>
+  <div
+    class="col-xs-7"
+    ddlinput
+    widget-form="validationWizardForm"
+    widget-name="width"
+    ng-model="record.data.fishbelt_transect"
+    widget-label="Width"
+    widget-required="true"
+    widget-choices="belttransectwidths"
+  ></div>
+  <div
+    class="col-xs-7"
+    ddlinput
+    widget-form="validationWizardForm"
+    widget-name="relative_depth"
+    ng-model="record.data.sample_event"
+    widget-label="Relative depth"
+    widget-required="false"
+    widget-choices="relativedepths"
+  ></div>
+</div>

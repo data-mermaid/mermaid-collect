@@ -1,0 +1,23 @@
+<!-- HEADER -->
+<div data-smart-include="app/layout/partials/header.tpl.html" class="placeholder-header"></div>
+<!-- END HEADER -->
+<!-- Left panel : Navigation area -->
+<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+<div ng-include="$state.current.data.navTemplate" class="placeholder-left-panel"></div>
+<!-- END NAVIGATION -->
+<!-- MAIN PANEL -->
+<div id="main" role="main">
+  <!-- RIBBON -->
+
+  <div id="ribbon">
+    <div data-smart-include="app/_mermaid_common/layout/partials/ribbon-content.tpl.html"></div>
+  </div>
+  <!-- END RIBBON -->
+  <offline-notification></offline-notification>
+  <div data-ui-view="content" data-autoscroll="false"></div>
+</div>
+<!-- END MAIN PANEL -->
+<!-- PAGE FOOTER -->
+<div data-smart-include="app/layout/partials/footer.tpl.html"></div>
+<div data-smart-include="app/layout/shortcut/shortcut.tpl.html"></div>
+<!-- END PAGE FOOTER -->

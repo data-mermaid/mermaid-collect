@@ -1,0 +1,59 @@
+<section class="input-widget date-input col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="widgetIf === true">
+  <label class="label">
+    {{ widgetLabel }}
+    <span ng-if="widgetRequired === true" class="required" title="Required"> *</span>
+  </label>
+  <div class="form-group input" ng-class="{false: 'state-error', true: ''}[widgetForm[widgetName].$valid]">
+    <div ng-switch="hasMask()" class="input-group">
+      <input
+        ng-switch-when="yes"
+        bsdatepicker
+        class="form-control picker-readonly"
+        name="{{ widgetName }}"
+        ng-model="ngModel[widgetName]"
+        type="text"
+        readonly="readonly"
+        placeholder="{{ widgetPlaceholder }}"
+        ng-required="widgetRequired"
+        data-dateformat="widgetFormat"
+        data-mask="widgetMask"
+        data-mask-placeholder="-"
+        ng-disabled="widgetDisabled"
+        ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
+        focusinput
+      >
+      <input
+        ng-switch-default
+        bsdatepicker
+        class="form-control picker-readonly"
+        name="{{ widgetName }}"
+        ng-model="ngModel[widgetName]"
+        type="text"
+        readonly="readonly"
+        placeholder="{{ widgetPlaceholder }}"
+        ng-required="widgetRequired"
+        data-dateformat="widgetFormat"
+        ng-disabled="widgetDisabled"
+        ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
+        focusinput
+      >
+      <span class="input-group-addon" ng-click="openDatepicker($event)"><i class="fa fa-calendar" style="pointer-events: none;"></i></span>
+    </div>
+  </div>
+  <div class="note">{{ widgetHelp }}</div>
+  <div class="note note-error">
+    <span ng-if="widgetRequired === true" class="error ng-cloak" ng-show="widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.required==true"> {{ widgetLabel }} is required.</span>
+  </div>
+  <div class="note note-error ng-cloak">
+    <span
+      class="error ng-cloak"
+      ng-repeat="(error, obj) in widgetForm[widgetName].$validations.errors"
+    > {{obj.message}}</span>
+    <span
+      class="warn ng-cloak"
+      ng-repeat="(warning, obj) in widgetForm[widgetName].$validations.warnings"
+    > {{obj.message}}</span>
+    <div ng-transclude="validations"></div>
+  </div>
+</section>
+<div style="clear: both;"></div>

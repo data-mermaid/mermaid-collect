@@ -1,0 +1,20 @@
+<div class="row" ng-show="error_rows.length > 0">
+    <article class="col-sm-12">
+
+        <div jarvis-widget id="normal-table-widget" data-widget-editbutton="false">
+            <header>
+                <span class="widget-icon"></span>
+
+                <h2>Errors</h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                  <div class="center">
+                    <h5>Success count: {{success_rows.length}}</h5>
+                    <h5>Error count: {{error_rows.length}}</h5>
+                    <h5>Please review the rows highlighted below.</h5>
+                  </div>
+            </div>
+        </div>
+    </article>
+</div>

@@ -1,0 +1,77 @@
+<div>
+  <!-- HEADER -->
+  <div>
+    <div>
+      <!-- toolbar -->
+      <div class="col-md-3" ng-include="config.toolbar.template" style="padding: 0;"></div>
+      <div class="col-md-4 table-selecting" ng-show="config.selecting" >{{config.toolbar.message()}}</div>
+      <!-- search -->
+      <div class="col-md-5 {{searchLocation}}" ng-show="config.searching" style="padding: 0;">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa {{searchIcon}}"></i></span>
+          <input class="form-control" type="text" placeholder="{{searchPlaceholder}}" ng-model="search"
+            ng-change="searchTable(search)" ng-model-options='{ debounce: 500 }'>
+        </div>
+        <span class="help-block">{{searchHelp}}</span>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <!-- TABLE -->
+  <table class="table table-bordered table-responsive" ng-class="{true: '', false: 'table-striped'}[hideRowStripes]">
+    <thead>
+      <tr>
+        <th ng-if="rowSelect" style="width: 50px; text-align: center;"></th>
+        <th ng-repeat="col in columns" ng-hide="col.hide()" ng-click="sortColumn(col)"
+          ng-class="{'col-sortable': col.sortable, 'col-sort-desc': (sortArgs.column === col && !sortArgs.ascending), 'col-sort-asc': (sortArgs.column === col && sortArgs.ascending)}">
+          <span ng-if="col.th_template" ng-include="col.th_template"></span>
+          <span ng-if="!col.th_template" ng-bind-html="col.display"></span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-show="control.records.length===0">
+        <td colspan="{{rowSelect ? columns.length+1 : columns.length}}">No records found.</td>
+      </tr>
+      <tr class="row__status" rowformatter="rowFormatter" row-record="record"
+        ng-repeat="(record_index, record) in control.records">
+        <td ng-if="rowSelect" style="width: 50px; text-align: center">
+          <input
+            type="checkbox"
+            ng-model="selected[record.id]"
+            ng-change="toggleRow(record)"
+          >
+        </td>
+        <td ng-hide="col.hide()" ng-repeat="col in columns">
+          <tablecell record="record" column="col" index="record_index" control="control"></tablecell>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- FOOTER -->
+  <div style="padding: 5px;">
+    <!-- page limit -->
+    <span class="" ng-if="hideLimits !== true">
+      Showing
+      <label>
+        <select class="form-control" ng-model="pagination.limit" ng-options="limit for limit in limits"
+          ng-change="pageLimitChange(pagination.limit)"></select>
+      </label>
+      records.
+    </span>
+    <!-- pagination -->
+    <span class="">
+      <span class="pull-right">
+        <span class="ng-cloak record-count" ng-show="pagination.count !== null">Records {{pagination.range.from}} -
+          {{pagination.range.to}} of {{pagination.total}}</span>
+        <button class="btn btn-sm btn-primary" ng-disabled="!pagination.hasPrev || control.isLoading"
+          ng-click="pagination.page = pagination.page - 1; fetchTableRecords();"><i
+            class="fa fa-chevron-left"></i></button>
+        <button class="btn btn-sm btn-primary" ng-disabled="!pagination.hasNext || control.isLoading"
+          ng-click="pagination.page = pagination.page + 1; fetchTableRecords();"><i
+            class="fa fa-chevron-right"></i></button>
+      </span>
+    </span>
+    <span class="clearfix"></span>
+  </div>
+</div>

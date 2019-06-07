@@ -1,0 +1,12 @@
+<div class="modal-header">
+  <h3 class="modal-title" id="modal-title">{{modalTitle}}</h3>
+</div>
+<div class="modal-body" id="modal-body"></div>
+<div class="modal-footer">
+  <button ng-if="modalSection > 1" class="btn btn-default pull-left" type="button" ng-click="modalSetSection('decrement')">Back</button>
+
+  <button ng-if="modalNumSections > 1 && modalSection < modalNumSections" class="btn btn-success" ng-click="modalSetSection('increment')" ng-disabled="form.$invalid || form.$pristine">{{modalNextLabel || "Next"}}</button>
+  <button ng-if="modalConfirmLabel && (modalNumSections === 1 || modalSection === modalNumSections)" ng-disabled="form.$invalid || form.$pristine" class="btn btn-success" type="button" ng-click="saveModal()">{{modalConfirmLabel}}</button>
+  <button ng-if="!modalConfirmLabel && (modalNumSections === 1 || modalSection === modalNumSections)" ng-disabled="form.$invalid || form.$pristine" class="btn btn-success" type="button" ng-click="saveModal()">Save</button>
+  <button class="btn btn-default" type="button" ng-click="cancelModal()">Cancel</button>
+</div>

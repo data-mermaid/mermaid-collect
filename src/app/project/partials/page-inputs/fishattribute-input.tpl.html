@@ -1,0 +1,162 @@
+<form name="form" novalidate>
+  <div>
+    <div class="widget-body no-padding">
+      <div class="smart-form">
+        <fieldset>
+          <div class="clearfix">
+            <div
+              autocompleteinput
+              class="col-xs-5"
+              widget-form="form"
+              widget-label="Genus"
+              widget-name="genus"
+              ng-model="record"
+              widget-required="true"
+              widget-disabled="isDisabled"
+              widget-choices="getFishGenera()"
+              widget-help="e.g., Acanthurus"
+            ></div>
+
+            <div class="col-xs-1"></div>
+
+            <div
+              textinput
+              class="col-xs-5"
+              widget-form="form"
+              widget-label="Species"
+              widget-name="name"
+              ng-model="record"
+              widget-required="true"
+              widget-disabled="isDisabled"
+              widget-help="e.g., leucosternon"
+            ></div>
+          </div>
+
+          <div class="clearfix">
+            <div
+              numberinput
+              class="col-xs-2"
+              widget-form="form"
+              widget-label="Biomass Constant A"
+              widget-name="biomass_constant_a"
+              ng-model="record"
+              widget-required="false"
+              widget-disabled="isDisabled"
+              widget-minvalue="0"
+              widget-maxvalue="10"
+              widget-validators="decimal='7:6',maxvalue='10:',minvalue='0:'"
+            ></div>
+
+            <div class="col-xs-1"></div>
+
+            <div
+              numberinput
+              class="col-xs-2"
+              widget-form="form"
+              widget-label="Biomass Constant B"
+              widget-name="biomass_constant_b"
+              ng-model="record"
+              widget-required="false"
+              widget-disabled="isDisabled"
+              widget-minvalue="0"
+              widget-maxvalue="10"
+              widget-validators="decimal='7:6',maxvalue='10:',minvalue='0:'"
+            ></div>
+
+            <div class="col-xs-1"></div>
+
+            <div
+              numberinput
+              class="col-xs-2"
+              widget-form="form"
+              widget-label="Biomass Constant C"
+              widget-name="biomass_constant_c"
+              ng-model="record"
+              widget-required="false"
+              widget-disabled="isDisabled"
+              widget-minvalue="0"
+              widget-maxvalue="10"
+              widget-validators="decimal='7:6',maxvalue='10:',minvalue='0:'"
+            ></div>
+
+            <div class="col-xs-1"></div>
+
+            <div
+              ddlinput
+              class="col-xs-2"
+              widget-form="form"
+              widget-label="Biomass Source"
+              widget-name="biomass_constant_source"
+              ng-model="record"
+              widget-required="false"
+              widget-choices="choices.biomasssources"
+              widget-disabled="isDisabled"
+            ></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div class="clearfix">
+            <div
+              ddlinput
+              class="col-xs-5"
+              widget-form="form"
+              widget-label="Region"
+              widget-name="regions"
+              ng-model="record"
+              widget-required="false"
+              widget-mode="multiple"
+              widget-choices="choices.regions"
+              widget-disabled="isDisabled"
+            ></div>
+
+            <div class="col-xs-1"></div>
+
+            <div
+              numberinput
+              class="col-xs-5"
+              widget-form="form"
+              widget-label="Climate Score"
+              widget-name="climate_score"
+              ng-model="record"
+              widget-required="false"
+              widget-disabled="isDisabled"
+              widget-help="Climate score can range from 0 to 1."
+              widget-minvalue="0"
+              widget-maxvalue="1"
+              widget-validators="decimal='10:9',maxvalue='1:true',minvalue='0:true'"
+            ></div>
+          </div>
+
+          <div class="clearfix">
+            <div
+              ddlinput
+              class="col-xs-5"
+              widget-form="form"
+              widget-label="Trophic Group"
+              widget-name="trophic_group"
+              ng-model="record"
+              widget-required="false"
+              widget-choices="choices.fishgrouptrophics"
+              widget-disabled="isDisabled"
+            ></div>
+
+            <div class="col-xs-1"></div>
+
+            <div
+              ddlinput
+              class="col-xs-5"
+              widget-form="form"
+              widget-label="Functional Group"
+              widget-name="functional_group"
+              ng-model="record"
+              widget-required="false"
+              widget-choices="choices.fishgroupfunctions"
+              widget-disabled="isDisabled"
+            ></div>
+          </div>
+        </fieldset>
+
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,60 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+  <div class="row">
+    <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+  </div>
+
+  <div class="row">
+    <div class="col" style="padding: 0 13px">
+      <div class="well well-lg">Limit the fish names available for this project by applying filters.</div>
+    </div>
+  </div>
+
+  <!-- widget grid -->
+  <section widget-grid id="widget-grid">
+    <div class="row">
+      <article class="col-sm-12">
+        <div jarvis-widget id="normal-table-widget" data-widget-editbutton="false">
+          <header>
+            <h2></h2>
+          </header>
+          <div>
+            <div class="widget-body">
+              <form class="smart-form" name="form" novalidate="">
+                <section>
+                  <label class="label">Include names from:</label>
+                  <div class="row">
+                    <div class="col">
+                      <label class="checkbox">
+                        <input
+                          type="checkbox"
+                          name="fish_family"
+                          ng-model="project.settings.fish_name_filters.fish_family"
+                        >
+                        <i></i>Fish families</label>
+                      <label class="checkbox">
+                        <input
+                          type="checkbox"
+                          name="fish_genus"
+                          ng-model="project.settings.fish_name_filters.fish_genus"
+                        >
+                        <i></i>Fish genera</label>
+                      <label class="checkbox">
+                        <input
+                          type="checkbox"
+                          name="fish_species"
+                          ng-model="project.settings.fish_name_filters.fish_species"
+                        >
+                        <i></i>Fish species</label>
+                      </div>
+                  </div>
+                </section>
+              </form>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+  </section>
+</div>

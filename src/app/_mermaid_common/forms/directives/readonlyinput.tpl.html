@@ -1,0 +1,13 @@
+<section class="input-widget readonly-input">
+  <label class="label"> {{ widgetLabel }} </label>
+  <label class="input">
+    <input
+      name="{{ widgetName }}"
+      ng-model="ngModel[widgetName]"
+      type="text"
+      readonly="readonly"
+      disabled class="text-dull"
+      focusinput
+    />
+  </label>
+</section>

@@ -1,0 +1,59 @@
+<aside id="left-panel">
+    <nav>
+        <!-- NOTE: Notice the gaps after each icon usage <i></i>..
+        Please note that these links work a bit different than
+        traditional href="" links. See documentation for details.
+        -->
+        <ul data-smart-menu>
+            <li data-ui-sref-active="active">
+                <projectname></projectname>
+            </li>
+            <li data-ui-sref-active="active" ng-style="{'border-top':'1px solid'}">
+                <a data-ui-sref="app.project.records" title="Collecting">
+                    <i class="fa fa-lg fa-fw fa-pencil"></i>
+                    <small><span class="menu-item-parent" ng-style="{'font-size':'20px'}"> {{getWord('Collecting')}}</span></small>
+                    <collect-record-count></collect-record-count></small>
+                </a>
+            </li>
+            <li data-ui-sref-active="active" ng-style="{'border-bottom':'1px solid'}" offlinehide>
+                <a data-ui-sref="app.project.submittedtransects" title="Submitted">
+                    <i class="fa fa-lg fa-fw fa-check-circle"></i>
+                    <small><span class="menu-item-parent" ng-style="{'font-size':'20px'}"> {{getWord('Submitted')}}</span></small>
+                </a>
+            </li>
+
+            <li data-ui-sref-active="active" admin-only admin-online-only="true">
+                <a data-ui-sref="app.project.project" title="Project Info"><small><i class="fa fa-lg fa-fw fa-file-text"></i>
+                        <span class="menu-item-parent ">
+                            {{getWord('Project Info')}}</span></small>
+                </a>
+            </li>
+            <li data-ui-sref-active="active" admin-only admin-online-only="true">
+                <a data-ui-sref="app.project.users" title="Users"><small><i class="fa fa-lg fa-fw fa-users"></i>
+                        <span class="menu-item-parent">
+                            {{getWord('Users')}}</span></small>
+                </a>
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="app.project.sites" title="Sites"><small><i class="fa fa-lg fa-fw fa-map-marker"></i>
+                        <span class="menu-item-parent"> {{getWord('Sites')}}</span></small><br /><validation-duplicate-sites-alert></validation-duplicate-sites-alert></a> 
+                        
+            </li>
+            <li data-ui-sref-active="active">
+                <a data-ui-sref="app.project.managements" title="Management Regimes"><small><i class="fa fa-lg fa-fw fa-files-o"></i>
+                        <span class="menu-item-parent"> {{getWord('Management Regimes')}}</span></small><br/><validation-duplicate-managements-alert></validation-duplicate-managements-alert></a>
+            </li>
+            <li data-ui-sref-active="active" admin-only admin-online-only="true">
+                <a data-ui-sref="app.project.datasharing" title="Data Sharing"><small><i class="fa fa-lg fa-fw fa-share-alt"></i>
+                        <span class="menu-item-parent"> {{getWord('Data Sharing')}}</span></small></a>
+            </li>
+            <!-- End of New Admin UX-->
+        </ul>
+        
+        <span class="minifyme" data-action="minifyMenu" minify-menu>
+            <i class="fa fa-arrow-circle-left hit"></i>
+        </span>
+    </nav>
+
+
+</aside>

@@ -1,0 +1,32 @@
+<div>
+  <fieldset offlinehide>
+    <div
+      textinput
+      widget-form="form"
+      widget-label="Name"
+      widget-name="name"
+      ng-model="project"
+      widget-required="true"
+      widget-maxlength="255"
+      widget-disabled="isDisabled"
+    ></div>
+    <div
+      textareainput
+      widget-form="form"
+      widget-label="Notes"
+      widget-name="notes"
+      ng-model="project"
+      widget-required="false"
+      widget-disabled="isDisabled"
+    ></div>
+    <div>
+      <project-tags
+        tag-choices="tags"
+        organization="organization"
+        tags="project.tags"
+        is-disabled="isDisabled"
+      ></project-tags>
+    </div>
+  </fieldset>
+  <not-available-offline></not-available-offline>
+</div>

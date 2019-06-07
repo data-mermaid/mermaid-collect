@@ -1,0 +1,20 @@
+<div class="smart-form " offlinehide>
+  <div
+    class="col-sm-8"
+    textinput
+    widget-name="email"
+    ng-model="data"
+    ng-keyup="$event.keyCode === 13 && config.toolbar.addUser(data);"
+    widget-disabled="control.isDisabled"
+    widget-placeholder="Enter email of user to add..."
+  ></div>
+  <section class="col-sm-3" style="padding-left: 5px;">
+    <btn
+      classes="btn-sm btn-default"
+      click="config.toolbar.addUser(data);"
+      icon="fa-plus"
+      style="position: absolute; top: 6px;"
+      is-disabled="control.isDisabled"
+    > Add User</btn>
+  </section>
+</div>

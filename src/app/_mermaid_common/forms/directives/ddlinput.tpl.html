@@ -1,0 +1,109 @@
+<section class="input-widget ddl-input" ng-show="widgetIf === true">
+  <label class="label"> {{ widgetLabel }}
+    <span find-tooltip="ngModel[widgetName]"></span>
+    <span ng-if="widgetRequired === true && widgetRequiredHide !== true" class="required" title="Required"> *</span>
+  </label>
+  <div ng-class="{true: 'modal-trigger-on', false: ''}[modalController != null && mode == 'single']">
+    <label class="select{{ checkSymbol }}" ng-switch="choiceValue()" ng-class="{false: 'state-error', true: ''}[widgetForm[widgetName].$pristine || widgetForm[widgetName].$valid]">
+      <span class="input-group-addon" ng-if="widgetPrepend!==null">{{ widgetPrepend }}</span>
+
+      <select
+        multiple
+        ng-if="mode == 'multiple'"
+        ng-model="ngModel[widgetName]"
+        name="{{ widgetName }}"
+        ng-required="widgetRequired"
+        ng-change="widgetChange()"
+        ng-disabled="widgetDisabled"
+        ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
+        convert-to-float="{{widgetFloatValue}}"
+        convert-to-integer="{{widgetIntValue}}"
+        focusinput
+      >
+        <option ng-switch-when="index" ng-selected="(ngModel[widgetName] || []).indexOf(choice.id) !== -1" value="{{$index}}" ng-repeat="choice in widgetChoices track by $index">{{choice[displayAttribute]}}</option>
+        <option ng-switch-default ng-selected="(ngModel[widgetName] || []).indexOf(choice.id) !== -1" value="{{choice.id}}" ng-repeat="choice in widgetChoices track by $index">{{choice[displayAttribute]}}</option>
+      </select>
+
+      <select
+        ng-if="mode == 'single'"
+        ng-model="ngModel[widgetName]"
+        name="{{ widgetName }}"
+        ng-required="widgetRequired"
+        ng-change="widgetChange()"
+        ng-disabled="widgetDisabled"
+        ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
+        convert-to-float="{{widgetFloatValue}}"
+        convert-to-integer="{{widgetIntValue}}"
+        focusinput
+      >
+        <option ng-show="widgetIncludeBlank" ng-selected="{{ngModel[widgetName] == null || ngModel[widgetName] === ''}}" value=""></option>
+        <option ng-switch-when="index" ng-selected="{{choice.id == ngModel[widgetName]}}" value="{{$index}}" ng-repeat="choice in widgetChoices track by $index">{{choice[displayAttribute]}}</option>
+        <option ng-switch-default ng-selected="{{choice.id == ngModel[widgetName]}}" value="{{choice.id}}" ng-repeat="choice in widgetChoices track by $index">{{choice[displayAttribute]}}</option>
+      </select>
+      <select
+        ng-if="mode == 'group'"
+        ng-model="ngModel[widgetName]"
+        name="{{ widgetName }}"
+        ng-required="widgetRequired"
+        convert-to-float="{{widgetFloatValue}}"
+        convert-to-integer="{{widgetIntValue}}"
+        focusinput
+      >
+        <optgroup label="{{choice.id}}" ng-repeat="choice in widgetChoices">
+          <option ng-selected="{{opt[0] === ngModel[widgetName]}}" value="{{opt[0]}}" ng-repeat="opt in (choice[displayAttribute]) track by $index">{{opt[1]}}</option>
+        </optgroup>
+      </select>
+      <span class="input-group-addon" ng-if="widgetAppend!==null">{{ widgetAppend }}</span>
+    </label>
+    <div class="note">{{ widgetHelp }}</div>
+    <div class="note note-error ng-cloak">
+      <span ng-if="widgetRequired === true" class="error ng-cloak" ng-show="widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.required==true"> Required</span>
+    </div>
+    <div class="note note-error ng-cloak">
+      <span
+        class="error ng-cloak"
+        ng-repeat="(error, obj) in widgetForm[widgetName].$validations.errors"
+      > {{obj.message}}</span>
+      <span
+        class="warn ng-cloak"
+        ng-repeat="(warning, obj) in widgetForm[widgetName].$validations.warnings"
+      > {{obj.message}}</span>
+      <div ng-transclude="validations"></div>
+    </div>
+  </div>
+  <div class="btn-group modal-buttons" ng-if="modalController != null && mode == 'single'">
+    <button
+      type="button"
+      class="btn btn-sm btn-default modal-trigger"
+      modal-trigger
+      modal-title="modalTitle"
+      modal-confirm-label="modalConfirmLabel"
+      modal-next-label="modalNextLabel"
+      modal-section="modalSection"
+      modal-num-sections="modalNumSections"
+      modal-set-section="modalSetSection"
+      modal-controller="modalController"
+      modal-body-template-url="modalBodyTemplateUrl"
+      save-callback="updateChoices"
+      tabindex="-1"
+    ><i class="fa fa-plus fa-md"></i></button>
+    <button
+      type="button"
+      class="btn btn-sm btn-default modal-trigger"
+      modal-trigger
+      modal-title="modalTitle"
+      modal-confirm-label="modalConfirmLabel"
+      modal-next-label="modalNextLabel"
+      modal-section="modalSection"
+      modal-num-sections="modalNumSections"
+      modal-set-section="modalSetSection"
+      modal-controller="modalController"
+      modal-body-template-url="modalBodyTemplateUrl"
+      ng-model="ngModel[widgetName]"
+      ng-disabled="ngModel[widgetName] == null"
+      save-callback="updateChoices"
+      tabindex="-1"
+    ><i class="fa fa-pencil fa-md"></i></button>
+  </div>
+  <div class="clearfix"></div>
+</section>

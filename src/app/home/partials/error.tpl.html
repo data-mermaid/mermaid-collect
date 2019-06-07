@@ -1,0 +1,34 @@
+<div id="content">
+  <!-- row -->
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="text-center error-box">
+            <h1 class="error-text tada animated">{{getWord('Error')}}</h1>
+            <h2 class="font-xl"><strong>Oooops, Something went wrong!</strong></h2>
+            <br>
+            <p class="lead semi-bold">
+              <strong>Please check the URL in your browser address bar,
+                or use one of the links below.</strong><br><br>
+              <small ng-if="apperror">{{getWord('Details')}}: {{apperror.message}}<br></small>
+              <small ng-if="rejection">{{rejection.detail}}</small>
+            </p>
+            <ul class="error-search text-left font-md">
+              <li><a ui-sref="fullapp.projects">
+                <small>Go to Projects page</small>
+              </a></li>
+              <li offlinehide><a ui-sref="fullapp.contact">
+                <small>Report error</small>
+              </a></li>
+              <li><a href back>
+                <small>Go back</small>
+              </a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end row -->
+</div>

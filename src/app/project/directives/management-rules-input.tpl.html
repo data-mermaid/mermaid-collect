@@ -1,0 +1,97 @@
+<h4 class="modal-subtitle">Rules</h4>
+
+<div class="clearfix">
+  <div class="col-md-8">
+    <ul class="selector-list">
+      <li ng-init="management.open_access=true">
+        <label class="radio" ng-class="{true: 'disabled', false: ''}[isDisabled]">
+          <input
+            type="radio"
+            name="rules_radio"
+            class="radio-disable-checkbox"
+            ng-model="management.open_access"
+            ng-value="true"
+            ng-disabled="isDisabled"
+          >
+          <i></i>Open Access<br /><span class="radio-sublabel">Open
+            for fishing and entering</span></label>
+      </li>
+      <li>
+        <label class="radio" ng-class="{true: 'disabled', false: ''}[isDisabled]">
+          <input
+            type="radio"
+            name="rules_radio"
+            class="radio-disable-checkbox"
+            ng-model="management.no_take"
+            ng-value="true"
+            ng-disabled="isDisabled"
+          >
+          <i></i>No Take<br /><span class="radio-sublabel">Total
+            extraction ban</span></label>
+      </li>
+      <li>
+        <label class="radio" ng-class="{true: 'disabled', false: ''}[isDisabled]">
+          <input
+            type="radio"
+            name="rules_radio"
+            class="radio-disable-checkbox"
+            ng-model="partial_restrictions"
+            ng-value="true"
+            ng-disabled="isDisabled"
+          >
+          <i></i>Partial Restrictions<br /><span class="radio-sublabel">e.g. periodic closures, size limits, gear restrictions, species restrictions</span></label>
+      </li>
+    </ul>
+  </div>
+  <div class="clearfix">
+    <div class="col-md-8"
+      ng-if="partial_restrictions === true">
+      <ul class="selector-list indented-selector-list">
+        <li>
+          <label class="checkbox" ng-class="{true: 'disabled', false: ''}[isDisabled]">
+            <input
+              ng-mouseenter=""
+              ng-mouseleave=""
+              type="checkbox"
+              name="management['periodic_closure']"
+              class="checkbox"
+              ng-model="management.periodic_closure"
+              ng-disabled="isDisabled"
+            >
+            <i></i>Periodic Closures
+          </label>
+          <label class="checkbox" ng-class="{true: 'disabled', false: ''}[isDisabled]">
+            <input
+              type="checkbox"
+              name="management['size_limits']"
+              class="checkbox"
+              ng-model="management.size_limits"
+              ng-disabled="isDisabled"
+            >
+            <i></i>Size Limits
+          </label>
+          <label class="checkbox" ng-class="{true: 'disabled', false: ''}[isDisabled]">
+            <input
+              type="checkbox"
+              name="management['gear_restriction']"
+              class="checkbox"
+              ng-model="management.gear_restriction"
+              ng-disabled="isDisabled"
+            >
+            <i></i>Gear Restrictions
+          </label>
+          <label class="checkbox" ng-class="{true: 'disabled', false: ''}[isDisabled]">
+            <input
+              type="checkbox"
+              name="management['species_restriction']"
+              class="checkbox"
+              ng-model="management.species_restriction"
+              ng-disabled="isDisabled"
+            >
+            <i></i>Species Restrictions
+          </label>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

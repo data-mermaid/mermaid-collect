@@ -1,0 +1,8 @@
+<div style="padding: 5px 15px;">
+  <ul class="validation-message-list">
+    <li ng-if="validationKeys.indexOf('validate_quadrat_count') !== -1">{{record.validations.results.obs_quadrat_benthic_percent.validate_quadrat_count.message}}</li>
+    <li ng-if="validationKeys.indexOf('validate_percent_values') !== -1">{{record.validations.results.obs_quadrat_benthic_percent.validate_percent_values.message}}</li>
+    <li ng-if="validationKeys.indexOf('validate_all_equal') !== -1">{{record.validations.results.obs_quadrat_benthic_percent.validate_all_equal.message}}</li>
+  </ul>
+</div>
+<div class="alert alert-warning">This issue is related to more than one field and must be addressed in the form.</div>

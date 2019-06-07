@@ -1,0 +1,23 @@
+<hoverinfo message="messages[isAvailableOffline]">
+  <a
+    offlinehide
+    ng-class="{false: 'btn-default', true: 'btn-success'}[isAvailableOffline]"
+    class="btn btn-md btn-default project-offline"
+    ng-click="toggleOffline()"
+  >
+    <i
+      class="fa fa-lg"
+      ng-class="{false: 'fa-cloud-download', true: 'available fa-check-circle-o'}[isAvailableOffline]"
+    ></i>
+  </a>
+  <span
+    offlineshow
+    ng-class="{false: 'btn-default', true: 'btn-success'}[isAvailableOffline]"
+    class="btn btn-md btn-default project-offline disabled"
+  >
+    <i
+      class="fa fa-lg"
+      ng-class="{false: 'fa-cloud-download', true: 'available fa-check-circle-o'}[isAvailableOffline]"
+    ></i>
+  </span>
+</hoverinfo>

@@ -1,0 +1,7 @@
+<div style="padding: 5px 15px;">
+  <ul class="validation-message-list">
+    <li ng-if="validationKeys.indexOf('validate_hard_coral') !== -1">All observations are Hard coral.</li>
+    <li ng-if="validationKeys.indexOf('validate_observation_count') !== -1">{{record.validations.results.obs_benthic_pits.validate_observation_count.message}}</li>
+  </ul>
+</div>
+<div class="alert alert-warning">This issue is related to more than one field and must be addressed in the form.</div>

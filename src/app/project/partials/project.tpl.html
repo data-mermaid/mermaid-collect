@@ -1,0 +1,24 @@
+<div id="content">
+  <div class="row">
+    <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+  </div>
+
+  <section widget-grid id="widget-grid-project">
+    <save-alert form="form"></save-alert>
+    <form name="form" novalidate>
+      <div class="row">
+        <article class="col-sm-12">
+          <div jarvis-widget id="dataentry-widget" data-widget-editbutton="false">
+            <header>
+            </header>
+            <div>
+              <div class="widget-body no-padding smart-form">
+                <div ng-include="'app/project/partials/forms/project.form.tpl.html'"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </form>
+  </section>
+</div>

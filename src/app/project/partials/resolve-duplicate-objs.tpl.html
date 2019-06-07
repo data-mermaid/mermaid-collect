@@ -1,0 +1,39 @@
+<div class="table-wrapper">
+  <table class="table table-bordered resolve-records-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th ng-repeat="record in records">
+          <span class="pull-left table-vertical-padding"></span>
+          <a class="btn btn-success pull-right btn-left-spacing"
+            data-ui-sref="{{recordLink(record)}}"><i class="fa fa-edit"></i> Edit {{ buttonObjLabel }}</a>
+          <button
+            class="btn btn-success pull-right btn-toggle"
+            ng-click="toggleObj(record, $index)"
+            ng-disabled="record === toggledObj"
+          ><i ng-class="{true: 'fa fa-check-square-o', false: 'fa fa-square-o'}[record === toggledObj]"></i> Keep this
+            {{ buttonObjLabel }}</button>
+          <span class="clearfix"></span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="displayValueSet in displayValues track by $index">
+        <td ng-bind-html="displayValueSet.label"></td>
+        <td
+          ng-repeat="col in displayValueSet.values track by $index"
+          ng-class="{'danger': toggledColIndex !== $index && toggledObj != null, 'error-color': !displayValueSet.isSameValues}"
+        >
+          <span ng-if="displayValueSet.label !== 'Map'">{{col}}</span>
+          <leaflet_map
+            ng-if="displayValueSet.label === 'Map'"
+            records="[{location: col}]"
+            class="map-sm"
+            mapopts="mapopts"
+          ></leaflet_map>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note"><sup>+</sup> {{ note }}</div>
+</div>

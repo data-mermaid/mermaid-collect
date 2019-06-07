@@ -1,0 +1,112 @@
+<div class="clearfix">
+  <div
+    class="col-xs-5"
+    ddlinput
+    widget-disabled="isDisabled"
+    widget-form="form"
+    widget-name="site"
+    ng-model="record.data.sample_event"
+    widget-label="Site"
+    widget-required="true"
+    widget-choices="choices.sites"
+    modal-title="'Sites'"
+    modal-controller="'SiteModalCtrl'"
+    modal-body-template-url="'app/project/partials/page-inputs/site-input.tpl.html'"
+  >
+    <validations>
+      <input-validation-alert
+        identifier="site"
+        identifier-validations="record.validations.results.site"
+      ></input-validation-alert>
+    </validations>
+  </div>
+  <div class="col-xs-1"></div>
+  <div
+    class="col-xs-5"
+    ddlinput
+    widget-disabled="isDisabled"
+    widget-form="form"
+    widget-name="management"
+    ng-model="record.data.sample_event"
+    widget-label="Management"
+    widget-required="true"
+    widget-choices="choices.managements"
+    modal-title="'Management Regimes'"
+    modal-controller="'ManagementModalCtrl'"
+    modal-body-template-url="'app/project/partials/page-inputs/management-input.tpl.html'"
+  >
+    <validations>
+      <input-validation-alert
+        identifier="management"
+        identifier-validations="record.validations.results.management"
+      ></input-validation-alert>
+    </validations>
+  </div>
+</div>
+
+<div class="clearfix">
+  <div
+    class="col-xs-5"
+    dateinput
+    widget-disabled="isDisabled"
+    widget-form="form"
+    widget-required="true"
+    widget-name="sample_date"
+    ng-model="record.data.sample_event"
+    widget-label="Sample date"
+    widget-help=""
+    widget-format="yy-mm-dd"
+    widget-mask="9999/99/99"
+  >
+    <validations>
+      <input-validation-alert
+        identifier="sample_date"
+        identifier-validations="record.validations.results.sample_date"
+      ></input-validation-alert>
+    </validations>
+  </div>
+  <div class="col-xs-1"></div>
+  <div
+    class="col-xs-5"
+    timeinput
+    widget-disabled="isDisabled"
+    widget-form="form"
+    widget-required="true"
+    widget-name="sample_time"
+    ng-model="record.data.sample_event"
+    widget-label="Sample time"
+    widget-required="true"
+  >
+    <validations>
+      <input-validation-alert
+        identifier="sample_time"
+        identifier-validations="record.validations.results.sample_time"
+      ></input-validation-alert>
+    </validations>
+  </div>
+</div>
+
+<div class="clearfix">
+  <div
+    class="col-xs-5"
+    numberinput
+    widget-disabled="isDisabled"
+    widget-form="form"
+    widget-name="depth"
+    ng-model="record.data.sample_event"
+    widget-label="Depth"
+    widget-required="true"
+    widget-append="m"
+    widget-validators="decimal='3:1',minvalue='0',maxvalue='30:true'"
+  >
+
+    <validations>
+      <input-validation-alert
+        identifier="depth"
+        identifier-validations="record.validations.results.depth"
+      ></input-validation-alert>
+    </validations>
+
+  </div>
+  <div class="col-xs-1"></div>
+</div>

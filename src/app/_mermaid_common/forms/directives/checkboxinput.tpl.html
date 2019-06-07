@@ -1,0 +1,27 @@
+<section class="input-widget checkbox-input">
+  <label class="label">
+    <input
+      type="checkbox"
+      name="{{ widgetName }}"
+      ng-model="ngModel[widgetName]"
+      ng-change="widgetChange()"
+      ng-disabled="widgetDisabled"
+      focusinput
+    /> {{ widgetLabel }}
+  </label>
+  <div ng-if="widgetDescription" class="checkbox-label">{{ widgetDescription }}</div>
+  <div class="note note-error">
+    <span ng-repeat="(key, value) in widgetForm[widgetName].$error track by $index" class="error" ng-show="value" ng-bind-html="widgetForm[widgetName].validator_messages[key]"></span>
+  </div>
+  <div class="note note-error ng-cloak">
+    <span
+      class="error ng-cloak"
+      ng-repeat="(error, obj) in widgetForm[widgetName].$validations.errors"
+    > {{obj.message}}</span>
+    <span
+      class="warn ng-cloak"
+      ng-repeat="(warning, obj) in widgetForm[widgetName].$validations.warnings"
+    > {{obj.message}}</span>
+    <div ng-transclude="validations"></div>
+  </div>
+</section>

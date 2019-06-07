@@ -1,0 +1,18 @@
+<div class="table-toolbar">
+  <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-pencil"></i>
+      Method <span class="caret"></span>
+    </button>
+  
+    <ul class="dropdown-menu">
+      <li ng-repeat="item in config.toolbar.methodTypes track by item.protocol">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterMethod(item)">
+            {{item.name}}
+          </label>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="alert alert-block alert-{{alertClass}} validation-alert">
+  <div class="alert-section icon">
+    <a ng-if="hasElement(identifier)" href ng-click="scrollTo(identifier)"><i class="fa {{icon}}" title="{{tooltip}}"></i></a>
+    <span ng-if="hasElement(identifier) === false" ><i class="fa {{icon}}" title="{{tooltip}}"></i></span>
+  </div>
+  <div class="alert-section">
+    <div ng-repeat="message in messages track by $index">{{message}}</div>
+  </div>
+  <div class="alert-section">
+    <div ng-transclude="validationwizard"></div>
+  </div>
+  <div class="clearfix"></div>
+</div>

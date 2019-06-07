@@ -1,0 +1,32 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+    <div class="row">
+      <!-- <big-breadcrumbs items="['Collect', 'Records']" icon="table"
+      class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></big-breadcrumbs> -->
+      <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+    </div>
+
+    <form name="form" novalidate offlinehide>
+
+      <!-- widget grid -->
+      <section widget-grid id="widget-grid">
+        <div class="row">
+          <article class="col-sm-12">
+            <div jarvis-widget id="normal-table-widget" data-widget-editbutton="false">
+              <header>
+                <!-- <span class="widget-icon"> <i class="fa fa-table"></i> </span> -->
+                <h2></h2>
+              </header>
+              <div>
+                <div class="widget-body">
+                  <div ng-include="'app/profile/partials/profile-info.tpl.html'"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    </form>
+    <not-available-offline></not-available-offline>
+  </div>

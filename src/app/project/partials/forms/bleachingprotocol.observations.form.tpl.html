@@ -1,0 +1,53 @@
+<div class="row">
+  <article class="col-sm-12">
+    <div jarvis-widget id="wid-id-protocol-edit3" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" >
+      <header>
+        <h2>Observations - Colonies Bleached</h2>
+      </header>
+      <div class="note help-text">Use Tab to duplicate observation, use Enter to add row</div>
+      <div>
+        <div class="widget-body no-padding">
+          <div>
+            <div class="col-xs-12 note input-validation-alert-wrap">
+            <input-validation-alert
+              identifier="obs_colonies_bleached"
+              identifier-validations="record.validations.results.obs_colonies_bleached"
+            ></input-validation-alert>
+          </div>
+          <obs-colonies-bleached-list
+            obs-colonies-bleached="record.data.obs_colonies_bleached"
+            benthic-attribute-choices="benthicAttributes"
+            is-disabled="isDisabled"
+          ></obs-colonies-bleached-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+
+<div class="row">
+  <article class="col-sm-12">
+    <div jarvis-widget id="wid-id-protocol-edit3" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" >
+      <header>
+        <h2>Observations - Percent Cover</h2>
+      </header>
+      <div class="note help-text">Use Tab to duplicate observation, use Enter to add row</div>
+      <div>
+        <div class="widget-body no-padding">
+          <div>
+            <div class="col-xs-12 note input-validation-alert-wrap">
+            <input-validation-alert
+              identifier="obs_colonies_bleached"
+              identifier-validations="record.validations.results.obs_quadrat_benthic_percent"
+            ></input-validation-alert>
+          </div>
+          <obs-quadrat-benthic-percent-list
+            obs-quadrat-benthic-percent="record.data.obs_quadrat_benthic_percent"
+            is-disabled="isDisabled"
+          ></obs-quadrat-benthic-percent-list>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>

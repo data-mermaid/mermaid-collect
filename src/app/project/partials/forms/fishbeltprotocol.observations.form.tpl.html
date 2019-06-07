@@ -1,0 +1,30 @@
+<div class="row">
+  <article class="col-sm-12">
+    <div jarvis-widget id="wid-id-protocol-edit3" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" >
+      <header>
+        <h2>Observations</h2>
+      </header>
+      <div class="note help-text">Use Tab to duplicate observation, use Enter to add row</div>
+      <div>
+        <div class="widget-body no-padding">
+          <div>
+            <div class="col-xs-12 note input-validation-alert-wrap">
+              <input-validation-alert
+                identifier="obs_belt_fishes"
+                identifier-validations="record.validations.results.obs_belt_fishes"
+              ></input-validation-alert>
+            </div>
+            <obs-belt-fish-list
+              obs-belt-fishes="record.data.obs_belt_fishes"
+              fishsizebin="record.data.fishbelt_transect.size_bin"
+              fish-attribute-choices="fishAttributes"
+              transect-len-surveyed="record.data.fishbelt_transect.len_surveyed"
+              transect-width="record.data.fishbelt_transect.width"
+              is-disabled="isDisabled"
+            ></obs-belt-fish-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>

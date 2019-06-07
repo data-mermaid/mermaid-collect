@@ -1,0 +1,9 @@
+<div offlinehide class="alert alert-block alert-warning validation-alert duplicate-warning"
+  ng-if="managementsDuplicate">
+  <div class="alert-section duplicate-warning-icon">
+    <i class="fa fa-warning"></i>
+  </div>
+  <div>
+    <span> {{managementsWarningMessage}}</span> <ng-transclude></ng-transclude>
+  </div>
+</div>

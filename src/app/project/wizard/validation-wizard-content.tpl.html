@@ -1,0 +1,55 @@
+<div class="modal-wizard">
+  <div style="padding: 0 20px;">
+    <div class="modal-header" style="border: 0;">
+        <h3 class="modal-title" id="modal-title">
+          <div class="alert-section">
+            <i class="fa {{$ctrl.icon}}"></i>
+          </div>
+          <div class="alert-section">
+            <div ng-repeat="message in $ctrl.messages track by $index">{{message}}</div>
+          </div>
+          <div class="clearfix"></div>
+        </h3>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <form name="validationWizardForm" class="smart-form" novalidate>
+        <validation-wizard-page
+          record="$ctrl.record"
+          config="$ctrl.templateConfig"
+        ></validation-wizard-page>
+      </form>
+      <div class="clearfix"></div>
+    </div>
+    <div class="modal-footer" style="border: 0;">
+      <div class="pull-left">
+        <button
+          class="btn btn-success"
+          type="button"
+          ng-show="$ctrl.templateConfig.allowSkip !== true"
+          ng-disabled="$ctrl.validationWizardForm.$pristine || $ctrl.templateConfig.ignoreOnly"
+          ng-click="$ctrl.updateIssue($ctrl.identifier, $ctrl.record)"
+        >Update</button>
+        <button
+          class="btn btn-completed"
+          ng-show="$ctrl.validationStatus === 'warning'"
+          type="button"
+          ng-click="$ctrl.ignoreIssue($ctrl.identifier, $ctrl.record)"
+        >{{$ctrl.ignoreButtonText}}</button>
+        <button
+          class="btn btn-completed"
+          ng-show="$ctrl.templateConfig.allowSkip"
+          type="button"
+          ng-click="$ctrl.skipIssue()"
+        >Skip</button>
+        <div class="form-horizontal" style="display: inline-block;margin-left: 10px;">
+          <div class="checkbox">
+            <label><input type="checkbox" ng-model="$ctrl.autoMoveNext">Automatically move to the next issue</label>
+          </div>
+        </div>
+      </div>
+      <div class="pull-right">
+          <button class="btn btn-completed" type="button" ng-click="$ctrl.cancel()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

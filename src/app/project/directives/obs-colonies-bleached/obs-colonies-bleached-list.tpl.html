@@ -1,0 +1,303 @@
+<div class="smart-form">
+	<table class="table obs-table">
+		<thead>
+			<tr>
+				<th colspan="2"></th>
+				<th colspan="7" class="text-center th-borders-l th-borders-r" style="width: 70%;">Number of colonies</th>
+				<th style="width: 5%;"></th>
+			</tr>
+			<tr>
+				<th class="text-center">
+					Benthic attribute
+					<span class="required">*</span>
+				</th>
+				<th class="text-center">Growth form</th>
+				<th class="text-center th-borders-l" style="width: 10%;">Normal</th>
+				<th class="text-center">Pale</th>
+				<th class="text-center">0-20% bleached</th>
+				<th class="text-center">20-50% bleached</th>
+				<th class="text-center">50-80% bleached</th>
+				<th class="text-center">80-100% bleached</th>
+				<th class="text-center th-borders-r">Recently dead</th>
+				<th class="text-center"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr
+				ng-repeat="obs in obsColoniesBleached track by $index" ng-click="startEditing($event, $index)"
+				class="cursor-pointer"
+				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex === $index]"
+			>
+
+				<!--
+
+					READ SECTION
+
+				-->
+				<td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
+					<span class="readonly-cell text-left">{{::obs.attribute | matchchoice:benthicAttributeChoices}} </span><obs-validation-tooltip
+							validations="[
+								{
+									'isValid': validator.requiresvalue(obs.attribute) === true,
+									'message': 'Required'
+								}
+							]"
+						>
+					</obs-validation-tooltip>
+				</td>
+				<td class="readonly-cell">
+					{{::obs.growth_form | matchchoice:choices.growthforms}}
+				</td>
+				<td class="readonly-cell">
+					<span>{{::obs.count_normal | null_value}} </span>
+					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_normal)"></obs-validation-tooltip>
+				</td>
+				<td class="readonly-cell">
+					<span>{{::obs.count_pale | null_value}} </span>
+					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_pale)"></obs-validation-tooltip>
+				</td>
+				<td class="readonly-cell">
+					<span>{{::obs.count_20 | null_value}} </span>
+					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_20)"></obs-validation-tooltip>
+				</td>
+				<td class="readonly-cell">
+					<span>{{::obs.count_50 | null_value}} </span>
+					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_50)"></obs-validation-tooltip>
+				</td>
+				<td class="readonly-cell">
+					<span>{{::obs.count_80 | null_value}} </span>
+					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_80)"></obs-validation-tooltip>
+				</td>
+				<td class="readonly-cell">
+					<span>{{::obs.count_100 | null_value}} </span>
+					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_100)"></obs-validation-tooltip>
+				</td>
+				<td ng-if-end class="readonly-cell">
+					<span>{{::obs.count_dead | null_value}} </span>
+					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_dead)"></obs-validation-tooltip>
+				</td>
+				
+				<!--
+
+					EDIT SECTION
+
+				-->
+
+				<td ng-if-start="editableObservationIndex === $index">
+					<autocompleteinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="attribute"
+						ng-model="obs"
+						widget-required="true"
+						widget-required-hide="true"
+						widget-lazy-choices="getBenthicAttributes"
+						widget-new-record-label="Propose New Benthic Attribute..."
+						widget-new-record-modal-config="modalConfig"
+						widget-modal-trigger="modalTrigger(obs)"
+					>
+						<appendaddon>
+							<a
+								tabindex="-1"
+								target="_blank"
+								ui-sref="app.reference.benthicattributes.benthicattribute({id: obs.attribute})"
+							>
+								<i class="fa fa-book"></i>
+							</a>
+						</appendaddon>
+					</autocompleteinput>
+					<obs-model-validation-tooltip
+						requiresval
+						ng-model="obs.attribute"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
+				</td>
+				<td>
+					<div
+						ddlinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="growth_form"
+						ng-model="obs"
+						widget-required="false"
+						widget-choices="choices.growthforms"
+						ng-keydown="navInputs($event, obs, false, $index)"
+					></div>
+				</td>
+				<td>
+					<div
+						numberinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="count_normal"
+						ng-model="obs"
+						widget-validators="integer,minvalue='0:t'"
+						widget-required="true"
+						widget-required-hide="true"
+						ng-keydown="navInputs($event, obs, false, $index)"
+					></div>
+					<obs-model-validation-tooltip
+						integer
+						requiresval
+						minvalue='0:t'
+						ng-model="obs.count_normal"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
+				</td>
+				<td>
+					<div
+						numberinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="count_pale"
+						ng-model="obs"
+						widget-validators="integer,minvalue='0:t'"
+						widget-required="true"
+						widget-required-hide="true"
+						ng-keydown="navInputs($event, obs, false, $index)"
+						ng-change="obs.$$validations = validateCountInput(obs.count_pale)"
+					></div>
+					<obs-model-validation-tooltip
+						integer
+						requiresval
+						minvalue='0:t'
+						ng-model="obs.count_pale"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
+				</td>
+				<td>
+					<div
+						numberinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="count_20"
+						ng-model="obs"
+						widget-validators="integer,minvalue='0:t'"
+						widget-required="true"
+						widget-required-hide="true"
+						ng-keydown="navInputs($event, obs, false, $index)"
+					></div>
+					<obs-model-validation-tooltip
+						integer
+						requiresval
+						minvalue='0:t'
+						ng-model="obs.count_20"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
+				</td>
+				<td>
+					<div
+						numberinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="count_50"
+						ng-model="obs"
+						widget-validators="integer,minvalue='0:t'"
+						widget-required="true"
+						widget-required-hide="true"
+						ng-keydown="navInputs($event, obs, false, $index)"
+					></div>
+					<obs-model-validation-tooltip
+						integer
+						requiresval
+						minvalue='0:t'
+						ng-model="obs.count_50"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
+				</td>
+				<td>
+					<div
+						numberinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="count_80"
+						ng-model="obs"
+						widget-validators="integer,minvalue='0:t'"
+						widget-required="true"
+						widget-required-hide="true"
+						ng-keydown="navInputs($event, obs, false, $index)"
+					></div>
+					<obs-model-validation-tooltip
+						integer
+						requiresval
+						minvalue='0:t'
+						ng-model="obs.count_80"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
+				</td>
+				<td>
+					<div
+						numberinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="count_100"
+						ng-model="obs"
+						widget-validators="integer,minvalue='0:t'"
+						widget-required="true"
+						widget-required-hide="true"
+						ng-keydown="navInputs($event, obs, false, $index)"
+					></div>
+					<obs-model-validation-tooltip
+						integer
+						requiresval
+						minvalue='0:t'
+						ng-model="obs.count_100"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
+				</td>
+				<td ng-if-end>
+					<div
+						numberinput
+						widget-disabled="isDisabled"
+						widget-form="form"
+						widget-name="count_dead"
+						ng-model="obs"
+						widget-validators="integer,minvalue='0:t'"
+						widget-required="true"
+						widget-required-hide="true"
+						ng-keydown="navInputs($event, obs, true, $index)"
+					></div>
+					<obs-model-validation-tooltip
+						integer
+						requiresval
+						minvalue='0:t'
+						ng-model="obs.count_dead"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
+				</td>
+				<td ng-style="{'padding-top': editableObservationIndex === $index ? '18px' : '6px'}">
+					<btn
+						icon="fa-times"
+						classes="btn-xs btn-danger"
+						tab-index="-1"
+						click="deleteRow(obs)"
+						is-disabled="isDisabled"
+					></btn>
+				</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="10">
+					<a ng-if="isDisabled !== true" href="" ng-click="$event.stopPropagation();addRow()">
+						<i class="fa fa-plus"></i>
+						Add row
+					</a>
+					<span ng-if="isDisabled === true" class="disabled">
+						<i class="fa fa-plus"></i>
+						Add row
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="10">
+					<obs-colonies-bleached-summary
+						class="pull-right observation-summary"
+						ng-if="obsColoniesBleached.length > 0"
+						obs-colonies-bleached="obsColoniesBleached"
+					></obs-colonies-bleached-summary>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div>

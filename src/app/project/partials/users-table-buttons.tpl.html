@@ -1,0 +1,11 @@
+<a offlinehide  
+  ng-hide="control.isAdmin === false"
+  class="btn btn-sm btn-primary" 
+  ng-click="control.transferSampleUnits(record)"
+>Transfer Sample Units</a>
+
+<a offlinehide  
+  ng-hide="control.currentUser.id === record.profile || control.isAdmin === false"
+  class="btn btn-sm btn-danger margin-left-10" 
+  ng-click="control.removeUser(record)" 
+>Remove User</a>

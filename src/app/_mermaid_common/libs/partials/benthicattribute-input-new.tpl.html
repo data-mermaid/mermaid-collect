@@ -1,0 +1,37 @@
+<form name="form" novalidate>
+    <div>
+        <div class="widget-body no-padding">
+            <div class="smart-form">
+                <fieldset>
+                    <div class="clearfix" ng-show="modalSection === 1">
+                            <div class="clearfix">
+                              <div autocompleteinput class="col-xs-5" widget-form="form" widget-label="Parent" widget-name="parent" ng-model="record"
+                                widget-required="true" widget-choices="parents" widget-disabled="isDisabled" widget-help="e.g. Acanthastrea"></div>
+                              <div class="col-xs-1"></div>
+                                <div textinput class="col-xs-5" widget-form="form" widget-label="Name" widget-name="name" ng-model="record"
+                                    widget-required="true" widget-disabled="isDisabled" widget-help="e.g. coralline algae"></div>
+                            </div>
+
+                    </div>
+
+                    <div class="clearfix" ng-show="modalSection === 2">
+                        <br>
+                        <div class="propose-email-mock">
+                            <p>I'd like to propose a new benthic attribute called <strong>{{record.name}}</strong>.</p>
+                            <br />
+                            <p>Details</p>
+                            <p>User: <strong>{{full_name}}</strong></p>
+                            <p>Project: <strong class="breadcrumb-override">
+                                    <projectname></projectname>
+                                </strong></p>
+                        </div>
+                        <br>
+                        <p>Your proposed new benthic attribute will be reviewed by the MERMAID team, who will either approve it
+                            for inclusion in the taxonomy
+                            or contact you to follow up.</p>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>

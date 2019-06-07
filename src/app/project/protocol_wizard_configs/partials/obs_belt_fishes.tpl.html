@@ -1,0 +1,12 @@
+<div style="padding: 5px 15px;">
+  <ul class="validation-message-list">
+    <li ng-if="validationKeys.indexOf('validate_observation_density') !== -1">Total biomass for this record is
+      {{totalBiomass | number : 1 | null_value}}; values usually fall between 100 kg/ha and 2000 kg/ha.</li>
+    <li ng-if="validationKeys.indexOf('validate_observation_count') !== -1">Generally there are more than 5
+      observations per record.</li>
+    <li ng-if="validationKeys.indexOf('validate_fish_count') !== -1">Generally the number of fish should be greater than 10.</li>
+    <li ng-if="validationKeys.indexOf('validate_fish_lengths') !== -1">The maximum length for a species is the size
+    of the longest individual recorded; observing longer is possible but unlikely.</li>
+  </ul>
+</div>
+<div class="alert alert-warning">This issue is related to more than one field and must be addressed in the form.</div>

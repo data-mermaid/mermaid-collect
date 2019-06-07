@@ -1,0 +1,112 @@
+<div class="smart-form">
+  <table class="table" style="border-collapse: separate;">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Benthic attribute<span class="required"> *</span></th>
+        <th>Growth form</th>
+        <th>Length<span class="required"> *</span></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody ng-if="obsBenthicLits.length > 0"></tbody>
+      <tr ng-repeat="obs in obsBenthicLits track by obs.$$uid">
+        <td style="padding-top: 20px; width: 0.5em;">
+          <div style="opacity: 0.75;"><small>{{::($index + 1)}}</small></div>
+        </td>
+        <td>
+          <autocompleteinput
+            
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="attribute"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-lazy-choices="getBenthicAttributes"
+            widget-new-record-label="Propose New Benthic Attribute..."
+            widget-new-record-modal-config="modalConfig"
+            widget-modal-trigger="modalTrigger(obs)"
+            drop-up-enabled="true"
+          >
+            <appendaddon >
+              <a
+                tabindex="-1"
+                target="_blank"
+                ui-sref="app.reference.benthicattributes.benthicattribute({id: obs.attribute})"
+              >
+                <i class="fa fa-book"></i>
+              </a>
+            </appendaddon>
+          </autocompleteinput>
+          <obs-attribute-validation
+            widget-name="'attribute'"
+            ng-model="obs.attribute"
+            requiresval
+          ></obs-attribute-validation>
+        </td>
+        <td>
+          <div
+            ddlinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="growth_form"
+            ng-model="obs"
+            widget-required="false"
+            widget-choices="choices.growthforms"
+          ></div>
+        </td>
+        <td>
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="length"
+            id="length_{{getHashkey(obs)}}"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-append="cm"
+            ng-keydown="addRow($event, obs)"
+          ></div>
+          <obs-attribute-validation
+            widget-name="'length'"
+            ng-model="obs.length"
+            requiresval
+          ></obs-attribute-validation>
+        </td>
+        <td style="padding-top: 20px;">
+          <btn
+            icon="fa-times"
+            classes="btn-xs btn-danger"
+            tab-index="-1"
+            click="deleteRow(obs)"
+            is-disabled="isDisabled"
+          ></btn>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">
+          <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
+          <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
+        </td>
+        <td> </td>
+        <td>
+          <span
+            ng-show="observation_calcs.total"
+          >Total cm<span class="pull-right">{{observation_calcs.total}}</span>
+          </span>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr ng-repeat="cat_percentage in observation_calcs.category_percentages" ng-show="observation_calcs.total">
+        <td>&nbsp;</td>
+        <td> </td>
+        <td>% {{cat_percentage.id}}<span class="pull-right">{{cat_percentage.val | number: 1}}</span></td>
+        <td>&nbsp;</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

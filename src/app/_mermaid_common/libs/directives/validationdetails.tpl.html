@@ -1,0 +1,61 @@
+<div class="row" ng-show="warning_count > 0 || error_count > 0"">
+  <article class="col-sm-12">
+    <div jarvis-widget data-widget-editbutton="false">
+      <header>
+        <h2>Submission Results</h2>
+      </header>
+
+      <div class="widget-body">
+
+        <div class="row">
+
+          <div class="col-xs-12" ng-show="error_count > 0">
+            <div class="alert alert-danger">
+              <ng-pluralize
+                count="error_count"
+                when="{
+                  '1': '{} error',
+                  'other': '{} errors'
+                }"
+              ></ng-pluralize>
+              <ul>
+                <li ng-repeat="obj in form_level_validations.errors">
+                  <validation-display
+                    validation-result="obj"
+                    template-config="templatesConfig[obj.result.validation]"
+                  ></validation-display>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12"  ng-show="warning_count > 0">
+            <div class="alert alert-warning">
+              <ng-pluralize
+                count="warning_count"
+                when="{
+                  '1': '{} warning',
+                  'other': '{} warnings'
+                }"
+              ></ng-pluralize>
+              <ul>
+                <li ng-repeat="obj in form_level_validations.warnings">
+                  <validation-display
+                    validation-result="obj"
+                    template-config="templatesConfig[obj.result.validation]"
+                  ></validation-display>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+              <button type="button" class="btn btn-lg btn-default pull-right" ng-click="clearValidations()">Clear</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>

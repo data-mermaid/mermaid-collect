@@ -1,0 +1,151 @@
+<div class="smart-form">
+  <table class="table obs-table">
+    <thead>
+      <tr>
+        <th class="text-center" style="width: 5%;">Quadrat</th>
+        <th class="text-center">Hard coral, % cover</th>
+        <th class="text-center">Soft coral, % cover</th>
+        <th class="text-center">Macroalgae, % cover</th>
+        <th class="text-center" style="width: 5%;"></th>
+      </tr>
+    </thead>
+    <tbody ng-if="obsQuadratBenthicPercent.length > 0">
+      <tr
+        ng-repeat="obs in obsQuadratBenthicPercent track by $index"
+        class="cursor-pointer"
+        ng-click="startEditing($event, $index)"
+        ng-class="{'editable-row': editableObservationIndex !== $index, 'danger': rowError[$index] === true}"
+      >
+
+        <!--
+          READ SECTION
+        -->
+
+        <td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
+          <div>
+            <small>{{::$index + 1}}</small>
+          </div>
+        </td>
+
+        <td class="readonly-cell">
+          <span>{{::obs.percent_hard | null_value}} </span>
+          <obs-validation-tooltip validations-fx="validateCountInput(obs.percent_hard)"></obs-validation-tooltip>
+        </td>
+        <td class="readonly-cell">
+          <span>{{::obs.percent_soft | null_value}}</span>
+          <obs-validation-tooltip validations-fx="validateCountInput(obs.percent_soft)"></obs-validation-tooltip>
+        </td>
+        <td ng-if-end class="readonly-cell">
+          <span>{{::obs.percent_algae | null_value}}</span>
+          <obs-validation-tooltip validations-fx="validateCountInput(obs.percent_algae)"></obs-validation-tooltip>
+        </td>
+
+        <!--
+          WRITE SECTION
+        -->
+
+        <td class="observation__row-number" ng-if-start="editableObservationIndex === $index">
+          <div>
+            <small>{{$index + 1}}</small>
+          </div>
+        </td>
+        <td>
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="percent_hard"
+            ng-model="obs"
+            widget-append="%"
+            widget-change="validateRow(obs, $index)"
+            widget-validators="integer,minvalue='0:t',maxvalue='100:t'"
+            widget-required="true"
+            widget-required-hide="true"
+            ng-keydown="navInputs($event, obs, false, $index)"
+          ></div>
+          <obs-model-validation-tooltip
+            integer
+            requiresval
+            minvalue="0:t"
+            maxvalue="100:t"
+            ng-model="obs.percent_hard"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
+        </td>
+        <td>
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="percent_soft"
+            ng-model="obs"
+            widget-append="%"
+            widget-change="validateRow(obs, $index)"
+            widget-validators="integer,minvalue='0:t',maxvalue='100:t'"
+            widget-required="true"
+            widget-required-hide="true"
+            ng-keydown="navInputs($event, obs, false, $index)"
+          ></div>
+          <obs-model-validation-tooltip
+            integer
+            requiresval
+            minvalue="0:t"
+            maxvalue="100:t"
+            ng-model="obs.percent_soft"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
+        </td>
+        <td ng-if-end>
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="percent_algae"
+            ng-model="obs"
+            ng-keydown="navInputs($event, obs, true, $index)"
+            widget-append="%"
+            widget-change="validateRow(obs, $index)"
+            widget-validators="integer,minvalue='0:t',maxvalue='100:t'"
+            widget-required="true"
+            widget-required-hide="true"
+          ></div>
+          <obs-model-validation-tooltip
+            integer
+            requiresval
+            minvalue="0:t"
+            maxvalue="100:t"
+            ng-model="obs.percent_algae"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
+        </td>
+
+        <td ng-style="{'padding-top': editableObservationIndex === $index ? '18px' : '6px'}">
+          <btn
+            icon="fa-times"
+            classes="btn-xs btn-danger"
+            tab-index="-1"
+            click="deleteRow(obs)"
+            is-disabled="isDisabled"
+          ></btn>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">
+          <a ng-if="isDisabled !== true" href="" ng-click="$event.stopPropagation();addRow()"><i class="fa fa-plus"></i> Add row</a>
+          <span ng-if="isDisabled === true" class="disabled"><i class="fa fa-plus"></i> Add row</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5">
+          <obs-quadrat-benthic-percent-summary
+            class="pull-right observation-summary"
+            ng-if="obsQuadratBenthicPercent.length > 0"
+            obs-quadrat-benthic-percent="obsQuadratBenthicPercent"
+          ></obs-quadrat-benthic-percent-summary>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

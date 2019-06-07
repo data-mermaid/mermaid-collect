@@ -1,0 +1,38 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+  <div class="row">
+    <!-- <big-breadcrumbs items="['Collect', 'Records']" icon="table"
+    class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></big-breadcrumbs> -->
+    <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+  </div>
+  <!-- widget grid -->
+  <section widget-grid id="widget-grid">
+    <div class="row">
+      <article class="col-sm-12">
+      <p class="reference-home">This is where you can find the names and information of the fish and benthic attributes you can choose in MERMAID.</p>
+      <ul data-smart-menu class="reference-home-items">
+        <li data-ui-sref-active="active">
+          <a data-ui-sref="app.reference.fishfamilies">
+            <i class="fa fa-chevron-right reduce-font-70"></i> <span class="reference-home-item">{{getWord('Fish Family')}}</span>
+          </a>
+        </li>
+        <li data-ui-sref-active="active">
+          <a data-ui-sref="app.reference.fishgenera">
+            <i class="fa fa-chevron-right reduce-font-70"></i> <span class="reference-home-item">{{getWord('Fish Genera')}}</span>
+          </a>
+        </li>
+        <li data-ui-sref-active="active">
+          <a data-ui-sref="app.reference.fishspeciess">
+            <i class="fa fa-chevron-right reduce-font-70"></i> <span class="reference-home-item">{{getWord('Fish Species')}}</span>
+          </a>
+        </li>
+        <li data-ui-sref-active="active">
+          <a data-ui-sref="app.reference.benthicattributes">
+            <i class="fa fa-chevron-right reduce-font-70"></i> <span class="reference-home-item">{{getWord('Benthic Attributes')}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    </article>
+  </section>
+</div>

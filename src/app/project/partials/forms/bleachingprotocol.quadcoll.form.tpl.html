@@ -1,0 +1,46 @@
+<div class="smart-form">
+  <fieldset>
+    <div ng-include="'app/project/partials/forms/sample_event.required.tpl.html'"></div>
+  </fieldset>
+  <fieldset>
+    <div class="clearfix">
+      <div
+        class="col-xs-5"
+        numberinput
+        widget-disabled="isDisabled"
+        widget-form="form"
+        widget-name="quadrat_size"
+        ng-model="record.data.quadrat_collection"
+        widget-label="Quadrat size"
+        widget-required="true"
+        widget-append="m<sup>2</sup>"
+        widget-validators="minvalue='0'"
+      >
+
+        <validations>
+          <input-validation-alert
+            identifier="quadrat_size"
+            identifier-validations="record.validations.results.quadrat_size"
+          ></input-validation-alert>
+        </validations>
+
+      </div>
+      <div class="col-xs-1"></div>
+      <div
+        class="col-xs-5"
+        textinput
+        widget-disabled="isDisabled"
+        widget-form="form"
+        widget-name="label"
+        ng-model="record.data.quadrat_collection"
+        widget-label="Label"
+        widget-required="false"
+      ></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <div ng-include="'app/project/partials/forms/sample_event.non_required.tpl.html'"></div>
+  </fieldset>
+
+</div>

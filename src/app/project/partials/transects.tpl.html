@@ -1,0 +1,23 @@
+<div id="content">
+  <div class="row">
+    <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+  </div>
+  <section widget-grid id="widget-grid">
+    <div class="row">
+      <article class="col-sm-12">
+          <div>
+              <div class="widget-body">
+                <div
+                  offlinehide
+                  paginatedtable
+                  config="tableConfig"
+                  control="tableControl"
+                  resource="resource"
+                ></div>
+                <not-available-offline></not-available-offline>
+              </div>
+          </div>
+      </article>
+    </div>
+  </section>
+</div>

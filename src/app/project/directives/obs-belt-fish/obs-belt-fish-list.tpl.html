@@ -1,0 +1,163 @@
+<div class="smart-form">
+  <table class="table" style="border-collapse: separate;">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Fish name<span class="required"> *</span></th>
+        <th>Size<span class="required"> *</span></th>
+        <th>Count<span class="required"> *</span></th>
+        <th>Biomass (kg/ha)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody ng-if="obsBeltFishes.length > 0">
+      <tr ng-repeat="obs in obsBeltFishes track by obs.$$uid">
+        <td style="padding-top: 20px; width: 0.5em">
+          <div style="opacity: 0.75;"><small>{{::($index + 1)}}</small></div>
+        </td>
+        <td>
+          <autocompleteinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="fish_attribute"
+            id="attr_{{getHashkey(obs)}}"
+            class="autocomplete__propose-species"
+            ng-model="obs"
+            display-attribute="display_name"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-lazy-choices="getFishAttributes"
+            widget-new-record-label="Propose New Species..."
+            widget-new-record-modal-config="modalConfig"
+            widget-modal-trigger="modalTrigger(obs)"
+            drop-up-enabled="true"
+          >
+            <appendaddon>
+              <a
+                ng-click="navReferenceLink(obs.fish_attribute)"
+              >
+                <i class="fa fa-book"></i>
+              </a>
+            </appendaddon>
+          </autocompleteinput>
+          <obs-attribute-validation
+            widget-name="'fish_attribute'"
+            ng-model="obs.fish_attribute"
+            requiresval
+          ></obs-attribute-validation>
+        </td>
+        <td ng-if="!fishsize_choices[fishsizebin]">
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="size"
+            id="size_{{getHashkey(obs)}}"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-append="cm"
+            widget-validators="decimal='5:1',minvalue='0'"
+          ></div>
+          <obs-attribute-validation
+            widget-name="'size'"
+            ng-model="obs.size"
+            requiresval
+          ></obs-attribute-validation>
+        </td>
+        <td ng-if="fishsize_choices[fishsizebin].length > 0">
+          <div
+            ng-if="!obs.size || obs.size < 50"
+            ddlinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="size"
+            id="size_{{getHashkey(obs)}}"
+            ng-model="obs"
+            widget-append="cm"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-choices="fishsize_choices[fishsizebin]"
+            widget-float-value="true"
+          ></div>
+          <div
+            ng-if="obs.size >= 50"
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="size"
+            widget-help="Enter estimated size (eg: 51)"
+            id="size_{{getHashkey(obs)}}"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-append="cm"
+            widget-validators="decimal='5:1',minvalue='0'"
+          ></div>
+
+          <obs-attribute-validation
+            widget-name="'size'"
+            ng-model="obs.size"
+            requiresval
+          ></obs-attribute-validation>
+
+        </td>
+
+        <td>
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="count"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            ng-keydown="addRow($event, obs)"
+            widget-validators="integer,minvalue='0'"
+          ></div>
+          <obs-attribute-validation
+            widget-name="'count'"
+            ng-model="obs.count"
+            integer
+            minvalue='0'
+            requiresval
+          ></obs-attribute-validation>
+        </td>
+        <td>
+          <biomass class="input-align"
+            obs="obs"
+            biomassval="biomassvalues[obs.$$uid]"
+            transect-len-surveyed="transectLenSurveyed"
+            transect-width="getWidthVal(transectWidth)"
+          ></biomass>
+        </td>
+        <td style="padding-top: 20px;">
+          <btn
+            icon="fa-times"
+            classes="btn-xs btn-danger"
+            tab-index="-1"
+            click="deleteRow(obs)"
+            is-disabled="isDisabled"
+          ></btn>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3">
+          <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
+          <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
+        </td>
+        <th>Total biomass (kg/ha)</th>
+        <td>
+          <biomass-total
+            observations="obsBeltFishes"
+            transect-len-surveyed="transectLenSurveyed"
+            transect-width="getWidthVal(transectWidth)"
+          ></biomass-total>
+        </td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

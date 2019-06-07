@@ -1,0 +1,76 @@
+<section class="input-widget text-input">
+
+  <label ng-show="widgetLabel.length > 0" class="label" ng-if="widgetType !== 'hidden'">
+    {{ widgetLabel }}
+    <span ng-show="widgetRequired === true" class="required" title="Required"> *</span>
+  </label>
+
+  <div ng-class="{true: 'modal-trigger-on', false: ''}[modalController != null]"
+    ng-if="widgetChoices || widgetLazyChoices || widgetRemoteChoices" class="autocomplete-typeahead">
+    <label class="input"
+      ng-class="[{false: 'state-error', true: ''}[widgetForm[widgetName].$pristine || widgetForm[widgetName].$valid],{false: '', true: 'disabled'}[widgetDisabled]]">
+      <div class="input-group">
+        <input
+          class="form-control"
+          name="{{ widgetName }}"
+          ng-model="ngModel[widgetName]"
+          type="{{ widgetType }}"
+          uib-typeahead="item.id as item[displayAttribute] for item in choices($viewValue)"
+          typeahead-popup-template-url="app/_mermaid_common/forms/directives/autocompleteinput-popup.tpl.html"
+          typeahead-append-to-body="true"
+          typeahead-no-results="noResults"
+          typeahead-on-select="widgetCallback()"
+          ng-model-option="{ allowInvalid: widgetAllowInvalid }"
+          ng-required="widgetRequired"
+          ng-disabled="widgetDisabled"
+          placeholder="{{ widgetPlaceholder }}"
+          typeahead-wait-ms="250"
+          typeahead-template-url="autocompleteTemplate.html"
+          typeahead-input-formatter="formatValue($item, $model, $label, $event)"
+          typeahead-editable="widgetEditable"
+          typeahead-select-on-exact="true"
+          ignore-dirty="{{widgetIgnoreDirty}}"
+          autocomplete="off"
+          ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
+          focusinput
+        />
+        <span ng-transclude="appendaddon" ng-class="{true: 'input-group-addon', false: ''}[transcludePresent('appendaddon')]"></span>
+      </div>
+    </label>
+    <div ng-if="noResults && moreThanThree" uib-dropdown uib-dropdown-toggle is-open="true" auto-close="disabled">
+      <ul class="dropdown-menu" >
+        <li class="no-result-search">
+          <div>No results</div>
+        </li>
+        <li ng-show="widgetNewRecordLabel">
+          <hr />
+          <a ng-href type="button" class="btn btn-sm btn-default modal-trigger" ng-click="widgetModalTrigger()"
+          tabindex="-1">{{widgetNewRecordLabel}}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="note">{{ widgetHelp }}</div>
+
+    <div class="note note-error">
+      <div ng-if="widgetRequired === true && widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.required==true" class="error ng-cloak">
+        {{ widgetLabel }} is required.</div>
+    </div>
+
+    <div class="note note-error ng-cloak">
+      <div class="error ng-cloak" ng-repeat="(error, obj) in widgetForm[widgetName].$validations.errors">
+        {{obj.message}}</div>
+      <div class="warn ng-cloak" ng-repeat="(warning, obj) in widgetForm[widgetName].$validations.warnings">
+        {{obj.message}}</div>
+      <div ng-transclude="validations"></div>
+    </div>
+
+    <script type="text/ng-template" id="autocompleteTemplate.html">
+      <a>
+        <span ng-bind-html="match.label | typeaheadHighLight:query"></span>
+      </a>
+    </script>
+
+  </div>
+  <div class="clearfix"></div>
+</section>

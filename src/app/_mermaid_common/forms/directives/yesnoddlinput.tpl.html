@@ -1,0 +1,35 @@
+<section class="input-widget ddl-input">
+  <label class="label"> {{ widgetLabel }}
+    <span ng-show="widgetRequired === true" class="required" title="Required"> *</span>
+    <span find-tooltip="ngModel[widgetName]"></span>
+  </label>
+  <label class="select" ng-class="{false: 'state-error', true: ''}[widgetForm[widgetName].$valid || widgetForm[widgetName].$pristine]">
+    <select
+      ng-model="ngModel[widgetName]"
+      name="{{ widgetName }}"
+      ng-required="widgetRequired"
+      ng-change="widgetChange"
+      ng-disabled="widgetDisabled"
+      ng-class="{false: '', true: disabled}[widgetDisabled]"
+      focusinput
+      ng-options="item.id as item.name for item in widgetChoices"
+    >
+    </select>
+    <i />
+  </label>
+  <div class="note">{{ widgetHelp }}</div>
+  <div class="note note-error ng-cloak">
+    <span ng-if="widgetRequired === true" class="error" ng-show="widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.required==true"> {{ widgetLabel }} is required.</span>
+  </div>
+  <div class="note note-error ng-cloak">
+    <span
+      class="error ng-cloak"
+      ng-repeat="(error, obj) in widgetForm[widgetName].$validations.errors"
+    > {{obj.message}}</span>
+    <span
+      class="warn ng-cloak"
+      ng-repeat="(warning, obj) in widgetForm[widgetName].$validations.warnings"
+    > {{obj.message}}</span>
+    <div ng-transclude="validations"></div>
+  </div>
+</section>

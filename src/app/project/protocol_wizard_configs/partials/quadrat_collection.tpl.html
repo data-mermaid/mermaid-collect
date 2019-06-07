@@ -1,0 +1,51 @@
+<div>
+  <div
+    class="col-xs-7"
+    ddlinput
+    widget-name="site"
+    widget-form="validationWizardForm"
+    ng-model="record.data.sample_event"
+    widget-label="Site"
+    widget-required="true"
+    widget-choices="sites"
+  ></div>
+   <div
+    class="col-xs-7"
+    dateinput
+    widget-form="validationWizardForm"
+    widget-required="true"
+    widget-name="sample_date"
+    ng-model="record.data.sample_event"
+    widget-label="Sample date"
+    widget-help=""
+    widget-format="yy-mm-dd"
+    widget-mask="9999/99/99"
+  ></div>
+  <div
+    class="col-xs-7"
+    timeinput
+    widget-disabled="isDisabled"
+    widget-form="validationWizardForm"
+    widget-required="true"
+    widget-name="sample_time"
+    ng-model="record.data.sample_event"
+    widget-label="Sample time"
+    widget-required="true"
+  ></div>
+  <div
+    class="col-xs-7"
+    textinput
+    widget-form="validationWizardForm"
+    widget-name="label"
+    ng-model="record.data.quadrat_collection"
+    widget-label="Label"
+    widget-required="false"
+></div>
+<div class="clearfix"></div>
+
+<label class="label">Observers</label>
+<observer-list
+    observers="record.data.observers",
+    form="validationWizardForm"
+    project_profiles="projectProfiles"
+></observer-list>

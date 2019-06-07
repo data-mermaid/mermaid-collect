@@ -1,0 +1,21 @@
+<div class="table-toolbar">
+  <div class="btn-group">
+    <button
+      offlinehide
+      class="btn btn-primary"
+      ng-hide="!config.toolbar.submitSelected"
+      ng-click="config.toolbar.submitSelected()"
+    >Submit</button>
+    <button
+      class="btn btn-primary"
+      ng-hide="!config.toolbar.exportSelected"
+      ng-click="config.toolbar.exportSelected()"
+    >Export</button>
+    <btn
+      classes="btn-primary"
+      ng-hide="!config.toolbar.deleteSelected"
+      click="config.toolbar.deleteSelected()"
+      is-disabled="control.isDisabled"
+    >Delete</btn>
+  </div>
+</div>

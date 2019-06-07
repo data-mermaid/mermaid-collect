@@ -1,0 +1,88 @@
+<header id="header" dev-class="dev-env-background">
+    <div id="logo-group">
+
+        <!-- PLACE YOUR LOGO HERE -->
+        <a ui-sref="fullapp.projects" style="padding: 2px;">
+            <svg class="logo-lg" height="49px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="styles/img/logo.svg" x="9" y="6" height="38px" />
+            </svg>
+            <svg class="logo-sm" height="49px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image xlink:href="styles/img/logo_wht_only.svg" x="9" y="6" height="38px" />
+            </svg>
+
+        </a>
+        <!-- <span id="logo"><img src="styles/img/logo.png" alt="Mermaid"></span> -->
+
+
+        <!-- END LOGO PLACEHOLDER -->
+    </div>
+
+    <!-- <projectname class="projectname-container" titlelength=40></projectname> -->
+
+    <div class="dev-header-label" dev-class="dev-header-show">DEVELOPMENT</div>
+    <!-- <recent-projects></recent-projects> -->
+    <div class="referencetext" ng-if="$state.current.data.refText">{{$state.current.data.refText}}</div>
+
+    <!-- collapse menu button -->
+    <div id="hide-menu" class="btn-header pull-right">
+        <span> <a toggle-menu title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
+    </div>
+    <!-- end collapse menu -->
+    
+    <!-- pulled right: nav area -->
+    <div class="pull-right header-menu-items" ng-hide="$state.current.data.hideRightMenuItems">
+
+        <profile-menu ng-if="!$state.current.data.hideRightMenuItems"></profile-menu>
+
+        <div class="top-menu-link pull-right">
+            <span>
+                <a
+                    class=""
+                    href="/#/reference/home"
+                    target="_blank"
+                    aria-haspopup="true"
+                    aria-expanded="true"
+                >
+                    <i class="fa fa-book fa-small-margin"></i>
+                    <span class="hide-small-width">Reference</span>
+                    <i class="fa fa-external-link add-left-margin"></i>
+                </a>
+            </span>
+        </div>
+
+        <!-- multiple lang dropdown : find all flags in the flags page -->
+        <language-selector></language-selector>
+        <!-- end multiple lang -->
+
+        <!-- TODO: Implement once reports view created -->
+        <!-- <div class=" top-menu-link pull-right">
+        <span>
+            <a
+                class=""
+                href="/#/reports"
+                aria-haspopup="true"
+                aria-expanded="true"
+            >
+                <i class="fa fa-bar-chart-o fa-small-margin"></i>
+                <span>Reports</span>
+            </a>
+        </span>
+    </div> -->
+
+    <div class="top-menu-link pull-right">
+        <span>
+            <a
+                class=""
+                href="/#/projects"
+                aria-haspopup="true"
+                aria-expanded="true"
+            >
+                <i class="fa fa-list-alt fa-small-margin"></i>
+                <span class="hide-small-width">Projects</span>
+            </a>
+        </span>
+    </div>
+    <!-- end pulled right: nav area -->
+
+
+</header>

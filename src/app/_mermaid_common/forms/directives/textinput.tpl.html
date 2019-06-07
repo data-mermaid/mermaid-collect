@@ -1,0 +1,40 @@
+<section class="input-widget text-input">
+  <label class="label" ng-if="widgetType !== 'hidden'">
+    {{ widgetLabel }}
+    <span ng-show="widgetRequired === true" class="required" title="Required"> *</span>
+  </label>
+  <label class="input" ng-class="{false: 'state-error', true: ''}[widgetForm[widgetName].$pristine || widgetForm[widgetName].$valid]">
+    <input
+      name="{{ widgetName }}"
+      ng-model="ngModel[widgetName]"
+      type="{{ widgetType }}"
+      ng-model-options="{ allowInvalid: widgetAllowInvalid }"
+      ng-required="widgetRequired"
+      ng-disabled="widgetDisabled"
+      placeholder="{{ widgetPlaceholder }}"
+      ng-maxlength="widgetMaxlength"
+      ng-minlength="widgetMinlength"
+      ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
+      focusinput
+    />
+  </label>
+  <div class="note">{{ widgetHelp }}</div>
+  <div class="note note-error">
+    <span ng-if="widgetType === 'email'" class="error ng-cloak" ng-show="widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.email==true"> {{ widgetLabel }} is not a valid email.</span>
+    <span ng-if="widgetRequired === true" class="error ng-cloak" ng-show="widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.required==true"> {{ widgetLabel }} is required.</span>
+    <span ng-if="widgetType == 'number'" class="error ng-cloak" ng-show="widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.number==true">{{ widgetLabel }} is not a valid number.</span>
+    <span ng-if="widgetMinlength"  class="error ng-cloak" ng-show="widgetForm[widgetName].$error.minlength">Minimum characters is {{ widgetMinlength }}</span>
+    <span ng-if="widgetMaxlength"  class="error ng-cloak" ng-show="widgetForm[widgetName].$error.maxlength">Maximum characters is {{ widgetMaxlength }}</span>
+  </div>
+  <div class="note note-error ng-cloak">
+    <span
+      class="error ng-cloak"
+      ng-repeat="(error, obj) in widgetForm[widgetName].$validations.errors"
+    > {{obj.message}}</span>
+    <span
+      class="warn ng-cloak"
+      ng-repeat="(warning, obj) in widgetForm[widgetName].$validations.warnings"
+    > {{obj.message}}</span>
+    <div ng-transclude="validations"></div>
+  </div>
+</section>

@@ -1,0 +1,100 @@
+/* globals L */
+
+angular.module('mermaid.libs').directive('leafletMap', [
+  function() {
+    'use strict';
+    return {
+      restrict: 'EA',
+      scope: {
+        map: '=?',
+        mapopts: '=?',
+        records: '=?',
+        secondaryRecords: '=?',
+        geoattr: '=?'
+      },
+      link: function(scope, element) {
+        var defaultCenter;
+        var defaultZoom;
+        var style = {
+          color: '#ff0000',
+          fillColor: '#ff0000',
+          opacity: 0.7,
+          radius: 4,
+          stroke: 1
+        };
+
+        var mutedStyle = {
+          color: '#2D2D2D',
+          fillColor: '#2D2D2D',
+          opacity: 0.2,
+          radius: 4,
+          stroke: 1
+        };
+
+        scope.mapopts = scope.mapopts || {};
+        scope.records = scope.records || [];
+        scope.geoattr = scope.geoattr || 'location';
+        scope.maprecords = L.geoJson([], {
+          pointToLayer: function(feature, latlng) {
+            return new L.circleMarker(latlng, style);
+          }
+        });
+
+        defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
+        defaultZoom = scope.mapopts.defaultZoom || 2;
+
+        scope.secondaryMapRecords = L.geoJson([], {
+          pointToLayer: function(feature, latlng) {
+            return new L.circleMarker(latlng, mutedStyle);
+          }
+        });
+
+        element.addClass('mapcanvas');
+        scope.map = scope.map || L.map(element[0], scope.mapopts);
+
+        L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Basemap &copy; OpenStreetMap',
+          maxZoom: 18,
+          id: 'mapbox.streets',
+          subdomains: ['a', 'b', 'c']
+        }).addTo(scope.map);
+
+        scope.map.addLayer(scope.secondaryMapRecords);
+        scope.map.addLayer(scope.maprecords);
+
+        scope.$watch(
+          'records',
+          function() {
+            var center = defaultCenter;
+            scope.maprecords.clearLayers();
+            _.each(scope.records, function(rec) {
+              scope.maprecords.addData(rec[scope.geoattr]);
+            });
+
+            var rec_len = scope.records.length;
+            if (rec_len < 2) {
+              if (rec_len === 1) {
+                center = scope.maprecords.getBounds().getCenter();
+              }
+              scope.map.setView(center, defaultZoom);
+            } else {
+              scope.map.fitBounds(scope.maprecords.getBounds());
+            }
+          },
+          true
+        );
+
+        scope.$watch(
+          'secondaryRecords',
+          function() {
+            scope.secondaryMapRecords.clearLayers();
+            _.each(scope.secondaryRecords, function(rec) {
+              scope.secondaryMapRecords.addData(rec[scope.geoattr]);
+            });
+          },
+          true
+        );
+      }
+    };
+  }
+]);

@@ -1,0 +1,70 @@
+<div>
+  <fieldset offlinehide>
+      <div class="row">
+        <div class="col col-6" style="border-right: solid;">
+          <div><strong>Data is much more powerful when shared.</strong></div>
+          <div>Given the urgent need for global coral reef conservation, MERMAID is committed to working collectively as a community
+          and using the power of data to help make faster, better decisions. Coral reef monitoring data is collected with
+          the intent of advancing coral reef science and improving management. We recognize the large effort to collect data and
+          your sense of ownership. While not required, we hope you choose to make your data available to fuel new discoveries and
+          inform conservation solutions.</div>
+          <br>
+          <div
+            ddlinput
+            widget-form="form"
+            widget-label="Fish Belt"
+            widget-name="data_policy_beltfish"
+            ng-model="project"
+            widget-required="true"
+            widget-disabled="isDisabled"
+            widget-choices="dataPolicies"
+            widget-int-value="true"
+          ></div>
+          <div
+            ddlinput
+            widget-form="form"
+            widget-label="Benthic: PIT, LIT, and Habitat Complexity"
+            widget-name="data_policy_benthics"
+            ng-model="benthicPolicies"
+            widget-required="true"
+            widget-disabled="isDisabled"
+            widget-choices="dataPolicies"
+            widget-int-value="true"
+            widget-change="setBenthicPolicies(benthicPolicies.data_policy_benthics)"
+          ></div>
+          <div
+            ddlinput
+            widget-form="form"
+            widget-label="Bleaching"
+            widget-name="data_policy_bleachingqc"
+            ng-model="project"
+            widget-required="true"
+            widget-disabled="isDisabled"
+            widget-choices="dataPolicies"
+            widget-int-value="true"
+          ></div>
+          <div
+            checkboxinput
+            widget-form="form"
+            widget-name="isTest"
+            ng-model="projectStatuses"
+            widget-disabled="isDisabled"
+            widget-label="This is a test project"
+            widget-change="setTestStatus(projectStatuses.isTest)"
+            widget-description="Data for a test project will be omitted from all public reporting."
+          ></div>
+        </div>
+        <div class="col col-6">
+          <div><strong>{{public_summary_data_policy.name}}</strong></div>
+          <div>{{public_summary_data_policy.description}}</div>
+          <br>
+          <div><strong>{{public_data_policy.name}}</strong></div>
+          <div>{{public_data_policy.description}}</div>
+          <br>
+          <div><strong>{{private_data_policy.name}}</strong></div>
+          <div>{{private_data_policy.description}}</div>
+        </div>
+      </div>
+  </fieldset>
+  <not-available-offline></not-available-offline>
+</div>

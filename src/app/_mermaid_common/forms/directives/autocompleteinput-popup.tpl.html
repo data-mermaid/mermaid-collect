@@ -1,0 +1,16 @@
+<ul class="dropdown-menu" ng-show="isOpen() && !moveInProgress" ng-style="{top: position().top+'px', left: position().left+'px'}" role="listbox" aria-hidden="{{!isOpen()}}">
+  <li class="uib-typeahead-match" ng-repeat="match in matches | limitTo: $parent.widgetLimitTo track by $index" ng-class="{active: isActive($index) }"
+    ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">
+    <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
+  </li>
+  <li ng-show="$parent.widgetNewRecordLabel">
+    <hr style="margin: 0;"/>
+    <a
+      ng-href
+      type="button"
+      class="btn btn-sm btn-default modal-trigger"
+      ng-click="$parent.widgetModalTrigger()"
+      tabindex="-1"
+    >{{$parent.widgetNewRecordLabel}}</a>
+  </li>
+</ul>

@@ -1,0 +1,35 @@
+<form name="form" novalidate>
+  <div>
+    <div class="widget-body no-padding">
+      <div class="smart-form">
+        <fieldset>
+          <div class="clearfix"></div>
+
+          <div textinput
+            class='col-xs-12 col-sm-8'
+            widget-form="form"
+            widget-label="Subject"
+            widget-name="subject"
+            ng-model="contact"
+            widget-required="true"
+            widget-maxlength="255"
+
+          ></div>
+
+          <div class="clearfix"></div>
+          <div
+            textareainput
+            class='col-xs-12 col-sm-8'
+            widget-form="form"
+            widget-label="Message"
+            widget-name="message"
+            ng-model="contact"
+            widget-required="true"
+          ></div>
+
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</form>
+  

@@ -1,0 +1,6 @@
+<div
+  class="note note-error ng-cloak"
+  ng-show="modelCtrl.$invalid"
+>
+  <div ng-repeat="(key, value) in modelCtrl.$error | validators track by $index" class="error" ng-if="value" ng-bind-html="modelCtrl.validator_messages[key]"></div>
+</div>

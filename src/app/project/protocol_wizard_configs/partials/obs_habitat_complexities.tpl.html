@@ -1,0 +1,7 @@
+<div style="padding: 5px 15px;">
+  <ul class="validation-message-list">
+    <li ng-if="validationKeys.indexOf('validate_scores') !== -1">Habitat score doesn't exist.</li>
+    <li ng-if="validationKeys.indexOf('validate_observation_count') !== -1">{{record.validations.results.obs_habitat_complexities.validate_observation_count.message}}</li>
+  </ul>
+</div>
+<div class="alert alert-warning">This issue is related to more than one field and must be addressed in the form.</div>

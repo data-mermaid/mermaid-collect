@@ -1,0 +1,26 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+  <div class="row fixed">
+    <!-- <big-breadcrumbs items="['Sites', 'New Site']" icon="fa fa-edit"
+    class="col-xs-12 col-sm-8 col-md-8 col-lg-5"></big-breadcrumbs> -->
+    <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+  </div>
+  <section widget-grid id="widget-grid-sites">
+    <save-alert form="form"></save-alert>
+    <!-- Edit Site -->
+    <div class="row">
+      <article class="col-sm-12">
+        <div jarvis-widget id="wid-id-site" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
+          <header>
+            <!-- <span class="widget-icon"> <i class="fa fa-edit"></i> </span> -->
+          </header>
+          <div class="widget-body">
+            <div smart-include="app/project/partials/page-inputs/site-input.tpl.html">
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+  </section>
+</div>

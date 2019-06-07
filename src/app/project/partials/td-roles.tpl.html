@@ -1,0 +1,17 @@
+<div class="smart-form">
+  <div
+    offlinehide
+    class="col-sm-4 td-role-width"
+    ddlinput
+    ng-model="record"
+    widget-name="role"
+    widget-form="form"
+    widget-required="true"
+    widget-required-hide="true"
+    widget-choices="control.choices.roles"
+    widget-int-value="true"
+    widget-change="control.saveUser(record)"
+    widget-disabled="record.profile === control.currentUser.id || control.isDisabled"
+  ></div>
+  <div offlineshow>{{record.role | matchchoice: control.choices.roles}} </div>
+</div>
