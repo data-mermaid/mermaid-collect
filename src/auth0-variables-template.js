@@ -1,6 +1,0 @@
-var HOST_URL = 'http://localhost:8888';
-var AUTH0_CLIENT_ID = '<AUTH0_CLIENT_ID>';
-var AUTH0_DOMAIN = '<AUTH0_DOMAIN>';
-var AUTH0_AUDIENCE = '<AUTH0_AUDIENCE>';
-var AUTH0_CALLBACK_URL = HOST_URL + '/#/callback';
-var AUTH0_SILENT_AUTH_REDIRECT = HOST_URL + '/silent.html';

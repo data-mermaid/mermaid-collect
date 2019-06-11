@@ -148,8 +148,8 @@ angular.module('app.auth').service('authService', [
 
       angularAuth0.renewAuth(
         {
-          audience: window.AUTH0_AUDIENCE,
-          redirectUri: window.AUTH0_SILENT_AUTH_REDIRECT,
+          audience: APP_CONFIG.AUTH0_AUDIENCE,
+          redirectUri: APP_CONFIG.AUTH0_SILENT_AUTH_REDIRECT,
           usePostMessage: true
         },
         callback
