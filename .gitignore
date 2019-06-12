@@ -4,7 +4,9 @@ build/
 sw.js
 npm-debug.log
 tasks.txt
-src/build/app_version.js
+src/mermaid-config.js
+src/mermaid-config-dev.js
+src/mermaid-config-prod.js
 src/auth0-variables.js
 .DS_Store
 \.vscode/launch\.json

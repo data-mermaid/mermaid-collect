@@ -23,7 +23,7 @@ module.exports = function(config) {
         pattern: 'node_modules/angular-mocks/angular-mocks.js',
         watch: false
       },
-      { pattern: './src/auth0-variables.js', watch: false },
+      { pattern: './src/mermaid-config.js', watch: false },
       { pattern: './src/build/app_version.js', watch: false },
       {
         pattern:

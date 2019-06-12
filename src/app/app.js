@@ -79,11 +79,11 @@ angular
 
     // Initialization for the angular-auth0 library
     angularAuth0Provider.init({
-      clientID: window.AUTH0_CLIENT_ID,
-      domain: window.AUTH0_DOMAIN,
+      clientID: window.appConfig.AUTH0_CLIENT_ID,
+      domain: window.appConfig.AUTH0_DOMAIN,
       responseType: 'token id_token',
-      audience: window.AUTH0_AUDIENCE,
-      redirectUri: window.AUTH0_CALLBACK_URL
+      audience: window.appConfig.AUTH0_AUDIENCE,
+      redirectUri: window.appConfig.AUTH0_CALLBACK_URL
     });
 
     $urlRouterProvider.otherwise('/projects');

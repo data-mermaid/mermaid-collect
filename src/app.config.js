@@ -356,25 +356,30 @@ if (appConfig.voice_command) {
   };
 }
 
-appConfig.apiRootUrl = 'http://localhost:8080/';
-appConfig.apiUrl = appConfig.apiRootUrl + 'v1/';
-appConfig.loggerUrl = null;
-
-appConfig.localDbName = 'mermaid';
-appConfig.validatorPrefix = 'validator_';
-appConfig.systemEmail = 'sysadmin@datamermaid.org';
-
-appConfig.secure_state = 'fullapp.projects';
-appConfig.errorPage = 'fullapp.error';
-appConfig.verify_email_state = 'fullapp.verifyemail';
-appConfig.releaseVersion = window.MERMAID_VERSION;
-appConfig.defaultCacheExpire = 1; // in minutes
-
 appConfig.errors = [{ code: 400, message: 'Malformed request' }];
-
 appConfig.httpErrorWhitelist = [
   { status: 401, detail: 'Signature has expired.' }
 ];
+appConfig.defaultCacheExpire = 1; // in minutes
+appConfig.validatorPrefix = 'validator_';
+appConfig.secure_state = 'fullapp.projects';
+appConfig.errorPage = 'fullapp.error';
+appConfig.verify_email_state = 'fullapp.verifyemail';
+
+appConfig.apiRootUrl = MERMAID_CONFIG.API_ROOT_URL || 'http://localhost:8080/';
+appConfig.apiUrl = MERMAID_CONFIG.API_URL || appConfig.apiRootUrl + 'v1/';
+appConfig.loggerUrl = MERMAID_CONFIG.LOGGER_URL || null;
+appConfig.systemEmail = MERMAID_CONFIG.SYSTEM_EMAIL || '';
+appConfig.releaseVersion = window.RELEASE_VERSION || '';
+appConfig.localDbName = MERMAID_CONFIG.LOCAL_DB_NAME || 'mermaid';
+
+appConfig.HOST_URL = MERMAID_CONFIG.HOST_URL;
+appConfig.AUTH0_CLIENT_ID = MERMAID_CONFIG.AUTH0_CLIENT_ID;
+appConfig.AUTH0_DOMAIN = MERMAID_CONFIG.AUTH0_DOMAIN;
+appConfig.AUTH0_CALLBACK_URL = MERMAID_CONFIG.AUTH0_CALLBACK_URL;
+appConfig.AUTH0_SILENT_AUTH_REDIRECT =
+  MERMAID_CONFIG.AUTH0_SILENT_AUTH_REDIRECT;
+appConfig.AUTH0_AUDIENCE = MERMAID_CONFIG.AUTH0_AUDIENCE;
 
 window.appConfig = appConfig;
 

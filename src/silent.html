@@ -10,16 +10,16 @@
   <script type="text/javascript" src="https://cdn.auth0.com/js/auth0/8.9/auth0.min.js"></script>
   <script>
     var webAuth = new auth0.WebAuth({
-      domain: AUTH0_DOMAIN,
-      clientID: AUTH0_CLIENT_ID,
+      domain: window.appConfig.AUTH0_DOMAIN,
+      clientID: window.appConfig.AUTH0_CLIENT_ID,
       scope: 'openid',
       responseType: 'token id_token',
-      redirectUri: HOST_URL
+      redirectUri: appCowindow.appConfignfig.HOST_URL
     });
   </script>
   <script>
     webAuth.parseHash(window.location.hash, function (err, response) {
-      parent.postMessage(err || response, HOST_URL);
+      parent.postMessage(err || response, window.appConfig.HOST_URL);
     });
   </script>
 </head>
