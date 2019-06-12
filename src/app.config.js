@@ -370,7 +370,7 @@ appConfig.apiRootUrl = MERMAID_CONFIG.API_ROOT_URL || 'http://localhost:8080/';
 appConfig.apiUrl = MERMAID_CONFIG.API_URL || appConfig.apiRootUrl + 'v1/';
 appConfig.loggerUrl = MERMAID_CONFIG.LOGGER_URL || null;
 appConfig.systemEmail = MERMAID_CONFIG.SYSTEM_EMAIL || '';
-appConfig.releaseVersion = window.RELEASE_VERSION || '';
+appConfig.releaseVersion = window.MERMAID_VERSION || '';
 appConfig.localDbName = MERMAID_CONFIG.LOCAL_DB_NAME || 'mermaid';
 
 appConfig.HOST_URL = MERMAID_CONFIG.HOST_URL;
