@@ -135,8 +135,13 @@ angular
   ) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+    let conn = new ConnectivityFactory($rootScope);
 
-    var conn = new ConnectivityFactory($rootScope);
+    $transitions.onFinish({}, function() {
+      $rootScope.GlobalButtons = [];
+      $rootScope.PageHeaderButtons = [];
+    });
+
     conn.on('autoUpdate', function(evt) {
       if (evt.event === 'online' && authService.isAuthenticated()) {
         system.startAutoDataUpdate();
@@ -144,16 +149,33 @@ angular
         system.stopAutoDataUpdate();
       }
     });
-    connectivity.ping();
 
-    var handleAuthCallback = authService.handleAuthentication();
+    authService.handleAuthentication().then(function() {
+      if (connectivity.isOnline && authService.isAuthenticated()) {
+        system.startAutoDataUpdate();
+      }
+
+      $transitions.onStart({}, function(transition) {
+        let toState = transition.to();
+        let toStateParams = transition.params();
+
+        if (
+          toState.loginRequired === true &&
+          connectivity.isOnline &&
+          !authService.isAuthenticated()
+        ) {
+          localStorageService.set('toState', toState.name);
+          localStorageService.set('toStateParams', toStateParams);
+          authService.login();
+
+          return false;
+        }
+      });
+    });
+
     authService.scheduleRenewal();
     authManager.checkAuthOnRefresh();
-
-    $transitions.onFinish({}, function() {
-      $rootScope.GlobalButtons = [];
-      $rootScope.PageHeaderButtons = [];
-    });
+    connectivity.ping();
 
     $transitions.onSuccess({}, function(transition) {
       var fromState = transition.from();
@@ -176,29 +198,6 @@ angular
       if (top) {
         $uibModalStack.dismiss(top.key);
       }
-    });
-
-    handleAuthCallback.then(function() {
-      if (connectivity.isOnline && authService.isAuthenticated()) {
-        system.startAutoDataUpdate();
-      }
-
-      $transitions.onBefore({}, function(transition) {
-        let toState = transition.to();
-        let toStateParams = transition.params();
-
-        if (
-          toState.loginRequired &&
-          !authService.isAuthenticated() &&
-          connectivity.isOnline === true
-        ) {
-          localStorageService.set('toState', toState.name);
-          localStorageService.set('toStateParams', toStateParams);
-          authService.login();
-          return false;
-        }
-        return true;
-      });
     });
 
     $transitions.onError({}, function(transition) {
