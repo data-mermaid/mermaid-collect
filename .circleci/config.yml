@@ -51,7 +51,7 @@ jobs:
               gulp build
               gulp build-files-exist
               gulp generate-sw
-              ./deploy.sh collect.datamermaid.org
+              ./deploy.sh dev-collect.datamermaid.org
               curl -X DELETE "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/purge_cache" -H "X-Auth-Email: $CF_EMAIL" -H "X-Auth-Key: $CF_KEY" -H "Content-Type: application/json" --data '{"purge_everything": true}'
       - run:
           name: Update version
