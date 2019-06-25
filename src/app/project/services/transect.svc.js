@@ -74,7 +74,7 @@ angular.module('app.project').service('TransectService', [
         Number.isFinite(length) &&
         Number.isFinite(width)
       ) {
-        var biomass =
+        var biomass = 
           (count * (constant_a * Math.pow(size * constant_c, constant_b))) /
           1000;
         var area = (length * width) / 10000; // m2 to hectares

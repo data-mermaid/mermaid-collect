@@ -29,20 +29,13 @@ angular.module('app.auth').service('authService', [
     var tokenRenewalTimeout;
     var tokenRenewLeeway = 300000; // 5 minutes
 
-    function login(next) {
+    function login() {
       if (connectivity.isOnline !== true) {
         console.log("Can't login while offline");
         return $q.resolve();
       }
       var authorizeLogin = $timeout(angularAuth0.authorize, 0);
-      return authorizeLogin.then(function() {
-        // Fetch so user gets cached locally
-        getCurrentUser().then(function() {
-          if (next) {
-            $state.go(next);
-          }
-        });
-      });
+      return authorizeLogin;
     }
 
     function getToken() {
@@ -109,6 +102,10 @@ angular.module('app.auth').service('authService', [
     }
 
     function getCurrentUser() {
+      if (isAuthenticated() !== true) {
+        return $q.reject('Not authenticated');
+      }
+
       var user = localStorageService.get('user') || {};
       user.$session_id = user.$session_id || null;
 
