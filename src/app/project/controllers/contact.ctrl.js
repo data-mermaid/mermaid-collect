@@ -4,6 +4,7 @@ angular.module('app.project').controller('ContactCtrl', [
   '$state',
   'Button',
   'connectivity',
+  'ConnectivityFactory',
   '$http',
   'utils',
   'authService',
@@ -13,6 +14,7 @@ angular.module('app.project').controller('ContactCtrl', [
     $state,
     Button,
     connectivity,
+    ConnectivityFactory,
     $http,
     utils,
     authService
@@ -20,6 +22,8 @@ angular.module('app.project').controller('ContactCtrl', [
     'use strict';
 
     $scope.contact = {};
+    var conn = new ConnectivityFactory($scope);
+
     var sendMessage = function() {
       authService.getCurrentUser().then(function(currentUser) {
         $scope.contact.email = currentUser.email;
@@ -71,7 +75,7 @@ angular.module('app.project').controller('ContactCtrl', [
 
     $rootScope.PageHeaderButtons = [sendMessageButton];
 
-    connectivity.on('profile', function(event) {
+    conn.on('profile', function(event) {
       sendMessageButton.visible = event.event === 'online';
     });
 
