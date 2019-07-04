@@ -243,6 +243,12 @@ angular
             templateUrl: 'app/project/partials/sites.tpl.html',
             controller: 'SitesCtrl'
           }
+        },
+        resolve: {
+          projectProfile: _getMyProjectProfile,
+          projectSitesTable: function($stateParams, offlineservice) {
+            return offlineservice.ProjectSitesTable($stateParams.project_id);
+          }
         }
       })
       .state('app.project.sites.site', {

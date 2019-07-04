@@ -35,7 +35,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   ) {
     'use strict';
 
-    var collectRecordsTable;
     var addTransectGroupButton;
     var project_id = $stateParams.project_id;
 

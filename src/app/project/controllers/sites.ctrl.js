@@ -2,8 +2,6 @@ angular.module('app.project').controller('SitesCtrl', [
   '$scope',
   '$state',
   '$stateParams',
-  'offlineservice',
-  'ProjectService',
   'SiteService',
   'PaginatedOfflineTableWrapper',
   'ModalService',
@@ -11,22 +9,25 @@ angular.module('app.project').controller('SitesCtrl', [
   'ValidateDuplicationService',
   'connectivity',
   'ConnectivityFactory',
+  'projectSitesTable',
+  'projectProfile',
   function(
     $scope,
     $state,
     $stateParams,
-    offlineservice,
-    ProjectService,
     SiteService,
     PaginatedOfflineTableWrapper,
     ModalService,
     ValidateSubmitService,
     ValidateDuplicationService,
     connectivity,
-    ConnectivityFactory
+    ConnectivityFactory,
+    projectSitesTable,
+    projectProfile
   ) {
     'use strict';
 
+    var project_id = $stateParams.project_id;
     var conn = new ConnectivityFactory($scope);
     $scope.isOnline = connectivity.isOnline;
 
@@ -38,17 +39,10 @@ angular.module('app.project').controller('SitesCtrl', [
       contextMenu: ['row_below', 'remove_row']
     };
 
-    var project_id = $stateParams.project_id;
-
-    $scope.isDisabled = true;
-    ProjectService.getMyProjectProfile(project_id).then(function(
-      projectProfile
-    ) {
-      $scope.isDisabled =
-        !projectProfile ||
-        (projectProfile.is_admin !== true &&
-          projectProfile.is_collector !== true);
-    });
+    $scope.isDisabled =
+      !projectProfile ||
+      (projectProfile.is_admin !== true &&
+        projectProfile.is_collector !== true);
 
     $scope.resource = undefined;
     $scope.tableControl = {};
@@ -139,16 +133,14 @@ angular.module('app.project').controller('SitesCtrl', [
       }
     };
 
-    offlineservice.ProjectSitesTable(project_id).then(function(table) {
-      $scope.projectObjectsTable = table;
-      $scope.resource = new PaginatedOfflineTableWrapper(table, {
-        searchFields: [
-          'name',
-          '$$reeftypes.name',
-          '$$reefzones.name',
-          '$$reefexposures.name'
-        ]
-      });
+    $scope.projectObjectsTable = projectSitesTable;
+    $scope.resource = new PaginatedOfflineTableWrapper(projectSitesTable, {
+      searchFields: [
+        'name',
+        '$$reeftypes.name',
+        '$$reefzones.name',
+        '$$reefexposures.name'
+      ]
     });
 
     $scope.mapopts = {
