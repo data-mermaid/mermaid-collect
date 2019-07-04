@@ -163,6 +163,30 @@ angular
         resolve: {
           tags: function(TagService) {
             return TagService.fetchTags();
+          },
+          project: function($stateParams, offlineservice, $q) {
+            const projectId = $stateParams.project_id;
+            return offlineservice
+              .ProjectsTable(projectId)
+              .then(function(table) {
+                if (projectId == null) {
+                  return $q.resolve({});
+                }
+                return table.get(projectId).then(function(record) {
+                  return record;
+                });
+              });
+          },
+          projectProfile: _getMyProjectProfile,
+          dataPolicies: function(offlineservice) {
+            return offlineservice
+              .ChoicesTable()
+              .then(function(table) {
+                return table.filter({ name: 'datapolicies' });
+              })
+              .then(function(result) {
+                return result[0].data;
+              });
           }
         }
       })
@@ -181,6 +205,30 @@ angular
         resolve: {
           tags: function(TagService) {
             return TagService.fetchTags();
+          },
+          project: function($stateParams, offlineservice, $q) {
+            const projectId = $stateParams.project_id;
+            return offlineservice
+              .ProjectsTable(projectId)
+              .then(function(table) {
+                if (projectId == null) {
+                  return $q.resolve({});
+                }
+                return table.get(projectId).then(function(record) {
+                  return record;
+                });
+              });
+          },
+          projectProfile: _getMyProjectProfile,
+          dataPolicies: function(offlineservice) {
+            return offlineservice
+              .ChoicesTable()
+              .then(function(table) {
+                return table.filter({ name: 'datapolicies' });
+              })
+              .then(function(result) {
+                return result[0].data;
+              });
           }
         }
       })
