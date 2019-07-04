@@ -290,7 +290,16 @@ angular
           }
         },
         resolve: {
-          checkId: _checkId()
+          checkId: _checkId(),
+          management: function($stateParams, ManagementService) {
+            const managementId = $stateParams.id;
+            const projectId = $stateParams.project_id;
+            return ManagementService.fetchData(projectId, managementId);
+          },
+          choices: function(ProjectService) {
+            return ProjectService.fetchChoices();
+          },
+          projectProfile: _getMyProjectProfile
         }
       })
       .state('app.project.submittedtransects.fishbelttransectmethod', {
