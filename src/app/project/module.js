@@ -259,7 +259,16 @@ angular
           }
         },
         resolve: {
-          checkId: _checkId()
+          checkId: _checkId(),
+          site: function($stateParams, SiteService) {
+            const siteId = $stateParams.id;
+            const projectId = $stateParams.project_id;
+            return SiteService.fetchData(projectId, siteId);
+          },
+          choices: function(ProjectService) {
+            return ProjectService.fetchChoices();
+          },
+          projectProfile: _getMyProjectProfile
         }
       })
 

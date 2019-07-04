@@ -10,6 +10,9 @@ angular.module('app.project').controller('SiteCtrl', [
   'utils',
   'connectivity',
   'logger',
+  'site',
+  'choices',
+  'projectProfile',
   function(
     APP_CONFIG,
     $rootScope,
@@ -21,31 +24,21 @@ angular.module('app.project').controller('SiteCtrl', [
     Button,
     utils,
     connectivity,
-    logger
+    logger,
+    site,
+    choices,
+    projectProfile
   ) {
     'use strict';
 
-    var siteId = $stateParams.id;
     var projectId = $stateParams.project_id;
-    $scope.isDisabled = true;
-    $scope.choices = {};
+    $scope.site = site;
+    $scope.isDisabled = ProjectService.isFormDisabled(
+      projectProfile,
+      ProjectService.COLLECTOR_ROLE
+    );
+    $scope.choices = choices;
     $scope.isOnline = connectivity.isOnline;
-    ProjectService.getMyProjectProfile(projectId).then(function(
-      projectProfile
-    ) {
-      $scope.isDisabled = ProjectService.isFormDisabled(
-        projectProfile,
-        ProjectService.COLLECTOR_ROLE
-      );
-    });
-
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
-
-    SiteService.fetchData(projectId, siteId).then(function(site) {
-      $scope.site = site;
-    });
 
     $scope.save = function() {
       var isNew = $scope.site.id == null;
