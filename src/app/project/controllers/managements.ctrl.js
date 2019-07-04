@@ -2,38 +2,33 @@ angular.module('app.project').controller('ManagementsCtrl', [
   '$scope',
   '$state',
   '$stateParams',
-  'offlineservice',
-  'ProjectService',
   'ManagementService',
   'PaginatedOfflineTableWrapper',
   'ModalService',
   'ValidateSubmitService',
   'ValidateDuplicationService',
+  'projectManagementsTable',
+  'projectProfile',
   function(
     $scope,
     $state,
     $stateParams,
-    offlineservice,
-    ProjectService,
     ManagementService,
     PaginatedOfflineTableWrapper,
     ModalService,
     ValidateSubmitService,
-    ValidateDuplicationService
+    ValidateDuplicationService,
+    projectManagementsTable,
+    projectProfile
   ) {
     'use strict';
 
     var project_id = $stateParams.project_id;
 
-    $scope.isDisabled = true;
-    ProjectService.getMyProjectProfile(project_id).then(function(
-      projectProfile
-    ) {
-      $scope.isDisabled =
-        !projectProfile ||
-        (projectProfile.is_admin !== true &&
-          projectProfile.is_collector !== true);
-    });
+    $scope.isDisabled =
+      !projectProfile ||
+      (projectProfile.is_admin !== true &&
+        projectProfile.is_collector !== true);
 
     $scope.resource = undefined;
     $scope.tableControl = {};
@@ -153,12 +148,13 @@ angular.module('app.project').controller('ManagementsCtrl', [
       }
     };
 
-    offlineservice.ProjectManagementsTable(project_id).then(function(table) {
-      $scope.projectObjectsTable = table;
-      $scope.resource = new PaginatedOfflineTableWrapper(table, {
+    $scope.projectObjectsTable = projectManagementsTable;
+    $scope.resource = new PaginatedOfflineTableWrapper(
+      projectManagementsTable,
+      {
         searchFields: ['name']
-      });
-    });
+      }
+    );
 
     $scope.$on(ValidateDuplicationService.MR_PAGE, function() {
       $scope.tableControl.refresh(true);

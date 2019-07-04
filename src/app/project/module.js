@@ -289,6 +289,14 @@ angular
             templateUrl: 'app/project/partials/managements.tpl.html',
             controller: 'ManagementsCtrl'
           }
+        },
+        resolve: {
+          projectProfile: _getMyProjectProfile,
+          projectManagementsTable: function($stateParams, offlineservice) {
+            return offlineservice.ProjectManagementsTable(
+              $stateParams.project_id
+            );
+          }
         }
       })
       .state('app.project.managements.management', {
