@@ -637,6 +637,27 @@ angular
             templateUrl: 'app/project/partials/users.tpl.html',
             controller: 'UsersCtrl'
           }
+        },
+        resolve: {
+          roles: function(offlineservice) {
+            return offlineservice.ChoicesTable().then(function(table) {
+              return table
+                .filter({
+                  name: 'roles'
+                })
+                .then(function(choices) {
+                  return choices[0].data;
+                });
+            });
+          },
+          currentUser: function(authService) {
+            return authService.getCurrentUser();
+          },
+          projectProfile: _getMyProjectProfile,
+          projectProfileTable: function($stateParams, offlineservice) {
+            const projectId = $stateParams.project_id;
+            return offlineservice.ProjectProfilesTable(projectId);
+          }
         }
       })
       .state('app.project.submittedtransects', {

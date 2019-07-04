@@ -3,57 +3,43 @@ angular.module('app.project').controller('UsersCtrl', [
   '$stateParams',
   'offlineservice',
   'utils',
-  '$q',
   'Profile',
-  'authService',
   'PaginatedOfflineTableWrapper',
   'ProjectService',
   'ModalService',
+  'projectProfileTable',
+  'roles',
+  'currentUser',
+  'projectProfile',
   function(
     $scope,
     $stateParams,
     offlineservice,
     utils,
-    $q,
     Profile,
-    authService,
     PaginatedOfflineTableWrapper,
     ProjectService,
-    ModalService
+    ModalService,
+    projectProfileTable,
+    roles,
+    currentUser,
+    projectProfile
   ) {
     'use strict';
-    var project_profile_table;
-    var project_id = $stateParams.project_id;
-    var default_role;
+    const project_id = $stateParams.project_id;
+    const defaultRole = _.sortBy(roles, 'id')[1].id;
 
-    $scope.tableControl = {};
+    $scope.tableControl = {
+      choices: {
+        roles: roles
+      },
+      currentUser: currentUser,
+      isDisabled: !projectProfile || projectProfile.is_admin !== true,
+      isAdmin: projectProfile && projectProfile.is_admin === true
+    };
     $scope.data = {};
     $scope.project_profile_ids = [];
-    $scope.tableControl.isDisabled = true;
-
-    ProjectService.getMyProjectProfile(project_id).then(function(
-      projectProfile
-    ) {
-      $scope.tableControl.isDisabled =
-        !projectProfile || projectProfile.is_admin !== true;
-      $scope.tableControl.isAdmin =
-        projectProfile && projectProfile.is_admin === true;
-    });
-
-    $scope.tableControl.choices = {};
-    offlineservice.ChoicesTable().then(function(table) {
-      table
-        .filter({
-          name: 'roles'
-        })
-        .then(function(choices) {
-          $scope.tableControl.choices.roles = choices[0].data;
-          default_role = _.sortBy($scope.tableControl.choices.roles, 'id')[1]
-            .id;
-        });
-    });
-
-    $scope.tableControl.roles = utils.roles;
+    $scope.resource = new PaginatedOfflineTableWrapper(projectProfileTable);
 
     $scope.tableControl.removeUser = function(record) {
       return offlineservice
@@ -83,15 +69,6 @@ angular.module('app.project').controller('UsersCtrl', [
     $scope.tableControl.saveUser = function(record) {
       record.update();
     };
-
-    var userPromise = authService.getCurrentUser();
-    var projectProfilePromise = offlineservice.ProjectProfilesTable(project_id);
-
-    $q.all([userPromise, projectProfilePromise]).then(function(results) {
-      $scope.tableControl.currentUser = results[0];
-      project_profile_table = results[1];
-      $scope.resource = new PaginatedOfflineTableWrapper(project_profile_table);
-    });
 
     $scope.tableConfig = {
       id: 'users',
@@ -134,7 +111,7 @@ angular.module('app.project').controller('UsersCtrl', [
               return;
             }
             var profile = resp.results[0];
-            project_profile_table
+            projectProfileTable
               .filter({ profile: profile.id })
               .then(function(profile_recs) {
                 if (profile_recs.length > 0) {
@@ -148,12 +125,12 @@ angular.module('app.project').controller('UsersCtrl', [
                   return;
                 }
                 var new_project_profile = {
-                  role: default_role,
+                  role: defaultRole,
                   project: project_id,
                   profile: profile.id
                 };
                 model.email = null;
-                project_profile_table
+                projectProfileTable
                   .create(new_project_profile)
                   .then($scope.tableControl.refresh);
               });
@@ -173,7 +150,7 @@ angular.module('app.project').controller('UsersCtrl', [
             return $q.resolve(projectProfile);
           },
           ownerChoices: function() {
-            return project_profile_table.filter({
+            return projectProfileTable.filter({
               id: function(val, record) {
                 return (
                   val !== projectProfile.id &&
