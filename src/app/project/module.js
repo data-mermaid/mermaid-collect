@@ -620,10 +620,21 @@ angular
           }
         },
         resolve: {
-          projectProfile: function($stateParams, ProjectService) {
-            const projectId = $stateParams.project_id;
-            return ProjectService.getMyProjectProfile(projectId);
-          }
+          currentUser: function(authService) {
+            return authService.currentUser;
+          },
+          collectRecordsTable: function($stateParams, offlineservice) {
+            return offlineservice.CollectRecordsTable($stateParams.project_id);
+          },
+          beltTransectWidths: function(ProjectService) {
+            return ProjectService.fetchChoices().then(function(choices) {
+              return choices.belttransectwidths;
+            });
+          },
+          sites: function($stateParams, offlineservice) {
+            return offlineservice.ProjectSitesTable($stateParams.project_id);
+          },
+          projectProfile: _getMyProjectProfile
         }
       })
       .state('app.project.users', {

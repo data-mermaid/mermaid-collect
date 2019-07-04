@@ -1,54 +1,61 @@
 angular.module('app.project').controller('CollectRecordsCtrl', [
   '$state',
   '$stateParams',
-  '$q',
   '$rootScope',
   '$filter',
   '$scope',
   'utils',
   'Button',
-  'authService',
   'offlineservice',
   'PaginatedOfflineTableWrapper',
   'ProjectService',
   'OfflineTableBackup',
   'ValidateSubmitService',
+  'collectRecordsTable',
   'projectProfile',
+  'sites',
+  'beltTransectWidths',
   function(
     $state,
     $stateParams,
-    $q,
     $rootScope,
     $filter,
     $scope,
     utils,
     Button,
-    authService,
     offlineservice,
     PaginatedOfflineTableWrapper,
     ProjectService,
     OfflineTableBackup,
     ValidateSubmitService,
-    projectProfile
+    collectRecordsTable,
+    projectProfile,
+    sites,
+    beltTransectWidths
   ) {
     'use strict';
 
     var collectRecordsTable;
     var addTransectGroupButton;
-    var promises;
     var project_id = $stateParams.project_id;
 
-    $scope.choices = {};
+    $scope.choices = {
+      transect_types: ProjectService.transect_types,
+      belttransectwidths: beltTransectWidths,
+      sites: _.map(sites, function(site) {
+        return { id: site.id, name: site.name };
+      })
+    };
     $scope.tableControl = {};
     $scope.submission_outcome = {};
     $scope.config = null;
     $scope.userRecords = true;
-    $scope.choices.transect_types = ProjectService.transect_types;
     $scope.isDisabled =
       !projectProfile ||
       (projectProfile.is_admin !== true &&
         projectProfile.is_collector !== true);
     $scope.tableControl.isDisabled = $scope.isDisabled;
+    $scope.tableControl.choices = $scope.choices;
 
     var protocolMethods = [
       ProjectService.FISH_BELT_TRANSECT_TYPE,
@@ -93,11 +100,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       return result + 'm';
     };
 
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices.belttransectwidths = choices.belttransectwidths;
-    });
-
-    $scope.tableControl.choices = $scope.choices;
     $scope.tableConfig = {
       id: 'collect_records',
       hideRowStripes: true,
@@ -395,42 +397,25 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       });
     };
 
-    promises = [
-      authService.getCurrentUser(),
-      offlineservice.CollectRecordsTable(project_id)
-    ];
-
-    $q.all(promises).then(function(output) {
-      collectRecordsTable = output[1];
-      $scope.currentUser = output[0];
-      $scope.resource = new PaginatedOfflineTableWrapper(collectRecordsTable, {
-        searchFields: [
-          'data.protocol',
-          '$$sites.name',
-          'data.observers,profile_name'
-        ],
-        sortFields: {
-          transect_number: function(record) {
-            if (record.data.fishbelt_transect) {
-              return Number(record.data.fishbelt_transect.number);
-            } else if (record.data.benthic_transect) {
-              return Number(record.data.benthic_transect.number);
-            }
-            return null;
-          },
-          transect_length: function(record) {
-            return sizeFormat(record.data).toString();
+    $scope.resource = new PaginatedOfflineTableWrapper(collectRecordsTable, {
+      searchFields: [
+        'data.protocol',
+        '$$sites.name',
+        'data.observers,profile_name'
+      ],
+      sortFields: {
+        transect_number: function(record) {
+          if (record.data.fishbelt_transect) {
+            return Number(record.data.fishbelt_transect.number);
+          } else if (record.data.benthic_transect) {
+            return Number(record.data.benthic_transect.number);
           }
+          return null;
+        },
+        transect_length: function(record) {
+          return sizeFormat(record.data).toString();
         }
-      });
-    });
-
-    offlineservice.ProjectSitesTable(project_id).then(function(table) {
-      table.filter().then(function(sites) {
-        $scope.choices.sites = _.map(sites, function(site) {
-          return { id: site.id, name: site.name };
-        });
-      });
+      }
     });
 
     function addTransect(transect_type) {
