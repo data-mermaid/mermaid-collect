@@ -1,18 +1,10 @@
 angular.module('app.reference').controller('FishFamilyCtrl', [
   '$scope',
-  '$stateParams',
-  'FishAttributeService',
-  function($scope, $stateParams, FishAttributeService) {
+  'fishFamily',
+  function($scope, fishFamily) {
     'use strict';
 
-    var fishFamilyId = $stateParams.id;
-    $scope.record = {};
     $scope.isDisabled = true;
-
-    FishAttributeService.getFishFamily(fishFamilyId, true).then(function(
-      record
-    ) {
-      $scope.record = record;
-    });
+    $scope.record = fishFamily;
   }
 ]);

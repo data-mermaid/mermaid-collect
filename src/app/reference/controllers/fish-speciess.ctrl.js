@@ -2,28 +2,22 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
   '$rootScope',
   '$scope',
   '$filter',
-  '$q',
   'PaginatedOfflineTableWrapper',
-  'offlineservice',
+  'fishSpeciesTable',
+  'fishGenera',
   function(
     $rootScope,
     $scope,
     $filter,
-    $q,
     PaginatedOfflineTableWrapper,
-    offlineservice
+    fishSpeciesTable,
+    fishGenera
   ) {
     'use strict';
     $scope.resource = null;
-    $scope.tableControl = {};
-
-    var promiseFishGeneraTable = offlineservice
-      .FishGeneraTable()
-      .then(function(table) {
-        return table.filter().then(function(records) {
-          $scope.tableControl.fishgenera = records;
-        });
-      });
+    $scope.tableControl = {
+      fishgenera: fishGenera
+    };
 
     $scope.tableConfig = {
       id: 'fishspecies',
@@ -67,12 +61,8 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
         }
       ]
     };
-
-    var promise = offlineservice.FishSpeciesTable();
-    $q.all([promise, promiseFishGeneraTable]).then(function(tables) {
-      $scope.resource = new PaginatedOfflineTableWrapper(tables[0], {
-        searchFields: ['$$fishgenera.name', 'name']
-      });
+    $scope.resource = new PaginatedOfflineTableWrapper(fishSpeciesTable, {
+      searchFields: ['$$fishgenera.name', 'name']
     });
 
     $rootScope.PageHeaderButtons = [];

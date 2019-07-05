@@ -3,7 +3,14 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   '$scope',
   'PaginatedOfflineTableWrapper',
   'offlineservice',
-  function($rootScope, $scope, PaginatedOfflineTableWrapper, offlineservice) {
+  'fishFamiliesTable',
+  function(
+    $rootScope,
+    $scope,
+    PaginatedOfflineTableWrapper,
+    offlineservice,
+    fishFamiliesTable
+  ) {
     'use strict';
 
     $scope.resource = null;
@@ -43,11 +50,8 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       ]
     };
 
-    var promise = offlineservice.FishFamiliesTable();
-    promise.then(function(table) {
-      $scope.resource = new PaginatedOfflineTableWrapper(table, {
-        searchFields: ['name']
-      });
+    $scope.resource = new PaginatedOfflineTableWrapper(fishFamiliesTable, {
+      searchFields: ['name']
     });
 
     $rootScope.PageHeaderButtons = [];

@@ -74,7 +74,10 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         }
       },
       resolve: {
-        checkId: _checkId()
+        checkId: _checkId(),
+        fishFamily: function($stateParams, FishAttributeService) {
+          return FishAttributeService.getFishFamily($stateParams.id, true);
+        }
       }
     })
     .state('app.reference.fishfamilies', {
@@ -89,6 +92,11 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         'content@app': {
           templateUrl: 'app/reference/partials/fishfamilies.tpl.html',
           controller: 'FishFamiliesCtrl'
+        }
+      },
+      resolve: {
+        fishFamiliesTable: function(offlineservice) {
+          return offlineservice.FishFamiliesTable();
         }
       }
     })
@@ -110,6 +118,17 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         checkId: _checkId(),
         fishFamilies: function(FishAttributeService) {
           return FishAttributeService.fetchFishFamilies();
+        },
+        fishGenus: function($stateParams, FishAttributeService) {
+          return FishAttributeService.getFishGenus($stateParams.id, true).then(
+            function(record) {
+              return (
+                record || {
+                  status: FishAttributeService.PROPOSED_RECORD
+                }
+              );
+            }
+          );
         }
       }
     })
@@ -125,6 +144,16 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         'content@app': {
           templateUrl: 'app/reference/partials/fishgenera.tpl.html',
           controller: 'FishGeneraCtrl'
+        }
+      },
+      resolve: {
+        fishGeneraTable: function(offlineservice) {
+          return offlineservice.FishGeneraTable();
+        },
+        fishfamilies: function(offlineservice) {
+          return offlineservice.FishFamiliesTable().then(function(table) {
+            return table.filter();
+          });
         }
       }
     })
@@ -146,6 +175,12 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         checkId: _checkId(),
         fishGenera: function(FishAttributeService) {
           return FishAttributeService.fetchFishGenera();
+        },
+        fishSpecies: function($stateParams, FishAttributeService) {
+          return FishAttributeService.getFishSpecies($stateParams.id, true);
+        },
+        choices: function(ProjectService) {
+          return ProjectService.fetchChoices();
         }
       }
     })
@@ -161,6 +196,16 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         'content@app': {
           templateUrl: 'app/reference/partials/fishspeciess.tpl.html',
           controller: 'FishSpeciessCtrl'
+        }
+      },
+      resolve: {
+        fishSpeciesTable: function(offlineservice) {
+          return offlineservice.FishSpeciesTable();
+        },
+        fishGenera: function(offlineservice) {
+          return offlineservice.FishGeneraTable().then(function(table) {
+            return table.filter();
+          });
         }
       }
     })
