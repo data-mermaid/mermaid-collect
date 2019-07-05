@@ -134,7 +134,11 @@ angular
           backgroundLoadChoices: _backgroundLoadChoices,
           tags: function(TagService) {
             return TagService.fetchTags();
-          }
+          },
+          choices: function(ProjectService) {
+            return ProjectService.fetchChoices();
+          },
+          currentUser: _fetchCurrentUser
         }
       })
       .state('fullapp.contact', {
@@ -634,9 +638,7 @@ angular
           }
         },
         resolve: {
-          currentUser: function(authService) {
-            return authService.currentUser;
-          },
+          currentUser: _fetchCurrentUser,
           collectRecordsTable: function($stateParams, offlineservice) {
             return offlineservice.CollectRecordsTable($stateParams.project_id);
           },
@@ -675,9 +677,7 @@ angular
                 });
             });
           },
-          currentUser: function(authService) {
-            return authService.getCurrentUser();
-          },
+          currentUser: _fetchCurrentUser,
           projectProfile: _getMyProjectProfile,
           projectProfileTable: function($stateParams, offlineservice) {
             const projectId = $stateParams.project_id;

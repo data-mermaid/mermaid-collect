@@ -17,6 +17,8 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
   '$stateParams',
   'CopySitesService',
   'CopyManagementsService',
+  'choices',
+  'currentUser',
   'tags',
   function(
     $scope,
@@ -37,6 +39,8 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     $stateParams,
     CopySitesService,
     CopyManagementsService,
+    choices,
+    currentUser,
     tags
   ) {
     'use strict';
@@ -52,6 +56,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     var defaultRole;
     var siteService;
     var managementService;
+    const adminRole = _.filter(choices.roles, { name: 'admin' })[0];
 
     $scope.isCreating = false;
     $scope.currentStep = 1;
@@ -70,6 +75,18 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     $scope.organization = {};
     $scope.tags = _.uniq(tags.results, 'id');
     $scope.project.tags = [];
+    $scope.mapopts = { gestureHandling: true };
+    $scope.project.data_policy_beltfish = $scope.project.data_policy;
+    $scope.project.data_policy_bleachingqc = $scope.project.data_policy;
+    $scope.benthicPolicies.data_policy_benthics = $scope.project.data_policy;
+    $scope.choices.roles = _.sortBy(choices.roles, 'id');
+    $scope.profilesTableControl.choices = {
+      roles: $scope.choices.roles
+    };
+    defaultRole = $scope.choices.roles[1];
+    $scope.currentUser = currentUser;
+    $scope.profilesTableControl.currentUser = currentUser;
+    ProjectService.setupFormDataPolicies($scope, choices.datapolicies);
 
     var addUser = function(model, role) {
       role = role || defaultRole;
@@ -103,36 +120,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
         $scope.profilesTableControl.refresh();
       });
     };
-
-    offlineservice
-      .ChoicesTable()
-      .then(function(table) {
-        return table.filter().then(function(choices) {
-          _.each(choices, function(choice_set) {
-            if (choice_set.name === 'roles') {
-              $scope.choices.roles = _.sortBy(choice_set.data, 'id');
-              defaultRole = $scope.choices.roles[1];
-            } else if (choice_set.name === 'datapolicies') {
-              ProjectService.setupFormDataPolicies($scope, choice_set.data);
-            }
-          });
-          $scope.profilesTableControl.choices = {
-            roles: $scope.choices.roles
-          };
-        });
-      })
-      .then(function() {
-        authService.getCurrentUser().then(function(currentUser) {
-          $scope.currentUser = currentUser;
-          $scope.profilesTableControl.currentUser = currentUser;
-          $scope.project.data_policy_beltfish = $scope.project.data_policy;
-          $scope.project.data_policy_bleachingqc = $scope.project.data_policy;
-          $scope.benthicPolicies.data_policy_benthics =
-            $scope.project.data_policy;
-          var adminRole = _.filter($scope.choices.roles, { name: 'admin' })[0];
-          addUser(currentUser, adminRole);
-        });
-      });
+    addUser(currentUser, adminRole);
 
     $scope.profilesTableConfig = {
       id: 'users',
@@ -193,8 +181,6 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
         $scope.invalidateMap(attempts);
       }, 100);
     };
-
-    $scope.mapopts = { gestureHandling: true };
 
     $scope.setBenthicPolicies = function(policy) {
       $scope.project.data_policy_benthiclit = policy;
