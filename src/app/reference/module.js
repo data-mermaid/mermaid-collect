@@ -182,6 +182,12 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         checkId: _checkId(),
         parents: function(BenthicAttributeService) {
           return BenthicAttributeService.fetchBenthicAttributes();
+        },
+        benthicAttribute: function($stateParams, BenthicAttributeService) {
+          return BenthicAttributeService.getBenthicAttribute($stateParams.id);
+        },
+        choices: function(ProjectService) {
+          return ProjectService.fetchChoices();
         }
       }
     })
@@ -196,6 +202,11 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         'content@app': {
           templateUrl: 'app/reference/partials/benthicattributes.tpl.html',
           controller: 'BenthicAttributesCtrl'
+        }
+      },
+      resolve: {
+        benthicAttributesTable: function(offlineservice) {
+          return offlineservice.BenthicAttributesTable();
         }
       }
     });

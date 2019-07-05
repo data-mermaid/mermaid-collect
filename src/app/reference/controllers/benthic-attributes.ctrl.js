@@ -4,18 +4,18 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
   '$state',
   'PaginatedOfflineTableWrapper',
   'Button',
-  'offlineservice',
   'utils',
   '$filter',
+  'benthicAttributesTable',
   function(
     $scope,
     $rootScope,
     $state,
     PaginatedOfflineTableWrapper,
     Button,
-    offlineservice,
     utils,
-    $filter
+    $filter,
+    benthicAttributesTable
   ) {
     'use strict';
 
@@ -67,22 +67,19 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       ]
     };
 
-    var promise = offlineservice.BenthicAttributesTable();
-    promise.then(function(table) {
-      $scope.resource = new PaginatedOfflineTableWrapper(table, {
-        searchFields: ['name', '$$benthicattributes.name']
-      });
-      table.filter().then(function(records) {
-        var joinSchema = {
-          benthicattributes: {
-            foreignKey: 'parent',
-            relatedRecords: records,
-            relatedKey: 'id',
-            relatedColumns: ['name']
-          }
-        };
-        table.setJoinDefn(joinSchema);
-      });
+    $scope.resource = new PaginatedOfflineTableWrapper(benthicAttributesTable, {
+      searchFields: ['name', '$$benthicattributes.name']
+    });
+    benthicAttributesTable.filter().then(function(records) {
+      var joinSchema = {
+        benthicattributes: {
+          foreignKey: 'parent',
+          relatedRecords: records,
+          relatedKey: 'id',
+          relatedColumns: ['name']
+        }
+      };
+      benthicAttributesTable.setJoinDefn(joinSchema);
     });
 
     var add = function() {
