@@ -61,6 +61,12 @@ angular
       return $q.resolve(true);
     };
 
+    var _fetchDataPolicyChoices = function($q, ProjectService) {
+      return ProjectService.fetchChoices().then(function(choices) {
+        return choices.datapolicies;
+      });
+    };
+
     var _getMyProjectProfile = function($stateParams, ProjectService) {
       return ProjectService.getMyProjectProfile($stateParams.project_id);
     };
@@ -114,6 +120,7 @@ angular
         },
         resolve: {
           backgroundLoadChoices: _backgroundLoadChoices,
+          dataPolicies: _fetchDataPolicyChoices,
           currentUser: _fetchCurrentUser
         }
       })
