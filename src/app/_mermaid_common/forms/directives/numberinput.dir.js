@@ -87,7 +87,7 @@ angular.module('mermaid.forms').directive('numberinput', [
 
         // Attempt to cast model val as number for view and validators
         modelCtrl.$formatters.push(function(modelValue) {
-          if (scope.ngModel != null) {
+          if (scope.ngModel != null && modelValue[attrs.widgetName] != null) {
             var castedVal = Number(modelValue[attrs.widgetName]);
             scope.ngModel[attrs.widgetName] = castedVal;
             return castedVal;
