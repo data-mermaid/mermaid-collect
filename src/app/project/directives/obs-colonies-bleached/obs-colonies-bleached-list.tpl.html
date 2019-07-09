@@ -49,31 +49,31 @@
 					{{::obs.growth_form | matchchoice:choices.growthforms}}
 				</td>
 				<td class="readonly-cell">
-					<span>{{::obs.count_normal | null_value}} </span>
+					<span>{{obs.count_normal | null_value}} </span>
 					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_normal)"></obs-validation-tooltip>
 				</td>
 				<td class="readonly-cell">
-					<span>{{::obs.count_pale | null_value}} </span>
+					<span>{{obs.count_pale | null_value}} </span>
 					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_pale)"></obs-validation-tooltip>
 				</td>
 				<td class="readonly-cell">
-					<span>{{::obs.count_20 | null_value}} </span>
+					<span>{{obs.count_20 | null_value}} </span>
 					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_20)"></obs-validation-tooltip>
 				</td>
 				<td class="readonly-cell">
-					<span>{{::obs.count_50 | null_value}} </span>
+					<span>{{obs.count_50 | null_value}} </span>
 					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_50)"></obs-validation-tooltip>
 				</td>
 				<td class="readonly-cell">
-					<span>{{::obs.count_80 | null_value}} </span>
+					<span>{{obs.count_80 | null_value}} </span>
 					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_80)"></obs-validation-tooltip>
 				</td>
 				<td class="readonly-cell">
-					<span>{{::obs.count_100 | null_value}} </span>
+					<span>{{obs.count_100 | null_value}} </span>
 					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_100)"></obs-validation-tooltip>
 				</td>
 				<td ng-if-end class="readonly-cell">
-					<span>{{::obs.count_dead | null_value}} </span>
+					<span>{{obs.count_dead | null_value}} </span>
 					<obs-validation-tooltip validations-fx="validateCountInput(obs.count_dead)"></obs-validation-tooltip>
 				</td>
 				
