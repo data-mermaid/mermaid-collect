@@ -2,6 +2,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
   '$rootScope',
   '$scope',
   '$q',
+  '$timeout',
   '$state',
   'offlineservice',
   'PaginatedOfflineTableWrapper',
@@ -16,6 +17,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     $rootScope,
     $scope,
     $q,
+    $timeout,
     $state,
     offlineservice,
     PaginatedOfflineTableWrapper,
@@ -31,6 +33,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     $scope.tableControl = {};
 
     var user;
+    var switchTableResourceTimer;
     var conn = new ConnectivityFactory($scope);
     var dataSharingPolicies = dataPolicies
       ? _.reduce(
@@ -44,24 +47,30 @@ angular.module('app.project').controller('ProjectsCtrl', [
       : {};
 
     var setTableResource = function() {
-      var promise;
-      if (connectivity.isOnline) {
-        $scope.resource = Project;
-        promise = $q.resolve();
-      } else {
-        promise = offlineservice
-          .ProjectsTable(null, true)
-          .then(function(table) {
-            $scope.resource = new PaginatedOfflineTableWrapper(table, {
-              searchFields: ['name', 'countries']
-            });
-          });
+      if (switchTableResourceTimer) {
+        $timeout.cancel(switchTableResourceTimer);
+        switchTableResourceTimer = null;
       }
-      promise.then(function() {
-        if ($scope.tableControl && $scope.tableControl.refresh) {
-          $scope.tableControl.refresh();
+      switchTableResourceTimer = $timeout(function() {
+        var promise;
+        if (connectivity.isOnline) {
+          $scope.resource = Project;
+          promise = $q.resolve();
+        } else {
+          promise = offlineservice
+            .ProjectsTable(null, true)
+            .then(function(table) {
+              $scope.resource = new PaginatedOfflineTableWrapper(table, {
+                searchFields: ['name', 'countries']
+              });
+            });
         }
-      });
+        promise.then(function() {
+          if ($scope.tableControl && $scope.tableControl.refresh) {
+            $scope.tableControl.refresh();
+          }
+        });
+      }, 200);
     };
 
     var dataSharingFormatter = function(record) {

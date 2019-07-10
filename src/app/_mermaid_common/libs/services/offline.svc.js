@@ -45,6 +45,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   ) {
     'use strict';
 
+    var projectTableRefreshPromise;
     var tables = {};
     var projectRelatedTableBaseNames = [
       'projectsites',
@@ -406,7 +407,11 @@ angular.module('mermaid.libs').service('offlineservice', [
           return $q.resolve(table);
         }
 
-        return table
+        if (projectTableRefreshPromise) {
+          return projectTableRefreshPromise;
+        }
+
+        projectTableRefreshPromise = table
           .get(projectId)
           .then(function(record) {
             if (record === null) {
@@ -419,7 +424,12 @@ angular.module('mermaid.libs').service('offlineservice', [
           .then(function() {
             OfflineTableSync.setLastAccessed(tableName + '-' + projectId);
             return table;
+          })
+          .finally(function() {
+            projectTableRefreshPromise = null;
           });
+
+        return projectTableRefreshPromise;
       };
 
       return getOrCreateOfflineTable(
