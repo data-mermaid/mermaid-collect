@@ -45,6 +45,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   ) {
     'use strict';
 
+    var deleteProjectPromises = {};
     var tables = {};
     var projectRelatedTableBaseNames = [
       'projectsites',
@@ -116,12 +117,18 @@ angular.module('mermaid.libs').service('offlineservice', [
     };
 
     var deleteProjectDatabases = function(projectId) {
-      return fetchProjectTablesForRemoval(projectId).then(function(tables) {
-        var deletePromises = _.map(tables, function(table) {
-          var name = table.name;
-          if (name === APP_CONFIG.localDbName + '-projects') {
-            return table.deleteRecords([projectId], true);
-          } else {
+      if (deleteProjectPromises[projectId] != null) {
+        return deleteProjectPromises[projectId];
+      }
+
+      deleteProjectPromises[projectId] = fetchProjectTablesForRemoval(projectId)
+        .then(function(tables) {
+          var deletePromises = _.map(tables, function(table) {
+            var name = table.name;
+            if (name === APP_CONFIG.localDbName + '-projects') {
+              return table.deleteRecords([projectId], true);
+            }
+
             if (table.closeDbGroup) {
               table.closeDbGroup();
             } else {
@@ -130,11 +137,14 @@ angular.module('mermaid.libs').service('offlineservice', [
             return Dexie.delete(name).then(function() {
               return OfflineTableSync.removeLastAccessed(name);
             });
-          }
+          });
+          return $q.all(deletePromises);
+        })
+        .finally(function() {
+          delete deleteProjectPromises[projectId];
         });
 
-        return $q.all(deletePromises);
-      });
+      return deleteProjectPromises[projectId];
     };
 
     var deleteDatabases = function() {
@@ -366,13 +376,30 @@ angular.module('mermaid.libs').service('offlineservice', [
       if (resourceUrlName) {
         remote_url = buildProjectRelatedRemoteUrl(resourceUrlName, project_id);
       }
+
+      const refresh = function(table, options) {
+        var promise;
+        if (_.isFunction(options.refresh)) {
+          promise = options.refresh(table, options);
+        } else {
+          promise = paginatedRefresh(table, options);
+        }
+        return promise.catch(function(err) {
+          if (err.status === 403) {
+            deleteProjectDatabases(project_id);
+            return table;
+          }
+          return err;
+        });
+      };
+
       return getOrCreateOfflineTable(
         APP_CONFIG.localDbName,
         table_name,
         remote_url,
         resource,
         options,
-        _.isFunction(options.refresh) ? options.refresh : paginatedRefresh,
+        refresh,
         skipRefresh
       );
     };
