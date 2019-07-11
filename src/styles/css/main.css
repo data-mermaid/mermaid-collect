@@ -1224,31 +1224,9 @@ ul li.transect-buttons[disabled] {
   pointer-events: none;
 }
 
-/* autocomplete dropdown , dropup style */
-/* .autocomplete-typeahead .autocomplete-popup-wrapper {
-  position: absolute;
-  z-index: 1000;
-  display: block;
-  background-color:white;
-  border: #ccc solid 0.5px;
+.dropdown-menu {
+  z-index: 10000 !important;
 }
-*/
-/* .autocomplete-typeahead .autocomplete-popup-wrapper > .dropdown-menu {
-  position: static;
-  display: block;
-}
-
-.dropup-enabled {
-  top: auto;
-  bottom: 100%;
-  left: 0;
-}
-
-.dropdown-enabled {
-  top: 32px;
-  left: 0;
-} */
-
 
 .th-borders-l {
   border-left: 1px solid #ddd;
