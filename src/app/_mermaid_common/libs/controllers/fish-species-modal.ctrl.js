@@ -19,5 +19,16 @@ angular.module('mermaid.libs').controller('FishSpeciesModalCtrl', [
     FishAttributeService.fetchFishGenera().then(function(records) {
       $scope.fishGenusChoices = records;
     });
+
+    $scope.$watch(
+      'record',
+      function() {
+        $ctrl.proposeNewAttributeBtn.enabled =
+          $scope.record &&
+          $scope.record.name != null &&
+          $scope.record.genus != null;
+      },
+      true
+    );
   }
 ]);

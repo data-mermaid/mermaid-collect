@@ -732,6 +732,28 @@ angular.module('mermaid.libs').service('offlineservice', [
     };
 
     var FishSpeciesTable = function(skipRefresh) {
+      const refreshFishSpecies = function(table, options) {
+        return table
+          .filter({
+            status: 10, // PROPOSED_RECORD
+            $$synced: false
+          })
+          .then(function(records) {
+            return _.map(records, function(record) {
+              if (!record.name || !record.genus) {
+                return record.delete(true);
+              }
+              return $q.resolve();
+            });
+          })
+          .then(function(deletePromises) {
+            return $q.all(deletePromises);
+          })
+          .then(function() {
+            return paginatedRefresh(table, options);
+          });
+      };
+
       return getOrCreateOfflineTable(
         APP_CONFIG.localDbName,
         'fishspecies',
@@ -744,7 +766,7 @@ angular.module('mermaid.libs').service('offlineservice', [
           limit: 3000,
           isPublic: true
         },
-        paginatedRefresh,
+        refreshFishSpecies,
         skipRefresh
       );
     };
