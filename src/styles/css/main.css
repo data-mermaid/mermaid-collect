@@ -1283,6 +1283,10 @@ ul li.transect-buttons[disabled] {
   right: 7px;
 }
 
+.obs-edit-del-padding {
+  padding-top: 20px !important;
+}
+
 .validation-popup {
   font-size: 0.9em;
   margin: 10px;
