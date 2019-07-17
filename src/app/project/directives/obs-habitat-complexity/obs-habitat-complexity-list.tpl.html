@@ -36,7 +36,15 @@
           READ SECTION
         -->
         <td class="readonly-cell" ng-if="editableObservationIndex !== $index">
-          {{obs.score | matchchoice:choices.habitatcomplexityscores}}
+          <span>{{obs.score | matchchoice:choices.habitatcomplexityscores | null_value}}</span><obs-validation-tooltip
+          validations="[
+            {
+              'isValid': validator.requiresvalue(obs.score) === true,
+              'message': 'Required'
+            }
+          ]"
+        >
+      </obs-validation-tooltip>
         </td>
 
         
@@ -58,6 +66,11 @@
             widget-required-hide="true"
             ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
+          <obs-attribute-validation
+            widget-name="'score'"
+            ng-model="obs.score"
+            requiresval
+          ></obs-attribute-validation>
         </td>
         <td
           ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
