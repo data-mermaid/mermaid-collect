@@ -10,7 +10,12 @@
       </tr>
     </thead>
     <tbody ng-if="obsBenthicPits.length > 0">
-      <tr ng-repeat="obs in obsBenthicPits track by obs.$$uid">
+      <tr
+        ng-repeat="obs in obsBenthicPits track by $index"
+        ng-click="startEditing($event, $index)"
+				class="cursor-pointer"
+				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
+      >
         <td class="observation__row-number">
           <div style="opacity: 0.75;"><small>{{::($index + 1)}}</small></div>
         </td>
@@ -18,7 +23,32 @@
           <input type="hidden" ng-model="obs">
           <div>{{obs.interval | null_value}}m</div>
         </td>
-        <td>
+
+        <!--
+          READ SECTION
+        -->
+
+        <td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
+          <span class="text-left">{{::obs.attribute | matchchoice:benthicAttributeChoices}} </span><obs-validation-tooltip
+              validations="[
+                {
+                  'isValid': validator.requiresvalue(obs.attribute) === true,
+                  'message': 'Required'
+                }
+              ]"
+            >
+          </obs-validation-tooltip>
+        </td>
+
+        <td ng-if-end class="readonly-cell">
+         {{obs.growth_form | matchchoice:choices.growthforms}}
+        </td>
+
+        <!--
+          WRITE SECTION
+        -->
+
+        <td ng-if-start="editableObservationIndex === $index">
           <autocompleteinput            
             widget-disabled="isDisabled"
             widget-form="form"
@@ -47,7 +77,7 @@
             requiresval
           ></obs-attribute-validation>
         </td>
-        <td>
+        <td ng-if-end>
           <div
             ddlinput
             widget-disabled="isDisabled"
@@ -56,10 +86,12 @@
             ng-model="obs"
             widget-required="false"
             widget-choices="choices.growthforms"
-            ng-keydown="addRow($event, obs)"
+            ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
         </td>
-        <td style="padding-top: 20px;">
+        <td
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
           <btn
             icon="fa-times"
             classes="btn-xs btn-danger"

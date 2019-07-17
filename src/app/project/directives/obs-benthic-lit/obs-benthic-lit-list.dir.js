@@ -117,8 +117,8 @@ angular.module('app.project').directive('obsBenthicLitList', [
 
           scope.obsBenthicLits = scope.obsBenthicLits || [];
           const nextIndex = getRowIndex($index) + 1;
-          var nextCol = 'attr';
-          var newRecord = {}; // simple add row
+          let nextCol = 'attr';
+          let newRecord = {}; // simple add row
 
           if (!$event || $event.keyCode === 13 || $event.keyCode === 9) {
             if ($event && $event.keyCode === 9) {
@@ -145,7 +145,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
           }
 
           scope.obsBenthicLits = scope.obsBenthicLits || [];
-          var idx = scope.obsBenthicLits.indexOf(observation);
+          const idx = scope.obsBenthicLits.indexOf(observation);
           if (idx !== -1) {
             scope.obsBenthicLits.splice(idx, 1);
           }
@@ -161,11 +161,6 @@ angular.module('app.project').directive('obsBenthicLitList', [
             scope.editableObservationIndex = null;
             return;
           }
-
-          console.log(
-            'scope.editableObservationIndex',
-            scope.editableObservationIndex
-          );
 
           if (
             idx === scope.editableObservationIndex &&
@@ -189,7 +184,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
           scope.editableObservationIndex = null;
         };
 
-        var _updateBenthicPercentages = function() {
+        const _updateBenthicPercentages = function() {
           $timeout.cancel(watchTimeoutPromise);
           loadBenthicAttributesLookup();
           watchTimeoutPromise = $timeout(function() {
@@ -207,7 +202,6 @@ angular.module('app.project').directive('obsBenthicLitList', [
         scope.$watch(
           'obsBenthicLits',
           function() {
-            utils.assignUniqueId(scope.obsBenthicLits);
             _updateBenthicPercentages();
           },
           true
