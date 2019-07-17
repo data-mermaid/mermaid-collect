@@ -16,7 +16,6 @@ angular.module('app.project').directive('obsBenthicLitList', [
     ModalService
   ) {
     'use strict';
-    9;
     return {
       restrict: 'EA',
       require: '^form',
