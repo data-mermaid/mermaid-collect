@@ -26,7 +26,7 @@
 			<tr
 				ng-repeat="obs in obsColoniesBleached track by $index" ng-click="startEditing($event, $index)"
 				class="cursor-pointer"
-				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex === $index]"
+				ng-class="{'editable-row': editableObservationIndex === $index,  'warning': rowErrors[$index] === true}"
 			>
 
 				<!--
