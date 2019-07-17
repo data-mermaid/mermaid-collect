@@ -113,7 +113,6 @@
             widget-new-record-modal-config="modalConfig"
             widget-modal-trigger="modalTrigger(obs)"
             drop-up-enabled="true"
-            ng-keydown="navInputs($event, obs, false, $index)"
           >
             <appendaddon>
               <a
@@ -222,7 +221,9 @@
             transect-width="getWidthVal(transectWidth)"
           ></biomass>
         </td>
-        <td style="padding-top: 20px;" >
+        <td
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
           <btn
             icon="fa-times"
             classes="btn-xs btn-danger"
