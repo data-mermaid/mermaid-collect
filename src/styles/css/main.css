@@ -992,12 +992,10 @@ btn > button {
 }
 
 .observation__row-number div {
-  margin-top: 14px;
   opacity: 0.75;
 }
 
 .observation__row-interval div {
-  margin: 14px 0 0 14px;
   color: #AEAEAE;
   letter-spacing: 1.5px;
 }

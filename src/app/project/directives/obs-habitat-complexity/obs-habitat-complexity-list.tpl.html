@@ -9,18 +9,42 @@
       </tr>
     </thead>
     <tbody ng-if="obsHabitatComplexitys.length > 0">
-      <tr ng-repeat="obs in obsHabitatComplexitys track by obs.$$uid">
-        <td class="observation__row-number">
-          <div><small>{{::($index + 1)}}</small></div>
+      <tr
+        ng-repeat="obs in obsHabitatComplexitys track by $index"
+        ng-click="startEditing($event, $index)"
+				class="cursor-pointer"
+				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
+      >
+        <td
+          class="observation__row-number readonly-cell"
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
+          <div><small>{{($index + 1)}}</small></div>
         </td>
-        <td class="observation__row-interval">
+        <td
+          class="readonly-cell"
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
           <input
             type="hidden"
             ng-model="obs"
           >
           <div>{{obs.interval | null_value}}m</div>
         </td>
-        <td>
+
+        <!--
+          READ SECTION
+        -->
+        <td class="readonly-cell" ng-if="editableObservationIndex !== $index">
+          {{obs.score | matchchoice:choices.habitatcomplexityscores}}
+        </td>
+
+        
+        <!--
+          WRITE SECTION
+        -->
+
+        <td ng-if="editableObservationIndex === $index">
           <div
             class="complexity-score"
             ddlinput
@@ -32,10 +56,12 @@
             widget-choices="choices.habitatcomplexityscores"
             widget-required="true"
             widget-required-hide="true"
-            ng-keydown="addRow($event, obs)"
+            ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
         </td>
-        <td style="padding-top: 20px;">
+        <td
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
           <btn
             icon="fa-times"
             classes="btn-xs btn-danger"
@@ -48,7 +74,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="3">
+        <td colspan="4">
           <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
         </td>
