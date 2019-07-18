@@ -9,14 +9,66 @@
         <th></th>
       </tr>
     </thead>
-    <tbody ng-if="obsBenthicLits.length > 0"></tbody>
-      <tr ng-repeat="obs in obsBenthicLits track by obs.$$uid">
-        <td style="padding-top: 20px; width: 0.5em;">
-          <div style="opacity: 0.75;"><small>{{::($index + 1)}}</small></div>
+    <tbody>
+      <tr
+        ng-repeat="obs in obsBenthicLits track by $index"
+        ng-click="startEditing($event, $index)"
+				class="cursor-pointer"
+				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
+      >
+
+        <!--
+          READ SECTION
+        -->
+
+        <td class="readonly-cell">
+          <div>
+            <small>{{::$index + 1}}</small>
+          </div>
         </td>
-        <td>
+
+        <td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
+          <span class="text-left">{{::obs.attribute | matchchoice:benthicAttributeChoices}} </span><obs-validation-tooltip
+              validations="[
+                {
+                  'isValid': validator.requiresvalue(obs.attribute) === true,
+                  'message': 'Required'
+                }
+              ]"
+            >
+          </obs-validation-tooltip>
+        </td>
+
+        <td class="readonly-cell">
+          {{obs.growth_form | matchchoice:choices.growthforms}}
+        </td>
+
+        <td ng-if-end class="readonly-cell">
+          <span>{{obs.length | null_value}}</span><obs-validation-tooltip
+            validations="[
+              {
+                'isValid': validator.requiresvalue(obs.length) === true,
+                'message': 'Required'
+              },
+              {
+                'isValid': validator.integervalue(obs.length) === true,
+                'message': 'Value must be a whole number.'
+              },
+              {
+                'isValid': validator.minvalue(obs.length, 0) === true,
+                'message': 'Value must be greater than 0'
+              }
+            ]"
+        >
+        </td>
+        
+        <!--
+          WRITE SECTION
+        -->
+
+        <td ng-if-start="editableObservationIndex === $index">
+
           <autocompleteinput
-            
             widget-disabled="isDisabled"
             widget-form="form"
             widget-name="attribute"
@@ -54,9 +106,10 @@
             ng-model="obs"
             widget-required="false"
             widget-choices="choices.growthforms"
+            ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
         </td>
-        <td>
+        <td ng-if-end>
           <div
             numberinput
             widget-disabled="isDisabled"
@@ -67,15 +120,19 @@
             widget-required="true"
             widget-required-hide="true"
             widget-append="cm"
-            ng-keydown="addRow($event, obs)"
+            widget-validators="minvalue='0'"
+            ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
           <obs-attribute-validation
             widget-name="'length'"
             ng-model="obs.length"
             requiresval
+            minvalue="0"
           ></obs-attribute-validation>
         </td>
-        <td style="padding-top: 20px;">
+        <td
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
           <btn
             icon="fa-times"
             classes="btn-xs btn-danger"
@@ -88,23 +145,25 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="2">
+        <td>
           <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
         </td>
-        <td> </td>
+        <td>&nbsp;</td>
         <td>
           <span
             ng-show="observation_calcs.total"
-          >Total cm<span class="pull-right">{{observation_calcs.total}}</span>
-          </span>
+          >Total cm</span>
         </td>
+        <td>
+          <span ng-show="observation_calcs.total">{{observation_calcs.total}}</td></span>
         <td>&nbsp;</td>
       </tr>
       <tr ng-repeat="cat_percentage in observation_calcs.category_percentages" ng-show="observation_calcs.total">
         <td>&nbsp;</td>
         <td> </td>
-        <td>% {{cat_percentage.id}}<span class="pull-right">{{cat_percentage.val | number: 1}}</span></td>
+        <td>% {{cat_percentage.id}}</td>
+        <td>{{cat_percentage.val | number: 1}}</td>
         <td>&nbsp;</td>
       </tr>
     </tfoot>
