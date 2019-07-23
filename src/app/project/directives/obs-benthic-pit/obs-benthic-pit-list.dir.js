@@ -31,10 +31,9 @@ angular.module('app.project').directive('obsBenthicPitList', [
       link: function(scope, element, attrs, formCtrl) {
         const $table = $(element).find('table');
         let modal;
-        let watchTimeoutPromise;
 
-        scope.observation_calcs = {};
         scope.categoryLookup = {};
+        scope.benthicAttributesLookup = {};
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
         scope.editableObservationIndex = null;
@@ -81,7 +80,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
             scope.benthicAttributeChoices.push(record);
             loadBenthicAttributesLookup();
             observation.attribute = record.id;
-            _updateBenthicPercentages();
             utils.showAlert(
               'Proposal submitted',
               'Your proposal will be reviewed by the MERMAID team.',
@@ -202,16 +200,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
           scope.editableObservationIndex = null;
         };
 
-        const _updateBenthicPercentages = function() {
-          $timeout.cancel(watchTimeoutPromise);
-          watchTimeoutPromise = $timeout(function() {
-            scope.observation_calcs = TransectService.calcBenthicPercentages(
-              scope.obsBenthicPits,
-              scope.benthicAttributesLookup
-            );
-          }, 300);
-        };
-
         scope.$watch(
           'obsBenthicPits',
           function(newVal, oldVal) {
@@ -223,16 +211,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
               scope.obsBenthicPits,
               scope.intervalSize
             );
-
-            _updateBenthicPercentages();
-          },
-          true
-        );
-
-        scope.$watch(
-          'categoryLookup',
-          function() {
-            _updateBenthicPercentages();
           },
           true
         );
