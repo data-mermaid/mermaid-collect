@@ -210,8 +210,10 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
               scope.validations,
               'validate_duplicate_genus_growth'
             );
+
             _.each(scope.obsColoniesBleached, function(obs, idx) {
               scope.rowErrors[idx] =
+                duplicateGenusGrowthValidation &&
                 duplicateGenusGrowthValidation.status === 'error' &&
                 isDuplicate(obs, duplicateGenusGrowthValidation.data);
             });
