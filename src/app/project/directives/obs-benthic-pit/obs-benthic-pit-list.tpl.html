@@ -1,12 +1,12 @@
 <div class="smart-form">
-  <table class="table" style="border-collapse: separate;">
+  <table class="table table-bordered obs-table">
     <thead>
       <tr>
-        <th></th>
-        <th>Interval<span class="required"> *</span></th>
-        <th>Benthic attribute<span class="required"> *</span></th>
-        <th>Growth form</th>
-        <th></th>
+        <th class="text-center"></th>
+        <th class="text-center">Interval<span class="required"> *</span></th>
+        <th class="text-center">Benthic attribute<span class="required"> *</span></th>
+        <th class="text-center">Growth form</th>
+        <th class="text-center"></th>
       </tr>
     </thead>
     <tbody ng-if="obsBenthicPits.length > 0">
@@ -104,13 +104,13 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="4">
+        <td colspan="5" class="text-left">
           <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled === true" class="disabled"><i class="fa fa-plus"></i> Add row</span>
         </td>
       </tr>
       <tr ng-repeat="cat_percentage in observation_calcs.category_percentages track by $index" ng-if="observation_calcs.total">
-        <td colspan="2">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
         <td>% {{cat_percentage.id}}<span class="pull-right">{{cat_percentage.val | number: 1}}</span></td>
         <td>&nbsp;</td>
       </tr>
