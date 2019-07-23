@@ -4,7 +4,6 @@ angular.module('app.project').service('TransectService', [
   '$window',
   'APP_CONFIG',
   'utils',
-  'FishAttributeService',
   'offlineservice',
   'authService',
   function(
@@ -13,7 +12,6 @@ angular.module('app.project').service('TransectService', [
     $window,
     APP_CONFIG,
     utils,
-    FishAttributeService,
     offlineservice,
     authService
   ) {
@@ -74,7 +72,7 @@ angular.module('app.project').service('TransectService', [
         Number.isFinite(length) &&
         Number.isFinite(width)
       ) {
-        var biomass = 
+        var biomass =
           (count * (constant_a * Math.pow(size * constant_c, constant_b))) /
           1000;
         var area = (length * width) / 10000; // m2 to hectares
@@ -184,13 +182,13 @@ angular.module('app.project').service('TransectService', [
 
       for (var i = 0; i < obsBenthics.length; i++) {
         var benthicAttribute;
-        var obs_ben_lit = obsBenthics[i];
+        var obs_benthic = obsBenthics[i];
 
-        if (obs_ben_lit.attribute == null) {
+        if (obs_benthic.attribute == null) {
           continue;
         }
 
-        benthicAttribute = benthicAttributesLookup[obs_ben_lit.attribute];
+        benthicAttribute = benthicAttributesLookup[obs_benthic.attribute];
 
         // Combine into one object to do calcs
         recordset.push(
@@ -198,7 +196,7 @@ angular.module('app.project').service('TransectService', [
             {
               category: getCategory(benthicAttribute, benthicAttributesLookup)
             },
-            obs_ben_lit
+            obs_benthic
           )
         );
       }
@@ -208,8 +206,7 @@ angular.module('app.project').service('TransectService', [
         category_total[category] = _.reduce(
           group,
           function(sum, obs) {
-            var weight = angular.isDefined(obs.length) ? obs.length : 1;
-            return utils.safe_sum(sum, weight);
+            return utils.safe_sum(sum, obs.length);
           },
           0
         );
@@ -227,7 +224,10 @@ angular.module('app.project').service('TransectService', [
       category_percentages = _.map(category_names, function(category_name) {
         return {
           id: category_name,
-          val: (category_total[category_name] / total) * 100
+          val: utils.safe_multiply(
+            utils.safe_division(category_total[category_name], total),
+            100
+          )
         };
       });
 
