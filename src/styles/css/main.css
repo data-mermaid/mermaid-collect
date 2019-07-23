@@ -1261,7 +1261,6 @@ ul li.transect-buttons[disabled] {
 
 .obs-table {
   border-collapse: separate;
-  /* table-layout: fixed; */
 }
 
 .obs-table td, 
