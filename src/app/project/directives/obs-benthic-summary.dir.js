@@ -1,4 +1,4 @@
-angular.module('app.project').directive('obsBenthicPitSummary', [
+angular.module('app.project').directive('obsBenthicSummary', [
   '$timeout',
   'TransectService',
   function($timeout, TransectService) {
@@ -6,11 +6,10 @@ angular.module('app.project').directive('obsBenthicPitSummary', [
     return {
       restrict: 'E',
       scope: {
-        obsBenthicPits: '=',
+        observations: '=',
         benthicAttributesLookup: '='
       },
-      templateUrl:
-        'app/project/directives/obs-benthic-pit/obs-benthic-pit-summary.tpl.html',
+      templateUrl: 'app/project/directives/obs-benthic-summary.tpl.html',
       link: function(scope) {
         let watchTimeoutPromise = null;
         scope.observation_calcs = [];
@@ -18,11 +17,6 @@ angular.module('app.project').directive('obsBenthicPitSummary', [
         const calcSummary = function(obs) {
           $timeout.cancel(watchTimeoutPromise);
           watchTimeoutPromise = $timeout(function() {
-            console.log(
-              'scope.benthicAttributesLookup',
-              scope.benthicAttributesLookup
-            );
-
             scope.observation_calcs = TransectService.calcBenthicPercentages(
               obs,
               scope.benthicAttributesLookup
@@ -31,7 +25,7 @@ angular.module('app.project').directive('obsBenthicPitSummary', [
         };
 
         scope.$watch(
-          'obsBenthicPits',
+          'observations',
           function(obs) {
             obs = obs || [];
             calcSummary(obs);

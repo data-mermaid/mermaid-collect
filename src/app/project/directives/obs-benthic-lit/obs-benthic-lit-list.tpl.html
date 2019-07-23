@@ -150,19 +150,22 @@
           <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
         </td>
         <td>
-          <span
+          <strong
             ng-show="observation_calcs.total"
-          >Total cm</span>
+          >Total cm</strong>
         </td>
         <td>
-          <span ng-show="observation_calcs.total">{{observation_calcs.total}}</td></span>
+          <strong ng-show="observation_calcs.total">{{observation_calcs.total}}</td></strong>
         <td>&nbsp;</td>
       </tr>
-      <tr ng-repeat="cat_percentage in observation_calcs.category_percentages" ng-show="observation_calcs.total">
-        <td colspan="2">&nbsp;</td>
-        <td>% {{cat_percentage.id}}</td>
-        <td>{{cat_percentage.val | number: 1}}</td>
-        <td>&nbsp;</td>
+      <tr ng-show="observation_calcs.total">
+        <td colspan="5" class="text-left">
+            <obs-benthic-summary
+              class="pull-right observation-summary"
+              observations="obsBenthicLits"
+              benthic-attributes-lookup="benthicAttributesLookup"
+            ></obs-benthic-summary>
+        </td>
       </tr>
     </tfoot>
   </table>
