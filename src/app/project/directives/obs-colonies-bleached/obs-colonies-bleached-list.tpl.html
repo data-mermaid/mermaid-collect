@@ -1,5 +1,5 @@
 <div class="smart-form">
-	<table class="table obs-table">
+	<table class="table table-bordered obs-table">
 		<thead>
 			<tr>
 				<th colspan="2"></th>
@@ -278,7 +278,7 @@
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="10">
+				<td colspan="10" class="text-left">
 					<a ng-if="isDisabled !== true" href="" ng-click="$event.stopPropagation();addRow()">
 						<i class="fa fa-plus"></i>
 						Add row
@@ -290,7 +290,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="10">
+				<td colspan="10" class="text-left">
 					<obs-colonies-bleached-summary
 						class="pull-right observation-summary"
 						ng-if="obsColoniesBleached.length > 0"

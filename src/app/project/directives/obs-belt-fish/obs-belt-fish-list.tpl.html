@@ -1,5 +1,5 @@
 <div class="smart-form">
-  <table class="table" style="border-collapse: separate;">
+  <table class="table table-bordered obs-table" style="border-collapse: separate;">
     <thead>
       <tr>
         <th></th>
@@ -236,7 +236,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="3">
+        <td colspan="3" class="text-left">
           <a ng-if="isDisabled !== true" href="" ng-click="$event.stopPropagation();addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
         </td>

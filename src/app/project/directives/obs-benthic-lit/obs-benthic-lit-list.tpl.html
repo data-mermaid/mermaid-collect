@@ -1,5 +1,5 @@
 <div class="smart-form">
-  <table class="table" style="border-collapse: separate;">
+  <table class="table table-bordered obs-table">
     <thead>
       <tr>
         <th></th>
@@ -21,7 +21,7 @@
           READ SECTION
         -->
 
-        <td class="readonly-cell">
+        <td class="readonly-cell observation__row-number">
           <div>
             <small>{{::$index + 1}}</small>
           </div>
@@ -145,26 +145,27 @@
     </tbody>
     <tfoot>
       <tr>
-        <td>
+        <td class="text-left" colspan="2">
           <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
         </td>
-        <td>&nbsp;</td>
         <td>
-          <span
+          <strong
             ng-show="observation_calcs.total"
-          >Total cm</span>
+          >Total cm</strong>
         </td>
         <td>
-          <span ng-show="observation_calcs.total">{{observation_calcs.total}}</td></span>
+          <strong ng-show="observation_calcs.total">{{observation_calcs.total}}</td></strong>
         <td>&nbsp;</td>
       </tr>
-      <tr ng-repeat="cat_percentage in observation_calcs.category_percentages" ng-show="observation_calcs.total">
-        <td>&nbsp;</td>
-        <td> </td>
-        <td>% {{cat_percentage.id}}</td>
-        <td>{{cat_percentage.val | number: 1}}</td>
-        <td>&nbsp;</td>
+      <tr ng-show="observation_calcs.total">
+        <td colspan="5" class="text-left">
+            <obs-benthic-summary
+              class="pull-right observation-summary"
+              observations="obsBenthicLits"
+              benthic-attributes-lookup="benthicAttributesLookup"
+            ></obs-benthic-summary>
+        </td>
       </tr>
     </tfoot>
   </table>
