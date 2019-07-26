@@ -60,7 +60,7 @@
           </obs-validation-tooltip>
         </td>
         
-        <td class="readonly-cell">
+        <td ng-if-end class="readonly-cell">
 					<span>{{obs.count | null_value}} </span><obs-validation-tooltip
           validations="[
             {
@@ -80,14 +80,14 @@
         >
 				</td>
 
-        <td ng-if-end class="readonly-cell">
+        <!-- <td class="readonly-cell">
           <biomass
             obs="obs"
             biomassval="biomassvalues[$index]"
             transect-len-surveyed="transectLenSurveyed"
-            transect-width="getWidthVal(transectWidth)"
+            transect-width="widthValueLookup[transectWidth]"
           ></biomass>
-        </td>
+        </td> -->
 
         <!--
           WRITE SECTION
@@ -192,7 +192,7 @@
 					></obs-model-validation-tooltip>
         </td>
 
-        <td>
+        <td ng-if-end>
           <div
             numberinput
             widget-disabled="isDisabled"
@@ -212,13 +212,13 @@
 						class="obs-edit-validation-tooltip"
 					></obs-model-validation-tooltip>
         </td>
-        <td ng-if-end>
+        <td>
           <biomass 
             class="input-align"
             obs="obs"
-            biomassval="biomassvalues[obs.$$uid]"
+            biomassval="biomassvalues[$index]"
             transect-len-surveyed="transectLenSurveyed"
-            transect-width="getWidthVal(transectWidth)"
+            transect-width="widthValueLookup[transectWidth]"
           ></biomass>
         </td>
         <td
@@ -236,19 +236,20 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="3" class="text-left">
+        <td colspan="6" class="text-left">
           <a ng-if="isDisabled !== true" href="" ng-click="$event.stopPropagation();addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
         </td>
-        <th>Total biomass (kg/ha)</th>
-        <td>
-          <biomass-total
-            observations="obsBeltFishes"
-            transect-len-surveyed="transectLenSurveyed"
-            transect-width="getWidthVal(transectWidth)"
-          ></biomass-total>
+      </tr>
+      <tr>
+        <td colspan="6" class="text-left">
+            <obs-belt-fish-summary
+              class="pull-right observation-summary"
+              observations="obsBeltFishes"
+              transect-len-surveyed="transectLenSurveyed"
+              transect-width="transectWidth"
+            ></obs-belt-fish-summary>
         </td>
-        <td></td>
       </tr>
     </tfoot>
   </table>
