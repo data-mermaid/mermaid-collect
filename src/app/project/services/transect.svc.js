@@ -157,7 +157,8 @@ angular.module('app.project').service('TransectService', [
 
     var calcBenthicPercentages = function(
       obsBenthics,
-      benthicAttributesLookup
+      benthicAttributesLookup,
+      lengthAttr
     ) {
       if (obsBenthics == null || benthicAttributesLookup == null) {
         return;
@@ -206,7 +207,10 @@ angular.module('app.project').service('TransectService', [
         category_total[category] = _.reduce(
           group,
           function(sum, obs) {
-            return utils.safe_sum(sum, obs.length);
+            if (lengthAttr) {
+              return utils.safe_sum(sum, _.get(obs, lengthAttr));
+            }
+            return utils.safe_sum(sum, 1);
           },
           0
         );

@@ -7,7 +7,8 @@ angular.module('app.project').directive('obsBenthicSummary', [
       restrict: 'E',
       scope: {
         observations: '=',
-        benthicAttributesLookup: '='
+        benthicAttributesLookup: '=',
+        lengthAttr: '@'
       },
       templateUrl: 'app/project/directives/obs-benthic-summary.tpl.html',
       link: function(scope) {
