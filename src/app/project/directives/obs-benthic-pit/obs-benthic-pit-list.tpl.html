@@ -71,11 +71,11 @@
               </a>
             </appendaddon>
           </autocompleteinput>
-          <obs-attribute-validation
-            widget-name="'attribute'"
-            ng-model="obs.attribute"
-            requiresval
-          ></obs-attribute-validation>
+          <obs-model-validation-tooltip
+						requiresval
+						ng-model="obs.attribute"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
         </td>
         <td ng-if-end>
           <div

@@ -91,11 +91,11 @@
               </a>
             </appendaddon>
           </autocompleteinput>
-          <obs-attribute-validation
-            widget-name="'attribute'"
-            ng-model="obs.attribute"
-            requiresval
-          ></obs-attribute-validation>
+          <obs-model-validation-tooltip
+						requiresval
+						ng-model="obs.attribute"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
         </td>
         <td>
           <div
@@ -123,12 +123,12 @@
             widget-validators="minvalue='0'"
             ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
-          <obs-attribute-validation
-            widget-name="'length'"
-            ng-model="obs.length"
-            requiresval
-            minvalue="0"
-          ></obs-attribute-validation>
+          <obs-model-validation-tooltip
+						requiresval
+						minvalue='0'
+						ng-model="obs.length"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
         </td>
         <td
           ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"

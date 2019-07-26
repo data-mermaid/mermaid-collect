@@ -66,11 +66,11 @@
             widget-required-hide="true"
             ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
-          <obs-attribute-validation
-            widget-name="'score'"
-            ng-model="obs.score"
-            requiresval
-          ></obs-attribute-validation>
+          <obs-model-validation-tooltip
+						requiresval
+						ng-model="obs.score"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
         </td>
         <td
           ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"

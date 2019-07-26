@@ -122,11 +122,11 @@
               </a>
             </appendaddon>
           </autocompleteinput>
-          <obs-attribute-validation
-            widget-name="'fish_attribute'"
-            ng-model="obs.fish_attribute"
-            requiresval
-          ></obs-attribute-validation>
+          <obs-model-validation-tooltip
+						requiresval
+						ng-model="obs.fish_attribute"
+						class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td ng-if="!fishsize_choices[fishsizebin]">
           <div
@@ -142,13 +142,14 @@
             widget-validators="decimal='5:1',minvalue='0'"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
-          <obs-attribute-validation
-            widget-name="'size'"
-            ng-model="obs.size"
-            requiresval
-            minvalue="0"
+
+          <obs-model-validation-tooltip
+						requiresval
+            minvalue='0:t'
             decimal="5:1"
-          ></obs-attribute-validation>
+						ng-model="obs.size"
+						class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td ng-if="fishsize_choices[fishsizebin].length > 0">
           <div
@@ -182,14 +183,13 @@
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
 
-          <obs-attribute-validation
-            widget-name="'size'"
-            ng-model="obs.size"
-            requiresval
-            minvalue="0"
+          <obs-model-validation-tooltip
+						requiresval
+            minvalue='0:t'
             decimal="5:1"
-          ></obs-attribute-validation>
-
+						ng-model="obs.size"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
         </td>
 
         <td>
@@ -204,13 +204,13 @@
             ng-keydown="navInputs($event, obs, true, $index)"
             widget-validators="integer,minvalue='0'"
           ></div>
-          <obs-attribute-validation
-            widget-name="'count'"
-            ng-model="obs.count"
-            integer
-            minvalue='0'
-            requiresval
-          ></obs-attribute-validation>
+          <obs-model-validation-tooltip
+						integer
+						requiresval
+						minvalue='0:t'
+						ng-model="obs.count"
+						class="obs-edit-validation-tooltip"
+					></obs-model-validation-tooltip>
         </td>
         <td ng-if-end>
           <biomass 
