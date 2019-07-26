@@ -12,8 +12,8 @@
       <tr
         ng-repeat="obs in obsHabitatComplexitys track by $index"
         ng-click="startEditing($event, $index)"
-				class="cursor-pointer"
-				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
+        class="cursor-pointer"
+        ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
       >
         <td
           class="observation__row-number readonly-cell"
@@ -67,10 +67,10 @@
             ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
           <obs-model-validation-tooltip
-						requiresval
-						ng-model="obs.score"
-						class="obs-edit-validation-tooltip"
-					></obs-model-validation-tooltip>
+            requiresval
+            ng-model="obs.score"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td
           ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"

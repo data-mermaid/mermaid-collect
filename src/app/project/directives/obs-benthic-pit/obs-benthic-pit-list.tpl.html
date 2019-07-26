@@ -13,8 +13,8 @@
       <tr
         ng-repeat="obs in obsBenthicPits track by $index"
         ng-click="startEditing($event, $index)"
-				class="cursor-pointer"
-				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
+        class="cursor-pointer"
+        ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
       >
         <td class="observation__row-number">
           <div style="opacity: 0.75;"><small>{{::($index + 1)}}</small></div>
@@ -72,10 +72,10 @@
             </appendaddon>
           </autocompleteinput>
           <obs-model-validation-tooltip
-						requiresval
-						ng-model="obs.attribute"
-						class="obs-edit-validation-tooltip"
-					></obs-model-validation-tooltip>
+            requiresval
+            ng-model="obs.attribute"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td ng-if-end>
           <div

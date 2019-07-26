@@ -27,15 +27,15 @@
         </td>
 
         <td class="readonly-cell">
-					<span class="readonly-cell text-left">{{::obs.fish_attribute | matchchoice:fishAttributeChoices:"display_name"}} </span><obs-validation-tooltip
-							validations="[
-								{
-									'isValid': validator.requiresvalue(obs.fish_attribute) === true,
-									'message': 'Required'
-								}
-							]"
-						>
-					</obs-validation-tooltip>
+          <span class="readonly-cell text-left">{{::obs.fish_attribute | matchchoice:fishAttributeChoices:"display_name"}} </span><obs-validation-tooltip
+              validations="[
+                {
+                  'isValid': validator.requiresvalue(obs.fish_attribute) === true,
+                  'message': 'Required'
+                }
+              ]"
+            >
+          </obs-validation-tooltip>
         </td>
         
         <td class="readonly-cell">
@@ -61,7 +61,7 @@
         </td>
         
         <td ng-if-end class="readonly-cell">
-					<span>{{obs.count | null_value}} </span><obs-validation-tooltip
+          <span>{{obs.count | null_value}} </span><obs-validation-tooltip
           validations="[
             {
               'isValid': validator.requiresvalue(obs.count) === true,
@@ -78,7 +78,7 @@
 
           ]"
         >
-				</td>
+        </td>
 
         <!--
           WRITE SECTION
@@ -114,9 +114,9 @@
             </appendaddon>
           </autocompleteinput>
           <obs-model-validation-tooltip
-						requiresval
-						ng-model="obs.fish_attribute"
-						class="obs-edit-validation-tooltip"
+            requiresval
+            ng-model="obs.fish_attribute"
+            class="obs-edit-validation-tooltip"
           ></obs-model-validation-tooltip>
         </td>
         <td ng-if="!fishsize_choices[fishsizebin]">
@@ -135,11 +135,11 @@
           ></div>
 
           <obs-model-validation-tooltip
-						requiresval
+            requiresval
             minvalue='0:t'
             decimal="5:1"
-						ng-model="obs.size"
-						class="obs-edit-validation-tooltip"
+            ng-model="obs.size"
+            class="obs-edit-validation-tooltip"
           ></obs-model-validation-tooltip>
         </td>
         <td ng-if="fishsize_choices[fishsizebin].length > 0">
@@ -175,12 +175,12 @@
           ></div>
 
           <obs-model-validation-tooltip
-						requiresval
+            requiresval
             minvalue='0:t'
             decimal="5:1"
-						ng-model="obs.size"
-						class="obs-edit-validation-tooltip"
-					></obs-model-validation-tooltip>
+            ng-model="obs.size"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
 
         <td ng-if-end>
@@ -196,12 +196,12 @@
             widget-validators="integer,minvalue='0'"
           ></div>
           <obs-model-validation-tooltip
-						integer
-						requiresval
-						minvalue='0:t'
-						ng-model="obs.count"
-						class="obs-edit-validation-tooltip"
-					></obs-model-validation-tooltip>
+            integer
+            requiresval
+            minvalue='0:t'
+            ng-model="obs.count"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td>
           <biomass 
