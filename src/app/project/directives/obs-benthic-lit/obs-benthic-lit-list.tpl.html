@@ -13,8 +13,8 @@
       <tr
         ng-repeat="obs in obsBenthicLits track by $index"
         ng-click="startEditing($event, $index)"
-				class="cursor-pointer"
-				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
+        class="cursor-pointer"
+        ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
       >
 
         <!--
@@ -91,11 +91,11 @@
               </a>
             </appendaddon>
           </autocompleteinput>
-          <obs-attribute-validation
-            widget-name="'attribute'"
-            ng-model="obs.attribute"
+          <obs-model-validation-tooltip
             requiresval
-          ></obs-attribute-validation>
+            ng-model="obs.attribute"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td>
           <div
@@ -123,12 +123,12 @@
             widget-validators="minvalue='0'"
             ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
-          <obs-attribute-validation
-            widget-name="'length'"
-            ng-model="obs.length"
+          <obs-model-validation-tooltip
             requiresval
-            minvalue="0"
-          ></obs-attribute-validation>
+            minvalue='0'
+            ng-model="obs.length"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td
           ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
@@ -164,6 +164,7 @@
               class="pull-right observation-summary"
               observations="obsBenthicLits"
               benthic-attributes-lookup="benthicAttributesLookup"
+              length-attr="length"
             ></obs-benthic-summary>
         </td>
       </tr>

@@ -192,10 +192,11 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
         };
 
         const isDuplicate = function(ob, duplicates) {
+          duplicates = duplicates || [];
           for (let i = 0; i < duplicates.length; i++) {
             if (
               duplicates[i].attribute === ob.attribute &&
-              duplicates[i].growth_form === ob.growth_form
+              duplicates[i].growth_form == ob.growth_form
             ) {
               return true;
             }

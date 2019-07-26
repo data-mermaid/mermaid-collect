@@ -157,7 +157,8 @@ angular.module('app.project').service('TransectService', [
 
     var calcBenthicPercentages = function(
       obsBenthics,
-      benthicAttributesLookup
+      benthicAttributesLookup,
+      lengthAttr
     ) {
       if (obsBenthics == null || benthicAttributesLookup == null) {
         return;
@@ -206,7 +207,10 @@ angular.module('app.project').service('TransectService', [
         category_total[category] = _.reduce(
           group,
           function(sum, obs) {
-            return utils.safe_sum(sum, obs.length);
+            if (lengthAttr) {
+              return utils.safe_sum(sum, _.get(obs, lengthAttr));
+            }
+            return utils.safe_sum(sum, 1);
           },
           0
         );
@@ -340,6 +344,20 @@ angular.module('app.project').service('TransectService', [
       });
     };
 
+    var getWidthValueLookup = function() {
+      return offlineservice.ChoicesTable(true).then(function(table) {
+        return table
+          .filter({ name: 'belttransectwidths' })
+          .then(function(choices) {
+            const widthValueLookup = {};
+            _.each(choices[0].data, function(c) {
+              widthValueLookup[c.id] = c.val;
+            });
+            return widthValueLookup;
+          });
+      });
+    };
+
     var TransectService = {
       calcBenthicPercentages: calcBenthicPercentages,
       calcObsBiomass: calcObsBiomass,
@@ -352,7 +370,8 @@ angular.module('app.project').service('TransectService', [
       getProjectManagementChoices: getProjectManagementChoices,
       getProjectProfileChoices: getProjectProfileChoices,
       getProjectSiteChoices: getProjectSiteChoices,
-      setObservationIntervals: setObservationIntervals
+      setObservationIntervals: setObservationIntervals,
+      getWidthValueLookup: getWidthValueLookup
     };
 
     return TransectService;

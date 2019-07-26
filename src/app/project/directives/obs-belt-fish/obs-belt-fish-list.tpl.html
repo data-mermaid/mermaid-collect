@@ -27,15 +27,15 @@
         </td>
 
         <td class="readonly-cell">
-					<span class="readonly-cell text-left">{{::obs.fish_attribute | matchchoice:fishAttributeChoices:"display_name"}} </span><obs-validation-tooltip
-							validations="[
-								{
-									'isValid': validator.requiresvalue(obs.fish_attribute) === true,
-									'message': 'Required'
-								}
-							]"
-						>
-					</obs-validation-tooltip>
+          <span class="readonly-cell text-left">{{::obs.fish_attribute | matchchoice:fishAttributeChoices:"display_name"}} </span><obs-validation-tooltip
+              validations="[
+                {
+                  'isValid': validator.requiresvalue(obs.fish_attribute) === true,
+                  'message': 'Required'
+                }
+              ]"
+            >
+          </obs-validation-tooltip>
         </td>
         
         <td class="readonly-cell">
@@ -60,8 +60,8 @@
           </obs-validation-tooltip>
         </td>
         
-        <td class="readonly-cell">
-					<span>{{obs.count | null_value}} </span><obs-validation-tooltip
+        <td ng-if-end class="readonly-cell">
+          <span>{{obs.count | null_value}} </span><obs-validation-tooltip
           validations="[
             {
               'isValid': validator.requiresvalue(obs.count) === true,
@@ -78,15 +78,6 @@
 
           ]"
         >
-				</td>
-
-        <td ng-if-end class="readonly-cell">
-          <biomass
-            obs="obs"
-            biomassval="biomassvalues[$index]"
-            transect-len-surveyed="transectLenSurveyed"
-            transect-width="getWidthVal(transectWidth)"
-          ></biomass>
         </td>
 
         <!--
@@ -122,11 +113,11 @@
               </a>
             </appendaddon>
           </autocompleteinput>
-          <obs-attribute-validation
-            widget-name="'fish_attribute'"
-            ng-model="obs.fish_attribute"
+          <obs-model-validation-tooltip
             requiresval
-          ></obs-attribute-validation>
+            ng-model="obs.fish_attribute"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td ng-if="!fishsize_choices[fishsizebin]">
           <div
@@ -142,13 +133,14 @@
             widget-validators="decimal='5:1',minvalue='0'"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
-          <obs-attribute-validation
-            widget-name="'size'"
-            ng-model="obs.size"
+
+          <obs-model-validation-tooltip
             requiresval
-            minvalue="0"
+            minvalue='0:t'
             decimal="5:1"
-          ></obs-attribute-validation>
+            ng-model="obs.size"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td ng-if="fishsize_choices[fishsizebin].length > 0">
           <div
@@ -182,17 +174,16 @@
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
 
-          <obs-attribute-validation
-            widget-name="'size'"
-            ng-model="obs.size"
+          <obs-model-validation-tooltip
             requiresval
-            minvalue="0"
+            minvalue='0:t'
             decimal="5:1"
-          ></obs-attribute-validation>
-
+            ng-model="obs.size"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
 
-        <td>
+        <td ng-if-end>
           <div
             numberinput
             widget-disabled="isDisabled"
@@ -204,21 +195,21 @@
             ng-keydown="navInputs($event, obs, true, $index)"
             widget-validators="integer,minvalue='0'"
           ></div>
-          <obs-attribute-validation
-            widget-name="'count'"
-            ng-model="obs.count"
+          <obs-model-validation-tooltip
             integer
-            minvalue='0'
             requiresval
-          ></obs-attribute-validation>
+            minvalue='0:t'
+            ng-model="obs.count"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
-        <td ng-if-end>
+        <td>
           <biomass 
             class="input-align"
             obs="obs"
-            biomassval="biomassvalues[obs.$$uid]"
+            biomassval="biomassvalues[$index]"
             transect-len-surveyed="transectLenSurveyed"
-            transect-width="getWidthVal(transectWidth)"
+            transect-width="widthValueLookup[transectWidth]"
           ></biomass>
         </td>
         <td
@@ -236,19 +227,20 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="3" class="text-left">
+        <td colspan="6" class="text-left">
           <a ng-if="isDisabled !== true" href="" ng-click="$event.stopPropagation();addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
         </td>
-        <th>Total biomass (kg/ha)</th>
-        <td>
-          <biomass-total
-            observations="obsBeltFishes"
-            transect-len-surveyed="transectLenSurveyed"
-            transect-width="getWidthVal(transectWidth)"
-          ></biomass-total>
+      </tr>
+      <tr>
+        <td colspan="6" class="text-left">
+            <obs-belt-fish-summary
+              class="pull-right observation-summary"
+              observations="obsBeltFishes"
+              transect-len-surveyed="transectLenSurveyed"
+              transect-width="transectWidth"
+            ></obs-belt-fish-summary>
         </td>
-        <td></td>
       </tr>
     </tfoot>
   </table>

@@ -6,6 +6,7 @@ angular.module('app.project').directive('obsBeltFishList', [
   '$timeout',
   'FishAttributeService',
   'ValidatorService',
+  'TransectService',
   'ModalService',
   function(
     $window,
@@ -15,6 +16,7 @@ angular.module('app.project').directive('obsBeltFishList', [
     $timeout,
     FishAttributeService,
     ValidatorService,
+    TransectService,
     ModalService
   ) {
     'use strict';
@@ -42,6 +44,10 @@ angular.module('app.project').directive('obsBeltFishList', [
         scope.biomassvalues = {};
         scope.editableObservationIndex = null;
         scope.validator = ValidatorService;
+        scope.widthValueLookup = {};
+        TransectService.getWidthValueLookup().then(function(lookup) {
+          scope.widthValueLookup = lookup;
+        });
 
         const getRowIndex = function($index) {
           return $index == null ? scope.obsBeltFishes.length - 1 : $index;
@@ -130,15 +136,6 @@ angular.module('app.project').directive('obsBeltFishList', [
             });
           });
         });
-
-        scope.getWidthVal = function(widthkey) {
-          const width = _.find(scope.choices.belttransectwidths, {
-            id: widthkey
-          });
-          if (angular.isDefined(width) && angular.isDefined(width.val))
-            return width.val;
-          return null;
-        };
 
         scope.navInputs = function($event, obs, isRowEnd, $index) {
           isRowEnd = isRowEnd || false;
