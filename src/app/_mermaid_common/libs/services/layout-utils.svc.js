@@ -3,23 +3,36 @@ angular.module('mermaid.libs').service('layoutUtils', [
     'use strict';
 
     var activateNavItem = function(state) {
-      var toQry = 'a[data-ui-sref="' + state + '"]';
-      var $navItem = $(toQry);
-      var $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
-      var navTreeLength = $navTree.length - 1; //also refers the index of menu collapse item such as Fish Name in Reference site.
+      const toQry = 'a[data-ui-sref="' + state + '"]';
+      const $navItem = $(toQry);
+      const $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
+      const navTreeLength = $navTree.length - 1; //also refers the index of menu collapse item such as Fish Name in Reference site.
 
-      for (var i = navTreeLength; i >= 0; i--) {
+      for (let i = navTreeLength; i >= 0; i--) {
         $($navTree[i]).addClass('active');
       }
     };
 
-    var toggleNav = function(state) {
-      var toQry = 'a[data-ui-sref="' + state + '"]';
-      var $navItem = $(toQry);
-      var $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
-      var navTreeLength = $navTree.length - 1; //also refers the index of menu collapse item such as Fish Name in Reference site.
+    var toggleNav = function(state, fromState) {
+      const toQry = 'a[data-ui-sref="' + state + '"]';
+      const fromQry = 'a[data-ui-sref="' + fromState + '"]';
+      const $navItem = $(toQry);
+      const $prevNavItem = $(fromQry);
+      const $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
+      const $prevNavTree = $prevNavItem.parentsUntil('ul[data-smart-menu]');
+      //also refers the index of menu collapse item such as Fish Name in Reference site.
+      const navTreeLength = $navTree.length - 1;
 
-      for (var i = navTreeLength; i >= 0; i--) {
+      const inElemSelection = function(elem, sel2) {
+        for (let n = sel2.length; n >= 0; n--) {
+          if (elem == sel2[n]) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      for (let i = navTreeLength; i >= 0; i--) {
         if (
           i === navTreeLength &&
           $navTree[i].nodeName === 'LI' &&
@@ -28,6 +41,18 @@ angular.module('mermaid.libs').service('layoutUtils', [
           $($navTree[i]).smartCollapseToggle();
         }
       }
+
+      for (let j = 0; j < $prevNavTree.length; j++) {
+        const $elem = $($prevNavTree[j]);
+        if (
+          inElemSelection($elem[0], $navTree) === false &&
+          $elem.hasClass('open')
+        ) {
+          $elem.smartCollapseToggle();
+          $elem.removeClass('active');
+        }
+      }
+      activateNavItem(state);
     };
 
     return {

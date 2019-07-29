@@ -183,16 +183,13 @@ angular
       var curState = $rootScope.$state.current;
       var top = $uibModalStack.getTop();
 
-      // handling toggle from reference home items
-      if (_.has(fromState.data, 'toggleMenu') === true) {
-        layoutUtils.toggleNav(curState.name);
-      }
-
       // handling toggle from clicking the reference book in transect observations look up
       if (_.has(toState.data, 'parentStates')) {
         setTimeout(function() {
-          layoutUtils.toggleNav(curState.data.parentStates);
+          layoutUtils.toggleNav(curState.data.parentStates, fromState.name);
         }, 500);
+      } else {
+        layoutUtils.toggleNav(curState.name, fromState.name);
       }
 
       if (top) {
