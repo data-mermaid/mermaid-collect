@@ -31,13 +31,17 @@ angular
   })
 
   .filter('matchchoice', function() {
-    return function(val, choices) {
+    return function(val, choices, displayAttr) {
       var rec = _.find(choices, function(o) {
         return o.id == val;
       });
       var res = null;
       if (rec) {
-        res = rec.name || rec.label;
+        if (displayAttr != null) {
+          res = _.get(rec, displayAttr);
+        } else {
+          res = rec.name || rec.label;
+        }
       }
       return res;
     };

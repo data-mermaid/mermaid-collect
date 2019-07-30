@@ -992,12 +992,10 @@ btn > button {
 }
 
 .observation__row-number div {
-  margin-top: 14px;
   opacity: 0.75;
 }
 
 .observation__row-interval div {
-  margin: 14px 0 0 14px;
   color: #AEAEAE;
   letter-spacing: 1.5px;
 }
@@ -1263,7 +1261,11 @@ ul li.transect-buttons[disabled] {
 
 .obs-table {
   border-collapse: separate;
-  table-layout: fixed;
+}
+
+.obs-table td, 
+.obs-table th {
+  text-align: center
 }
 
 .obs-table td {
@@ -1281,6 +1283,10 @@ ul li.transect-buttons[disabled] {
   position: absolute;
   top: 7px;
   right: 7px;
+}
+
+.obs-edit-del-padding {
+  padding-top: 20px !important;
 }
 
 .validation-popup {

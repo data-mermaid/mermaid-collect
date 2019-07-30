@@ -71,14 +71,6 @@ angular.module('app.project').controller('CollectBaseProtocol', [
       return ignoredValidation;
     };
 
-    var assignObservationKeys = function(record) {
-      _.each(_.keys(record.data), function(key) {
-        if (key.startsWith('obs_')) {
-          utils.assignUniqueId(_.get(record.data, key) || []);
-        }
-      });
-    };
-
     $ctrl.defaultSchema = $ctrl.defaultSchema || {};
     $ctrl.projectId = $stateParams.project_id;
     $ctrl.recordId = $stateParams.id;
@@ -117,7 +109,6 @@ angular.module('app.project').controller('CollectBaseProtocol', [
       $scope.project = $ctrl.projectId;
       $scope.record.data = $scope.record.data || {};
     } else {
-      assignObservationKeys($ctrl.collectRecord);
       $scope.record = $ctrl.collectRecord;
     }
 
@@ -150,7 +141,6 @@ angular.module('app.project').controller('CollectBaseProtocol', [
           if ($scope.form) {
             $scope.form.$setPristine();
           }
-          assignObservationKeys(record);
           $scope.record = record;
         })
         .finally(function() {

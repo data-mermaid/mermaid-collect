@@ -1,0 +1,5 @@
+<div>
+  <div ng-repeat="cat_percentage in observation_calcs.category_percentages track by $index">
+      % {{cat_percentage.id}}<span class="pull-right">{{cat_percentage.val | number: 1}}</span>
+  </div>
+</div>

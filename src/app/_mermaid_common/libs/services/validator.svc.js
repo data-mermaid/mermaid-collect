@@ -36,7 +36,24 @@ angular.module('mermaid.libs').service('ValidatorService', [
       return Number.isFinite(val) && val % 1 === 0;
     };
 
+    const decimalvalue = function(val, decimalMaxDigits, decimalDecimalPlaces) {
+      if (val != null) {
+        const str_number = val.toString();
+        const number_parts = str_number.split('.');
+        const positive_num = number_parts[0];
+        const decimals = number_parts.length > 1 ? number_parts[1] : '';
+
+        const num_digits = positive_num.length + decimals.length;
+
+        const max_digit_count_check = num_digits <= decimalMaxDigits;
+        const decimals_check = decimals.length <= decimalDecimalPlaces;
+        return max_digit_count_check && decimals_check;
+      }
+      return true;
+    };
+
     return {
+      decimalvalue: decimalvalue,
       integervalue: integervalue,
       maxvalue: maxvalue,
       minvalue: minvalue,

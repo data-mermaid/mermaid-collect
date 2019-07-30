@@ -772,6 +772,28 @@ angular.module('mermaid.libs').service('offlineservice', [
     };
 
     var BenthicAttributesTable = function(skipRefresh) {
+      const refreshBenthicAttributes = function(table, options) {
+        return table
+          .filter({
+            status: 10, // PROPOSED_RECORD
+            $$synced: false
+          })
+          .then(function(records) {
+            return _.map(records, function(record) {
+              if (!record.name || !record.parent) {
+                return record.delete(true);
+              }
+              return $q.resolve();
+            });
+          })
+          .then(function(deletePromises) {
+            return $q.all(deletePromises);
+          })
+          .then(function() {
+            return paginatedRefresh(table, options);
+          });
+      };
+
       return getOrCreateOfflineTable(
         APP_CONFIG.localDbName,
         'benthicattributes',
@@ -781,7 +803,7 @@ angular.module('mermaid.libs').service('offlineservice', [
           limit: 300,
           isPublic: true
         },
-        paginatedRefresh,
+        refreshBenthicAttributes,
         skipRefresh
       );
     };

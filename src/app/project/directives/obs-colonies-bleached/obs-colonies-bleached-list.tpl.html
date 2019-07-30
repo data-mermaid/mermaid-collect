@@ -1,5 +1,5 @@
 <div class="smart-form">
-	<table class="table obs-table">
+	<table class="table table-bordered obs-table">
 		<thead>
 			<tr>
 				<th colspan="2"></th>
@@ -26,7 +26,7 @@
 			<tr
 				ng-repeat="obs in obsColoniesBleached track by $index" ng-click="startEditing($event, $index)"
 				class="cursor-pointer"
-				ng-class="{true: '', false: 'editable-row'}[editableObservationIndex === $index]"
+				ng-class="{'editable-row': editableObservationIndex === $index,  'warning': rowErrors[$index] === true}"
 			>
 
 				<!--
@@ -46,7 +46,7 @@
 					</obs-validation-tooltip>
 				</td>
 				<td class="readonly-cell">
-					{{::obs.growth_form | matchchoice:choices.growthforms}}
+					{{obs.growth_form | matchchoice:choices.growthforms}}
 				</td>
 				<td class="readonly-cell">
 					<span>{{obs.count_normal | null_value}} </span>
@@ -278,7 +278,7 @@
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="10">
+				<td colspan="10" class="text-left">
 					<a ng-if="isDisabled !== true" href="" ng-click="$event.stopPropagation();addRow()">
 						<i class="fa fa-plus"></i>
 						Add row
@@ -290,7 +290,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="10">
+				<td colspan="10" class="text-left">
 					<obs-colonies-bleached-summary
 						class="pull-right observation-summary"
 						ng-if="obsColoniesBleached.length > 0"

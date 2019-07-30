@@ -20,6 +20,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
       scope: {
         obsColoniesBleached: '=',
         benthicAttributeChoices: '=',
+        validations: '=',
         isDisabled: '=?'
       },
       templateUrl:
@@ -38,6 +39,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
             'app/_mermaid_common/libs/partials/benthicattribute-input-new.tpl.html',
           controller: 'BenthicAttributeModalCtrl'
         };
+        scope.rowErrors = [];
 
         offlineservice.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
@@ -188,6 +190,37 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
             { isValid: isInteger, message: 'Value must be a whole number' }
           ];
         };
+
+        const isDuplicate = function(ob, duplicates) {
+          duplicates = duplicates || [];
+          for (let i = 0; i < duplicates.length; i++) {
+            if (
+              duplicates[i].attribute === ob.attribute &&
+              duplicates[i].growth_form == ob.growth_form
+            ) {
+              return true;
+            }
+          }
+          return false;
+        };
+
+        scope.$watch(
+          'validations',
+          function() {
+            const duplicateGenusGrowthValidation = _.get(
+              scope.validations,
+              'validate_duplicate_genus_growth'
+            );
+
+            _.each(scope.obsColoniesBleached, function(obs, idx) {
+              scope.rowErrors[idx] =
+                duplicateGenusGrowthValidation &&
+                duplicateGenusGrowthValidation.status === 'error' &&
+                isDuplicate(obs, duplicateGenusGrowthValidation.data);
+            });
+          },
+          true
+        );
       }
     };
   }

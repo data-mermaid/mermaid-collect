@@ -4,6 +4,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
   '$timeout',
   'TransectService',
   'ModalService',
+  'ValidatorService',
   'BenthicAttributeService',
   function(
     offlineservice,
@@ -11,6 +12,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
     $timeout,
     TransectService,
     ModalService,
+    ValidatorService,
     BenthicAttributeService
   ) {
     'use strict';
@@ -27,20 +29,35 @@ angular.module('app.project').directive('obsBenthicPitList', [
       templateUrl:
         'app/project/directives/obs-benthic-pit/obs-benthic-pit-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        var modal;
-        var $table = $(element).find('table');
-        var watchTimeoutPromise;
+        const $table = $(element).find('table');
+        let modal;
 
-        scope.observation_calcs = {};
         scope.categoryLookup = {};
+        scope.benthicAttributesLookup = {};
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
+        scope.editableObservationIndex = null;
+        scope.validator = ValidatorService;
 
-        var loadBenthicAttributesLookup = function() {
+        const getRowIndex = function($index) {
+          return $index == null ? scope.obsBenthicPits.length - 1 : $index;
+        };
+
+        const setInputFocus = function(rowIndex, cellIndex) {
+          $timeout(function() {
+            const $elm = $($table.find('tbody tr')[rowIndex]);
+            $($elm.find('select, input')[cellIndex])
+              .focus()
+              .select();
+          }, 30);
+        };
+
+        const loadBenthicAttributesLookup = function() {
           scope.benthicAttributesLookup = utils.createLookup(
             scope.benthicAttributeChoices
           );
         };
+
         loadBenthicAttributesLookup();
 
         scope.getBenthicAttributes = function() {
@@ -63,7 +80,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
             scope.benthicAttributeChoices.push(record);
             loadBenthicAttributesLookup();
             observation.attribute = record.id;
-            _updateBenthicPercentages();
             utils.showAlert(
               'Proposal submitted',
               'Your proposal will be reviewed by the MERMAID team.',
@@ -80,29 +96,35 @@ angular.module('app.project').directive('obsBenthicPitList', [
           });
         });
 
-        scope.getNextIndex = function(obs) {
-          var index = scope.obsBenthicPits.indexOf(obs);
-          return _.parseInt(index) + 1 || scope.obsBenthicPits.length;
+        scope.navInputs = function($event, obs, isRowEnd, $index) {
+          isRowEnd = isRowEnd || false;
+          if (!$event) {
+            return;
+          }
+
+          const keyCode = $event.keyCode;
+
+          if (keyCode === 13 || (keyCode === 9 && isRowEnd)) {
+            scope.addRow($event, $index);
+          }
+          $event.stopPropagation();
         };
 
-        scope.addRow = function($event, observation) {
+        scope.addRow = function($event, $index) {
           if (scope.isDisabled === true) {
             return;
           }
 
           scope.obsBenthicPits = scope.obsBenthicPits || [];
-          // The comma causes the benthic attribute to be
-          // cleared, need to keep track of it.
-          var benthicAttribute = observation ? observation.attribute : null;
-          var nextIndex = scope.getNextIndex(observation);
-          var nextCol = 'attr';
-          var newRecord = {}; // simple add row
+          const nextIndex = getRowIndex($index) + 1;
+          let nextCol = 'attr';
+          let newRecord = {}; // simple add row
 
           if (!$event || $event.keyCode === 13 || $event.keyCode === 9) {
             if ($event && $event.keyCode === 9) {
               // if tab, duplicate row and focus on val
               nextCol = 'interval';
-              newRecord = _.omit(observation, [
+              newRecord = _.omit(scope.obsBenthicPits[$index], [
                 'id',
                 '$$hashKey',
                 '$$uid',
@@ -110,15 +132,11 @@ angular.module('app.project').directive('obsBenthicPitList', [
               ]);
             }
 
-            utils.assignUniqueId(newRecord);
             scope.obsBenthicPits.splice(nextIndex, 0, newRecord);
-            $timeout(function() {
-              if (observation) {
-                observation.attribute = benthicAttribute;
-              }
-              var $elm = $($table.find('tr')[nextIndex + 1]);
-              $($elm.find('input')[1]).focus();
-            }, 0);
+            formCtrl.$setDirty();
+            scope.startEditing(null, nextIndex);
+
+            setInputFocus(nextIndex, 1);
           }
         };
 
@@ -128,7 +146,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
           }
 
           scope.obsBenthicPits = scope.obsBenthicPits || [];
-          var idx = scope.obsBenthicPits.indexOf(observation);
+          const idx = scope.obsBenthicPits.indexOf(observation);
           if (idx !== -1) {
             scope.obsBenthicPits.splice(idx, 1);
           }
@@ -150,14 +168,36 @@ angular.module('app.project').directive('obsBenthicPitList', [
           true
         );
 
-        var _updateBenthicPercentages = function() {
-          $timeout.cancel(watchTimeoutPromise);
-          watchTimeoutPromise = $timeout(function() {
-            scope.observation_calcs = TransectService.calcBenthicPercentages(
-              scope.obsBenthicPits,
-              scope.benthicAttributesLookup
-            );
-          }, 300);
+        scope.startEditing = function(evt, idx) {
+          if (evt) {
+            evt.stopPropagation();
+          }
+
+          if (scope.isDisabled) {
+            scope.editableObservationIndex = null;
+            return;
+          }
+
+          if (
+            idx === scope.editableObservationIndex &&
+            evt &&
+            evt.target.nodeName !== 'TD'
+          ) {
+            return;
+          } else if (
+            idx === scope.editableObservationIndex &&
+            evt &&
+            evt.target.nodeName === 'TD'
+          ) {
+            scope.editableObservationIndex = null;
+            return;
+          }
+          scope.editableObservationIndex = idx;
+        };
+
+        scope.stopEditing = function() {
+          scope.index = null;
+          scope.editableObservationIndex = null;
         };
 
         scope.$watch(
@@ -167,22 +207,10 @@ angular.module('app.project').directive('obsBenthicPitList', [
               return;
             }
 
-            utils.assignUniqueId(scope.obsBenthicPits);
-
             TransectService.setObservationIntervals(
               scope.obsBenthicPits,
               scope.intervalSize
             );
-
-            _updateBenthicPercentages();
-          },
-          true
-        );
-
-        scope.$watch(
-          'categoryLookup',
-          function() {
-            _updateBenthicPercentages();
           },
           true
         );

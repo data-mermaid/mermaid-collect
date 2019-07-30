@@ -270,13 +270,12 @@ angular
           fishAttributes: function(FishAttributeService) {
             return FishAttributeService.fetchFishAttributes();
           },
-          record: function($stateParams, BeltFishTransectMethod, utils) {
+          record: function($stateParams, BeltFishTransectMethod) {
             return BeltFishTransectMethod.get({
               project_pk: $stateParams.project_id,
               id: $stateParams.id
             }).$promise.then(function(beltFishRecord) {
               const record = { data: beltFishRecord };
-              utils.assignUniqueId(_.get(record.data, 'obs_belt_fishes') || []);
               return record;
             });
           },
