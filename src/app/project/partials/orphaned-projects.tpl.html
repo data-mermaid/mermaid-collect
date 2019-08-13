@@ -1,0 +1,16 @@
+<section>
+
+  <div class="font-size-16 margin-bottom-10">
+    SOME VERBAGE GOES HERE
+  </div>
+
+  <div ng-repeat="orphanedProject in orphanedProjects track by $index" class="margin-bottom-10">
+    <div class="col-md-12">
+      <strong>{{orphanedProject.name}}</strong>
+      <span class="pull-right">
+        <button class="btn btn-danger" ng-click="removeProject($event, orphanedProject)">Remove</button>    
+      </span>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</section>

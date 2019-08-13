@@ -118,12 +118,21 @@ angular.module('mermaid.libs').service('offlineservice', [
       });
     };
 
-    var deleteProjectDatabases = function(projectId) {
+    const deleteProjectDatabases = function(projectId, force) {
       if (deleteProjectPromises[projectId] != null) {
         return deleteProjectPromises[projectId];
       }
 
-      deleteProjectPromises[projectId] = fetchProjectTablesForRemoval(projectId)
+      force = force || false;
+
+      let tablesPromise;
+      if (force) {
+        tablesPromise = loadProjectRelatedTables(projectId, true);
+      } else {
+        tablesPromise = fetchProjectTablesForRemoval(projectId);
+      }
+
+      deleteProjectPromises[projectId] = tablesPromise
         .then(function(tables) {
           var deletePromises = _.map(tables, function(table) {
             var name = table.name;
@@ -261,18 +270,22 @@ angular.module('mermaid.libs').service('offlineservice', [
     };
 
     const getOrphanedProjects = function() {
-      return getProjectIds().then(function(projectIds) {
-        return $q.all(
-          _.map(projectIds, function(projectId) {
-            return isOrphanedProject(projectId).then(function(isOrphaned) {
-              return {
-                projectId: projectId,
-                isOrphaned: isOrphaned
-              };
-            });
-          })
-        );
-      });
+      return getProjectIds()
+        .then(function(projectIds) {
+          return $q.all(
+            _.map(_.compact(projectIds), function(projectId) {
+              return isOrphanedProject(projectId).then(function(isOrphaned) {
+                return {
+                  projectId: projectId,
+                  isOrphaned: isOrphaned
+                };
+              });
+            })
+          );
+        })
+        .then(function(projects) {
+          return _.filter(projects, { isOrphaned: true });
+        });
     };
 
     var _refresh = function(table, limit) {
@@ -588,6 +601,10 @@ angular.module('mermaid.libs').service('offlineservice', [
             },
             skipRefresh
           ).then(function(table) {
+            if (table.$watch == null) {
+              return table;
+            }
+
             table.$watch(
               function(event) {
                 if (
@@ -644,6 +661,7 @@ angular.module('mermaid.libs').service('offlineservice', [
         return paginatedRefresh(table, options).catch(function(err) {
           if (err.status === 403) {
             deleteProjectDatabases(project_id);
+            return table;
           }
           return err;
         });
@@ -936,7 +954,8 @@ angular.module('mermaid.libs').service('offlineservice', [
       projectIdFromTableName: projectIdFromTableName,
       isOrphanedProject: isOrphanedProject,
       getProjectIds: getProjectIds,
-      getOrphanedProjects: getOrphanedProjects
+      getOrphanedProjects: getOrphanedProjects,
+      deleteProjectDatabases: deleteProjectDatabases
     };
 
     return offlineutils;

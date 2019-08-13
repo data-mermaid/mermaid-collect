@@ -1204,6 +1204,10 @@ btn > button {
   margin-left: 10px;
 }
 
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
+
 table .smart-form section {
   margin-bottom: 0;
 }

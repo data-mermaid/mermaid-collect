@@ -61,7 +61,7 @@ angular.module('mermaid.libs').service('OfflineTableBackup', [
     };
 
     const getTables = function(projectId) {
-      const p1 = offlineservice.loadProjectRelatedTables(projectId);
+      const p1 = offlineservice.loadProjectRelatedTables(projectId, true);
       const p2 = offlineservice.loadLookupTables();
       return $q.all([p1, p2]).then(function(data) {
         return _.flatten(data);
