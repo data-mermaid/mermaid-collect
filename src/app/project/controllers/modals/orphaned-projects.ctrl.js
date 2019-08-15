@@ -14,6 +14,8 @@ angular.module('app.project').controller('OrphanedProjectsCtrl', [
     orphanedProjects
   ) {
     'use strict';
+
+    $scope.modalTitle = 'CLEAN UP UNSYNCHRONIZED DATA';
     $scope.orphanedProjects = orphanedProjects;
 
     $scope.removeProject = function($event, orphanedProject) {

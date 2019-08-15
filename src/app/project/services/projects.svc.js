@@ -6,7 +6,7 @@ angular.module('app.project').service('ProjectsService', [
 
     const showOrphanedProjectsModal = function() {
       const modalOptions = {
-        hideHeader: true,
+        hideHeader: false,
         controller: 'OrphanedProjectsCtrl',
         bodyTemplateUrl: 'app/project/partials/orphaned-projects.tpl.html'
       };
