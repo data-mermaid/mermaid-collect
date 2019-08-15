@@ -131,8 +131,7 @@ angular
     APP_CONFIG,
     layoutUtils,
     system,
-    ConnectivityFactory,
-    ProjectsService
+    ConnectivityFactory
   ) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
@@ -172,8 +171,6 @@ angular
           return false;
         }
       });
-
-      ProjectsService.showOrphanedProjectsModal();
     });
 
     authService.scheduleRenewal();

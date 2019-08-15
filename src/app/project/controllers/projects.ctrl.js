@@ -12,6 +12,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
   'currentUser',
   'ConnectivityFactory',
   'connectivity',
+  'ProjectsService',
   function(
     $rootScope,
     $scope,
@@ -25,10 +26,13 @@ angular.module('app.project').controller('ProjectsCtrl', [
     localStorageService,
     currentUser,
     ConnectivityFactory,
-    connectivity
+    connectivity,
+    ProjectsService
   ) {
     'use strict';
     $scope.tableControl = {};
+
+    ProjectsService.showOrphanedProjectsModal();
 
     var user;
     var conn = new ConnectivityFactory($scope);
@@ -83,6 +87,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
       id: 'projects',
       defaultSortByColumn: 'name',
       searching: true,
+      disableTrackingTableState: true,
       searchPlaceholder: 'Filter projects by name or country',
       searchIcon: 'fa-filter',
       searchLocation: 'right',
