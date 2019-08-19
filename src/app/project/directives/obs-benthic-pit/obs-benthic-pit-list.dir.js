@@ -200,6 +200,10 @@ angular.module('app.project').directive('obsBenthicPitList', [
           scope.editableObservationIndex = null;
         };
 
+        $(window).click(function () {
+          scope.stopEditing();
+        });
+
         scope.$watch(
           'obsBenthicPits',
           function(newVal, oldVal) {

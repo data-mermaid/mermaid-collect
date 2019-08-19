@@ -144,6 +144,10 @@ angular.module('app.project').directive('obsHabitatComplexityList', [
           scope.editableObservationIndex = null;
         };
 
+        $(window).click(function () {
+          scope.stopEditing();
+        });
+
         scope.$watch(
           'obsHabitatComplexitys',
           function(newVal, oldVal) {
