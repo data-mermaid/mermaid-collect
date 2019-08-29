@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: circleci/node:8-browsers
+    - image: circleci/python:3.7.3-stretch-node-browsers
 
 install_dependencies: &install_dependencies
     run:
@@ -15,6 +15,7 @@ install_dependencies: &install_dependencies
           sudo pip install git+https://github.com/data-mermaid/mermaid-changelog.git
 
 jobs:
+
   test:
     <<: *defaults
     steps:
