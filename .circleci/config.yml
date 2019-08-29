@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: circleci/node:8-browsers
+    - image: circleci/3.7.3-stretch-node-browsers
 
 install_dependencies: &install_dependencies
     run:
@@ -12,6 +12,7 @@ install_dependencies: &install_dependencies
           sudo npm install -g bower gulp karma-cli
           bower install
           npm install
+          sudo pip install git+https://github.com/data-mermaid/mermaid-changelog.git
 jobs:
   test:
     <<: *defaults
@@ -56,6 +57,10 @@ jobs:
       - run:
           name: Update version
           command: python ci_cd/update_version.py dev collect "${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}"
+      - run:
+          name: Update changelog
+          command: |
+            python -c "print(${CIRCLE_TAG})"
 
   deploy_prod:
     <<: *defaults
