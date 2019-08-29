@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: circleci/3.7.3-stretch-node-browsers
+    - image: circleci/python:3.7.3-stretch-node-browsers
 
 install_dependencies: &install_dependencies
     run:
