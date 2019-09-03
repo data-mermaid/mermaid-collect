@@ -184,6 +184,10 @@ angular.module('app.project').directive('obsBenthicLitList', [
           scope.editableObservationIndex = null;
         };
 
+        $(window).click(function () {
+          scope.stopEditing();
+        });
+
         const _updateBenthicPercentages = function() {
           $timeout.cancel(watchTimeoutPromise);
           loadBenthicAttributesLookup();
