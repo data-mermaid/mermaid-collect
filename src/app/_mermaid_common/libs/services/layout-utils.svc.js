@@ -18,6 +18,7 @@ angular.module('mermaid.libs').service('layoutUtils', [
       const fromQry = 'a[data-ui-sref="' + fromState + '"]';
       const $navItem = $(toQry);
       const $prevNavItem = $(fromQry);
+      const $parent = $navItem.closest('ul[data-smart-menu]');
       const $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
       const $prevNavTree = $prevNavItem.parentsUntil('ul[data-smart-menu]');
       //also refers the index of menu collapse item such as Fish Name in Reference site.
@@ -31,6 +32,16 @@ angular.module('mermaid.libs').service('layoutUtils', [
         }
         return false;
       };
+
+      _.each($parent.find('li[data-menu-collapse]'), function(collapsibleMenu) {
+        if (
+          $(collapsibleMenu).hasClass('open') &&
+          $(collapsibleMenu).find($navItem).length === 0
+        ) {
+          $(collapsibleMenu).smartCollapseToggle();
+          $(collapsibleMenu).removeClass('active');
+        }
+      });
 
       for (let i = navTreeLength; i >= 0; i--) {
         if (
