@@ -2,7 +2,7 @@ angular.module('mermaid.libs').service('layoutUtils', [
   function() {
     'use strict';
 
-    var activateNavItem = function(state) {
+    const activateNavItem = function(state) {
       const toQry = 'a[data-ui-sref="' + state + '"]';
       const $navItem = $(toQry);
       const $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
@@ -13,7 +13,7 @@ angular.module('mermaid.libs').service('layoutUtils', [
       }
     };
 
-    var toggleNav = function(state) {
+    const toggleNav = function(state) {
       const toQry = 'a[data-ui-sref="' + state + '"]';
       const $navItem = $(toQry);
       const $parent = $navItem.closest('ul[data-smart-menu]');
