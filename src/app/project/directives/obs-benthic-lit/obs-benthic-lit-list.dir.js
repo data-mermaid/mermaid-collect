@@ -184,7 +184,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
           scope.editableObservationIndex = null;
         };
 
-        $(window).click(function () {
+        $(window).click(function() {
           scope.stopEditing();
         });
 
@@ -194,7 +194,8 @@ angular.module('app.project').directive('obsBenthicLitList', [
           watchTimeoutPromise = $timeout(function() {
             scope.observation_calcs = TransectService.calcBenthicPercentages(
               scope.obsBenthicLits,
-              scope.benthicAttributesLookup
+              scope.benthicAttributesLookup,
+              'length'
             );
           }, 300);
         };
