@@ -200,7 +200,10 @@ angular.module('app.project').directive('obsBenthicPitList', [
           scope.editableObservationIndex = null;
         };
 
-        $(window).click(function () {
+        $(window).click(function(evt) {
+          if (evt.target.classList.contains('addRow')) {
+            return;
+          }
           scope.stopEditing();
         });
 
