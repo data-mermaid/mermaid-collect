@@ -144,7 +144,10 @@ angular.module('app.project').directive('obsHabitatComplexityList', [
           scope.editableObservationIndex = null;
         };
 
-        $(window).click(function () {
+        $(window).click(function(evt) {
+          if (evt.target.classList.contains('addRow')) {
+            return;
+          }
           scope.stopEditing();
         });
 
