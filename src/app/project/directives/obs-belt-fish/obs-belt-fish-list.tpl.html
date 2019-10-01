@@ -39,7 +39,7 @@
         </td>
         
         <td class="readonly-cell">
-          <span ng-if="fishsize_choices[fishsizebin].length > 0">{{obs.size | matchchoice:fishsize_choices[fishsizebin] | null_value}} </span>
+          <span ng-if="fishsize_choices[fishsizebin] && obs.size < 50">{{obs.size | matchchoice:fishsize_choices[fishsizebin] | null_value}} </span>
           <span ng-if="!fishsize_choices[fishsizebin] || obs.size >= 50">{{obs.size | null_value}} </span>
           <obs-validation-tooltip
               validations="[
