@@ -20,7 +20,8 @@ angular.module('app.project').directive('obsBenthicSummary', [
           watchTimeoutPromise = $timeout(function() {
             scope.observation_calcs = TransectService.calcBenthicPercentages(
               obs,
-              scope.benthicAttributesLookup
+              scope.benthicAttributesLookup,
+              scope.lengthAttr
             );
           }, 300);
         };
