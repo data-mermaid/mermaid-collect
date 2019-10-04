@@ -228,6 +228,13 @@ angular.module('app.project').directive('obsBeltFishList', [
           scope.editableObservationIndex = null;
         };
 
+        $(window).click(function(evt) {
+          if (evt.target.classList.contains('addRow')) {
+            return;
+          }
+          scope.stopEditing();
+        });
+
         scope.$watch(
           'fishsizebin',
           function() {

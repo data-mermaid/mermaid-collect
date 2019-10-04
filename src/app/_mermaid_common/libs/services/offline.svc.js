@@ -396,9 +396,14 @@ angular.module('mermaid.libs').service('offlineservice', [
           return refreshFx(table, options);
         };
         if (skipRefresh !== true) {
-          table.refresh().then(function() {
-            deferred.resolve(table);
-          });
+          table
+            .refresh()
+            .then(function() {
+              deferred.resolve(table);
+            })
+            .catch(function(err) {
+              deferred.reject(err);
+            });
         } else {
           deferred.resolve(table);
         }
@@ -917,7 +922,7 @@ angular.module('mermaid.libs').service('offlineservice', [
           var is_synced_promises = [];
           // Get database names
           _.each(names, function(name) {
-            if (name.startsWith(db_prefix)) {
+            if (name != null && name.startsWith(db_prefix)) {
               var table = new OfflineTable(name);
               is_synced_promises.push(table.isSynced());
             }
