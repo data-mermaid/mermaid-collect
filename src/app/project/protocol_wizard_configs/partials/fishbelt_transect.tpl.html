@@ -11,12 +11,22 @@
   ></div>
   <div
     class="col-xs-7"
-    textinput
+    numberinput
     widget-form="validationWizardForm"
     widget-name="number"
     ng-model="record.data.fishbelt_transect"
     widget-label="Transect Number"
     widget-required="true"
+    widget-validators="positive-small-integer"
+  ></div>
+  <div
+    class="col-xs-7"
+    textinput
+    widget-form="validationWizardForm"
+    widget-name="label"
+    ng-model="record.data.fishbelt_transect"
+    widget-label="Label"
+    widget-required="false"
   ></div>
   <div
     class="col-xs-7"
