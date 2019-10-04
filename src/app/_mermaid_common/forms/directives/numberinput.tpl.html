@@ -29,7 +29,8 @@
     <span ng-if="widgetRequired === true && widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.required==true" class="error ng-cloak"> Required</span>
     <span ng-if="widgetMinlength && widgetForm[widgetName].$error.minlength" class="error ng-cloak">Minimum characters is {{ widgetMinlength }}</span>
     <span ng-if="widgetMaxlength && widgetForm[widgetName].$error.maxlength" class="error ng-cloak">Maximum characters is {{ widgetMaxlength }}</span>
-    <span ng-repeat="(key, value) in widgetForm[widgetName].$error | validators track by $index" class="error" ng-show="value" ng-bind-html="widgetForm[widgetName].validator_messages[key]"></span>
+    <span ng-repeat="(key, value) in widgetForm[widgetName].$error | validators track by $index" class="error ng-cloak"
+          ng-show="value" ng-bind-html="widgetForm[widgetName].validator_messages[key]"></span>
   </div>
   <div class="note ng-cloak">
     <span

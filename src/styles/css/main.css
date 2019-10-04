@@ -992,12 +992,10 @@ btn > button {
 }
 
 .observation__row-number div {
-  margin-top: 14px;
   opacity: 0.75;
 }
 
 .observation__row-interval div {
-  margin: 14px 0 0 14px;
   color: #AEAEAE;
   letter-spacing: 1.5px;
 }
@@ -1224,31 +1222,9 @@ ul li.transect-buttons[disabled] {
   pointer-events: none;
 }
 
-/* autocomplete dropdown , dropup style */
-/* .autocomplete-typeahead .autocomplete-popup-wrapper {
-  position: absolute;
-  z-index: 1000;
-  display: block;
-  background-color:white;
-  border: #ccc solid 0.5px;
+.dropdown-menu {
+  z-index: 10000 !important;
 }
-*/
-/* .autocomplete-typeahead .autocomplete-popup-wrapper > .dropdown-menu {
-  position: static;
-  display: block;
-}
-
-.dropup-enabled {
-  top: auto;
-  bottom: 100%;
-  left: 0;
-}
-
-.dropdown-enabled {
-  top: 32px;
-  left: 0;
-} */
-
 
 .th-borders-l {
   border-left: 1px solid #ddd;
@@ -1285,7 +1261,11 @@ ul li.transect-buttons[disabled] {
 
 .obs-table {
   border-collapse: separate;
-  table-layout: fixed;
+}
+
+.obs-table td, 
+.obs-table th {
+  text-align: center
 }
 
 .obs-table td {
@@ -1303,6 +1283,10 @@ ul li.transect-buttons[disabled] {
   position: absolute;
   top: 7px;
   right: 7px;
+}
+
+.obs-edit-del-padding {
+  padding-top: 20px !important;
 }
 
 .validation-popup {

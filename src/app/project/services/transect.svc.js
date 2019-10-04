@@ -4,7 +4,6 @@ angular.module('app.project').service('TransectService', [
   '$window',
   'APP_CONFIG',
   'utils',
-  'FishAttributeService',
   'offlineservice',
   'authService',
   function(
@@ -13,7 +12,6 @@ angular.module('app.project').service('TransectService', [
     $window,
     APP_CONFIG,
     utils,
-    FishAttributeService,
     offlineservice,
     authService
   ) {
@@ -74,7 +72,7 @@ angular.module('app.project').service('TransectService', [
         Number.isFinite(length) &&
         Number.isFinite(width)
       ) {
-        var biomass = 
+        var biomass =
           (count * (constant_a * Math.pow(size * constant_c, constant_b))) /
           1000;
         var area = (length * width) / 10000; // m2 to hectares
@@ -159,7 +157,8 @@ angular.module('app.project').service('TransectService', [
 
     var calcBenthicPercentages = function(
       obsBenthics,
-      benthicAttributesLookup
+      benthicAttributesLookup,
+      lengthAttr
     ) {
       if (obsBenthics == null || benthicAttributesLookup == null) {
         return;
@@ -184,13 +183,13 @@ angular.module('app.project').service('TransectService', [
 
       for (var i = 0; i < obsBenthics.length; i++) {
         var benthicAttribute;
-        var obs_ben_lit = obsBenthics[i];
+        var obs_benthic = obsBenthics[i];
 
-        if (obs_ben_lit.attribute == null) {
+        if (obs_benthic.attribute == null) {
           continue;
         }
 
-        benthicAttribute = benthicAttributesLookup[obs_ben_lit.attribute];
+        benthicAttribute = benthicAttributesLookup[obs_benthic.attribute];
 
         // Combine into one object to do calcs
         recordset.push(
@@ -198,7 +197,7 @@ angular.module('app.project').service('TransectService', [
             {
               category: getCategory(benthicAttribute, benthicAttributesLookup)
             },
-            obs_ben_lit
+            obs_benthic
           )
         );
       }
@@ -208,8 +207,10 @@ angular.module('app.project').service('TransectService', [
         category_total[category] = _.reduce(
           group,
           function(sum, obs) {
-            var weight = angular.isDefined(obs.length) ? obs.length : 1;
-            return utils.safe_sum(sum, weight);
+            if (lengthAttr) {
+              return utils.safe_sum(sum, _.get(obs, lengthAttr));
+            }
+            return utils.safe_sum(sum, 1);
           },
           0
         );
@@ -227,7 +228,10 @@ angular.module('app.project').service('TransectService', [
       category_percentages = _.map(category_names, function(category_name) {
         return {
           id: category_name,
-          val: (category_total[category_name] / total) * 100
+          val: utils.safe_multiply(
+            utils.safe_division(category_total[category_name], total),
+            100
+          )
         };
       });
 
@@ -340,6 +344,20 @@ angular.module('app.project').service('TransectService', [
       });
     };
 
+    var getWidthValueLookup = function() {
+      return offlineservice.ChoicesTable(true).then(function(table) {
+        return table
+          .filter({ name: 'belttransectwidths' })
+          .then(function(choices) {
+            const widthValueLookup = {};
+            _.each(choices[0].data, function(c) {
+              widthValueLookup[c.id] = c.val;
+            });
+            return widthValueLookup;
+          });
+      });
+    };
+
     var TransectService = {
       calcBenthicPercentages: calcBenthicPercentages,
       calcObsBiomass: calcObsBiomass,
@@ -352,7 +370,8 @@ angular.module('app.project').service('TransectService', [
       getProjectManagementChoices: getProjectManagementChoices,
       getProjectProfileChoices: getProjectProfileChoices,
       getProjectSiteChoices: getProjectSiteChoices,
-      setObservationIntervals: setObservationIntervals
+      setObservationIntervals: setObservationIntervals,
+      getWidthValueLookup: getWidthValueLookup
     };
 
     return TransectService;

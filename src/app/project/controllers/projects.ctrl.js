@@ -7,6 +7,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
   'PaginatedOfflineTableWrapper',
   'Button',
   'Project',
+  'dataPolicies',
   'localStorageService',
   'currentUser',
   'ConnectivityFactory',
@@ -20,6 +21,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     PaginatedOfflineTableWrapper,
     Button,
     Project,
+    dataPolicies,
     localStorageService,
     currentUser,
     ConnectivityFactory,
@@ -30,6 +32,16 @@ angular.module('app.project').controller('ProjectsCtrl', [
 
     var user;
     var conn = new ConnectivityFactory($scope);
+    var dataSharingPolicies = dataPolicies
+      ? _.reduce(
+          dataPolicies,
+          function(o, v) {
+            o[v.id] = v.name;
+            return o;
+          },
+          {}
+        )
+      : {};
 
     var setTableResource = function() {
       var promise;
@@ -50,6 +62,20 @@ angular.module('app.project').controller('ProjectsCtrl', [
           $scope.tableControl.refresh();
         }
       });
+    };
+
+    var dataSharingFormatter = function(record) {
+      return (
+        'Fish Belt: <em>' +
+        dataSharingPolicies[record.data_policy_beltfish] +
+        '</em><br>' +
+        'Benthics: <em>' +
+        dataSharingPolicies[record.data_policy_benthiclit] +
+        '</em><br>' +
+        'Bleaching: <em>' +
+        dataSharingPolicies[record.data_policy_bleachingqc] +
+        '</em>'
+      );
     };
 
     $scope.resource = undefined;
@@ -84,6 +110,13 @@ angular.module('app.project').controller('ProjectsCtrl', [
           }
         },
         { name: 'num_sites', display: 'Number of Sites', sortable: false },
+        {
+          display: 'Data Sharing',
+          sortable: false,
+          formatter: function(val, record) {
+            return dataSharingFormatter(record);
+          }
+        },
         {
           display: 'Offline Ready',
           sortable: false,

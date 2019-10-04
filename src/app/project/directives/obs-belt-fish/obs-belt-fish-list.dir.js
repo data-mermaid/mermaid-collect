@@ -5,6 +5,8 @@ angular.module('app.project').directive('obsBeltFishList', [
   'utils',
   '$timeout',
   'FishAttributeService',
+  'ValidatorService',
+  'TransectService',
   'ModalService',
   function(
     $window,
@@ -13,6 +15,8 @@ angular.module('app.project').directive('obsBeltFishList', [
     utils,
     $timeout,
     FishAttributeService,
+    ValidatorService,
+    TransectService,
     ModalService
   ) {
     'use strict';
@@ -30,18 +34,38 @@ angular.module('app.project').directive('obsBeltFishList', [
       templateUrl:
         'app/project/directives/obs-belt-fish/obs-belt-fish-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        var modal;
-        var $table = $(element).find('table');
-        var fishAttributesLookup = {};
+        const $table = $(element).find('table');
+        let modal;
+        let fishAttributesLookup = {};
 
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
         scope.fishsize_choices = {};
         scope.biomassvalues = {};
+        scope.editableObservationIndex = null;
+        scope.validator = ValidatorService;
+        scope.widthValueLookup = {};
+        TransectService.getWidthValueLookup().then(function(lookup) {
+          scope.widthValueLookup = lookup;
+        });
 
-        var loadFishAttributesLookup = function() {
+        const getRowIndex = function($index) {
+          return $index == null ? scope.obsBeltFishes.length - 1 : $index;
+        };
+
+        const setInputFocus = function(rowIndex, cellIndex) {
+          $timeout(function() {
+            const $elm = $($table.find('tbody tr')[rowIndex]);
+            $($elm.find('select, input')[cellIndex])
+              .focus()
+              .select();
+          }, 30);
+        };
+
+        const loadFishAttributesLookup = function() {
           fishAttributesLookup = utils.createLookup(scope.fishAttributeChoices);
         };
+
         loadFishAttributesLookup();
 
         scope.getFishAttributes = function() {
@@ -49,10 +73,9 @@ angular.module('app.project').directive('obsBeltFishList', [
         };
 
         scope.navReferenceLink = function(fishAttributeId) {
-          // console.log(fishAttributeId);
           if (!_.isUndefined(fishAttributeId)) {
-            var rank = fishAttributesLookup[fishAttributeId].$$taxonomic_rank;
-            var state = null;
+            const rank = fishAttributesLookup[fishAttributeId].$$taxonomic_rank;
+            let state = null;
 
             if (rank === FishAttributeService.SPECIES_RANK) {
               state = 'app.reference.fishspeciess.fishspecies';
@@ -74,6 +97,7 @@ angular.module('app.project').directive('obsBeltFishList', [
             'app/_mermaid_common/libs/partials/fishattribute-input-new.tpl.html',
           controller: 'FishSpeciesModalCtrl'
         };
+
         scope.modalTrigger = function(observation) {
           modal = ModalService.open(scope.modalConfig);
           modal.result.then(function(record) {
@@ -101,7 +125,7 @@ angular.module('app.project').directive('obsBeltFishList', [
         offlineservice.FishSizesTable(true).then(function(table) {
           return table.filter().then(function(fishsizes) {
             _.each(_.sortBy(fishsizes, 'val'), function(fishsize) {
-              var key = fishsize.fish_bin_size;
+              let key = fishsize.fish_bin_size;
               if (scope.fishsize_choices[key] == null) {
                 scope.fishsize_choices[key] = [];
               }
@@ -113,43 +137,35 @@ angular.module('app.project').directive('obsBeltFishList', [
           });
         });
 
-        scope.getWidthVal = function(widthkey) {
-          var width = _.find(scope.choices.belttransectwidths, {
-            id: widthkey
-          });
-          if (angular.isDefined(width) && angular.isDefined(width.val))
-            return width.val;
-          return null;
-        };
-
-        scope.getNextIndex = function(obs) {
-          var index = scope.obsBeltFishes.indexOf(obs);
-          return _.parseInt(index) + 1 || scope.obsBeltFishes.length;
-        };
-
-        scope.getFormElement = function(selectorPrefix) {
-          var retElement = $(element).find(selectorPrefix + ' input');
-          if (retElement.length === 0) {
-            retElement = $(element).find(selectorPrefix + ' select');
+        scope.navInputs = function($event, obs, isRowEnd, $index) {
+          isRowEnd = isRowEnd || false;
+          if (!$event) {
+            return;
           }
-          return retElement;
+
+          const keyCode = $event.keyCode;
+
+          if (keyCode === 13 || (keyCode === 9 && isRowEnd)) {
+            scope.addRow($event, $index);
+          }
+          $event.stopPropagation();
         };
 
-        scope.addRow = function($event, observation) {
+        scope.addRow = function($event, $index) {
           if (scope.isDisabled) {
             return;
           }
 
           scope.obsBeltFishes = scope.obsBeltFishes || [];
-          var nextIndex = scope.getNextIndex(observation);
-          var nextCol = 'attr';
-          var newRecord = {}; // simple add row
+          const nextIndex = getRowIndex($index) + 1;
+          let nextCol = 'attr';
+          let newRecord = {}; // simple add row
 
           if (!$event || $event.keyCode === 13 || $event.keyCode === 9) {
             if ($event && $event.keyCode === 9) {
               // if tab, duplicate row and focus on val
               nextCol = 'size';
-              newRecord = _.omit(observation, [
+              newRecord = _.omit(scope.obsBeltFishes[$index], [
                 'id',
                 '$$hashKey',
                 nextCol,
@@ -158,13 +174,11 @@ angular.module('app.project').directive('obsBeltFishList', [
               ]);
             }
 
-            utils.assignUniqueId(newRecord);
             scope.obsBeltFishes.splice(nextIndex, 0, newRecord);
+            formCtrl.$setDirty();
+            scope.startEditing(null, nextIndex);
 
-            $timeout(function() {
-              var $elm = $($table.find('tr')[nextIndex + 1]);
-              $($elm.find('input')[0]).focus();
-            }, 0);
+            setInputFocus(nextIndex, 0);
           }
         };
 
@@ -174,33 +188,72 @@ angular.module('app.project').directive('obsBeltFishList', [
           }
 
           scope.obsBeltFishes = scope.obsBeltFishes || [];
-          var idx = scope.obsBeltFishes.indexOf(observation);
+          const idx = scope.obsBeltFishes.indexOf(observation);
           if (idx !== -1) {
+            delete scope.biomassvalues[idx];
             scope.obsBeltFishes.splice(idx, 1);
-            delete scope.biomassvalues[observation.$$hashKey];
           }
           formCtrl.$setDirty();
         };
+
+        scope.startEditing = function(evt, idx) {
+          if (evt) {
+            evt.stopPropagation();
+          }
+
+          if (scope.isDisabled) {
+            scope.editableObservationIndex = null;
+            return;
+          }
+
+          if (
+            idx === scope.editableObservationIndex &&
+            evt &&
+            evt.target.nodeName !== 'TD'
+          ) {
+            return;
+          } else if (
+            idx === scope.editableObservationIndex &&
+            evt &&
+            evt.target.nodeName === 'TD'
+          ) {
+            scope.editableObservationIndex = null;
+            return;
+          }
+          scope.editableObservationIndex = idx;
+        };
+
+        scope.stopEditing = function() {
+          scope.index = null;
+          scope.editableObservationIndex = null;
+        };
+
+        $(window).click(function(evt) {
+          if (evt.target.classList.contains('addRow')) {
+            return;
+          }
+          scope.stopEditing();
+        });
 
         scope.$watch(
           'fishsizebin',
           function() {
             _.each(scope.obsBeltFishes, function(obs) {
-              var prev_bin_val;
-              var bin_val = scope.fishsizebin;
+              let prev_bin_val;
+              let bin_val = scope.fishsizebin;
               if (scope.choices.fishsizebins) {
-                var current_idx = _.findIndex(
+                let current_idx = _.findIndex(
                   scope.choices.fishsizebins,
                   function(item) {
                     return item.id == bin_val;
                   }
                 );
-                var current_bin_val = scope.choices.fishsizebins[current_idx]
+                let current_bin_val = scope.choices.fishsizebins[current_idx]
                   ? scope.choices.fishsizebins[current_idx].val
                   : undefined;
 
                 if (obs.size_bin) {
-                  var prev_idx = _.findIndex(
+                  let prev_idx = _.findIndex(
                     scope.choices.fishsizebins,
                     function(item) {
                       return item.id == obs.size_bin;

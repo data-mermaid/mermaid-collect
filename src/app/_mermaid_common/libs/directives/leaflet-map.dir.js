@@ -18,7 +18,7 @@ angular.module('mermaid.libs').directive('leafletMap', [
         var style = {
           color: '#ff0000',
           fillColor: '#ff0000',
-          opacity: 0.7,
+          opacity: 0.8,
           radius: 4,
           stroke: 1
         };
@@ -26,7 +26,7 @@ angular.module('mermaid.libs').directive('leafletMap', [
         var mutedStyle = {
           color: '#2D2D2D',
           fillColor: '#2D2D2D',
-          opacity: 0.2,
+          opacity: 0.5,
           radius: 4,
           stroke: 1
         };
@@ -52,12 +52,14 @@ angular.module('mermaid.libs').directive('leafletMap', [
         element.addClass('mapcanvas');
         scope.map = scope.map || L.map(element[0], scope.mapopts);
 
-        L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: 'Basemap &copy; OpenStreetMap',
-          maxZoom: 18,
-          id: 'mapbox.streets',
-          subdomains: ['a', 'b', 'c']
-        }).addTo(scope.map);
+        L.tileLayer(
+          '//server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+          {
+            attribution: 'Basemap &copy; esri',
+            maxZoom: 18,
+            subdomains: ['a', 'b', 'c']
+          }
+        ).addTo(scope.map);
 
         scope.map.addLayer(scope.secondaryMapRecords);
         scope.map.addLayer(scope.maprecords);

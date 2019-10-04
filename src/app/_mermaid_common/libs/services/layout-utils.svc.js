@@ -2,32 +2,44 @@ angular.module('mermaid.libs').service('layoutUtils', [
   function() {
     'use strict';
 
-    var activateNavItem = function(state) {
-      var toQry = 'a[data-ui-sref="' + state + '"]';
-      var $navItem = $(toQry);
-      var $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
-      var navTreeLength = $navTree.length - 1; //also refers the index of menu collapse item such as Fish Name in Reference site.
+    const activateNavItem = function(state) {
+      const toQry = 'a[data-ui-sref="' + state + '"]';
+      const $navItem = $(toQry);
+      const $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
+      const navTreeLength = $navTree.length - 1; //also refers the index of menu collapse item such as Fish Name in Reference site.
 
-      for (var i = navTreeLength; i >= 0; i--) {
+      for (let i = navTreeLength; i >= 0; i--) {
         $($navTree[i]).addClass('active');
       }
     };
 
-    var toggleNav = function(state) {
-      var toQry = 'a[data-ui-sref="' + state + '"]';
-      var $navItem = $(toQry);
-      var $navTree = $navItem.parentsUntil('ul[data-smart-menu]');
-      var navTreeLength = $navTree.length - 1; //also refers the index of menu collapse item such as Fish Name in Reference site.
+    const toggleNav = function(state) {
+      const toQry = 'a[data-ui-sref="' + state + '"]';
+      const $navItem = $(toQry);
+      const $parent = $navItem.closest('ul[data-smart-menu]');
 
-      for (var i = navTreeLength; i >= 0; i--) {
+      _.each($parent.find('li[data-menu-collapse]'), function(collapsibleMenu) {
         if (
-          i === navTreeLength &&
-          $navTree[i].nodeName === 'LI' &&
-          !$($navTree[i]).hasClass('open')
+          $(collapsibleMenu).hasClass('open') &&
+          $(collapsibleMenu).find($navItem).length === 0
         ) {
-          $($navTree[i]).smartCollapseToggle();
+          $(collapsibleMenu).smartCollapseToggle();
+          $(collapsibleMenu).removeClass('active');
         }
-      }
+      });
+
+      $parent
+        .find('li.open')
+        .not($navItem)
+        .not($navItem.closest('li[data-menu-collapse]'))
+        .removeClass('open');
+
+      activateNavItem(state);
+
+      $navItem
+        .closest('li[data-menu-collapse]')
+        .not('.open')
+        .smartCollapseToggle();
     };
 
     return {

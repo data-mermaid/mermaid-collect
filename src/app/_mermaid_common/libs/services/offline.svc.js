@@ -317,9 +317,14 @@ angular.module('mermaid.libs').service('offlineservice', [
           return refreshFx(table, options);
         };
         if (skipRefresh !== true) {
-          table.refresh().then(function() {
-            deferred.resolve(table);
-          });
+          table
+            .refresh()
+            .then(function() {
+              deferred.resolve(table);
+            })
+            .catch(function(err) {
+              deferred.reject(err);
+            });
         } else {
           deferred.resolve(table);
         }
@@ -705,6 +710,28 @@ angular.module('mermaid.libs').service('offlineservice', [
     };
 
     var FishSpeciesTable = function(skipRefresh) {
+      const refreshFishSpecies = function(table, options) {
+        return table
+          .filter({
+            status: 10, // PROPOSED_RECORD
+            $$synced: false
+          })
+          .then(function(records) {
+            return _.map(records, function(record) {
+              if (!record.name || !record.genus) {
+                return record.delete(true);
+              }
+              return $q.resolve();
+            });
+          })
+          .then(function(deletePromises) {
+            return $q.all(deletePromises);
+          })
+          .then(function() {
+            return paginatedRefresh(table, options);
+          });
+      };
+
       return getOrCreateOfflineTable(
         APP_CONFIG.localDbName,
         'fishspecies',
@@ -717,12 +744,34 @@ angular.module('mermaid.libs').service('offlineservice', [
           limit: 3000,
           isPublic: true
         },
-        paginatedRefresh,
+        refreshFishSpecies,
         skipRefresh
       );
     };
 
     var BenthicAttributesTable = function(skipRefresh) {
+      const refreshBenthicAttributes = function(table, options) {
+        return table
+          .filter({
+            status: 10, // PROPOSED_RECORD
+            $$synced: false
+          })
+          .then(function(records) {
+            return _.map(records, function(record) {
+              if (!record.name || !record.parent) {
+                return record.delete(true);
+              }
+              return $q.resolve();
+            });
+          })
+          .then(function(deletePromises) {
+            return $q.all(deletePromises);
+          })
+          .then(function() {
+            return paginatedRefresh(table, options);
+          });
+      };
+
       return getOrCreateOfflineTable(
         APP_CONFIG.localDbName,
         'benthicattributes',
@@ -732,7 +781,7 @@ angular.module('mermaid.libs').service('offlineservice', [
           limit: 300,
           isPublic: true
         },
-        paginatedRefresh,
+        refreshBenthicAttributes,
         skipRefresh
       );
     };
@@ -772,7 +821,7 @@ angular.module('mermaid.libs').service('offlineservice', [
           var is_synced_promises = [];
           // Get database names
           _.each(names, function(name) {
-            if (name.startsWith(db_prefix)) {
+            if (name != null && name.startsWith(db_prefix)) {
               var table = new OfflineTable(name);
               is_synced_promises.push(table.isSynced());
             }

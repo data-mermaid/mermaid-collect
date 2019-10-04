@@ -74,6 +74,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     $scope.benthicPolicies = {};
     $scope.organization = {};
     $scope.tags = _.uniq(tags.results, 'id');
+    $scope.projectStatuses = {};
     $scope.project.tags = [];
     $scope.mapopts = { gestureHandling: true };
     $scope.project.data_policy_beltfish = $scope.project.data_policy;
@@ -308,6 +309,13 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       $scope.isCreating = true;
       blockUI.start();
       var url = APP_CONFIG.apiUrl + 'projects/create_project/';
+
+      // Set project status
+      $scope.project.status =
+        $scope.projectStatuses.isTest === true
+          ? utils.project_statuses.test
+          : utils.project_statuses.open;
+
       var data = {
         project: $scope.project,
         sites: $scope.sites,

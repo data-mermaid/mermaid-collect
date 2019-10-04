@@ -1,5 +1,5 @@
 <div class="smart-form">
-  <table class="table" style="border-collapse: separate;">
+  <table class="table table-bordered obs-table" style="border-collapse: separate;">
     <thead>
       <tr>
         <th></th>
@@ -11,8 +11,81 @@
       </tr>
     </thead>
     <tbody ng-if="obsBeltFishes.length > 0">
-      <tr ng-repeat="obs in obsBeltFishes track by obs.$$uid">
-        <td style="padding-top: 20px; width: 0.5em">
+      <tr
+        ng-repeat="obs in obsBeltFishes track by $index"
+        class="cursor-pointer"
+        ng-click="startEditing($event, $index)"
+        ng-class="{'editable-row': editableObservationIndex !== $index}"
+      >
+        <!--
+          READ SECTION
+        -->
+        <td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
+          <div>
+            <small>{{::$index + 1}}</small>
+          </div>
+        </td>
+
+        <td class="readonly-cell">
+          <span class="readonly-cell text-left">{{::obs.fish_attribute | matchchoice:fishAttributeChoices:"display_name"}} </span><obs-validation-tooltip
+              validations="[
+                {
+                  'isValid': validator.requiresvalue(obs.fish_attribute) === true,
+                  'message': 'Required'
+                }
+              ]"
+            >
+          </obs-validation-tooltip>
+        </td>
+        
+        <td class="readonly-cell">
+          <span ng-if="fishsize_choices[fishsizebin] && obs.size < 50">{{obs.size | matchchoice:fishsize_choices[fishsizebin] | null_value}} </span>
+          <span ng-if="!fishsize_choices[fishsizebin] || obs.size >= 50">{{obs.size | null_value}} </span>
+          <obs-validation-tooltip
+              validations="[
+                {
+                  'isValid': validator.requiresvalue(obs.size) === true,
+                  'message': 'Required'
+                },
+                {
+                  'isValid': validator.minvalue(obs.size, 0) === true,
+                  'message': 'Value must be greater than 0'
+                },
+                {
+                  'isValid': validator.decimalvalue(obs.size, 5, 1) === true,
+                  'message': 'Value must have a maximum of 5 digits and a maximum of 1 decimal.'
+                }
+              ]"
+            >
+          </obs-validation-tooltip>
+        </td>
+        
+        <td ng-if-end class="readonly-cell">
+          <span>{{obs.count | null_value}} </span><obs-validation-tooltip
+          validations="[
+            {
+              'isValid': validator.requiresvalue(obs.count) === true,
+              'message': 'Required'
+            },
+            {
+              'isValid': validator.integervalue(obs.count) === true,
+              'message': 'Value must be a whole number.'
+            },
+            {
+              'isValid': validator.minvalue(obs.count, 0) === true,
+              'message': 'Value must be greater than 0'
+            }
+
+          ]"
+        >
+        </td>
+
+        <!--
+          WRITE SECTION
+        -->
+        <td
+          style="padding-top: 20px; width: 0.5em"
+          ng-if-start="editableObservationIndex === $index">
           <div style="opacity: 0.75;"><small>{{::($index + 1)}}</small></div>
         </td>
         <td>
@@ -40,11 +113,11 @@
               </a>
             </appendaddon>
           </autocompleteinput>
-          <obs-attribute-validation
-            widget-name="'fish_attribute'"
-            ng-model="obs.fish_attribute"
+          <obs-model-validation-tooltip
             requiresval
-          ></obs-attribute-validation>
+            ng-model="obs.fish_attribute"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td ng-if="!fishsize_choices[fishsizebin]">
           <div
@@ -58,12 +131,16 @@
             widget-required-hide="true"
             widget-append="cm"
             widget-validators="decimal='5:1',minvalue='0'"
+            ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
-          <obs-attribute-validation
-            widget-name="'size'"
-            ng-model="obs.size"
+
+          <obs-model-validation-tooltip
             requiresval
-          ></obs-attribute-validation>
+            minvalue='0:t'
+            decimal="5:1"
+            ng-model="obs.size"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td ng-if="fishsize_choices[fishsizebin].length > 0">
           <div
@@ -79,6 +156,7 @@
             widget-required-hide="true"
             widget-choices="fishsize_choices[fishsizebin]"
             widget-float-value="true"
+            ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <div
             ng-if="obs.size >= 50"
@@ -93,17 +171,19 @@
             widget-required-hide="true"
             widget-append="cm"
             widget-validators="decimal='5:1',minvalue='0'"
+            ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
 
-          <obs-attribute-validation
-            widget-name="'size'"
-            ng-model="obs.size"
+          <obs-model-validation-tooltip
             requiresval
-          ></obs-attribute-validation>
-
+            minvalue='0:t'
+            decimal="5:1"
+            ng-model="obs.size"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
 
-        <td>
+        <td ng-if-end>
           <div
             numberinput
             widget-disabled="isDisabled"
@@ -112,26 +192,29 @@
             ng-model="obs"
             widget-required="true"
             widget-required-hide="true"
-            ng-keydown="addRow($event, obs)"
+            ng-keydown="navInputs($event, obs, true, $index)"
             widget-validators="integer,minvalue='0'"
           ></div>
-          <obs-attribute-validation
-            widget-name="'count'"
-            ng-model="obs.count"
+          <obs-model-validation-tooltip
             integer
-            minvalue='0'
             requiresval
-          ></obs-attribute-validation>
+            minvalue='0:t'
+            ng-model="obs.count"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td>
-          <biomass class="input-align"
+          <biomass 
+            class="input-align"
             obs="obs"
-            biomassval="biomassvalues[obs.$$uid]"
+            biomassval="biomassvalues[$index]"
             transect-len-surveyed="transectLenSurveyed"
-            transect-width="getWidthVal(transectWidth)"
+            transect-width="widthValueLookup[transectWidth]"
           ></biomass>
         </td>
-        <td style="padding-top: 20px;">
+        <td
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
           <btn
             icon="fa-times"
             classes="btn-xs btn-danger"
@@ -144,19 +227,20 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="3">
-          <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
+        <td colspan="6" class="text-left">
+          <a class="addRow" ng-if="isDisabled !== true" href="" ng-click="$event.stopPropagation();addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled" ><i class="fa fa-plus"></i> Add row</span>
         </td>
-        <th>Total biomass (kg/ha)</th>
-        <td>
-          <biomass-total
-            observations="obsBeltFishes"
-            transect-len-surveyed="transectLenSurveyed"
-            transect-width="getWidthVal(transectWidth)"
-          ></biomass-total>
+      </tr>
+      <tr>
+        <td colspan="6" class="text-left">
+            <obs-belt-fish-summary
+              class="pull-right observation-summary"
+              observations="obsBeltFishes"
+              transect-len-surveyed="transectLenSurveyed"
+              transect-width="transectWidth"
+            ></obs-belt-fish-summary>
         </td>
-        <td></td>
       </tr>
     </tfoot>
   </table>

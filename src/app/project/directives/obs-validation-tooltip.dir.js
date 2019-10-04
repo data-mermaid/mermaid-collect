@@ -7,11 +7,12 @@ angular.module('app.project').directive('obsValidationTooltip', [
         validations: '<?',
         validationsFx: '&?'
       },
-      template: `<sup ng-cloak ng-if="isInvalid">
+      template: `<sup ng-cloak ng-if="modelCtrl.$invalid">
           <i class="fa fa-warning error-color"></i>
       </sup>`,
-      link: function(scope, element) {
+      link: function (scope, element, attrs, controller) {
         scope.isInvalid = false;
+        scope.modelCtrl = controller;
         const $element = $(element);
         const validations =
           scope.validations != null ? scope.validations : scope.validationsFx();
@@ -46,6 +47,7 @@ angular.module('app.project').directive('obsValidationTooltip', [
             })
             .popover('show');
         });
+
         $element.on('mouseleave', function() {
           const elem = $(this);
           if (elem.length > 0) {

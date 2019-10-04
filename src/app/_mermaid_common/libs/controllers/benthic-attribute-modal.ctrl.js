@@ -19,5 +19,16 @@ angular.module('mermaid.libs').controller('BenthicAttributeModalCtrl', [
     BenthicAttributeService.fetchBenthicAttributes().then(function(records) {
       $scope.parents = records;
     });
+
+    $scope.$watch(
+      'record',
+      function() {
+        $ctrl.proposeNewAttributeBtn.enabled =
+          $scope.record &&
+          $scope.record.name != null &&
+          $scope.record.parent != null;
+      },
+      true
+    );
   }
 ]);

@@ -1,5 +1,5 @@
 <div class="smart-form">
-  <table class="table" style="border-collapse: separate;">
+  <table class="table table-bordered obs-table">
     <thead>
       <tr>
         <th></th>
@@ -10,7 +10,12 @@
       </tr>
     </thead>
     <tbody ng-if="obsBenthicPits.length > 0">
-      <tr ng-repeat="obs in obsBenthicPits track by obs.$$uid">
+      <tr
+        ng-repeat="obs in obsBenthicPits track by $index"
+        ng-click="startEditing($event, $index)"
+        class="cursor-pointer"
+        ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
+      >
         <td class="observation__row-number">
           <div style="opacity: 0.75;"><small>{{::($index + 1)}}</small></div>
         </td>
@@ -18,7 +23,32 @@
           <input type="hidden" ng-model="obs">
           <div>{{obs.interval | null_value}}m</div>
         </td>
-        <td>
+
+        <!--
+          READ SECTION
+        -->
+
+        <td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
+          <span class="text-left">{{::obs.attribute | matchchoice:benthicAttributeChoices}} </span><obs-validation-tooltip
+              validations="[
+                {
+                  'isValid': validator.requiresvalue(obs.attribute) === true,
+                  'message': 'Required'
+                }
+              ]"
+            >
+          </obs-validation-tooltip>
+        </td>
+
+        <td ng-if-end class="readonly-cell">
+         {{obs.growth_form | matchchoice:choices.growthforms}}
+        </td>
+
+        <!--
+          WRITE SECTION
+        -->
+
+        <td ng-if-start="editableObservationIndex === $index">
           <autocompleteinput            
             widget-disabled="isDisabled"
             widget-form="form"
@@ -41,13 +71,13 @@
               </a>
             </appendaddon>
           </autocompleteinput>
-          <obs-attribute-validation
-            widget-name="'attribute'"
-            ng-model="obs.attribute"
+          <obs-model-validation-tooltip
             requiresval
-          ></obs-attribute-validation>
+            ng-model="obs.attribute"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
-        <td>
+        <td ng-if-end>
           <div
             ddlinput
             widget-disabled="isDisabled"
@@ -56,10 +86,12 @@
             ng-model="obs"
             widget-required="false"
             widget-choices="choices.growthforms"
-            ng-keydown="addRow($event, obs)"
+            ng-keydown="navInputs($event, obs, true, $index)"
           ></div>
         </td>
-        <td style="padding-top: 20px;">
+        <td
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
           <btn
             icon="fa-times"
             classes="btn-xs btn-danger"
@@ -72,15 +104,19 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="4">
-          <a ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
+        <td colspan="5" class="text-left">
+          <a class="addRow" ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
           <span ng-if="isDisabled === true" class="disabled"><i class="fa fa-plus"></i> Add row</span>
         </td>
       </tr>
-      <tr ng-repeat="cat_percentage in observation_calcs.category_percentages track by $index" ng-if="observation_calcs.total">
-        <td colspan="2">&nbsp;</td>
-        <td>% {{cat_percentage.id}}<span class="pull-right">{{cat_percentage.val | number: 1}}</span></td>
-        <td>&nbsp;</td>
+      <tr>
+        <td colspan="5" class="text-left">
+            <obs-benthic-summary
+              class="pull-right observation-summary"
+              observations="obsBenthicPits"
+              benthic-attributes-lookup="benthicAttributesLookup"
+            ></obs-benthic-summary>
+        </td>
       </tr>
     </tfoot>
   </table>

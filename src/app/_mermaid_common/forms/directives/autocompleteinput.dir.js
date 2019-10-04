@@ -92,7 +92,6 @@ angular.module('mermaid.forms').directive('autocompleteinput', [
         scope.dropUpEnabled = false;
         // scope.dropUpEnabled = utils.truthy(scope.dropUpEnabled) || false;
         scope.widgetPlaceholder = attrs.widgetPlaceholder;
-        scope.widgetLimitTo = scope.widgetLimitTo || 10;
         scope.displayAttribute = scope.displayAttribute || 'name';
         scope.moreThanThree = false;
 
