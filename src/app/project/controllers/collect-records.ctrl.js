@@ -154,6 +154,15 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           }
         },
         {
+          name: 'data.sample_event.management',
+          display: 'Management',
+          sortable: true,
+          sort_by: ['$$managements.name'],
+          formatter: function(v, record) {
+            return record.$$managements.name;
+          }
+        },
+        {
           name: 'data',
           display: 'Sample Unit #',
           sortable: true,
@@ -407,6 +416,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         searchFields: [
           'data.protocol',
           '$$sites.name',
+          '$$managements.name',
           'data.observers,profile_name'
         ],
         sortFields: {

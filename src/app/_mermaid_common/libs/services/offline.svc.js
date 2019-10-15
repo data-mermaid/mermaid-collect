@@ -591,6 +591,10 @@ angular.module('mermaid.libs').service('offlineservice', [
             sites:
               'data.sample_event.site -> mermaid-projectsites-' +
               project_id +
+              '.id, name',
+            managements:
+              'data.sample_event.management -> mermaid-projectmanagements-' +
+              project_id +
               '.id, name'
           }
         },
