@@ -85,7 +85,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       id: 'submitted_transects',
       defaultSortByColumn: 'protocol',
       searching: true,
-      searchPlaceholder: 'Filter sample units by method, site, or observer',
+      searchPlaceholder:
+        'Filter sample units by method, site, management, or observer',
       searchIcon: 'fa-filter',
       searchLocation: 'right',
       rowSelect: false,
@@ -110,6 +111,12 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           display: 'Site',
           sortable: true,
           sort_by: ['site_name']
+        },
+        {
+          name: 'management_name',
+          display: 'Management',
+          sortable: true,
+          sort_by: ['management_name']
         },
         {
           name: 'sample_unit_number',
