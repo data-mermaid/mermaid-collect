@@ -274,16 +274,19 @@ angular.module('mermaid.libs').service('offlineservice', [
     var refreshAll = function() {
       // Check if records are synced
       var projectTablesPromise = getProjectTableNames().then(function(names) {
-        var projectId;
-        var promises = [];
+        const projectIds = new Set();
         for (var n = 0; n < names.length; n++) {
-          projectId = projectIdFromTableName(names[n]);
+          const projectId = projectIdFromTableName(names[n]);
           if (projectId === null) {
             continue;
           }
-          promises.push(loadProjectRelatedTables(projectId));
+          projectIds.add(projectId);
         }
-        return $q.all(promises);
+        return $q.all(
+          _.map(projectIds, function(projectId) {
+            return loadProjectRelatedTables(projectId);
+          })
+        );
       });
       var lookupTablesPromise = loadLookupTables(false);
 
