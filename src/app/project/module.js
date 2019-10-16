@@ -103,6 +103,36 @@ angular
             ValidateDuplicationService.watchSites(projectId);
             ValidateDuplicationService.watchMRs(projectId);
             return $q.resolve();
+          },
+          orphanedProjectCheck: function(
+            $q,
+            $state,
+            $stateParams,
+            APP_CONFIG,
+            utils,
+            offlineservice,
+            ProjectService
+          ) {
+            let projectId = $stateParams.project_id;
+            return offlineservice
+              .isOrphanedProject(projectId)
+              .then(function(isOrphaned) {
+                if (isOrphaned) {
+                  return ProjectService.getProjectName(projectId).then(function(
+                    projectName
+                  ) {
+                    $state.go(APP_CONFIG.secure_state);
+                    utils.showAlert(
+                      'Error',
+                      `You are not a memeber of ${projectName}.`,
+                      utils.statuses.error,
+                      3000
+                    );
+                    return $q.reject();
+                  });
+                }
+                return $q.resolve();
+              });
           }
         }
       })
