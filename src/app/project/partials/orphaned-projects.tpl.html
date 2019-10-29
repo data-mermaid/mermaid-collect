@@ -1,0 +1,18 @@
+<section>
+
+  <div class="font-size-16 margin-bottom-20">
+    <span>
+      You have collected data for one or more projects that cannot be synchronized with the server because you are no longer part of the project(s). Clicking Remove for a project below will delete your unsynchronized data after downloading a backup file. If you do not, you will continue to see this message and may experience instability within MERMAID Collect.<br/><br/>Contact an admin for the project(s) if you have questions; if you believe this message is in error, contact support@datamermaid.org.
+    </span>
+  </div>
+
+  <div ng-repeat="orphanedProject in orphanedProjects track by $index" class="margin-bottom-10">
+    <div class="col-md-12">
+      <strong>{{orphanedProject.name}}</strong>
+      <span class="pull-right">
+        <button class="btn btn-danger" ng-click="removeProject($event, orphanedProject)">Remove</button>    
+      </span>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</section>

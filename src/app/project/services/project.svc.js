@@ -8,6 +8,7 @@ angular
     'offlineservice',
     'utils',
     'APP_CONFIG',
+    'Project',
     'blockUI',
     function(
       $http,
@@ -16,6 +17,7 @@ angular
       offlineservice,
       utils,
       APP_CONFIG,
+      Project,
       blockUI
     ) {
       'use strict';
@@ -348,6 +350,16 @@ angular
           '/transfer_sample_units/';
         var data = { from_profile: fromProfileId, to_profile: toProfileId };
         return $http.put(transformOwnershipUrl, data);
+      };
+
+      ProjectService.getProjectName = function(projectId) {
+        return Project.get({ id: projectId })
+          .$promise.then(function(project) {
+            return project.name;
+          })
+          .catch(function() {
+            return null;
+          });
       };
 
       return ProjectService;

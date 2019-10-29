@@ -13,10 +13,14 @@ angular.module('mermaid.libs').service('ErrorService', [
       if (alertPromise) {
         console.error(error);
       } else {
-        // Ignore 401
-        if (error && (error.status === 401 || error.status === -1)) {
+        // Ignore -1, 401, and 403
+        if (
+          error &&
+          (error.status === 401 || error.status === -1 || error.status === 403)
+        ) {
           return $q.reject(error);
         }
+
         var msg = ErrorRenderer.render(error);
         alertPromise = utils
           .showAlert('Error', msg, utils.statuses.error, 5000)
