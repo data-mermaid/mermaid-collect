@@ -55,32 +55,6 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       return false;
     };
 
-    var sizeFormat = function(record) {
-      const protocol = record.protocol;
-      const size = record.size;
-      if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
-        const width = _.get(size, 'width') || '-';
-        const width_units = _.get(size, 'width_units') || '';
-        const len_surveyed = _.get(size, 'len_surveyed') || '-';
-        const len_surveyed_units = _.get(size, 'len_surveyed_units') || '';
-        return `${len_surveyed}${len_surveyed_units} x ${width}${width_units}`;
-      } else if (protocol === ProjectService.BLEACHING_QC_QUADRAT_TYPE) {
-        const quadrat_size = _.get(size, 'quadrat_size') || '-';
-        const quadrat_size_units = _.get(size, 'quadrat_size_units') || '';
-        return `${quadrat_size}${quadrat_size_units}`;
-      } else if (
-        protocol === ProjectService.BENTHIC_LIT_TRANSECT_TYPE ||
-        protocol === ProjectService.BENTHIC_PIT_TRANSECT_TYPE ||
-        protocol === ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE
-      ) {
-        const len_surveyed = _.get(size, 'len_surveyed') || '-';
-        const len_surveyed_units = _.get(size, 'len_surveyed_units') || '';
-        return `${len_surveyed}${len_surveyed_units}`;
-      }
-
-      return '-';
-    };
-
     $scope.tableConfig = {
       id: 'submitted_transects',
       defaultSortByColumn: 'protocol',
@@ -132,11 +106,9 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         },
         {
           display: 'Size',
+          name: 'size_display',
           sortable: true,
-          sort_by: ['transect_length'],
-          formatter: function(v, r) {
-            return sizeFormat(r);
-          }
+          sort_by: ['size_display']
         },
         {
           name: 'depth',
