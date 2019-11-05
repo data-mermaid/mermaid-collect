@@ -4,35 +4,38 @@ angular.module('app.project').controller('ProjectCtrl', [
   'connectivity',
   '$state',
   '$stateParams',
-  '$q',
-  'offlineservice',
   'ConnectivityFactory',
   'utils',
   'Button',
   'ProjectService',
   'tags',
+  'projectsTable',
+  'project',
+  'projectProfile',
+  'dataPolicies',
   function(
     $rootScope,
     $scope,
     connectivity,
     $state,
     $stateParams,
-    $q,
-    offlineservice,
     ConnectivityFactory,
     utils,
     Button,
     ProjectService,
-    tags
+    tags,
+    projectsTable,
+    project,
+    projectProfile,
+    dataPolicies
   ) {
     'use strict';
 
-    var project_table;
     var project_id = $stateParams.project_id;
     var _isUserProjectAdmin = false;
     var conn = new ConnectivityFactory($scope);
 
-    $scope.project = {};
+    $scope.project = project;
     $scope.benthicPolicies = {};
     $scope.isDisabled = true;
     $scope.tags = _.uniq(tags.results, 'id');
@@ -44,36 +47,16 @@ angular.module('app.project').controller('ProjectCtrl', [
       _isUserProjectAdmin = true;
       $scope.isDisabled = !_isUserProjectAdmin || !connectivity.isOnline;
     } else {
-      ProjectService.getMyProjectProfile(project_id).then(function(
-        project_profile
-      ) {
-        _isUserProjectAdmin = project_profile && project_profile.is_admin;
-        $scope.isDisabled = !_isUserProjectAdmin || !connectivity.isOnline;
-      });
+      _isUserProjectAdmin = projectProfile && projectProfile.is_admin;
+      $scope.isDisabled = !_isUserProjectAdmin || !connectivity.isOnline;
     }
 
-    offlineservice.ProjectsTable(project_id).then(function(table) {
-      project_table = table;
-      if (project_id == null) {
-        return $q.resolve();
-      }
-      return table.get(project_id).then(function(record) {
-        $scope.project = record;
-        $scope.benthicPolicies.data_policy_benthics =
-          record.data_policy_benthiclit; // Assume (for now) all benthic transect data policies are the same
-        $scope.projectStatuses.isTest =
-          record.status === utils.project_statuses.test;
-      });
-    });
+    $scope.benthicPolicies.data_policy_benthics =
+      project.data_policy_benthiclit;
+    $scope.projectStatuses.isTest =
+      project.status === utils.project_statuses.test;
 
-    offlineservice
-      .ChoicesTable()
-      .then(function(table) {
-        return table.filter({ name: 'datapolicies' });
-      })
-      .then(function(result) {
-        ProjectService.setupFormDataPolicies($scope, result[0].data);
-      });
+    ProjectService.setupFormDataPolicies($scope, dataPolicies);
 
     $scope.setBenthicPolicies = function(policy) {
       $scope.project.data_policy_benthiclit = policy;
@@ -90,7 +73,7 @@ angular.module('app.project').controller('ProjectCtrl', [
 
     var save = function() {
       if (!$scope.project.id) {
-        return project_table.create($scope.project).then(function(project) {
+        return projectsTable.create($scope.project).then(function(project) {
           var params = {
             project_id: project.id
           };
@@ -114,7 +97,7 @@ angular.module('app.project').controller('ProjectCtrl', [
 
     $rootScope.PageHeaderButtons = [saveButton];
 
-    conn.on('profile', function(event) {
+    conn.on('project-details', function(event) {
       saveButton.visible = event.event === 'online';
       $scope.isDisabled = !_isUserProjectAdmin || event.event !== 'online';
     });

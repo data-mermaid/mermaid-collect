@@ -1,7 +1,8 @@
 angular.module('mermaid.libs').directive('projectname', [
-  'offlineservice',
   '$stateParams',
-  function(offlineservice, $stateParams) {
+  'offlineservice',
+  'authService',
+  function($stateParams, offlineservice, authService) {
     'use strict';
     return {
       restrict: 'AE',
@@ -33,27 +34,34 @@ angular.module('mermaid.libs').directive('projectname', [
           scope.project_name = null;
         }
 
-        offlineservice.ProjectsTable(project_id, true).then(function(table) {
-          var setProjectName = function(rec) {
-            if (rec != null) {
-              scope.project_name_tooltip = rec.name;
-              scope.project_name = ellipsis_middle(scope.project_name_tooltip);
-            } else {
-              scope.project_name = null;
-            }
-          };
+        authService
+          .getCurrentUser()
+          .then(function(profile) {
+            return offlineservice.ProjectsTable(profile.id, true);
+          })
+          .then(function(table) {
+            var setProjectName = function(rec) {
+              if (rec != null) {
+                scope.project_name_tooltip = rec.name;
+                scope.project_name = ellipsis_middle(
+                  scope.project_name_tooltip
+                );
+              } else {
+                scope.project_name = null;
+              }
+            };
 
-          table.get(project_id).then(function(rec) {
-            setProjectName(rec);
+            table.get(project_id).then(function(rec) {
+              setProjectName(rec);
+            });
+            table.$watch(
+              function(event) {
+                setProjectName(event.data[0]);
+              },
+              null,
+              scope.watchId
+            );
           });
-          table.$watch(
-            function(event) {
-              setProjectName(event.data[0]);
-            },
-            null,
-            scope.watchId
-          );
-        });
       }
     };
   }
