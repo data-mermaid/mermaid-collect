@@ -121,7 +121,12 @@ angular
         resolve: {
           backgroundLoadChoices: _backgroundLoadChoices,
           dataPolicies: _fetchDataPolicyChoices,
-          currentUser: _fetchCurrentUser
+          currentUser: _fetchCurrentUser,
+          ProjectsTable: function(authService, offlineservice) {
+            return authService.getCurrentUser().then(function(profile) {
+              return offlineservice.ProjectsTable(profile.id);
+            });
+          }
         }
       })
       .state('fullapp.project', {

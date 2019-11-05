@@ -10,6 +10,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   'resourceutils',
   'authService',
   'Choice',
+  'Project',
   'ProjectSite',
   'ProjectManagement',
   'ProjectProfile',
@@ -31,6 +32,7 @@ angular.module('mermaid.libs').service('offlineservice', [
     resourceutils,
     authService,
     Choice,
+    Project,
     ProjectSite,
     ProjectManagement,
     ProjectProfile,
@@ -103,10 +105,6 @@ angular.module('mermaid.libs').service('offlineservice', [
       return fetchProjectTablesForRemoval(projectId).then(function(tables) {
         return $q.all(
           _.map(tables, function(table) {
-            if (table.name === APP_CONFIG.localDbName + '-projects') {
-              return table.deleteRecords([projectId], true);
-            }
-
             return table.table.clear().then(function() {
               return OfflineTableSync.removeLastAccessed(table.name);
             });
@@ -117,22 +115,17 @@ angular.module('mermaid.libs').service('offlineservice', [
 
     var deleteProjectDatabases = function(projectId) {
       return fetchProjectTablesForRemoval(projectId).then(function(tables) {
-        var deletePromises = _.map(tables, function(table) {
-          var name = table.name;
-          if (name === APP_CONFIG.localDbName + '-projects') {
-            return table.deleteRecords([projectId], true);
+        const deletePromises = _.map(tables, function(table) {
+          const name = table.name;
+          if (table.closeDbGroup) {
+            table.closeDbGroup();
           } else {
-            if (table.closeDbGroup) {
-              table.closeDbGroup();
-            } else {
-              table.db.close();
-            }
-            return Dexie.delete(name).then(function() {
-              return OfflineTableSync.removeLastAccessed(name);
-            });
+            table.db.close();
           }
+          return Dexie.delete(name).then(function() {
+            return OfflineTableSync.removeLastAccessed(name);
+          });
         });
-
         return $q.all(deletePromises);
       });
     };
@@ -207,6 +200,28 @@ angular.module('mermaid.libs').service('offlineservice', [
           });
         });
       });
+    };
+
+    const getOfflineProjects = function(profileId) {
+      return ProjectsTable(profileId, true)
+        .then(function(table) {
+          return table.filter();
+        })
+        .then(function(projects) {
+          return $q.all(
+            _.map(projects, function(project) {
+              const projectId = project.id;
+              return isProjectOffline(projectId).then(function(isOffline) {
+                const o = {};
+                o[projectId] = isOffline;
+                return o;
+              });
+            })
+          );
+        })
+        .then(function(results) {
+          return _.merge.apply(_, results);
+        });
     };
 
     var _refresh = function(table, limit) {
@@ -385,49 +400,22 @@ angular.module('mermaid.libs').service('offlineservice', [
       );
     };
 
-    var ProjectsTable = function(projectId, skipRefresh) {
-      var tableName = 'projects';
-      var updatesUrl = APP_CONFIG.apiUrl + 'projects/updates/';
-      var remoteUrl = APP_CONFIG.apiUrl + 'projects/';
-
-      var addProject = function(table) {
-        if (projectId == null) {
-          throw 'Project id required';
-        }
-        var url = remoteUrl + projectId + '/';
-        return $http.get(url).then(function(resp) {
-          return table.addRemoteRecords(resp.data);
-        });
-      };
-
-      var refreshProjects = function(table) {
+    var ProjectsTable = function(profileId, skipRefresh) {
+      const tableName = 'projects';
+      const updatesUrl =
+        APP_CONFIG.apiUrl + 'projects/updates/?profile=' + profileId + '&';
+      const remoteUrl =
+        APP_CONFIG.apiUrl + 'projects/?profile=' + profileId + '&';
+      const refreshProjects = function(table) {
         if (connectivity.isOnline !== true) {
           return $q.resolve(table);
         }
 
-        if (projectId == null) {
-          if (APP_CONFIG.debugState) {
-            console.warn(
-              'Skipping table sync: All projects can not be refreshed at the same time.'
-            );
-          }
-          return $q.resolve(table);
-        }
-
-        return table
-          .get(projectId)
-          .then(function(record) {
-            if (record === null) {
-              return addProject(table);
-            } else {
-              var opts = { tableName: tableName + '-' + projectId };
-              return OfflineTableSync.sync(table, opts);
-            }
-          })
-          .then(function() {
-            OfflineTableSync.setLastAccessed(tableName + '-' + projectId);
-            return table;
-          });
+        const opts = { tableName: tableName, updatesUrl: updatesUrl };
+        return OfflineTableSync.sync(table, opts).then(function() {
+          OfflineTableSync.setLastAccessed(tableName);
+          return table;
+        });
       };
 
       return getOrCreateOfflineTable(
@@ -435,9 +423,7 @@ angular.module('mermaid.libs').service('offlineservice', [
         tableName,
         remoteUrl,
         null,
-        {
-          updatesUrl: updatesUrl
-        },
+        {},
         refreshProjects,
         skipRefresh
       ).then(function(table) {
@@ -795,7 +781,6 @@ angular.module('mermaid.libs').service('offlineservice', [
 
     var loadProjectRelatedTables = function(projectId, skipRefresh) {
       var promises = [
-        ProjectsTable(projectId, skipRefresh),
         ProjectSitesTable(projectId, skipRefresh),
         ProjectManagementsTable(projectId, skipRefresh),
         ProjectProfilesTable(projectId, skipRefresh),
@@ -860,6 +845,7 @@ angular.module('mermaid.libs').service('offlineservice', [
       BenthicAttributesTable: BenthicAttributesTable,
       loadProjectRelatedTables: loadProjectRelatedTables,
       isProjectOffline: isProjectOffline,
+      getOfflineProjects: getOfflineProjects,
       getProjectTableNames: getProjectTableNames,
       loadLookupTables: loadLookupTables,
       projectIdFromTableName: projectIdFromTableName
