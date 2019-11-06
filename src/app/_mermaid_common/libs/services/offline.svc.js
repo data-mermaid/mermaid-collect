@@ -47,6 +47,8 @@ angular.module('mermaid.libs').service('offlineservice', [
   ) {
     'use strict';
 
+    const projectsTableName = APP_CONFIG.localDbName + '-projects';
+    let deleteProjectPromises = {};
     var tables = {};
     var projectRelatedTableBaseNames = [
       'projectsites',
@@ -113,21 +115,46 @@ angular.module('mermaid.libs').service('offlineservice', [
       });
     };
 
-    var deleteProjectDatabases = function(projectId) {
-      return fetchProjectTablesForRemoval(projectId).then(function(tables) {
-        const deletePromises = _.map(tables, function(table) {
-          const name = table.name;
-          if (table.closeDbGroup) {
-            table.closeDbGroup();
-          } else {
-            table.db.close();
-          }
-          return Dexie.delete(name).then(function() {
-            return OfflineTableSync.removeLastAccessed(name);
+    const deleteProjectDatabases = function(projectId, force) {
+      if (deleteProjectPromises[projectId] != null) {
+        return deleteProjectPromises[projectId];
+      }
+
+      force = force || false;
+
+      let tablesPromise;
+      if (force) {
+        tablesPromise = loadProjectRelatedTables(projectId, true);
+      } else {
+        tablesPromise = fetchProjectTablesForRemoval(projectId);
+      }
+
+      deleteProjectPromises[projectId] = tablesPromise
+        .then(function(tables) {
+          const deletePromises = _.map(tables, function(table) {
+            const name = table.name;
+            if (name === projectsTableName) {
+              return table.deleteRecords([projectId], true);
+            }
+
+            if (table.closeDbGroup) {
+              table.closeDbGroup();
+            } else {
+              table.db.close();
+            }
+            console.log('--> delete', name);
+
+            return Dexie.delete(name).then(function() {
+              return OfflineTableSync.removeLastAccessed(name);
+            });
           });
+          return $q.all(deletePromises);
+        })
+        .finally(function() {
+          delete deleteProjectPromises[projectId];
         });
-        return $q.all(deletePromises);
-      });
+
+      return deleteProjectPromises[projectId];
     };
 
     var deleteDatabases = function() {
@@ -291,25 +318,59 @@ angular.module('mermaid.libs').service('offlineservice', [
       return parts.reverse().join('-');
     };
 
+    const checkRemoteProjectStatus = function(projectIds) {
+      return $q
+        .all(
+          _.map(projectIds, function(projectId) {
+            const url = APP_CONFIG.apiUrl + 'projects/' + projectId + '/';
+            return $http
+              .head(url)
+              .then(function() {
+                return { [projectId]: true };
+              })
+              .catch(function(err) {
+                let status = true;
+                if (err.status === 404) {
+                  status = false;
+                }
+                return { [projectId]: status };
+              });
+          })
+        )
+        .then(function(results) {
+          return _.merge.apply(_, results);
+        });
+    };
+
     var refreshAll = function() {
       // Check if records are synced
-      var projectTablesPromise = getProjectTableNames().then(function(names) {
-        const projectIds = new Set();
-        for (var n = 0; n < names.length; n++) {
-          const projectId = projectIdFromTableName(names[n]);
-          if (projectId === null) {
-            continue;
+      const projectTablesPromise = getProjectTableNames()
+        .then(function(names) {
+          const projectIds = new Set();
+          for (var n = 0; n < names.length; n++) {
+            const projectId = projectIdFromTableName(names[n]);
+            if (projectId === null) {
+              continue;
+            }
+            projectIds.add(projectId);
           }
-          projectIds.add(projectId);
-        }
-        return $q.all(
-          _.map(projectIds, function(projectId) {
-            return loadProjectRelatedTables(projectId);
-          })
-        );
-      });
-      var lookupTablesPromise = loadLookupTables(false);
+          return Array.from(projectIds);
+        })
+        .then(function(projectIds) {
+          return checkRemoteProjectStatus(projectIds);
+        })
+        .then(function(projectStatuses) {
+          return $q.all(
+            _.map(projectStatuses, function(status, projectId) {
+              if (status === false) {
+                return deleteProjectDatabases(projectId, true);
+              }
+              return loadProjectRelatedTables(projectId);
+            })
+          );
+        });
 
+      const lookupTablesPromise = loadLookupTables(false);
       return $q.all([projectTablesPromise, lookupTablesPromise]);
     };
 
