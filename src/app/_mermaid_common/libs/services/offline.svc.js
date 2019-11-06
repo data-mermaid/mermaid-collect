@@ -47,7 +47,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   ) {
     'use strict';
 
-    const projectsTableName = APP_CONFIG.localDbName + '-projects';
+    const projectsTableName = APP_CONFIG.localDbName + '-projects_v2';
     let deleteProjectPromises = {};
     var tables = {};
     var projectRelatedTableBaseNames = [
@@ -467,7 +467,7 @@ angular.module('mermaid.libs').service('offlineservice', [
     };
 
     var ProjectsTable = function(profileId, skipRefresh) {
-      const tableName = 'projects';
+      const tableName = 'projects_v2';
       const updatesUrl =
         APP_CONFIG.apiUrl + 'projects/updates/?profile=' + profileId + '&';
       const remoteUrl =
