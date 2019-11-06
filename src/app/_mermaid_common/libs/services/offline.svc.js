@@ -10,7 +10,6 @@ angular.module('mermaid.libs').service('offlineservice', [
   'resourceutils',
   'authService',
   'Choice',
-  'Project',
   'ProjectSite',
   'ProjectManagement',
   'ProjectProfile',
@@ -22,6 +21,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   'FishSpecies',
   'connectivity',
   'OfflineTableSync',
+  'logger',
   function(
     APP_CONFIG,
     $q,
@@ -32,7 +32,6 @@ angular.module('mermaid.libs').service('offlineservice', [
     resourceutils,
     authService,
     Choice,
-    Project,
     ProjectSite,
     ProjectManagement,
     ProjectProfile,
@@ -43,7 +42,8 @@ angular.module('mermaid.libs').service('offlineservice', [
     FishGenus,
     FishSpecies,
     connectivity,
-    OfflineTableSync
+    OfflineTableSync,
+    logger
   ) {
     'use strict';
 
@@ -262,9 +262,14 @@ angular.module('mermaid.libs').service('offlineservice', [
           }
 
           opts.applySyncRecord = options.applySyncRecord;
-          return OfflineTableSync.sync(table, opts).then(function() {
-            return table;
-          });
+          return OfflineTableSync.sync(table, opts)
+            .then(function() {
+              return table;
+            })
+            .catch(function(err) {
+              logger.error('refreshProjects', '[' + table.name + '] ', err);
+              return table;
+            });
         }
       });
     };
@@ -412,10 +417,15 @@ angular.module('mermaid.libs').service('offlineservice', [
         }
 
         const opts = { tableName: tableName, updatesUrl: updatesUrl };
-        return OfflineTableSync.sync(table, opts).then(function() {
-          OfflineTableSync.setLastAccessed(tableName);
-          return table;
-        });
+        return OfflineTableSync.sync(table, opts)
+          .then(function() {
+            OfflineTableSync.setLastAccessed(tableName);
+            return table;
+          })
+          .catch(function(err) {
+            logger.error('refreshProjects', '[' + profileId + '] ', err);
+            return table;
+          });
       };
 
       return getOrCreateOfflineTable(
