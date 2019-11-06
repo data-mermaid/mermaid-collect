@@ -142,8 +142,6 @@ angular.module('mermaid.libs').service('offlineservice', [
             } else {
               table.db.close();
             }
-            console.log('--> delete', name);
-
             return Dexie.delete(name).then(function() {
               return OfflineTableSync.removeLastAccessed(name);
             });
