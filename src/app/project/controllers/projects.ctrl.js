@@ -1,38 +1,33 @@
 angular.module('app.project').controller('ProjectsCtrl', [
   '$rootScope',
   '$scope',
-  '$q',
   '$state',
   'offlineservice',
   'PaginatedOfflineTableWrapper',
   'Button',
-  'Project',
   'dataPolicies',
-  'localStorageService',
-  'currentUser',
   'ConnectivityFactory',
   'connectivity',
+  'ProjectsTable',
+  'currentUser',
   function(
     $rootScope,
     $scope,
-    $q,
     $state,
     offlineservice,
     PaginatedOfflineTableWrapper,
     Button,
-    Project,
     dataPolicies,
-    localStorageService,
-    currentUser,
     ConnectivityFactory,
-    connectivity
+    connectivity,
+    ProjectsTable,
+    currentUser
   ) {
     'use strict';
     $scope.tableControl = {};
 
-    var user;
-    var conn = new ConnectivityFactory($scope);
-    var dataSharingPolicies = dataPolicies
+    const conn = new ConnectivityFactory($scope);
+    const dataSharingPolicies = dataPolicies
       ? _.reduce(
           dataPolicies,
           function(o, v) {
@@ -43,28 +38,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
         )
       : {};
 
-    var setTableResource = function() {
-      var promise;
-      if (connectivity.isOnline) {
-        $scope.resource = Project;
-        promise = $q.resolve();
-      } else {
-        promise = offlineservice
-          .ProjectsTable(null, true)
-          .then(function(table) {
-            $scope.resource = new PaginatedOfflineTableWrapper(table, {
-              searchFields: ['name', 'countries']
-            });
-          });
-      }
-      promise.then(function() {
-        if ($scope.tableControl && $scope.tableControl.refresh) {
-          $scope.tableControl.refresh();
-        }
-      });
-    };
-
-    var dataSharingFormatter = function(record) {
+    const dataSharingFormatter = function(record) {
       return (
         'Fish Belt: <em>' +
         dataSharingPolicies[record.data_policy_beltfish] +
@@ -78,17 +52,16 @@ angular.module('app.project').controller('ProjectsCtrl', [
       );
     };
 
-    $scope.resource = undefined;
-    var tableConfig = {
+    $scope.tableConfig = {
       id: 'projects',
       defaultSortByColumn: 'name',
+      disableTrackingTableState: true,
       searching: true,
       searchPlaceholder: 'Filter projects by name or country',
       searchIcon: 'fa-filter',
       searchLocation: 'right',
       filters: {
-        include_fields: 'countries,num_sites',
-        profile: currentUser.id
+        include_fields: 'countries,num_sites'
       },
       cols: [
         {
@@ -126,12 +99,16 @@ angular.module('app.project').controller('ProjectsCtrl', [
       ]
     };
 
-    var startProject = function() {
+    $scope.resource = new PaginatedOfflineTableWrapper(ProjectsTable, {
+      searchFields: ['name', 'countries']
+    });
+
+    const startProject = function() {
       $state.go('fullapp.project');
       startProjectButton.visible = false;
     };
 
-    var startProjectButton = new Button();
+    const startProjectButton = new Button();
     startProjectButton.name = 'Start Project';
     startProjectButton.enabled = true;
     startProjectButton.visible = connectivity.isOnline;
@@ -141,24 +118,21 @@ angular.module('app.project').controller('ProjectsCtrl', [
 
     $rootScope.PageHeaderButtons = [startProjectButton];
 
-    var un = $scope.$watch(
-      function() {
-        return localStorageService.get('user');
-      },
-      function(u) {
-        if (u != null) {
-          user = u;
-          tableConfig.filters.profile = user.id;
-          $scope.tableConfig = tableConfig;
-          un();
-        }
-      }
-    );
-
-    setTableResource();
     conn.on('project-connectivity', function(event) {
       startProjectButton.visible = event.event === 'online';
-      setTableResource();
+      if (event.event === 'offline') {
+        offlineservice
+          .getOfflineProjects(currentUser.id)
+          .then(function(results) {
+            $scope.tableConfig.filters.id = function(projectId) {
+              return results[projectId];
+            };
+            $scope.tableControl.refresh(true);
+          });
+      } else {
+        delete $scope.tableConfig.filters.id;
+        $scope.tableControl.refresh(true);
+      }
     });
   }
 ]);
