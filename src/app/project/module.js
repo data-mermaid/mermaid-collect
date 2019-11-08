@@ -137,7 +137,6 @@ angular
         resolve: {
           backgroundLoadChoices: _backgroundLoadChoices,
           dataPolicies: _fetchDataPolicyChoices,
-          currentUser: _fetchCurrentUser,
           ProjectsTable: _getProjectsTable
         }
       })
