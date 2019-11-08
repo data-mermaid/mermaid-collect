@@ -51,6 +51,8 @@ angular.module('app.auth').service('authService', [
       localStorage.setItem('id_token', authResult.idToken);
       localStorage.setItem('expires_at', expiresAt);
 
+      console.log('auth', authResult);
+
       scheduleRenewal();
     }
 

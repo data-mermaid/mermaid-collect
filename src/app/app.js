@@ -152,6 +152,7 @@ angular
 
     authService.handleAuthentication().then(function() {
       if (connectivity.isOnline && authService.isAuthenticated()) {
+        console.log('startAutoDataUpdate');
         system.startAutoDataUpdate();
       }
 
