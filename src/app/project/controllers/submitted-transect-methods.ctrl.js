@@ -57,7 +57,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
 
     $scope.tableConfig = {
       id: 'submitted_transects',
-      defaultSortByColumn: 'protocol',
+      defaultSortByColumn: 'protocol_name',
       searching: true,
       searchPlaceholder:
         'Filter sample units by method, site, management, or observer',

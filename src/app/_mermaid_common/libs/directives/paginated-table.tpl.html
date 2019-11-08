@@ -22,10 +22,18 @@
     <thead>
       <tr>
         <th ng-if="rowSelect" style="width: 50px; text-align: center;"></th>
-        <th ng-repeat="col in columns" ng-hide="col.hide()" ng-click="sortColumn(col)"
-          ng-class="{'col-sortable': col.sortable, 'col-sort-desc': (sortArgs.column === col && !sortArgs.ascending), 'col-sort-asc': (sortArgs.column === col && sortArgs.ascending)}">
-          <span ng-if="col.th_template" ng-include="col.th_template"></span>
-          <span ng-if="!col.th_template" ng-bind-html="col.display"></span>
+        <th ng-repeat="col in columns" ng-hide="col.hide()" 
+          ng-class="{'col-sortable': col.sortable, 'col-sort-desc': (checkDescColumn(col)), 'col-sort-asc': (checkAscColumn(col))}">
+          <!-- <span ng-if="col.th_template" ng-include="col.th_template"></span> -->
+          <div class="header-col">
+            <span ng-if="checkDescColumn(col) || checkAscColumn(col)" class="col-sort-ordering">
+              <span ng-click="removeSort(col)" class="remove-col-sort">
+                <i class="fa fa-times"></i>
+              </span>
+              <span class="index-col-sort">{{indexOfColumn(col)}}</span>
+            </span>
+            <div ng-if="!col.th_template" ng-bind-html="col.display" ng-click="sortColumn(col)"></div>
+          </div>
         </th>
       </tr>
     </thead>

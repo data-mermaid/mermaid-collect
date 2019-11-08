@@ -364,12 +364,19 @@ th.col-sortable {
     background: url(../img/sort_both.png) right center no-repeat;
     padding-left: 20px!important;
     padding-right: 20px!important;
+    
 }
 th.col-sort-desc {
     background-image: url(../img/sort_desc.png);
+    display: flex;
 }
+th.col-sort-asc:hover span.remove-col-sort,
+th.col-sort-desc:hover  span.remove-col-sort {
+  visibility: visible;
+} 
 th.col-sort-asc {
     background-image: url(../img/sort_asc.png);
+    display: flex;
      -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -1301,5 +1308,25 @@ ul li.transect-buttons[disabled] {
 .editable-row:hover .readonly-cell span{
   text-decoration-line: underline;
   text-decoration-style: dotted;
+}
+
+.header-col {
+  display: flex;
+}
+
+.col-sort-ordering {
+  display: flex;
+  align-content: flex-start;
+  padding-right: 8px;
+}
+
+.index-col-sort {
+  cursor: initial;
+}
+
+.remove-col-sort {
+  color: gray;
+  visibility: hidden;
+  padding-right: 5px;
 }
 
