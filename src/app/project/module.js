@@ -87,32 +87,20 @@ angular
       return TransectService.getLookups($stateParams.project_id);
     };
 
-    const _getProject = function(
-      $stateParams,
-      offlineservice,
-      authService,
-      $q
-    ) {
+    const _getProject = function($stateParams, offlineservice, $q) {
       const projectId = $stateParams.project_id;
-      return authService
-        .getCurrentUser()
-        .then(function(profile) {
-          return offlineservice.ProjectsTable(profile.id);
-        })
-        .then(function(table) {
-          if (projectId == null) {
-            return $q.resolve({});
-          }
-          return table.get(projectId).then(function(record) {
-            return record;
-          });
+      return offlineservice.ProjectsTable().then(function(table) {
+        if (projectId == null) {
+          return $q.resolve({});
+        }
+        return table.get(projectId).then(function(record) {
+          return record;
         });
+      });
     };
 
-    const _getProjectsTable = function(offlineservice, authService) {
-      return authService.getCurrentUser().then(function(profile) {
-        return offlineservice.ProjectsTable(profile.id);
-      });
+    const _getProjectsTable = function(offlineservice) {
+      return offlineservice.ProjectsTable();
     };
 
     $stateProvider

@@ -219,7 +219,7 @@ angular.module('mermaid.libs').service('offlineservice', [
           }
         }
 
-        return ProjectsTable(null, true).then(function(table) {
+        return ProjectsTable(true).then(function(table) {
           return table.get(projectId).then(function(record) {
             return record !== null;
           });
@@ -227,8 +227,8 @@ angular.module('mermaid.libs').service('offlineservice', [
       });
     };
 
-    const getOfflineProjects = function(profileId) {
-      return ProjectsTable(profileId, true)
+    const getOfflineProjects = function() {
+      return ProjectsTable(true)
         .then(function(table) {
           return table.filter();
         })
@@ -464,12 +464,10 @@ angular.module('mermaid.libs').service('offlineservice', [
       );
     };
 
-    var ProjectsTable = function(profileId, skipRefresh) {
+    var ProjectsTable = function(skipRefresh) {
       const tableName = 'projects_v2';
-      const updatesUrl =
-        APP_CONFIG.apiUrl + 'projects/updates/?profile=' + profileId + '&';
-      const remoteUrl =
-        APP_CONFIG.apiUrl + 'projects/?profile=' + profileId + '&';
+      const updatesUrl = APP_CONFIG.apiUrl + 'projects/updates/';
+      const remoteUrl = APP_CONFIG.apiUrl + 'projects/';
       const refreshProjects = function(table) {
         if (connectivity.isOnline !== true) {
           return $q.resolve(table);
@@ -482,7 +480,7 @@ angular.module('mermaid.libs').service('offlineservice', [
             return table;
           })
           .catch(function(err) {
-            logger.error('refreshProjects', '[' + profileId + '] ', err);
+            logger.error('refreshProjects', err);
             return table;
           });
       };
