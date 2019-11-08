@@ -368,17 +368,6 @@ angular
             $location.search(p);
           };
 
-          var removeItemFromArr = function(column_name) {
-            return _.filter(
-              $scope.sortArrArgs,
-              columnItem =>
-                !(
-                  columnItem === column_name.sort_by[0] ||
-                  columnItem === `-${column_name.sort_by[0]}`
-                )
-            );
-          };
-
           var findSortColumnName = function(column_sortby) {
             return _.filter(
               $scope.sortArrArgs,
