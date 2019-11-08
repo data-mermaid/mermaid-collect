@@ -100,7 +100,6 @@ angular
     };
 
     const _getProjectsTable = function(offlineservice) {
-      console.log('fetch projects table');
       return offlineservice.ProjectsTable();
     };
 

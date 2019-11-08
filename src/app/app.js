@@ -87,6 +87,7 @@ angular
     });
 
     $urlRouterProvider.otherwise('/projects');
+    $urlRouterProvider.deferIntercept();
 
     // Intercept http calls.
     $provide.factory('ErrorHttpInterceptor', function($q, $injector) {
@@ -124,6 +125,7 @@ angular
     $stateParams,
     $transitions,
     $uibModalStack,
+    $urlRouter,
     authService,
     authManager,
     localStorageService,
@@ -152,7 +154,6 @@ angular
 
     authService.handleAuthentication().then(function() {
       if (connectivity.isOnline && authService.isAuthenticated()) {
-        console.log('startAutoDataUpdate');
         system.startAutoDataUpdate();
       }
 
@@ -172,6 +173,8 @@ angular
           return false;
         }
       });
+
+      $urlRouter.listen();
     });
 
     authService.scheduleRenewal();
