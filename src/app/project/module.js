@@ -4,7 +4,7 @@ angular
   .module('app.project', ['ui.router'])
 
   .config(function($stateProvider) {
-    var _checkUuid = function($q, utils, id) {
+    const _checkUuid = function($q, utils, id) {
       var deferred = $q.defer();
       if (id === '' || utils.isUuid(id)) {
         deferred.resolve(true);
@@ -17,13 +17,13 @@ angular
       return deferred.promise;
     };
 
-    var _checkId = function() {
+    const _checkId = function() {
       return [
         '$stateParams',
         '$q',
         'utils',
         function($stateParams, $q, utils) {
-          var id = $stateParams.id;
+          const id = $stateParams.id;
           return _checkUuid($q, utils, id).then(
             function(response) {
               return $q.resolve(response);
@@ -36,14 +36,14 @@ angular
       ];
     };
 
-    var _loadProject = function() {
+    const _loadProject = function() {
       return [
         '$stateParams',
         'ProjectService',
         '$q',
         'utils',
         function($stateParams, ProjectService, $q, utils) {
-          var project_id = $stateParams.project_id;
+          const project_id = $stateParams.project_id;
           return _checkUuid($q, utils, project_id).then(
             function() {
               return ProjectService.loadProject(project_id);
@@ -56,26 +56,26 @@ angular
       ];
     };
 
-    var _backgroundLoadChoices = function($q, ProjectService) {
+    const _backgroundLoadChoices = function($q, ProjectService) {
       ProjectService.loadLookupTables();
       return $q.resolve(true);
     };
 
-    var _fetchDataPolicyChoices = function($q, ProjectService) {
+    const _fetchDataPolicyChoices = function($q, ProjectService) {
       return ProjectService.fetchChoices().then(function(choices) {
         return choices.datapolicies;
       });
     };
 
-    var _getMyProjectProfile = function($stateParams, ProjectService) {
+    const _getMyProjectProfile = function($stateParams, ProjectService) {
       return ProjectService.getMyProjectProfile($stateParams.project_id);
     };
 
-    var _fetchCurrentUser = function(authService) {
+    const _fetchCurrentUser = function(authService) {
       return authService.getCurrentUser();
     };
 
-    var _fetchCollectRecord = function($stateParams, offlineservice) {
+    const _fetchCollectRecord = function($stateParams, offlineservice) {
       return offlineservice
         .CollectRecordsTable($stateParams.project_id)
         .then(function(table) {
@@ -83,8 +83,24 @@ angular
         });
     };
 
-    var _fetchTransectLookups = function($stateParams, TransectService) {
+    const _fetchTransectLookups = function($stateParams, TransectService) {
       return TransectService.getLookups($stateParams.project_id);
+    };
+
+    const _getProject = function($stateParams, offlineservice, $q) {
+      const projectId = $stateParams.project_id;
+      return offlineservice.ProjectsTable().then(function(table) {
+        if (projectId == null) {
+          return $q.resolve({});
+        }
+        return table.get(projectId).then(function(record) {
+          return record;
+        });
+      });
+    };
+
+    const _getProjectsTable = function(offlineservice) {
+      return offlineservice.ProjectsTable();
     };
 
     $stateProvider
@@ -121,7 +137,7 @@ angular
         resolve: {
           backgroundLoadChoices: _backgroundLoadChoices,
           dataPolicies: _fetchDataPolicyChoices,
-          currentUser: _fetchCurrentUser
+          ProjectsTable: _getProjectsTable
         }
       })
       .state('fullapp.project', {
@@ -170,7 +186,11 @@ angular
         resolve: {
           tags: function(TagService) {
             return TagService.fetchTags();
-          }
+          },
+          projectsTable: _getProjectsTable,
+          project: _getProject,
+          projectProfile: _getMyProjectProfile,
+          dataPolicies: _fetchDataPolicyChoices
         }
       })
       .state('app.project.datasharing', {
@@ -188,7 +208,11 @@ angular
         resolve: {
           tags: function(TagService) {
             return TagService.fetchTags();
-          }
+          },
+          projectsTable: _getProjectsTable,
+          project: _getProject,
+          projectProfile: _getMyProjectProfile,
+          dataPolicies: _fetchDataPolicyChoices
         }
       })
       .state('app.project.sites', {

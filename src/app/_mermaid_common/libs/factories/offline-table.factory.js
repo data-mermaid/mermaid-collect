@@ -194,7 +194,11 @@ angular.module('mermaid.libs').factory('OfflineTable', [
 
           var url = self.remote_url;
           if (pk) {
-            url += pk + '/';
+            const url_parts = url.split('?');
+            url = url_parts.shift() + pk + '/';
+            if (url_parts.length > 1) {
+              url += url_parts.join('?');
+            }
           }
           return url;
         }

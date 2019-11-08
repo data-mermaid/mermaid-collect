@@ -1,7 +1,7 @@
 angular.module('mermaid.libs').directive('projectname', [
-  'offlineservice',
   '$stateParams',
-  function(offlineservice, $stateParams) {
+  'offlineservice',
+  function($stateParams, offlineservice) {
     'use strict';
     return {
       restrict: 'AE',
@@ -33,7 +33,7 @@ angular.module('mermaid.libs').directive('projectname', [
           scope.project_name = null;
         }
 
-        offlineservice.ProjectsTable(project_id, true).then(function(table) {
+        offlineservice.ProjectsTable(true).then(function(table) {
           var setProjectName = function(rec) {
             if (rec != null) {
               scope.project_name_tooltip = rec.name;
