@@ -36,7 +36,7 @@ angular.module('mermaid.libs').factory('PaginatedArrayWrapper', [
             }
             directions.push(direction);
             if (self.sortFields[order_by]) {
-              o = self.sortFields[order_by];
+              order_by = self.sortFields[order_by];
             }
             columns.push(order_by);
           }
