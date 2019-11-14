@@ -412,10 +412,8 @@ angular
               parsedTableConfig = JSON.parse(localStorage.getItem(tableId));
             }
 
-            console.log('parsedTableConfig ', parsedTableConfig);
             defaultSortByColumns = (parsedTableConfig &&
               parsedTableConfig.columns) || [config.defaultSortByColumn];
-            console.log('defaultSortByColumns ', defaultSortByColumns);
 
             watchers = config.watchers || [];
             angular.forEach(watchers, function(fx) {
