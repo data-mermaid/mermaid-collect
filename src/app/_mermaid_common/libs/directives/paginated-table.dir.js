@@ -232,7 +232,6 @@ angular
           var selectedRecords = {};
 
           $scope.search = null;
-          $scope.sortArgs = null;
           $scope.sortArrArgs = null;
           $scope.selected = {};
           $scope.control.isLoading = false;
@@ -296,7 +295,6 @@ angular
 
             qry.limit = params.limit;
             qry.page = params.page;
-
             qry.ordering = params.sortArrArgs.join(',');
 
             // Search
@@ -414,8 +412,10 @@ angular
               parsedTableConfig = JSON.parse(localStorage.getItem(tableId));
             }
 
+            console.log('parsedTableConfig ', parsedTableConfig);
             defaultSortByColumns = (parsedTableConfig &&
               parsedTableConfig.columns) || [config.defaultSortByColumn];
+            console.log('defaultSortByColumns ', defaultSortByColumns);
 
             watchers = config.watchers || [];
             angular.forEach(watchers, function(fx) {
@@ -429,21 +429,14 @@ angular
             if (disableTrackingTableState !== true) {
               // Update with query parameters if they exist
               table_query_params = getTableQueryParam();
-              if (!_.isEmpty(table_query_params)) {
+              if (
+                !_.isEmpty(table_query_params && table_query_params.ordering)
+              ) {
+                var tableQueryParamOrdering = table_query_params.ordering.split(
+                  ','
+                );
                 tableSettings.limit = table_query_params.limit;
-                if (table_query_params.ordering) {
-                  tableSettings.column_name = table_query_params.ordering.split(
-                    ','
-                  );
-                  if (table_query_params.ordering[0] === '-') {
-                    tableSettings.asc = false;
-                  } else {
-                    tableSettings.asc = true;
-                  }
-                  tableSettings.columns = table_query_params.ordering.split(
-                    ','
-                  );
-                }
+                tableSettings.columns = tableQueryParamOrdering;
                 localStorage.setItem(tableId, JSON.stringify(tableSettings));
               }
             } else {
@@ -460,6 +453,7 @@ angular
             } else if (defaultSortByColumns.length >= 0) {
               $scope.sortArrArgs = defaultSortByColumns;
             }
+
             updatePagination(paginationUpdates);
             $scope.search = table_query_params.search || null;
           };
@@ -477,7 +471,6 @@ angular
             qry = buildQuery({
               limit: $scope.pagination.limit,
               page: $scope.pagination.page,
-              sortArgs: $scope.sortArgs,
               sortArrArgs: $scope.sortArrArgs,
               search: $scope.search,
               filters: $scope.filters
@@ -531,6 +524,8 @@ angular
           $scope.sortColumn = function(column) {
             var column_sort_by = column.sort_by[0];
             var foundColumnName = findSortColumnName(column_sort_by)[0];
+            var pageLimit = null;
+
             if (!column.sortable) {
               return;
             }
@@ -559,7 +554,6 @@ angular
               $scope.sortArrArgs.unshift(column_sort_by);
             }
 
-            var pageLimit = null;
             if (parsedTableConfig) {
               pageLimit = parsedTableConfig.limit;
             }
