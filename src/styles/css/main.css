@@ -1310,23 +1310,22 @@ ul li.transect-buttons[disabled] {
   text-decoration-style: dotted;
 }
 
-.header-col {
-  display: flex;
+.header-col-name {
+  float: left;
 }
 
 .col-sort-ordering {
-  display: flex;
-  align-content: flex-start;
-  padding-right: 8px;
+  float: right;
 }
 
 .index-col-sort {
   cursor: initial;
+  color: #c6c6c6;
+  font-size:12px;
 }
 
 .remove-col-sort {
-  color: gray;
+  color: #555555;
   visibility: hidden;
-  padding-right: 5px;
 }
 
