@@ -507,6 +507,10 @@ angular
             });
           };
 
+          $scope.hideColumnOrder = function() {
+            return $scope.sortArrArgs.length > 1;
+          };
+
           $scope.checkAscColumn = function(column) {
             $scope.sortArrArgs = $scope.sortArrArgs || [];
             var foundColumn = findSortColumnName(column.sort_by[0]);

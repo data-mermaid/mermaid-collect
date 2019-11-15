@@ -30,7 +30,7 @@
             <span ng-click="$event.stopPropagation();removeSort(col)" class="remove-col-sort">
               <i class="fa fa-times"></i>
             </span>
-            <span class="index-col-sort">{{indexOfColumn(col)}}</span>
+            <span ng-if="hideColumnOrder()" class="index-col-sort">{{indexOfColumn(col)}}</span>
           </span>
         </th>
       </tr>

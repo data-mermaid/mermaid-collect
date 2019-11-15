@@ -1323,12 +1323,12 @@ ul li.transect-buttons[disabled] {
 .index-col-sort {
   cursor: initial;
   color: #c6c6c6;
-  font-size:12px;
+  font-size: 11px;
+  padding-left: 5px;;
 }
 
 .remove-col-sort {
   color: #555555;
   visibility: hidden;
-  padding-right: 5px;
 }
 
