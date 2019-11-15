@@ -68,9 +68,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       return false;
     };
 
-    var checkAllOptions = function() {
-      var options = JSON.parse(localStorage.getItem('collect_methodfilter'));
-      return options.length === 5;
+    var checkAllOptions = function(choices, storageName) {
+      var options = JSON.parse(localStorage.getItem(storageName)) || choices;
+      return options.length === choices.length;
     };
 
     var sizeFormat = function(value) {
@@ -257,7 +257,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       toolbar: {
         template:
           'app/project/partials/custom-toolbars/collect-record-toolbar.tpl.html',
-        allMethods: checkAllOptions(),
+        allMethods: checkAllOptions(protocolMethods, 'collect_methodfilter'),
+        allStatus: checkAllOptions(statusChoices, 'collect_statusfilter'),
         methodTypes: [
           {
             name: 'Fish Belt',
@@ -364,6 +365,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           var options =
             JSON.parse(localStorage.getItem('collect_methodfilter')) ||
             protocolMethods;
+
           if (showMethod === true) {
             options.push(protocol);
           } else {
@@ -372,7 +374,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
               options.splice(index, 1);
             }
           }
-          this.allMethods = options.length === 5;
+
+          this.allMethods = options.length === protocolMethods.length;
           localStorage.setItem('collect_methodfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
@@ -380,6 +383,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           var options =
             JSON.parse(localStorage.getItem('collect_statusfilter')) ||
             statusChoices;
+
           if (recordStatus === true) {
             options.push(status);
           } else {
@@ -388,35 +392,62 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
               options.splice(index, 1);
             }
           }
+
+          this.allStatus = options.length === 4;
           localStorage.setItem('collect_statusfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
         backUp: function() {
           backupRecords();
         },
-        selectAll: function(allStatus) {
+        selectAllMethods: function(allSelected) {
           var methodTypes = this.methodTypes;
           var options =
             JSON.parse(localStorage.getItem('collect_methodfilter')) ||
             protocolMethods;
 
-          if (allStatus) {
-            for (var m = 0; m < methodTypes.length; m++) {
-              if (!methodTypes[m].selected) {
-                options.push(methodTypes[m].protocol);
+          if (allSelected) {
+            for (var i = 0; i < methodTypes.length; i++) {
+              if (!methodTypes[i].selected) {
+                options.push(methodTypes[i].protocol);
               }
-              methodTypes[m].selected = true;
+              methodTypes[i].selected = true;
             }
           } else {
             options = [];
-            for (var m = 0; m < methodTypes.length; m++) {
-              if (!methodTypes[m].selected) {
-                options.push(methodTypes[m].protocol);
+            for (var i = 0; i < methodTypes.length; i++) {
+              if (!methodTypes[i].selected) {
+                options.push(methodTypes[i].protocol);
               }
-              methodTypes[m].selected = false;
+              methodTypes[i].selected = false;
             }
           }
           localStorage.setItem('collect_methodfilter', JSON.stringify(options));
+          $scope.tableControl.refresh();
+        },
+        selectAllStatus: function(allSelected) {
+          var statusTypes = this.statusTypes;
+          var options =
+            JSON.parse(localStorage.getItem('collect_statusfilter')) ||
+            protocolMethods;
+
+          if (allSelected) {
+            for (var i = 0; i < statusTypes.length; i++) {
+              if (!statusTypes[i].selected) {
+                options.push(statusTypes[i].status);
+              }
+              statusTypes[i].selected = true;
+            }
+          } else {
+            options = [];
+            for (var i = 0; i < statusTypes.length; i++) {
+              if (!statusTypes[i].selected) {
+                options.push(statusTypes[i].status);
+              }
+              statusTypes[i].selected = false;
+            }
+          }
+          localStorage.setItem('collect_statusfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         }
       }
