@@ -529,27 +529,17 @@ angular
             }
 
             $scope.sortArrArgs = $scope.sortArrArgs || [];
-
             if ($scope.sortArrArgs.includes(foundColumnName)) {
-              if ($scope.sortArrArgs[0] === foundColumnName) {
-                $scope.sortArrArgs = $scope.sortArrArgs.map(val => {
-                  if (val === column_sort_by) {
-                    return `-${val}`;
-                  } else if (val.substr(1) === column_sort_by) {
-                    return val.substr(1);
-                  }
-                  return val;
-                });
-              } else {
-                var tempFilterArr = _.filter(
-                  $scope.sortArrArgs,
-                  column => column !== foundColumnName
-                );
-                tempFilterArr.unshift(column_sort_by);
-                $scope.sortArrArgs = tempFilterArr;
-              }
+              $scope.sortArrArgs = $scope.sortArrArgs.map(val => {
+                if (val === column_sort_by) {
+                  return `-${val}`;
+                } else if (val.substr(1) === column_sort_by) {
+                  return val.substr(1);
+                }
+                return val;
+              });
             } else {
-              $scope.sortArrArgs.unshift(column_sort_by);
+              $scope.sortArrArgs.push(column_sort_by);
             }
 
             if (parsedTableConfig) {

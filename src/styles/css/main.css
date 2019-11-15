@@ -1316,6 +1316,8 @@ ul li.transect-buttons[disabled] {
 
 .col-sort-ordering {
   float: right;
+  display: inline-flex;
+  align-items: center;
 }
 
 .index-col-sort {
@@ -1327,5 +1329,6 @@ ul li.transect-buttons[disabled] {
 .remove-col-sort {
   color: #555555;
   visibility: hidden;
+  padding-right: 5px;
 }
 
