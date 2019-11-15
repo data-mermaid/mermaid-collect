@@ -10,55 +10,23 @@ angular.module('mermaid.libs').service('utils', [
         deleteRecordWarning:
           'Deleting {{count}} record{{plural}}. Are you sure?'
       },
-      project_statuses: {
-        open: 90,
-        test: 80,
-        locked: 10
-      },
+      project_statuses: { open: 90, test: 80, locked: 10 },
       statuses: {
-        primary: {
-          color: '#2196F3',
-          icon: 'fa-exclamation-circle'
-        },
-        info: {
-          color: '#B3E5FC',
-          icon: 'fa-info-circle'
-        },
-        success: {
-          color: '#739e73',
-          icon: 'fa-check-circle'
-        },
-        warning: {
-          color: '#c79121',
-          icon: 'fa-warning'
-        },
-        error: {
-          color: '#a90329',
-          icon: 'fa-times-circle'
-        }
+        primary: { color: '#2196F3', icon: 'fa-exclamation-circle' },
+        info: { color: '#B3E5FC', icon: 'fa-info-circle' },
+        success: { color: '#739e73', icon: 'fa-check-circle' },
+        warning: { color: '#c79121', icon: 'fa-warning' },
+        error: { color: '#a90329', icon: 'fa-times-circle' }
       },
-      roles: {
-        admin: 90,
-        collector: 50,
-        readonly: 10
-      },
+      roles: { admin: 90, collector: 50, readonly: 10 },
       management_rules: {
-        no_take: {
-          label: 'No Take',
-          name: 'no_take'
-        },
+        no_take: { label: 'No Take', name: 'no_take' },
         periodic_closure: {
           label: 'Periodic Closure',
           name: 'periodic_closure'
         },
-        open_access: {
-          label: 'Open Access',
-          name: 'open_access'
-        },
-        size_limits: {
-          label: 'Size Limits',
-          name: 'size_limits'
-        },
+        open_access: { label: 'Open Access', name: 'open_access' },
+        size_limits: { label: 'Size Limits', name: 'size_limits' },
         gear_restriction: {
           label: 'Gear Restriction',
           name: 'gear_restriction'
@@ -184,9 +152,7 @@ angular.module('mermaid.libs').service('utils', [
       },
       templateArgs: function(rows) {
         var row_count = rows.length;
-        var args = {
-          count: row_count
-        };
+        var args = { count: row_count };
         if (row_count !== 1) {
           args.plural = 's';
         }
@@ -303,6 +269,47 @@ angular.module('mermaid.libs').service('utils', [
           },
           {}
         );
+      },
+      combinations: function combination(arr) {
+        let i, j, temp;
+        let result = [];
+        let arrLen = arr.length;
+        let power = Math.pow;
+        let combinations = power(2, arrLen);
+
+        for (i = 0; i < combinations; i++) {
+          temp = [];
+
+          for (j = 0; j < arrLen; j++) {
+            if (i & power(2, j)) {
+              temp.push(arr[j]);
+            }
+          }
+          if (temp.length > 0) {
+            result.push(temp);
+          }
+        }
+        return result;
+      },
+      relationalOperatorFunctions: {
+        '==': function(a, b) {
+          return a === b;
+        },
+        '!=': function(a, b) {
+          return a !== b;
+        },
+        '>': function(a, b) {
+          return a > b;
+        },
+        '>=': function(a, b) {
+          return a >= b;
+        },
+        '<': function(a, b) {
+          return a < b;
+        },
+        '<=': function(a, b) {
+          return a <= b;
+        }
       }
     };
     return utils;

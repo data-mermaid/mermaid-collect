@@ -36,14 +36,18 @@ angular.module('mermaid.libs').directive('biomass', [
             constant_c = fishattribute.biomass_constant_c;
           }
 
-          if (Number.isFinite(scope.transectWidth)) {
-            width = scope.transectWidth;
-          }
-
           if (Number.isFinite(scope.transectLenSurveyed)) {
             length = scope.transectLenSurveyed;
           }
 
+          if (scope.transectWidth != null) {
+            width = TransectService.getBeltFishWidthVal(
+              size,
+              scope.transectWidth.conditions
+            );
+          }
+
+          console.log('width', width);
           scope.biomassval = TransectService.calcObsBiomass(
             size,
             count,
