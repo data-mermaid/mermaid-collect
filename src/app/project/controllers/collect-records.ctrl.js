@@ -68,6 +68,11 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       return false;
     };
 
+    var checkAllOptions = function() {
+      var options = JSON.parse(localStorage.getItem('collect_methodfilter'));
+      return options.length === 5;
+    };
+
     var sizeFormat = function(value) {
       var result = '-';
       var protocol = value.protocol;
@@ -252,6 +257,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       toolbar: {
         template:
           'app/project/partials/custom-toolbars/collect-record-toolbar.tpl.html',
+        allMethods: checkAllOptions(),
         methodTypes: [
           {
             name: 'Fish Belt',
@@ -366,6 +372,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
               options.splice(index, 1);
             }
           }
+          this.allMethods = options.length === 5;
           localStorage.setItem('collect_methodfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
@@ -386,6 +393,31 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         },
         backUp: function() {
           backupRecords();
+        },
+        selectAll: function(allStatus) {
+          var methodTypes = this.methodTypes;
+          var options =
+            JSON.parse(localStorage.getItem('collect_methodfilter')) ||
+            protocolMethods;
+
+          if (allStatus) {
+            for (var m = 0; m < methodTypes.length; m++) {
+              if (!methodTypes[m].selected) {
+                options.push(methodTypes[m].protocol);
+              }
+              methodTypes[m].selected = true;
+            }
+          } else {
+            options = [];
+            for (var m = 0; m < methodTypes.length; m++) {
+              if (!methodTypes[m].selected) {
+                options.push(methodTypes[m].protocol);
+              }
+              methodTypes[m].selected = false;
+            }
+          }
+          localStorage.setItem('collect_methodfilter', JSON.stringify(options));
+          $scope.tableControl.refresh();
         }
       }
     };

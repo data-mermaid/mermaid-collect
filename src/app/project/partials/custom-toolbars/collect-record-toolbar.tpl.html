@@ -9,6 +9,13 @@
       </label>
     
       <ul class="dropdown-menu">
+        <li>
+          <div class="checkbox">
+            <label> 
+              <input type="checkbox" ng-model="config.toolbar.allMethods" ng-change="config.toolbar.selectAll(config.toolbar.allMethods)">Select All
+            </label>
+          </div>
+        </li>
         <li ng-repeat="item in config.toolbar.methodTypes track by item.protocol">
           <div class="checkbox">
             <label>
