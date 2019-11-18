@@ -515,8 +515,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           filterTypes[i].selected = true;
         }
       } else {
-        for (var i = 0; i < filterTypes.length; i++) {
-          filterTypes[i].selected = false;
+        for (var y = 0; y < filterTypes.length; y++) {
+          filterTypes[y].selected = false;
         }
         options = [];
       }

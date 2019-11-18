@@ -184,8 +184,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
               methodTypes[i].selected = true;
             }
           } else {
-            for (let i = 0; i < methodTypes.length; i++) {
-              methodTypes[i].selected = false;
+            for (let y = 0; y < methodTypes.length; y++) {
+              methodTypes[y].selected = false;
             }
             options = [];
           }
