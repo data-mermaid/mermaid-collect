@@ -20,7 +20,6 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     Button
   ) {
     'use strict';
-    // var records = [];
     var project_id = $stateParams.project_id;
 
     $scope.tableControl = {};
@@ -178,14 +177,14 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
             protocolMethods;
           if (allSelected) {
-            for (var i = 0; i < methodTypes.length; i++) {
+            for (let i = 0; i < methodTypes.length; i++) {
               if (!methodTypes[i].selected) {
                 options.push(methodTypes[i].choice);
               }
               methodTypes[i].selected = true;
             }
           } else {
-            for (var i = 0; i < methodTypes.length; i++) {
+            for (let i = 0; i < methodTypes.length; i++) {
               methodTypes[i].selected = false;
             }
             options = [];
