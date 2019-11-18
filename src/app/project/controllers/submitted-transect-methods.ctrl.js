@@ -180,7 +180,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           if (allSelected) {
             methodTypes.map(method => {
               if (!method.selected) {
-                options.push(method['protocol']);
+                options.push(method.protocol);
               }
               method.selected = true;
             });
