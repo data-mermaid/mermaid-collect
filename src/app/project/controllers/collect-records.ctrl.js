@@ -57,8 +57,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
       ProjectService.BLEACHING_QC_QUADRAT_TYPE
     ];
-    var protocolMethodsLength = protocolMethods.length;
     var statusChoices = [null, 'ok', 'warning', 'error'];
+    var protocolMethodsLength = protocolMethods.length;
     var statusChoicesLength = statusChoices.length;
 
     var checkLocalStorage = function(item, choices, storageName) {

@@ -35,6 +35,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
       ProjectService.BLEACHING_QC_QUADRAT_TYPE
     ];
+    var protocolMethodsLength = protocolMethods.length;
 
     ProjectService.getMyProjectProfile(project_id).then(function(
       projectProfile
@@ -49,7 +50,9 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
 
     var checkLocalStorage = function(item, choices, storageName) {
       var options = JSON.parse(localStorage.getItem(storageName)) || choices;
-      if (options.indexOf(item) !== -1) {
+      if (item === 'all') {
+        return options.length === choices.length;
+      } else if (options.indexOf(item) !== -1) {
         return true;
       }
       return false;
@@ -159,16 +162,46 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
               options.splice(index, 1);
             }
           }
-          localStorage.setItem('submit_methodfilter', JSON.stringify(options));
 
+          this.allMethods = options.length === protocolMethodsLength;
+          localStorage.setItem('submit_methodfilter', JSON.stringify(options));
           $scope.tableControl.setFilterParam(
             'protocol',
             options.join(','),
             true
           );
-
           $scope.tableControl.refresh();
         },
+        selectAllMethods: function(allSelected) {
+          let methodTypes = this.methodTypes;
+          let options =
+            JSON.parse(localStorage.getItem('submit_methodfilter')) ||
+            protocolMethods;
+          if (allSelected) {
+            methodTypes.map(method => {
+              if (!method.selected) {
+                options.push(method['protocol']);
+              }
+              method.selected = true;
+            });
+          } else {
+            methodTypes.map(method => (method.selected = false));
+            options = [];
+          }
+
+          localStorage.setItem('submit_methodfilter', JSON.stringify(options));
+          $scope.tableControl.setFilterParam(
+            'protocol',
+            options.join(','),
+            true
+          );
+          $scope.tableControl.refresh();
+        },
+        allMethods: checkLocalStorage(
+          'all',
+          protocolMethods,
+          'submit_methodfilter'
+        ),
         methodTypes: [
           {
             name: 'Fish Belt',

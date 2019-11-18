@@ -5,6 +5,13 @@
     </button>
   
     <ul class="dropdown-menu">
+        <li class="select-all-filter">
+            <div class="checkbox">
+              <label> 
+                <input type="checkbox" ng-model="config.toolbar.allMethods" ng-change="config.toolbar.selectAllMethods(config.toolbar.allMethods)">Select All
+              </label>
+            </div>
+          </li>
       <li ng-repeat="item in config.toolbar.methodTypes track by item.protocol">
         <div class="checkbox">
           <label>
