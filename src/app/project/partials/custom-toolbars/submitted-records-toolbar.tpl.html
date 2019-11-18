@@ -12,7 +12,7 @@
               </label>
             </div>
           </li>
-      <li ng-repeat="item in config.toolbar.methodTypes track by item.protocol">
+      <li ng-repeat="item in config.toolbar.methodTypes track by item.choice">
         <div class="checkbox">
           <label>
             <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterMethod(item)">

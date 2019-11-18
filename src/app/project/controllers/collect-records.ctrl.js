@@ -130,7 +130,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           if (val === null) {
             return options.indexOf(val) !== -1;
           }
-          return options.indexOf(_.get(val, 'status')) !== -1;
+          return options.indexOf(_.get(val, 'choice')) !== -1;
         }
       },
       rowSelect: false,
@@ -268,7 +268,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         methodTypes: [
           {
             name: 'Fish Belt',
-            protocol: protocolMethods[0],
+            choice: protocolMethods[0],
             selected: checkLocalStorage(
               protocolMethods[0],
               protocolMethods,
@@ -277,7 +277,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Benthic LIT',
-            protocol: protocolMethods[1],
+            choice: protocolMethods[1],
             selected: checkLocalStorage(
               protocolMethods[1],
               protocolMethods,
@@ -286,7 +286,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Benthic PIT',
-            protocol: protocolMethods[2],
+            choice: protocolMethods[2],
             selected: checkLocalStorage(
               protocolMethods[2],
               protocolMethods,
@@ -295,7 +295,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Bleaching',
-            protocol: protocolMethods[4],
+            choice: protocolMethods[4],
             selected: checkLocalStorage(
               protocolMethods[4],
               protocolMethods,
@@ -304,7 +304,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Habitat Complexity',
-            protocol: protocolMethods[3],
+            choice: protocolMethods[3],
             selected: checkLocalStorage(
               protocolMethods[3],
               protocolMethods,
@@ -315,7 +315,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         statusTypes: [
           {
             name: 'Saved',
-            status: statusChoices[0],
+            choice: statusChoices[0],
             selected: checkLocalStorage(
               statusChoices[0],
               statusChoices,
@@ -324,7 +324,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Validated',
-            status: statusChoices[1],
+            choice: statusChoices[1],
             selected: checkLocalStorage(
               statusChoices[1],
               statusChoices,
@@ -333,7 +333,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Warnings',
-            status: statusChoices[2],
+            choice: statusChoices[2],
             selected: checkLocalStorage(
               statusChoices[2],
               statusChoices,
@@ -342,7 +342,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Errors',
-            status: statusChoices[3],
+            choice: statusChoices[3],
             selected: checkLocalStorage(
               statusChoices[3],
               statusChoices,
@@ -368,15 +368,15 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           );
         },
         filterMethod: function(item) {
-          var { protocol, selected } = item;
+          var { choice, selected } = item;
           var options =
             JSON.parse(localStorage.getItem('collect_methodfilter')) ||
             protocolMethods;
 
           if (selected) {
-            options.push(protocol);
+            options.push(choice);
           } else {
-            var index = options.indexOf(protocol);
+            var index = options.indexOf(choice);
             if (index !== -1) {
               options.splice(index, 1);
             }
@@ -387,15 +387,15 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           $scope.tableControl.refresh();
         },
         filterStatus: function(item) {
-          var { status, selected } = item;
+          var { choice, selected } = item;
           var options =
             JSON.parse(localStorage.getItem('collect_statusfilter')) ||
             statusChoices;
 
           if (selected) {
-            options.push(status);
+            options.push(choice);
           } else {
-            var index = options.indexOf(status);
+            var index = options.indexOf(choice);
             if (index !== -1) {
               options.splice(index, 1);
             }
@@ -411,7 +411,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         selectAllMethods: function(allSelected) {
           var filterOptions = {
             filterTypes: this.methodTypes,
-            filteredProperty: 'protocol',
             choices: protocolMethods,
             storageName: 'collect_methodfilter'
           };
@@ -420,7 +419,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         selectAllStatus: function(allSelected) {
           var filterOptions = {
             filterTypes: this.statusTypes,
-            filteredProperty: 'status',
             choices: statusChoices,
             storageName: 'collect_statusfilter'
           };
@@ -506,18 +504,13 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     }
 
     function selectAllOptions(allSelected, filter_options) {
-      var {
-        filterTypes,
-        filteredProperty,
-        choices,
-        storageName
-      } = filter_options;
+      var { filterTypes, choices, storageName } = filter_options;
       var options = JSON.parse(localStorage.getItem(storageName)) || choices;
 
       if (allSelected) {
         filterTypes.map(type => {
           if (!type.selected) {
-            options.push(type[filteredProperty]);
+            options.push(type.choice);
           }
           type.selected = true;
         });

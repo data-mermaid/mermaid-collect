@@ -150,14 +150,14 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           downloadFieldReport(transectmethod);
         },
         filterMethod: function(item) {
-          const { protocol, selected } = item;
+          const { choice, selected } = item;
           let options =
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
             protocolMethods;
           if (selected) {
-            options.push(protocol);
+            options.push(choice);
           } else {
-            var index = options.indexOf(protocol);
+            var index = options.indexOf(choice);
             if (index !== -1) {
               options.splice(index, 1);
             }
@@ -180,7 +180,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           if (allSelected) {
             methodTypes.map(method => {
               if (!method.selected) {
-                options.push(method.protocol);
+                options.push(method.choice);
               }
               method.selected = true;
             });
@@ -190,11 +190,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           }
 
           localStorage.setItem('submit_methodfilter', JSON.stringify(options));
-          $scope.tableControl.setFilterParam(
-            'protocol',
-            options.join(','),
-            true
-          );
+          $scope.tableControl.setFilterParam('choice', options.join(','), true);
           $scope.tableControl.refresh();
         },
         allMethods: checkLocalStorage(
@@ -205,7 +201,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         methodTypes: [
           {
             name: 'Fish Belt',
-            protocol: protocolMethods[0],
+            choice: protocolMethods[0],
             selected: checkLocalStorage(
               protocolMethods[0],
               protocolMethods,
@@ -214,7 +210,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           },
           {
             name: 'Benthic LIT',
-            protocol: protocolMethods[1],
+            choice: protocolMethods[1],
             selected: checkLocalStorage(
               protocolMethods[1],
               protocolMethods,
@@ -223,7 +219,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           },
           {
             name: 'Benthic PIT',
-            protocol: protocolMethods[2],
+            choice: protocolMethods[2],
             selected: checkLocalStorage(
               protocolMethods[2],
               protocolMethods,
@@ -232,7 +228,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           },
           {
             name: 'Bleaching',
-            protocol: protocolMethods[4],
+            choice: protocolMethods[4],
             selected: checkLocalStorage(
               protocolMethods[4],
               protocolMethods,
@@ -241,7 +237,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           },
           {
             name: 'Habitat Complexity',
-            protocol: protocolMethods[3],
+            choice: protocolMethods[3],
             selected: checkLocalStorage(
               protocolMethods[3],
               protocolMethods,
