@@ -223,6 +223,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           formatter: function(v) {
             var observers = [];
             angular.forEach(v, function(observer) {
+              console.log('test for each ');
               observers.push(observer.profile_name);
             });
             return observers.join(', ') || '-';
