@@ -367,12 +367,13 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             utils.template(utils.messages.deleteRecordWarning, args)
           );
         },
-        filterMethod: function(showMethod, protocol) {
+        filterMethod: function(item) {
+          var { protocol, selected } = item;
           var options =
             JSON.parse(localStorage.getItem('collect_methodfilter')) ||
             protocolMethods;
 
-          if (showMethod === true) {
+          if (selected) {
             options.push(protocol);
           } else {
             var index = options.indexOf(protocol);
@@ -385,12 +386,13 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           localStorage.setItem('collect_methodfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
-        filterStatus: function(recordStatus, status) {
+        filterStatus: function(item) {
+          var { status, selected } = item;
           var options =
             JSON.parse(localStorage.getItem('collect_statusfilter')) ||
             statusChoices;
 
-          if (recordStatus === true) {
+          if (selected) {
             options.push(status);
           } else {
             var index = options.indexOf(status);

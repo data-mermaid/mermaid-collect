@@ -19,7 +19,7 @@
         <li ng-repeat="item in config.toolbar.methodTypes track by item.protocol">
           <div class="checkbox">
             <label>
-              <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterMethod(item.selected, item.protocol)">
+              <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterMethod(item)">
               {{item.name}}
             </label>
           </div>
@@ -43,7 +43,7 @@
         <li ng-repeat="item in config.toolbar.statusTypes track by item.status">
           <div class="checkbox">
             <label>
-              <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterStatus(item.selected, item.status)">
+              <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterStatus(item)">
               {{item.name}}
             </label>
           </div>

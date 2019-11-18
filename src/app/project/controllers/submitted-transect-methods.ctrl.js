@@ -150,11 +150,11 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           downloadFieldReport(transectmethod);
         },
         filterMethod: function(item) {
-          const protocol = item.protocol;
+          const { protocol, selected } = item;
           let options =
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
             protocolMethods;
-          if (item.selected === true) {
+          if (selected) {
             options.push(protocol);
           } else {
             var index = options.indexOf(protocol);
