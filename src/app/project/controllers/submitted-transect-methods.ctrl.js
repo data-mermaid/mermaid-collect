@@ -178,19 +178,25 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
             protocolMethods;
           if (allSelected) {
-            methodTypes.map(method => {
+            for (const method of methodTypes) {
               if (!method.selected) {
                 options.push(method.choice);
               }
               method.selected = true;
-            });
+            }
           } else {
-            methodTypes.map(method => (method.selected = false));
+            for (const method of methodTypes) {
+              method.selected = false;
+            }
             options = [];
           }
 
           localStorage.setItem('submit_methodfilter', JSON.stringify(options));
-          $scope.tableControl.setFilterParam('choice', options.join(','), true);
+          $scope.tableControl.setFilterParam(
+            'protocol',
+            options.join(','),
+            true
+          );
           $scope.tableControl.refresh();
         },
         allMethods: checkLocalStorage(
