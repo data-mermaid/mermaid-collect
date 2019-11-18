@@ -508,15 +508,15 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       var options = JSON.parse(localStorage.getItem(storageName)) || choices;
 
       if (allSelected) {
-        for (var type of filterTypes) {
-          if (!type.selected) {
-            options.push(type.choice);
+        for (var item of filterTypes) {
+          if (!item.selected) {
+            options.push(item.choice);
           }
-          type.selected = true;
+          item.selected = true;
         }
       } else {
-        for (var type of filterTypes) {
-          type.selected = false;
+        for (var item of filterTypes) {
+          item.selected = false;
         }
         options = [];
       }
