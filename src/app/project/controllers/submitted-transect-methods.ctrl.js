@@ -149,7 +149,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           downloadFieldReport(transectmethod);
         },
         filterMethod: function(item) {
-          var { choice, selected } = item;
+          var selected = item.selected;
+          var choice = item.choice;
           var options =
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
             protocolMethods;

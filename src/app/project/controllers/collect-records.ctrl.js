@@ -368,7 +368,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           );
         },
         filterMethod: function(item) {
-          var { choice, selected } = item;
+          var selected = item.selected;
+          var choice = item.choice;
           var options =
             JSON.parse(localStorage.getItem('collect_methodfilter')) ||
             protocolMethods;
@@ -387,7 +388,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           $scope.tableControl.refresh();
         },
         filterStatus: function(item) {
-          var { choice, selected } = item;
+          var selected = item.selected;
+          var choice = item.choice;
           var options =
             JSON.parse(localStorage.getItem('collect_statusfilter')) ||
             statusChoices;
@@ -504,7 +506,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     }
 
     function selectAllOptions(allSelected, filter_options) {
-      var { filterTypes, choices, storageName } = filter_options;
+      var filterTypes = filter_options.filterTypes;
+      var choices = filter_options.choices;
+      var storageName = filter_options.storageName;
       var options = JSON.parse(localStorage.getItem(storageName)) || choices;
 
       if (allSelected) {
