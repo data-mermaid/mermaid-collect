@@ -178,15 +178,15 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
             protocolMethods;
           if (allSelected) {
-            for (const method of methodTypes) {
-              if (!method.selected) {
-                options.push(method.choice);
+            for (var i = 0; i < methodTypes.length; i++) {
+              if (!methodTypes[i].selected) {
+                options.push(methodTypes[i].choice);
               }
-              method.selected = true;
+              methodTypes[i].selected = true;
             }
           } else {
-            for (const method of methodTypes) {
-              method.selected = false;
+            for (var i = 0; i < methodTypes.length; i++) {
+              methodTypes[i].selected = false;
             }
             options = [];
           }
