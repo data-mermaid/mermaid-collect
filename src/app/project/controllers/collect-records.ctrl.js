@@ -512,16 +512,14 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       var options = JSON.parse(localStorage.getItem(storageName)) || choices;
 
       if (allSelected) {
-        for (var i = 0; i < filterTypes.length; i++) {
-          if (!filterTypes[i].selected) {
-            options.push(filterTypes[i].choice);
+        filterTypes.forEach(filterItem => {
+          if (!filterItem.selected) {
+            options.push(filterItem.choice);
           }
-          filterTypes[i].selected = true;
-        }
+          filterItem.selected = true;
+        });
       } else {
-        for (var y = 0; y < filterTypes.length; y++) {
-          filterTypes[y].selected = false;
-        }
+        filterTypes.forEach(filterItem => (filterItem.selected = false));
         options = [];
       }
       localStorage.setItem(storageName, JSON.stringify(options));
