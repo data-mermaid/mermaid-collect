@@ -149,8 +149,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           downloadFieldReport(transectmethod);
         },
         filterMethod: function(item) {
-          const { choice, selected } = item;
-          let options =
+          var { choice, selected } = item;
+          var options =
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
             protocolMethods;
           if (selected) {
@@ -172,19 +172,19 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           $scope.tableControl.refresh();
         },
         selectAllMethods: function(allSelected) {
-          let methodTypes = this.methodTypes;
-          let options =
+          var methodTypes = this.methodTypes;
+          var options =
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
             protocolMethods;
           if (allSelected) {
-            for (let i = 0; i < methodTypes.length; i++) {
+            for (var i = 0; i < methodTypes.length; i++) {
               if (!methodTypes[i].selected) {
                 options.push(methodTypes[i].choice);
               }
               methodTypes[i].selected = true;
             }
           } else {
-            for (let y = 0; y < methodTypes.length; y++) {
+            for (var y = 0; y < methodTypes.length; y++) {
               methodTypes[y].selected = false;
             }
             options = [];
@@ -254,7 +254,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     };
     $scope.resource = SampleUnitMethod;
 
-    const buttons = [];
+    var buttons = [];
     _.each($scope.choices.transect_types, function(transect_type) {
       if (transect_type.method) {
         var btn = new Button();
@@ -269,7 +269,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       }
     });
 
-    const fieldReportButton = new Button();
+    var fieldReportButton = new Button();
     fieldReportButton.name = 'Export to CSV';
     fieldReportButton.classes = 'btn-success';
     fieldReportButton.icon = 'fa fa-download';
