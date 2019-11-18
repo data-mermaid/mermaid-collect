@@ -57,20 +57,18 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
       ProjectService.BLEACHING_QC_QUADRAT_TYPE
     ];
-
+    var protocolMethodsLength = protocolMethods.length;
     var statusChoices = [null, 'ok', 'warning', 'error'];
+    var statusChoicesLength = statusChoices.length;
 
     var checkLocalStorage = function(item, choices, storageName) {
       var options = JSON.parse(localStorage.getItem(storageName)) || choices;
-      if (options.indexOf(item) !== -1) {
+      if (item === 'all') {
+        return options.length === choices.length;
+      } else if (options.indexOf(item) !== -1) {
         return true;
       }
       return false;
-    };
-
-    var checkAllOptions = function(choices, storageName) {
-      var options = JSON.parse(localStorage.getItem(storageName)) || choices;
-      return options.length === choices.length;
     };
 
     var sizeFormat = function(value) {
@@ -257,8 +255,16 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       toolbar: {
         template:
           'app/project/partials/custom-toolbars/collect-record-toolbar.tpl.html',
-        allMethods: checkAllOptions(protocolMethods, 'collect_methodfilter'),
-        allStatus: checkAllOptions(statusChoices, 'collect_statusfilter'),
+        allMethods: checkLocalStorage(
+          'all',
+          protocolMethods,
+          'collect_methodfilter'
+        ),
+        allStatus: checkLocalStorage(
+          'all',
+          statusChoices,
+          'collect_statusfilter'
+        ),
         methodTypes: [
           {
             name: 'Fish Belt',
@@ -375,7 +381,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             }
           }
 
-          this.allMethods = options.length === protocolMethods.length;
+          this.allMethods = options.length === protocolMethodsLength;
           localStorage.setItem('collect_methodfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
@@ -393,7 +399,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             }
           }
 
-          this.allStatus = options.length === 4;
+          this.allStatus = options.length === statusChoicesLength;
           localStorage.setItem('collect_statusfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
@@ -401,54 +407,22 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           backupRecords();
         },
         selectAllMethods: function(allSelected) {
-          var methodTypes = this.methodTypes;
-          var options =
-            JSON.parse(localStorage.getItem('collect_methodfilter')) ||
-            protocolMethods;
-
-          if (allSelected) {
-            for (var i = 0; i < methodTypes.length; i++) {
-              if (!methodTypes[i].selected) {
-                options.push(methodTypes[i].protocol);
-              }
-              methodTypes[i].selected = true;
-            }
-          } else {
-            options = [];
-            for (var i = 0; i < methodTypes.length; i++) {
-              if (!methodTypes[i].selected) {
-                options.push(methodTypes[i].protocol);
-              }
-              methodTypes[i].selected = false;
-            }
-          }
-          localStorage.setItem('collect_methodfilter', JSON.stringify(options));
-          $scope.tableControl.refresh();
+          var filterOptions = {
+            filterTypes: this.methodTypes,
+            filteredProperty: 'protocol',
+            choices: protocolMethods,
+            storageName: 'collect_methodfilter'
+          };
+          selectAllOptions(allSelected, filterOptions);
         },
         selectAllStatus: function(allSelected) {
-          var statusTypes = this.statusTypes;
-          var options =
-            JSON.parse(localStorage.getItem('collect_statusfilter')) ||
-            protocolMethods;
-
-          if (allSelected) {
-            for (var i = 0; i < statusTypes.length; i++) {
-              if (!statusTypes[i].selected) {
-                options.push(statusTypes[i].status);
-              }
-              statusTypes[i].selected = true;
-            }
-          } else {
-            options = [];
-            for (var i = 0; i < statusTypes.length; i++) {
-              if (!statusTypes[i].selected) {
-                options.push(statusTypes[i].status);
-              }
-              statusTypes[i].selected = false;
-            }
-          }
-          localStorage.setItem('collect_statusfilter', JSON.stringify(options));
-          $scope.tableControl.refresh();
+          var filterOptions = {
+            filterTypes: this.statusTypes,
+            filteredProperty: 'status',
+            choices: statusChoices,
+            storageName: 'collect_statusfilter'
+          };
+          selectAllOptions(allSelected, filterOptions);
         }
       }
     };
@@ -527,6 +501,30 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           utils.statuses.warning
         );
       });
+    }
+
+    function selectAllOptions(allSelected, filter_options) {
+      var {
+        filterTypes,
+        filteredProperty,
+        choices,
+        storageName
+      } = filter_options;
+      var options = JSON.parse(localStorage.getItem(storageName)) || choices;
+
+      if (allSelected) {
+        filterTypes.map(type => {
+          if (!type.selected) {
+            options.push(type[filteredProperty]);
+          }
+          type.selected = true;
+        });
+      } else {
+        filterTypes.map(type => (type.selected = false));
+        options = [];
+      }
+      localStorage.setItem(storageName, JSON.stringify(options));
+      $scope.tableControl.refresh();
     }
 
     function loadButtons() {

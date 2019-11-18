@@ -515,6 +515,10 @@ th.col-sort-asc {
   margin-left: 10px;
 }
 
+li.select-all-filter {
+  border-bottom: 1px solid lightgray;
+}
+
 .checkbox-label {
   margin-left: 18px;
 }
@@ -1310,6 +1314,7 @@ ul li.transect-buttons[disabled] {
   text-decoration-style: dotted;
 }
 
+/* Multiple column sorts */
 .header-col-name {
   float: left;
 }
@@ -1331,4 +1336,5 @@ ul li.transect-buttons[disabled] {
   color: #555555;
   visibility: hidden;
 }
+
 
