@@ -130,7 +130,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           if (val === null) {
             return options.indexOf(val) !== -1;
           }
-          return options.indexOf(_.get(val, 'choice')) !== -1;
+          return options.indexOf(_.get(val, 'status')) !== -1;
         }
       },
       rowSelect: false,
