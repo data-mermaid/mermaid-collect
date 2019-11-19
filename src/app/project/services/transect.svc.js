@@ -93,7 +93,6 @@ angular.module('app.project').service('TransectService', [
         })
         .then(function(fishAttributeLookups) {
           var biomassTotal;
-
           biomassTotal = _.reduce(
             observations,
             function(total, obs) {
@@ -104,6 +103,10 @@ angular.module('app.project').service('TransectService', [
               var constant_a = fishAttribute.biomass_constant_a;
               var constant_b = fishAttribute.biomass_constant_b;
               var constant_c = fishAttribute.biomass_constant_c;
+              let width = null;
+              if (transectWidth != null) {
+                width = getBeltFishWidthVal(size, transectWidth.conditions);
+              }
               var biomass =
                 calcObsBiomass(
                   size,
@@ -112,7 +115,7 @@ angular.module('app.project').service('TransectService', [
                   constant_b,
                   constant_c,
                   transectLenSurveyed,
-                  transectWidth
+                  width
                 ) || 0.0;
               return total + biomass;
             },

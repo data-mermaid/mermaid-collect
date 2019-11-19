@@ -47,7 +47,6 @@ angular.module('mermaid.libs').directive('biomass', [
             );
           }
 
-          console.log('width', width);
           scope.biomassval = TransectService.calcObsBiomass(
             size,
             count,
