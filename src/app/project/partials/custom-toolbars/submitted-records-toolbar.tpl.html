@@ -22,9 +22,12 @@
       </li>
     </ul>
   </div>
-  <div class="filter-records-wrapper" ng-hide="control.hideFilteredCount()"> 
-      <span ng-if="!control.records">Filtering</span>
-      <span class="filter-count" ng-if="control.records"> <i class="fa fa-filter"></i>{{control.getFilteredRecordsCount()}}</span>
-      Records
+  <div class="filter-wrapper" ng-hide="control.hideFilteredCount()">
+      <div class="filter-records" > 
+        <span ng-if="!control.records">Filtering</span>
+        <span class="filter-count" ng-if="control.records"> <i class="fa fa-filter"></i>{{control.getFilteredRecordsCount()}}</span>
+        Records
+      </div>
+      <div class="clear-filter" ng-if="control.records" ng-click="config.toolbar.selectAllMethods(true);"><i class="fa fa-remove"></i></div>
     </div>
 </div>

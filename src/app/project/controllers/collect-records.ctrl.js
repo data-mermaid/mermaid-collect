@@ -418,6 +418,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             choices: protocolMethods,
             storageName: 'collect_methodfilter'
           };
+          this.allMethods = allSelected;
           selectAllOptions(allSelected, filterOptions);
         },
         selectAllStatus: function(allSelected) {
@@ -426,6 +427,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             choices: statusChoices,
             storageName: 'collect_statusfilter'
           };
+          this.allStatus = allSelected;
           selectAllOptions(allSelected, filterOptions);
         }
       }

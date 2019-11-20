@@ -174,6 +174,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           $scope.tableControl.refresh();
         },
         selectAllMethods: function(allSelected) {
+          this.allMethods = allSelected;
           var methodTypes = this.methodTypes;
           var options =
             JSON.parse(localStorage.getItem('submit_methodfilter')) ||
