@@ -446,9 +446,10 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     };
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return $scope.tableControl.records
-        ? `${$scope.tableControl.records.length}/${collectRecordsCount}`
-        : 'Filtering';
+      return (
+        $scope.tableControl.records &&
+        `${$scope.tableControl.records.length}/${collectRecordsCount}`
+      );
     };
 
     $scope.tableControl.hideFilteredCount = function() {
@@ -457,6 +458,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         $scope.tableControl.records.length === collectRecordsCount
       );
     };
+
     promises = [
       authService.getCurrentUser(),
       offlineservice.CollectRecordsTable(project_id)

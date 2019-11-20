@@ -22,4 +22,9 @@
       </li>
     </ul>
   </div>
+  <div class="filter-records-wrapper" ng-hide="control.hideFilteredCount()"> 
+      <span ng-if="!control.records">Filtering</span>
+      <span class="filter-count" ng-if="control.records"> <i class="fa fa-filter"></i>{{control.getFilteredRecordsCount()}}</span>
+      Records
+    </div>
 </div>

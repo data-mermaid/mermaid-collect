@@ -21,6 +21,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
   ) {
     'use strict';
     var project_id = $stateParams.project_id;
+    var submittedRecordsCount;
 
     $scope.tableControl = {};
     $scope.isDisabled = true;
@@ -252,6 +253,32 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       }
     };
     $scope.resource = SampleUnitMethod;
+    $scope.resource
+      .query({
+        project_pk: project_id,
+        limit: 0,
+        protocol: $scope.choices.transect_types
+          .map(function(tt) {
+            return tt.protocol;
+          })
+          .join(',')
+      })
+      .$promise.then(function(val) {
+        submittedRecordsCount = val.count;
+      });
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      return (
+        $scope.tableControl.records &&
+        `${$scope.tableControl.records.length}/${submittedRecordsCount}`
+      );
+    };
+
+    $scope.tableControl.hideFilteredCount = function() {
+      return (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length === submittedRecordsCount
+      );
+    };
 
     var buttons = [];
     _.each($scope.choices.transect_types, function(transect_type) {
