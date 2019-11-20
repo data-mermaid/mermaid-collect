@@ -34,10 +34,12 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     'use strict';
 
     var collectRecordsTable;
+    var collectRecordsCount;
     var addTransectGroupButton;
     var promises;
     var project_id = $stateParams.project_id;
 
+    $scope.someTestVal = 11;
     $scope.choices = {};
     $scope.tableControl = {};
     $scope.submission_outcome = {};
@@ -443,6 +445,18 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       });
     };
 
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      return $scope.tableControl.records
+        ? `${$scope.tableControl.records.length}/${collectRecordsCount}`
+        : 'Filtering';
+    };
+
+    $scope.tableControl.hideFilteredCount = function() {
+      return (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length === collectRecordsCount
+      );
+    };
     promises = [
       authService.getCurrentUser(),
       offlineservice.CollectRecordsTable(project_id)
@@ -450,6 +464,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
 
     $q.all(promises).then(function(output) {
       collectRecordsTable = output[1];
+      collectRecordsTable.count().then(function(val) {
+        collectRecordsCount = val;
+      });
       $scope.currentUser = output[0];
       $scope.resource = new PaginatedOfflineTableWrapper(collectRecordsTable, {
         searchFields: [

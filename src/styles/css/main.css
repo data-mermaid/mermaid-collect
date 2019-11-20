@@ -504,6 +504,8 @@ th.col-sort-asc {
 
 .table-toolbar {
   width: 500px;
+  display: flex;
+  align-items: center;
 }
 
 .table-selecting {
@@ -521,6 +523,18 @@ li.select-all-filter {
 
 .checkbox-label {
   margin-left: 18px;
+}
+
+.filter-records-wrapper {
+  display: inline-block;
+  padding: 6px;
+  margin-left:5px;
+  border-radius: 4px;
+  background-color: #FFE083;
+}
+
+.filter-count {
+  font-weight: bold;
 }
 
 .note-error span.error,
