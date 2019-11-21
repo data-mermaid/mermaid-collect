@@ -1338,11 +1338,12 @@ ul li.transect-buttons[disabled] {
 }
 
 .leaflet-popup-content{
-  margin: 12px 6px 6px 6px;
+  margin: 14px 6px 6px 6px;
 }
 
 .leaflet-popup-content a {
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .leaflet-popup-content div {
