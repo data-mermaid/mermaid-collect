@@ -34,11 +34,15 @@ angular.module('mermaid.libs').directive('leafletMap', [
         scope.mapopts = scope.mapopts || {};
         scope.records = scope.records || [];
         scope.geoattr = scope.geoattr || 'location';
-        scope.maprecords = L.geoJson([], {
+
+        var mapRecordsProperty = {
           pointToLayer: function(feature, latlng) {
             return new L.circleMarker(latlng, style);
-          },
-          onEachFeature: function(feature, layer) {
+          }
+        };
+
+        if (scope.mapopts.showPopup) {
+          mapRecordsProperty.onEachFeature = function(feature, layer) {
             var featureProperties = feature.properties;
             layer.bindPopup(
               '<a href="#/projects/' +
@@ -56,8 +60,9 @@ angular.module('mermaid.libs').directive('leafletMap', [
                 featureProperties.reefexposures +
                 '</span></p></div>'
             );
-          }
-        });
+          };
+        }
+        scope.maprecords = L.geoJson([], mapRecordsProperty);
 
         defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
         defaultZoom = scope.mapopts.defaultZoom || 2;
@@ -89,15 +94,17 @@ angular.module('mermaid.libs').directive('leafletMap', [
             var center = defaultCenter;
             scope.maprecords.clearLayers();
             _.each(scope.records, function(rec) {
-              var rec_geo_data = {
-                id: rec.id,
-                name: rec.name,
-                project_id: scope.mapopts.project_id,
-                reefexposures: rec.$$reefexposures.name,
-                reeftypes: rec.$$reeftypes.name,
-                reefzones: rec.$$reefzones.name
-              };
-              rec[scope.geoattr].properties = rec_geo_data;
+              if (scope.mapopts.showPopup) {
+                var rec_geo_data = {
+                  id: rec.id,
+                  name: rec.name,
+                  project_id: scope.mapopts.project_id,
+                  reefexposures: rec.$$reefexposures.name,
+                  reeftypes: rec.$$reeftypes.name,
+                  reefzones: rec.$$reefzones.name
+                };
+                rec[scope.geoattr].properties = rec_geo_data;
+              }
               scope.maprecords.addData(rec[scope.geoattr]);
             });
 
