@@ -537,6 +537,7 @@ li.select-all-filter {
 
 .filter-count {
   font-weight: bold;
+  margin-left: 4px;
 }
 
 .clear-filter {

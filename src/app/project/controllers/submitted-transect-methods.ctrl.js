@@ -270,6 +270,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     $scope.tableControl.getFilteredRecordsCount = function() {
       return (
         $scope.tableControl.records &&
+        submittedRecordsCount &&
         `${$scope.tableControl.records.length}/${submittedRecordsCount}`
       );
     };
