@@ -4,7 +4,7 @@
 
 
     <div class="btn-group">
-      <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-pencil"></i>
+      <label type="button" class="btn btn-default dropdown-toggle" ng-class="{true: 'filter-highlight-on', false: ''}[!config.toolbar.allMethods]" data-toggle="dropdown"><i class="fa fa-pencil"></i>
         Method <span class="caret"></span>
       </label>
     
@@ -28,7 +28,7 @@
     </div>
 
     <div class="btn-group">
-      <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-table"></i>
+      <label type="button" class="btn btn-default dropdown-toggle" ng-class="{true: 'filter-highlight-on', false: ''}[!config.toolbar.allStatus]" data-toggle="dropdown"><i class="fa fa-table"></i>
         Status <span class="caret"></span>
       </label>
     

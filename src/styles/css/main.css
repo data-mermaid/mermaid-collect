@@ -525,6 +525,9 @@ li.select-all-filter {
   margin-left: 18px;
 }
 
+.filter-highlight-on {
+  background-color: #FFE083;
+}
 .filter-wrapper {
   display: inline-flex;
 }
