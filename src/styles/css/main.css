@@ -1332,3 +1332,25 @@ ul li.transect-buttons[disabled] {
   visibility: hidden;
 }
 
+/* leaflet popup content style */
+.leaflet-popup-content{
+  margin: 14px 6px;
+}
+
+.leaflet-popup-content a {
+  font-size: 14px;
+}
+
+.leaflet-popup-content div {
+  border-top: 1px solid;
+}
+
+.leaflet-popup-content div p {
+  margin: 0;
+}
+
+.leaflet-popup-content div p span {
+  margin: 0;
+  font-style: italic;
+}
+

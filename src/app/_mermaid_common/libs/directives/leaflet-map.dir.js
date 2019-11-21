@@ -37,6 +37,25 @@ angular.module('mermaid.libs').directive('leafletMap', [
         scope.maprecords = L.geoJson([], {
           pointToLayer: function(feature, latlng) {
             return new L.circleMarker(latlng, style);
+          },
+          onEachFeature: function(feature, layer) {
+            var featureProperties = feature.properties;
+            layer.bindPopup(
+              '<a href="#/projects/' +
+                featureProperties.project_id +
+                '/sites/' +
+                featureProperties.id +
+                '">' +
+                featureProperties.name +
+                '</a>' +
+                '<div><p>Reef type: <span>' +
+                featureProperties.reeftypes +
+                '</span></p><p>Reef zone: <span>' +
+                featureProperties.reefzones +
+                '</span></p><p>Exposure: <span>' +
+                featureProperties.reefexposures +
+                '</span></p></div>'
+            );
           }
         });
 
@@ -70,6 +89,15 @@ angular.module('mermaid.libs').directive('leafletMap', [
             var center = defaultCenter;
             scope.maprecords.clearLayers();
             _.each(scope.records, function(rec) {
+              var rec_geo_data = {
+                id: rec.id,
+                name: rec.name,
+                project_id: scope.mapopts.project_id,
+                reefexposures: rec.$$reefexposures.name,
+                reeftypes: rec.$$reeftypes.name,
+                reefzones: rec.$$reefzones.name
+              };
+              rec[scope.geoattr].properties = rec_geo_data;
               scope.maprecords.addData(rec[scope.geoattr]);
             });
 

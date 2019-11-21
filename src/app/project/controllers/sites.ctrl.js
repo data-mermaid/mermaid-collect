@@ -152,7 +152,8 @@ angular.module('app.project').controller('SitesCtrl', [
     });
 
     $scope.mapopts = {
-      gestureHandling: true
+      gestureHandling: true,
+      project_id: project_id
     };
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {
       $scope.tableControl.refresh(true);
