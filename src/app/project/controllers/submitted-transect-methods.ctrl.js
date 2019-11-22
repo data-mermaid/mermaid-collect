@@ -6,7 +6,6 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
   'ProjectService',
   'TransectService',
   'SampleUnitMethod',
-  'sites',
   'Button',
   function(
     $rootScope,
@@ -16,26 +15,25 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     ProjectService,
     TransectService,
     SampleUnitMethod,
-    sites,
     Button
   ) {
     'use strict';
-    var project_id = $stateParams.project_id;
-    var submittedRecordsCount;
+    const project_id = $stateParams.project_id;
+    const fieldReportButton = new Button();
+    let submittedRecordsCount = 0;
 
     $scope.tableControl = {};
     $scope.isDisabled = true;
     $scope.choices = {};
     $scope.choices.transect_types = ProjectService.transect_types;
 
-    var protocolMethods = [
+    const protocolMethods = [
       ProjectService.FISH_BELT_TRANSECT_TYPE,
       ProjectService.BENTHIC_LIT_TRANSECT_TYPE,
       ProjectService.BENTHIC_PIT_TRANSECT_TYPE,
       ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
       ProjectService.BLEACHING_QC_QUADRAT_TYPE
     ];
-    var protocolMethodsLength = protocolMethods.length;
 
     ProjectService.getMyProjectProfile(project_id).then(function(
       projectProfile
@@ -44,12 +42,12 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         !projectProfile || projectProfile.is_admin !== true;
     });
 
-    var downloadFieldReport = function(method) {
+    const downloadFieldReport = function(method) {
       TransectService.downloadFieldReport(project_id, method);
     };
 
-    var checkLocalStorage = function(item, choices, storageName) {
-      var options = JSON.parse(localStorage.getItem(storageName)) || choices;
+    const checkLocalStorage = function(item, choices, storageName) {
+      const options = JSON.parse(localStorage.getItem(storageName)) || choices;
       if (item === 'all') {
         return options.length === choices.length;
       } else if (options.indexOf(item) !== -1) {
@@ -124,7 +122,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           display: 'Sample Date',
           sortable: true,
           formatter: function(v) {
-            var val = '';
+            let val = '';
             if (v) {
               val = $filter('date')(new Date(v), 'dd-MMM-yyyy');
             }
@@ -150,21 +148,20 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           downloadFieldReport(transectmethod);
         },
         filterMethod: function(item) {
-          var selected = item.selected;
-          var choice = item.choice;
-          var options =
-            JSON.parse(localStorage.getItem('submit_methodfilter')) ||
-            protocolMethods;
-          if (selected) {
+          const choice = item.choice;
+          let options = JSON.parse(
+            localStorage.getItem('submit_methodfilter')
+          ) || [...protocolMethods];
+          if (item.selected) {
             options.push(choice);
           } else {
-            var index = options.indexOf(choice);
+            const index = options.indexOf(choice);
             if (index !== -1) {
               options.splice(index, 1);
             }
           }
 
-          this.allMethods = options.length === protocolMethodsLength;
+          this.allMethods = options.length === protocolMethods.length;
           localStorage.setItem('submit_methodfilter', JSON.stringify(options));
           $scope.tableControl.setFilterParam(
             'protocol',
@@ -175,10 +172,10 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         },
         selectAllMethods: function(allSelected) {
           this.allMethods = allSelected;
-          var methodTypes = this.methodTypes;
-          var options =
-            JSON.parse(localStorage.getItem('submit_methodfilter')) ||
-            protocolMethods;
+          const methodTypes = this.methodTypes;
+          let options = JSON.parse(
+            localStorage.getItem('submit_methodfilter')
+          ) || [...protocolMethods];
           if (allSelected) {
             methodTypes.forEach(method => {
               if (!method.selected) {
@@ -282,10 +279,10 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       );
     };
 
-    var buttons = [];
+    const buttons = [];
     _.each($scope.choices.transect_types, function(transect_type) {
       if (transect_type.method) {
-        var btn = new Button();
+        const btn = new Button();
         btn.name = transect_type.name;
         btn.protocol = transect_type.protocol;
         btn.onlineOnly = true;
@@ -297,7 +294,6 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       }
     });
 
-    var fieldReportButton = new Button();
     fieldReportButton.name = 'Export to CSV';
     fieldReportButton.classes = 'btn-success';
     fieldReportButton.icon = 'fa fa-download';
