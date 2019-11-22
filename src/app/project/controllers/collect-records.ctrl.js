@@ -108,7 +108,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       hideRowStripes: true,
       searching: true,
       searchPlaceholder: 'Filter sample units by method, site, or observer',
-      searchIcon: 'fa-filter',
       searchLocation: 'right',
       defaultSortByColumn: 'data.protocol',
       rowFormatter: function(record, element) {
@@ -424,6 +423,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           };
           this.allStatus = allSelected;
           selectAllOptions(allSelected, filterOptions);
+        },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
         }
       }
     };

@@ -27,7 +27,6 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter benthic attributes by name or parent',
-      searchIcon: 'fa-filter',
       searchLocation: 'left',
       cols: [
         {

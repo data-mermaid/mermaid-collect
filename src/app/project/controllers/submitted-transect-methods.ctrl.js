@@ -62,7 +62,6 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       searching: true,
       searchPlaceholder:
         'Filter sample units by method, site, management, or observer',
-      searchIcon: 'fa-filter',
       searchLocation: 'right',
       rowSelect: false,
       hideRowStripes: true,
