@@ -53,7 +53,7 @@
       
     
   </div>
-  <div class="filter-wrapper" ng-hide="control.hideFilteredCount()">
+  <div class="filter-wrapper" ng-hide="control.recordsNotFiltered() && control.noAppliedFilters()">
     <div class="filter-records" > 
       <span ng-if="!control.records">Filtering</span>
       <i class="fa fa-filter" ng-if="control.records"></i>
