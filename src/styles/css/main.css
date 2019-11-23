@@ -504,6 +504,8 @@ th.col-sort-asc {
 
 .table-toolbar {
   width: 500px;
+  display: flex;
+  align-items: center;
 }
 
 .table-selecting {
@@ -515,8 +517,40 @@ th.col-sort-asc {
   margin-left: 10px;
 }
 
+li.select-all-filter {
+  border-bottom: 1px solid lightgray;
+}
+
 .checkbox-label {
   margin-left: 18px;
+}
+
+.filter-highlight-on {
+  background-color: #FFE083;
+}
+.filter-wrapper {
+  display: inline-flex;
+}
+
+.filter-records {
+  padding: 6px;
+  margin-left: 5px;
+  background-color: #FFE083;
+}
+
+.filter-count {
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+.clear-filter {
+  background-color: #eee;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.clear-filter:hover {
+  background-color: lightgray;
 }
 
 .note-error span.error,
@@ -1310,6 +1344,7 @@ ul li.transect-buttons[disabled] {
   text-decoration-style: dotted;
 }
 
+/* Multiple column sorts */
 .header-col-name {
   float: left;
 }
