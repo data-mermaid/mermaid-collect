@@ -272,10 +272,10 @@ angular.module('mermaid.libs').service('utils', [
       },
       combinations: function combination(arr) {
         let i, j, temp;
-        let result = [];
-        let arrLen = arr.length;
-        let power = Math.pow;
-        let combinations = power(2, arrLen);
+        const result = [];
+        const arrLen = arr.length;
+        const power = Math.pow;
+        const combinations = power(2, arrLen);
 
         for (i = 0; i < combinations; i++) {
           temp = [];
