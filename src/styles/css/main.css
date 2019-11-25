@@ -763,6 +763,10 @@ btn > button {
   width: 100%;
 }
 
+.search-trigger {
+  background-color: #FFE083;
+}
+
 /* MAP DIRECTIVE */
 .mapcanvas {
   width: 100%;

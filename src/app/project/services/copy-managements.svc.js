@@ -14,7 +14,6 @@ angular.module('app.project').service('CopyManagementsService', [
         selecting: true,
         selectingTableName: 'Management Regimes',
         searching: true,
-        searchIcon: 'fa-filter',
         searchLocation: 'right',
         searchPlaceholder: 'Filter by name, secondary name, project or year',
         rowSelect: true,

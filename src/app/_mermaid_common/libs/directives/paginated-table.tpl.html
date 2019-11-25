@@ -9,7 +9,7 @@
       <div class="col-md-5 {{searchLocation}}" ng-show="config.searching" style="padding: 0;">
         <div class="input-group">
           <span class="input-group-addon"><i class="fa {{searchIcon}}"></i></span>
-          <input class="form-control" type="text" placeholder="{{searchPlaceholder}}" ng-model="search"
+          <input class="form-control"  type="text" placeholder="{{searchPlaceholder}}" ng-model="search" ng-class="{true: 'search-trigger', false: ''}[search.length > 0 && search !== null]"
             ng-change="searchTable(search)" ng-model-options='{ debounce: 500 }'>
         </div>
         <span class="help-block">{{searchHelp}}</span>

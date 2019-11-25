@@ -57,7 +57,6 @@ angular.module('app.project').controller('SitesCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter sites by name, reef (type, zone, or exposure)',
-      searchIcon: 'fa-filter',
       searchLocation: 'right',
       disableTrackingTableState: false,
       rowFormatter: function(record, element) {

@@ -14,7 +14,6 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish families by name',
-      searchIcon: 'fa-filter',
       searchLocation: 'left',
       cols: [
         {
