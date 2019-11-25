@@ -108,7 +108,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       hideRowStripes: true,
       searching: true,
       searchPlaceholder: 'Filter sample units by method, site, or observer',
-      searchLocation: 'right',
+      searchLocation: 'left',
       defaultSortByColumn: 'data.protocol',
       rowFormatter: function(record, element) {
         element.addClass(ValidateSubmitService.transectStatusCssClass(record));

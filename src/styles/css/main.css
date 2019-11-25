@@ -503,9 +503,12 @@ th.col-sort-asc {
 }
 
 .table-toolbar {
-  width: 500px;
   display: flex;
   align-items: center;
+}
+
+.filter-group {
+  flex-grow: 1;
 }
 
 .table-selecting {
@@ -1175,8 +1178,13 @@ btn > button {
 
 /* COPY RECORDS */
 
-.copy-records-toolbar label{
-  padding-left: 5px;
+.copy-records-toolbar {
+  display: flex;
+  padding-right: 100px;
+}
+
+.copy-record-select {
+  flex-grow: 1;
 }
 
 .copy-records-modal-body .modal-map-body{
