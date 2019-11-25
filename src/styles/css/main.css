@@ -503,12 +503,11 @@ th.col-sort-asc {
 }
 
 .table-toolbar {
-  display: flex;
-  align-items: center;
+  padding-bottom: 10px;
 }
 
-.filter-group {
-  flex-grow: 1;
+.right-position {
+  float: right;
 }
 
 .table-selecting {
@@ -848,11 +847,11 @@ btn > button {
 }
 
 .pull-left {
-  padding-right: 5px;
+  padding: 0 5px 0 0;
 }
 
 .pull-right {
-  padding-left: 5px;
+  padding: 0 0 0 5px;
 }
 
 .underline {
