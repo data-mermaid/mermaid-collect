@@ -183,7 +183,7 @@ angular.module('mermaid.libs').directive('geopoint', [
           center: {
             lat: 0,
             lng: 0,
-            zoom: 2
+            zoom: 11
           }
         });
       }
