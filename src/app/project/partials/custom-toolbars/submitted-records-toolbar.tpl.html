@@ -3,7 +3,6 @@
     <button type="button" class="btn btn-default dropdown-toggle" ng-class="{true: 'filter-highlight-on', false: ''}[!config.toolbar.allMethods]" data-toggle="dropdown"><i class="fa fa-pencil"></i>
       Method <span class="caret"></span>
     </button>
-  
     <ul class="dropdown-menu">
         <li class="select-all-filter">
             <div class="checkbox">
@@ -22,6 +21,7 @@
       </li>
     </ul>
   </div>
+
   <div class="filter-wrapper" ng-hide="control.recordsNotFiltered() && control.noAppliedFilters()">
       <div class="filter-records" > 
         <span ng-if="!control.records">Filtering</span>
@@ -29,6 +29,6 @@
         <span class="filter-count" ng-if="control.records">{{control.getFilteredRecordsCount()}}</span>
         Records
       </div>
-      <div class="clear-filter" ng-if="control.records" ng-click="config.toolbar.selectAllMethods(true);"><i class="fa fa-remove"></i></div>
+      <div class="clear-filter" ng-if="control.records" ng-click="config.toolbar.selectAllMethods(true); config.toolbar.clearFilters();"><i class="fa fa-remove"></i></div>
     </div>
 </div>
