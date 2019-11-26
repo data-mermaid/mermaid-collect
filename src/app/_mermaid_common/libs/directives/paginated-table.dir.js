@@ -719,6 +719,7 @@ angular
 
           $scope.control.clearSearch = function() {
             $scope.search = null;
+            $scope.fetchTableRecords(true);
           };
 
           // WATCHES

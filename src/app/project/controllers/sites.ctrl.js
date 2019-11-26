@@ -38,6 +38,7 @@ angular.module('app.project').controller('SitesCtrl', [
       contextMenu: ['row_below', 'remove_row']
     };
 
+    let siteRecordsCount = 0;
     var project_id = $stateParams.project_id;
 
     $scope.isDisabled = true;
@@ -57,7 +58,7 @@ angular.module('app.project').controller('SitesCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter sites by name, reef (type, zone, or exposure)',
-      searchLocation: 'right',
+      searchLocation: 'left',
       disableTrackingTableState: false,
       rowFormatter: function(record, element) {
         var isInvalid =
@@ -134,12 +135,18 @@ angular.module('app.project').controller('SitesCtrl', [
           modal.result.then(function() {
             $scope.tableControl.refresh();
           });
+        },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
         }
       }
     };
 
     offlineservice.ProjectSitesTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
+      $scope.projectObjectsTable.count().then(function(val) {
+        siteRecordsCount = val;
+      });
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: [
           'name',
@@ -149,6 +156,21 @@ angular.module('app.project').controller('SitesCtrl', [
         ]
       });
     });
+
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      return (
+        $scope.tableControl.records &&
+        siteRecordsCount &&
+        `${$scope.tableControl.records.length}/${siteRecordsCount}`
+      );
+    };
+
+    $scope.tableControl.recordsNotFiltered = function() {
+      return (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length === siteRecordsCount
+      );
+    };
 
     $scope.mapopts = {
       gestureHandling: true
