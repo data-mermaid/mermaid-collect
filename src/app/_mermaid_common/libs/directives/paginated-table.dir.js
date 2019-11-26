@@ -717,6 +717,11 @@ angular
             }, 100);
           };
 
+          $scope.control.clearSearch = function() {
+            $scope.search = null;
+            $scope.fetchTableRecords(true);
+          };
+
           // WATCHES
 
           var un = $scope.$watch('resource', function(n) {

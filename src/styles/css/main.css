@@ -503,9 +503,11 @@ th.col-sort-asc {
 }
 
 .table-toolbar {
-  width: 500px;
-  display: flex;
-  align-items: center;
+  padding-bottom: 10px;
+}
+
+.right-position {
+  float: right;
 }
 
 .table-selecting {
@@ -534,7 +536,6 @@ li.select-all-filter {
 
 .filter-records {
   padding: 6px;
-  margin-left: 5px;
   background-color: #FFE083;
 }
 
@@ -763,6 +764,10 @@ btn > button {
   width: 100%;
 }
 
+.search-trigger {
+  background-color: #FFE083;
+}
+
 /* MAP DIRECTIVE */
 .mapcanvas {
   width: 100%;
@@ -841,11 +846,11 @@ btn > button {
 }
 
 .pull-left {
-  padding-right: 5px;
+  padding: 0;
 }
 
 .pull-right {
-  padding-left: 5px;
+  padding: 0 0 0 5px;
 }
 
 .underline {
@@ -1171,8 +1176,13 @@ btn > button {
 
 /* COPY RECORDS */
 
-.copy-records-toolbar label{
-  padding-left: 5px;
+.copy-records-toolbar {
+  display: flex;
+  padding-right: 100px;
+}
+
+.copy-record-select {
+  flex-grow: 1;
 }
 
 .copy-records-modal-body .modal-map-body{

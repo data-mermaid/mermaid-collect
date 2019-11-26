@@ -62,8 +62,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       searching: true,
       searchPlaceholder:
         'Filter sample units by method, site, management, or observer',
-      searchIcon: 'fa-filter',
-      searchLocation: 'right',
+      searchLocation: 'left',
       rowSelect: false,
       hideRowStripes: true,
       filters: {
@@ -196,6 +195,9 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           );
           $scope.tableControl.refresh();
         },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
+        },
         allMethods: checkLocalStorage(
           'all',
           protocolMethods,
@@ -272,11 +274,20 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       );
     };
 
-    $scope.tableControl.hideFilteredCount = function() {
+    $scope.tableControl.recordsNotFiltered = function() {
       return (
         $scope.tableControl.records &&
         $scope.tableControl.records.length === submittedRecordsCount
       );
+    };
+
+    $scope.tableControl.noAppliedFilters = function() {
+      const methodStorage = checkLocalStorage(
+        'all',
+        protocolMethods,
+        'submit_methodfilter'
+      );
+      return methodStorage;
     };
 
     const buttons = [];

@@ -1,13 +1,9 @@
-<div class="table-toolbar">
-  <div class="btn-group">
-    <label type="button" class="btn btn-default" ng-click="config.toolbar.backUp()"><i class="fa fa-save"></i> Backup</label>
-
-
+<div>
     <div class="btn-group">
+      <div class="btn-group">
       <label type="button" class="btn btn-default dropdown-toggle" ng-class="{true: 'filter-highlight-on', false: ''}[!config.toolbar.allMethods]" data-toggle="dropdown"><i class="fa fa-pencil"></i>
         Method <span class="caret"></span>
       </label>
-    
       <ul class="dropdown-menu">
         <li class="select-all-filter">
           <div class="checkbox">
@@ -25,42 +21,44 @@
           </div>
         </li>
       </ul>
+      </div>
+
+      <div class="btn-group">
+        <label type="button" class="btn btn-default dropdown-toggle" ng-class="{true: 'filter-highlight-on', false: ''}[!config.toolbar.allStatus]" data-toggle="dropdown"><i class="fa fa-table"></i>
+          Status <span class="caret"></span>
+        </label>
+        <ul class="dropdown-menu">
+            <li class="select-all-filter">
+                <div class="checkbox">
+                  <label> 
+                    <input type="checkbox" ng-model="config.toolbar.allStatus" ng-change="config.toolbar.selectAllStatus(config.toolbar.allStatus)">Select All
+                  </label>
+                </div>
+              </li>
+          <li ng-repeat="item in config.toolbar.statusTypes track by item.choice">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterStatus(item)">
+                {{item.name}}
+              </label>
+            </div>
+          </li>
+        </ul>
+
+      </div>
+
+    <div class="filter-wrapper" ng-hide="control.recordsNotFiltered() && control.noAppliedFilters()">
+      <div class="filter-records" > 
+        <span ng-if="!control.records">Filtering</span>
+        <i class="fa fa-filter" ng-if="control.records"></i>
+        <span class="filter-count" ng-if="control.records">{{control.getFilteredRecordsCount()}}</span>
+        Records
+      </div>
+      <div class="clear-filter" ng-if="control.records" ng-click="config.toolbar.selectAllStatus(true); config.toolbar.selectAllMethods(true); config.toolbar.clearFilters();"><i class="fa fa-remove"></i></div>
     </div>
 
-    <div class="btn-group">
-      <label type="button" class="btn btn-default dropdown-toggle" ng-class="{true: 'filter-highlight-on', false: ''}[!config.toolbar.allStatus]" data-toggle="dropdown"><i class="fa fa-table"></i>
-        Status <span class="caret"></span>
-      </label>
-    
-      <ul class="dropdown-menu">
-          <li class="select-all-filter">
-              <div class="checkbox">
-                <label> 
-                  <input type="checkbox" ng-model="config.toolbar.allStatus" ng-change="config.toolbar.selectAllStatus(config.toolbar.allStatus)">Select All
-                </label>
-              </div>
-            </li>
-        <li ng-repeat="item in config.toolbar.statusTypes track by item.choice">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterStatus(item)">
-              {{item.name}}
-            </label>
-          </div>
-        </li>
-      </ul>
     </div>
-      
-    
-  </div>
-  <div class="filter-wrapper" ng-hide="control.hideFilteredCount()">
-    <div class="filter-records" > 
-      <span ng-if="!control.records">Filtering</span>
-      <i class="fa fa-filter" ng-if="control.records"></i>
-      <span class="filter-count" ng-if="control.records">{{control.getFilteredRecordsCount()}}</span>
-      Records
+    <div class="btn-group right-position">
+      <label type="button" class="btn btn-default" ng-click="config.toolbar.backUp()"><i class="fa fa-save"></i> Backup</label>
     </div>
-    <div class="clear-filter" ng-if="control.records" ng-click="config.toolbar.selectAllStatus(true); config.toolbar.selectAllMethods(true);"><i class="fa fa-remove"></i></div>
-  </div>
-    
 </div>

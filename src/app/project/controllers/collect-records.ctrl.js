@@ -108,8 +108,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       hideRowStripes: true,
       searching: true,
       searchPlaceholder: 'Filter sample units by method, site, or observer',
-      searchIcon: 'fa-filter',
-      searchLocation: 'right',
+      searchLocation: 'left',
       defaultSortByColumn: 'data.protocol',
       rowFormatter: function(record, element) {
         element.addClass(ValidateSubmitService.transectStatusCssClass(record));
@@ -424,6 +423,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           };
           this.allStatus = allSelected;
           selectAllOptions(allSelected, filterOptions);
+        },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
         }
       }
     };
@@ -452,11 +454,25 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       );
     };
 
-    $scope.tableControl.hideFilteredCount = function() {
+    $scope.tableControl.recordsNotFiltered = function() {
       return (
         $scope.tableControl.records &&
         $scope.tableControl.records.length === collectRecordsCount
       );
+    };
+
+    $scope.tableControl.noAppliedFilters = function() {
+      const methodStorage = checkLocalStorage(
+        'all',
+        protocolMethods,
+        'collect_methodfilter'
+      );
+      const statusStorage = checkLocalStorage(
+        'all',
+        statusChoices,
+        'collect_statusfilter'
+      );
+      return methodStorage && statusStorage;
     };
 
     $q.all(promises).then(function(output) {

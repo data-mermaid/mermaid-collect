@@ -1,21 +1,18 @@
 <div>
   <!-- HEADER -->
-  <div>
-    <div>
-      <!-- toolbar -->
-      <div class="col-md-3" ng-include="config.toolbar.template" style="padding: 0;"></div>
-      <div class="col-md-4 table-selecting" ng-show="config.selecting" >{{config.toolbar.message()}}</div>
-      <!-- search -->
-      <div class="col-md-5 {{searchLocation}}" ng-show="config.searching" style="padding: 0;">
-        <div class="input-group">
-          <span class="input-group-addon"><i class="fa {{searchIcon}}"></i></span>
-          <input class="form-control" type="text" placeholder="{{searchPlaceholder}}" ng-model="search"
-            ng-change="searchTable(search)" ng-model-options='{ debounce: 500 }'>
-        </div>
-        <span class="help-block">{{searchHelp}}</span>
+  <div class="table-toolbar">
+    <!-- search -->
+    <div class="col-lg-4 {{searchLocation}}" ng-show="config.searching">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa {{searchIcon}}"></i></span>
+        <input class="form-control"  type="text" placeholder="{{searchPlaceholder}}" ng-model="search" ng-class="{true: 'search-trigger', false: ''}[search.length > 0 && search !== null]"
+        ng-change="searchTable(search)" ng-model-options='{ debounce: 500 }'>
       </div>
-      <div class="clearfix"></div>
+      <span class="help-block">{{searchHelp}}</span>
     </div>
+    <!-- toolbar -->
+    <div class="col-lg-8" ng-include="config.toolbar.template" style="padding: 0;"></div>
+    <div class="clearfix"></div>
   </div>
   <!-- TABLE -->
   <table class="table table-bordered table-responsive" ng-class="{true: '', false: 'table-striped'}[hideRowStripes]">
