@@ -62,7 +62,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       searching: true,
       searchPlaceholder:
         'Filter sample units by method, site, management, or observer',
-      searchLocation: 'right',
+      searchLocation: 'left',
       rowSelect: false,
       hideRowStripes: true,
       filters: {
@@ -194,6 +194,9 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             true
           );
           $scope.tableControl.refresh();
+        },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
         },
         allMethods: checkLocalStorage(
           'all',

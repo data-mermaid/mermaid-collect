@@ -23,6 +23,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
   ) {
     'use strict';
 
+    let managementRecordsCount = 0;
     var project_id = $stateParams.project_id;
 
     $scope.isDisabled = true;
@@ -42,7 +43,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter management regimes by name',
-      searchLocation: 'right',
+      searchLocation: 'left',
       rowSelect: false,
       hideRowStripes: true,
       rowFormatter: function(record, element) {
@@ -148,16 +149,37 @@ angular.module('app.project').controller('ManagementsCtrl', [
           modal.result.then(function() {
             $scope.tableControl.refresh();
           });
+        },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
         }
       }
     };
 
     offlineservice.ProjectManagementsTable(project_id).then(function(table) {
+      table.count().then(function(val) {
+        managementRecordsCount = val;
+      });
       $scope.projectObjectsTable = table;
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name']
       });
     });
+
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      return (
+        $scope.tableControl.records &&
+        managementRecordsCount &&
+        `${$scope.tableControl.records.length}/${managementRecordsCount}`
+      );
+    };
+
+    $scope.tableControl.recordsNotFiltered = function() {
+      return (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length === managementRecordsCount
+      );
+    };
 
     $scope.$on(ValidateDuplicationService.MR_PAGE, function() {
       $scope.tableControl.refresh(true);

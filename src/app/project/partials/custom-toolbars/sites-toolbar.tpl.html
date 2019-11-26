@@ -1,11 +1,28 @@
-<div class="table-toolbar">
-  <div class="btn-group">
-    <label
-      ng-if="!config.toolbar.isDisabled()"
-      type="button" class="btn btn-default" ng-click="config.toolbar.newSite()"><i class="fa fa-plus"></i> New site</label>
-    <label
-      ng-if="!config.toolbar.isDisabled()"
-      offlinehide type="button" class="btn btn-default" ng-click="config.toolbar.copySites()"><i class="fa fa-copy"></i> Copy sites from other projects</label>
-    <label offlinehide type="button" class="btn btn-default" ng-click="config.toolbar.exportSites()"><i class="fa fa-download"></i> Export sites</label>
+<div>
+    <div class="btn-group">
+      <div class="filter-wrapper" ng-hide="control.recordsNotFiltered()">
+        <div class="filter-records" > 
+          <span ng-if="!control.records">Filtering</span>
+          <i class="fa fa-filter" ng-if="control.records"></i>
+          <span class="filter-count" ng-if="control.records">{{control.getFilteredRecordsCount()}}</span>
+          Records
+        </div>
+        <div class="clear-filter" ng-if="control.records" ng-click="config.toolbar.clearFilters();"><i class="fa fa-remove"></i></div>
+      </div>
+    </div>
+  <div class="btn-group right-position">
+    <div class="btn-group">
+      <label
+        ng-if="!config.toolbar.isDisabled()"
+        type="button" class="btn btn-default" ng-click="config.toolbar.newSite()"><i class="fa fa-plus"></i> New site</label>
+    </div>
+    <div class="btn-group">
+      <label
+        ng-if="!config.toolbar.isDisabled()"
+        offlinehide type="button" class="btn btn-default" ng-click="config.toolbar.copySites()"><i class="fa fa-copy"></i> Copy sites from other projects</label>
+    </div>
+    <div class="btn-group">
+      <label offlinehide type="button" class="btn btn-default" ng-click="config.toolbar.exportSites()"><i class="fa fa-download"></i> Export sites</label>
+    </div>
   </div>
 </div>
