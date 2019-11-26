@@ -717,6 +717,10 @@ angular
             }, 100);
           };
 
+          $scope.control.clearSearch = function() {
+            $scope.search = null;
+          };
+
           // WATCHES
 
           var un = $scope.$watch('resource', function(n) {

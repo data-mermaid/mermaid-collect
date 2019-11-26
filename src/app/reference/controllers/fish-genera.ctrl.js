@@ -27,7 +27,6 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish genera by name or family',
-      searchIcon: 'fa-filter',
       searchLocation: 'left',
       cols: [
         {

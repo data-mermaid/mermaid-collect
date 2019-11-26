@@ -42,7 +42,6 @@ angular.module('app.project').controller('ManagementsCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter management regimes by name',
-      searchIcon: 'fa-filter',
       searchLocation: 'right',
       rowSelect: false,
       hideRowStripes: true,
