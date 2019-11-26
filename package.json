@@ -54,7 +54,6 @@
   },
   "dependencies": {
     "angular-auth0": "^3.0.4",
-    "auth0-js": "^9.11.3",
     "leaflet": "^0.7.1",
     "leaflet-gesture-handling": "^1.1.8"
   },
