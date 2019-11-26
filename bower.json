@@ -44,7 +44,6 @@
     "leaflet": "^0.7.1",
     "leaflet-draw": "0.4.10",
     "angular-jwt": "^0.1.9",
-    "angular-auth0": "^2.0.0",
     "angular-block-ui": "^0.2.2",
     "circular-json": "^0.5.1",
     "angular-file-saver": "^1.1.3",

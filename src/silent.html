@@ -4,22 +4,19 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <script type="text/javascript" src="https://cdn.auth0.com/js/auth0/8.9/auth0.min.js"></script>
+  <script src="https://cdn.auth0.com/js/auth0/9.11/auth0.min.js"></script>
   <script type="text/javascript" src="/mermaid-config.js"></script>
   <script type="text/javascript" src="/app.config.js"></script>
   <script>
     var webAuth = new auth0.WebAuth({
-      domain: window.appConfig.AUTH0_DOMAIN,
       clientID: window.appConfig.AUTH0_CLIENT_ID,
-      scope: 'openid',
+      domain: window.appConfig.AUTH0_DOMAIN,
       responseType: 'token id_token',
       redirectUri: window.appConfig.HOST_URL
     });
   </script>
   <script>
-    webAuth.parseHash(window.location.hash, function (err, response) {
-      parent.postMessage(err || response, window.appConfig.HOST_URL);
-    });
+    parent.postMessage(window.location.hash, window.appConfig.HOST_URL);
   </script>
 </head>
 <body></body>
