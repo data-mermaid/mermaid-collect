@@ -34,25 +34,7 @@ angular.module('mermaid.libs').directive('leafletMap', [
         scope.geoattr = scope.geoattr || 'location';
         const defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
         const defaultZoom = scope.mapopts.defaultZoom || 2;
-
-        const sitePopupLabel = function(feature) {
-          return !_.isEmpty(feature)
-            ? '<a href="#/projects/' +
-                feature.project_id +
-                '/sites/' +
-                feature.id +
-                '">' +
-                feature.name +
-                '</a>' +
-                '<div><p>Reef type: <span>' +
-                feature.reeftype +
-                '</span></p><p>Reef zone: <span>' +
-                feature.reefzone +
-                '</span></p><p>Exposure: <span>' +
-                feature.reefexposure +
-                '</span></p></div>'
-            : '<p>No content</p>';
-        };
+        const popup = scope.mapopts.popup || false;
 
         const mapRecordsProperty = {
           pointToLayer: function(feature, latlng) {
@@ -60,9 +42,9 @@ angular.module('mermaid.libs').directive('leafletMap', [
           }
         };
 
-        if (scope.mapopts.showPopup) {
+        if (popup) {
           mapRecordsProperty.onEachFeature = function(feature, layer) {
-            layer.bindPopup(sitePopupLabel(feature.properties));
+            layer.bindPopup(popup(feature.properties));
           };
         }
 
@@ -94,7 +76,7 @@ angular.module('mermaid.libs').directive('leafletMap', [
             let center = defaultCenter;
             scope.maprecords.clearLayers();
             _.each(scope.records, function(rec) {
-              if (scope.mapopts.showPopup) {
+              if (popup) {
                 const rec_geo_data = {
                   id: rec.id,
                   name: rec.name,

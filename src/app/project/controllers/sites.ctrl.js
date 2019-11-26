@@ -151,11 +151,31 @@ angular.module('app.project').controller('SitesCtrl', [
       });
     });
 
+    const createPopup = function(feature) {
+      return !_.isEmpty(feature)
+        ? '<a href="#/projects/' +
+            feature.project_id +
+            '/sites/' +
+            feature.id +
+            '">' +
+            feature.name +
+            '</a>' +
+            '<div><p>Reef type: <span>' +
+            feature.reeftype +
+            '</span></p><p>Reef zone: <span>' +
+            feature.reefzone +
+            '</span></p><p>Exposure: <span>' +
+            feature.reefexposure +
+            '</span></p></div>'
+        : '<p>No content</p>';
+    };
+
     $scope.mapopts = {
       gestureHandling: true,
       project_id: project_id,
-      showPopup: true
+      popup: createPopup
     };
+
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {
       $scope.tableControl.refresh(true);
     });
