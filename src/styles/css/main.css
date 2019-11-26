@@ -536,7 +536,6 @@ li.select-all-filter {
 
 .filter-records {
   padding: 6px;
-  margin-left: 5px;
   background-color: #FFE083;
 }
 
@@ -847,7 +846,7 @@ btn > button {
 }
 
 .pull-left {
-  padding: 0 5px 0 0;
+  padding: 0;
 }
 
 .pull-right {

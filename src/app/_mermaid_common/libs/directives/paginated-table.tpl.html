@@ -1,8 +1,8 @@
 <div>
   <!-- HEADER -->
-<div>
+  <div class="table-toolbar">
     <!-- search -->
-    <div class="col-md-5 {{searchLocation}}" ng-show="config.searching">
+    <div class="col-lg-4 {{searchLocation}}" ng-show="config.searching">
       <div class="input-group">
         <span class="input-group-addon"><i class="fa {{searchIcon}}"></i></span>
         <input class="form-control"  type="text" placeholder="{{searchPlaceholder}}" ng-model="search" ng-class="{true: 'search-trigger', false: ''}[search.length > 0 && search !== null]"
@@ -11,7 +11,7 @@
       <span class="help-block">{{searchHelp}}</span>
     </div>
     <!-- toolbar -->
-    <div class="col-md-7" ng-include="config.toolbar.template" style="padding: 0;"></div>
+    <div class="col-lg-8" ng-include="config.toolbar.template" style="padding: 0;"></div>
     <div class="clearfix"></div>
   </div>
   <!-- TABLE -->

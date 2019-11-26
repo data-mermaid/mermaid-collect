@@ -59,7 +59,7 @@ angular.module('app.project').controller('SitesCtrl', [
       searching: true,
       searchPlaceholder: 'Filter sites by name, reef (type, zone, or exposure)',
       searchLocation: 'left',
-      disableTrackingTableState: false,
+      disableTrackingTableState: true,
       rowFormatter: function(record, element) {
         var isInvalid =
           _.get(
