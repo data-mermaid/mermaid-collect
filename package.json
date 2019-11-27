@@ -53,8 +53,7 @@
     "sw-precache": "^5.2.1"
   },
   "dependencies": {
-    "angular-auth0": "^2.0.0",
-    "auth0-js": "^9.6.1",
+    "angular-auth0": "^3.0.4",
     "leaflet": "^0.7.1",
     "leaflet-gesture-handling": "^1.1.8"
   },

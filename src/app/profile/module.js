@@ -1,12 +1,20 @@
 angular.module('app.profile', []).config(function($stateProvider) {
   'use strict';
+
+  const checkAuthentication = function($transition$) {
+    const authService = $transition$.injector().get('authService');
+    if (!authService.isAuthenticated()) {
+      return authService.login();
+    }
+  };
+
   $stateProvider
     .state('fullapp.profile', {
       url: '/me',
       data: {
         title: 'Profile'
       },
-      loginRequired: true,
+      onEnter: checkAuthentication,
       views: {
         'content@fullapp': {
           templateUrl: 'app/profile/partials/profile.tpl.html',
@@ -19,7 +27,7 @@ angular.module('app.profile', []).config(function($stateProvider) {
       data: {
         title: 'Profile'
       },
-      loginRequired: true,
+      onEnter: checkAuthentication,
       views: {
         'content@fullapp': {
           templateUrl: 'app/profile/partials/profile.tpl.html',
