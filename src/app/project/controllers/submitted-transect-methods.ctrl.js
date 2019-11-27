@@ -23,7 +23,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     // var records = [];
     var project_id = $stateParams.project_id;
 
-    $scope.tableControl = {};
+    $scope.tableControl = { isDisabled: true };
     $scope.isDisabled = true;
     $scope.choices = {};
     $scope.choices.transect_types = ProjectService.transect_types;

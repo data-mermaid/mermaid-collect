@@ -305,7 +305,9 @@ angular.module('mermaid.libs').service('OfflineTableSync', [
         }
         var _applySyncRecord = options.applySyncRecord || applySyncRecord;
         return _applySyncRecord(syncRecord, offlineTable).then(function() {
-          service.setLastAccessed(tableName);
+          if (Object.keys(syncRecord).length > 0) {
+            service.setLastAccessed(tableName);
+          }
           return syncRecord;
         });
       });

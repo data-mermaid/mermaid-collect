@@ -589,10 +589,7 @@ angular
           }
         },
         resolve: {
-          projectProfile: function($stateParams, ProjectService) {
-            const projectId = $stateParams.project_id;
-            return ProjectService.getMyProjectProfile(projectId);
-          }
+          projectProfile: _getMyProjectProfile
         }
       })
       .state('app.project.users', {

@@ -245,6 +245,7 @@ angular
           })
           .catch(function(err) {
             console.error(err);
+            throw err;
           });
       };
 

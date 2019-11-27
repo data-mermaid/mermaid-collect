@@ -16,6 +16,7 @@
     'APP_CONFIG',
     'layoutUtils',
     'system',
+    // '$urlRouter',
     'ConnectivityFactory'
   ];
 
@@ -32,6 +33,7 @@
     APP_CONFIG,
     layoutUtils,
     system,
+    // $urlRouter,
     ConnectivityFactory
   ) {
     const conn = new ConnectivityFactory($rootScope);
@@ -46,6 +48,7 @@
     }
 
     handleAuth.then(function() {
+      // $urlRouter.listen();
       if (connectivity.isOnline && authService.isAuthenticated()) {
         system.startAutoDataUpdate();
       }
@@ -82,7 +85,8 @@
     $transitions.onError({}, function(transition) {
       const error = transition.error();
       if (angular.isDefined(error.detail)) {
-        const errorcode = error.detail.code || null;
+        const errorcode =
+          error.detail != null ? error.detail.code || null : null;
         const apperror = _.find(APP_CONFIG.errors, { code: errorcode }) || null;
         if (apperror !== null) {
           const params = {
@@ -91,7 +95,7 @@
           };
           $state.go(APP_CONFIG.errorPage, params);
           return false;
-        } else if (error.detail === 'Not authenticated') {
+        } else if (!authService.isAuthenticated()) {
           const toState = transition.to();
           const toStateParams = transition.params();
           localStorageService.set('toState', toState.name);
