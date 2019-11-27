@@ -87,7 +87,6 @@ angular
     });
 
     $urlRouterProvider.otherwise('/projects');
-    // $urlRouterProvider.deferIntercept();
 
     // Intercept http calls.
     $provide.factory('ErrorHttpInterceptor', function($q, $injector) {

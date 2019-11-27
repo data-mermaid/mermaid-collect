@@ -133,7 +133,7 @@ angular.module('app.auth').service('authService', [
     }
 
     function renewToken() {
-      const deferred = $q.deferred();
+      const deferred = $q.defer();
 
       if (connectivity.isOnline === false) {
         deferred.resolve();

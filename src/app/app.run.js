@@ -9,7 +9,6 @@
     '$stateParams',
     '$transitions',
     '$uibModalStack',
-    '$urlRouter',
     'authService',
     'authManager',
     'localStorageService',
@@ -26,7 +25,6 @@
     $stateParams,
     $transitions,
     $uibModalStack,
-    $urlRouter,
     authService,
     authManager,
     localStorageService,
@@ -36,7 +34,7 @@
     system,
     ConnectivityFactory
   ) {
-    let conn = new ConnectivityFactory($rootScope);
+    const conn = new ConnectivityFactory($rootScope);
     let handleAuth;
 
     if (authService.getToken() != null) {
@@ -51,28 +49,7 @@
       if (connectivity.isOnline && authService.isAuthenticated()) {
         system.startAutoDataUpdate();
       }
-
-      $transitions.onStart({}, function(transition) {
-        let toState = transition.to();
-        let toStateParams = transition.params();
-
-        if (
-          toState.loginRequired === true &&
-          connectivity.isOnline &&
-          !authService.isAuthenticated()
-        ) {
-          localStorageService.set('toState', toState.name);
-          localStorageService.set('toStateParams', toStateParams);
-          authService.login();
-
-          return false;
-        }
-      });
-
-      // $urlRouter.listen();
     });
-
-    // --------------
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
@@ -103,16 +80,23 @@
     });
 
     $transitions.onError({}, function(transition) {
-      var error = transition.error();
+      const error = transition.error();
       if (angular.isDefined(error.detail)) {
-        var errorcode = error.detail.code || null;
-        var apperror = _.find(APP_CONFIG.errors, { code: errorcode }) || null;
+        const errorcode = error.detail.code || null;
+        const apperror = _.find(APP_CONFIG.errors, { code: errorcode }) || null;
         if (apperror !== null) {
-          var params = {
+          const params = {
             rejection: { detail: error.detail.detail },
             apperror: apperror
           };
           $state.go(APP_CONFIG.errorPage, params);
+          return false;
+        } else if (error.detail === 'Not authenticated') {
+          const toState = transition.to();
+          const toStateParams = transition.params();
+          localStorageService.set('toState', toState.name);
+          localStorageService.set('toStateParams', toStateParams);
+          authService.login();
           return false;
         }
       }
@@ -129,7 +113,5 @@
     authService.scheduleRenewal();
     authManager.checkAuthOnRefresh();
     connectivity.ping();
-
-    // ------//------
   }
 })();

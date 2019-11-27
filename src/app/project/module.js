@@ -103,6 +103,13 @@ angular
       return offlineservice.ProjectsTable();
     };
 
+    const checkAuthentication = function($transition$) {
+      const authService = $transition$.injector().get('authService');
+      if (!authService.isAuthenticated()) {
+        return authService.login();
+      }
+    };
+
     $stateProvider
       .state('app.project', {
         abstract: true,
@@ -124,7 +131,7 @@ angular
       })
       .state('fullapp.projects', {
         url: '/projects',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Projects'
         },
@@ -142,10 +149,10 @@ angular
       })
       .state('fullapp.project', {
         url: '/startproject',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'New Project',
-          loginRequired: true
+          onEnter: checkAuthentication
         },
         views: {
           'content@fullapp': {
@@ -162,10 +169,10 @@ angular
       })
       .state('fullapp.contact', {
         url: '/contact',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Contact MERMAID',
-          loginRequired: true
+          onEnter: checkAuthentication
         },
         views: {
           'content@fullapp': {
@@ -176,7 +183,7 @@ angular
       })
       .state('app.project.project', {
         url: '/details',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         views: {
           'content@app': {
             templateUrl: 'app/project/partials/project.tpl.html',
@@ -195,7 +202,7 @@ angular
       })
       .state('app.project.datasharing', {
         url: '/datasharing',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Data Sharing'
         },
@@ -217,7 +224,7 @@ angular
       })
       .state('app.project.sites', {
         url: '/sites',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Sites'
         },
@@ -230,7 +237,7 @@ angular
       })
       .state('app.project.sites.site', {
         url: '/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Site',
           parentStates: ['app.project.sites']
@@ -248,7 +255,7 @@ angular
 
       .state('app.project.managements', {
         url: '/managements',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Management Regimes'
         },
@@ -261,7 +268,7 @@ angular
       })
       .state('app.project.managements.management', {
         url: '/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Management Regime',
           parentStates: ['app.project.managements']
@@ -278,7 +285,7 @@ angular
       })
       .state('app.project.submittedtransects.fishbelttransectmethod', {
         url: '/fishbelttransectmethods/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Fish Belt',
           parentStates: ['app.project.submittedtransects']
@@ -309,7 +316,7 @@ angular
       })
       .state('app.project.records.collectfishbelt', {
         url: '/fishbelt/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Fish Belt',
           parentStates: ['app.project.records']
@@ -333,7 +340,7 @@ angular
       })
       .state('app.project.submittedtransects.benthiclittransectmethod', {
         url: '/benthiclittransectmethods/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Benthic LIT',
           parentStates: ['app.project.submittedtransects']
@@ -367,7 +374,7 @@ angular
       })
       .state('app.project.records.collectbenthiclit', {
         url: '/benthiclit/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Benthic LIT',
           parentStates: ['app.project.records']
@@ -391,7 +398,7 @@ angular
       })
       .state('app.project.submittedtransects.benthicpittransectmethod', {
         url: '/benthicpittransectmethods/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Benthic PIT',
           parentStates: ['app.project.submittedtransects']
@@ -425,7 +432,7 @@ angular
       })
       .state('app.project.records.collectbenthicpit', {
         url: '/benthicpit/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Benthic PIT',
           parentStates: ['app.project.records']
@@ -449,7 +456,7 @@ angular
       })
       .state('app.project.submittedtransects.habitatcomplexitytransectmethod', {
         url: '/habitatcomplexitytransectmethods/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Habitat Complexity',
           parentStates: ['app.project.submittedtransects']
@@ -484,7 +491,7 @@ angular
       })
       .state('app.project.records.collecthabitatcomplexity', {
         url: '/habitatcomplexity/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Habitat Complexity',
           parentStates: ['app.project.records']
@@ -507,7 +514,7 @@ angular
         'app.project.submittedtransects.bleachingquadratcollectionmethod',
         {
           url: '/bleachingqcmethods/:id',
-          loginRequired: true,
+          onEnter: checkAuthentication,
           data: {
             title: 'Bleaching',
             parentStates: ['app.project.submittedtransects']
@@ -549,7 +556,7 @@ angular
       )
       .state('app.project.records.collectbleaching', {
         url: '/bleachingqc/:id',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Bleaching',
           parentStates: ['app.project.records']
@@ -573,7 +580,7 @@ angular
       })
       .state('app.project.records', {
         url: '/collect',
-        loginRequired: true,
+        onStart: checkAuthentication,
         data: {
           title: 'Collecting'
         },
@@ -592,7 +599,7 @@ angular
       })
       .state('app.project.users', {
         url: '/users',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Users'
         },
@@ -605,7 +612,7 @@ angular
       })
       .state('app.project.submittedtransects', {
         url: '/transectmethods',
-        loginRequired: true,
+        onEnter: checkAuthentication,
         data: {
           title: 'Submitted Sample Units'
         },
