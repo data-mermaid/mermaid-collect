@@ -15,33 +15,32 @@ angular.module('app.project').directive('managementRulesInput', [
           'gear_restriction',
           'species_restriction'
         ];
-        scope.rule = null;
-        scope.partial_restrictions = null;
+        scope.partial_restrictions = false;
         var resetPartialRestrictions = function() {
           scope.partial_restrictions = false;
           _.each(partial_restriction_choices, function(key) {
-            _.set(scope.management, key, null);
+            _.set(scope.management, key, false);
           });
         };
 
         scope.$watch('management.open_access', function(n) {
           if (n === true) {
-            scope.management.no_take = null;
+            scope.management.no_take = false;
             resetPartialRestrictions();
           }
         });
 
         scope.$watch('management.no_take', function(n) {
           if (n === true) {
-            scope.management.open_access = null;
+            scope.management.open_access = false;
             resetPartialRestrictions();
           }
         });
 
         scope.$watch('partial_restrictions', function(n) {
           if (n === true) {
-            scope.management.open_access = null;
-            scope.management.no_take = null;
+            scope.management.open_access = false;
+            scope.management.no_take = false;
           }
         });
 
