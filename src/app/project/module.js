@@ -151,8 +151,7 @@ angular
         url: '/startproject',
         onEnter: checkAuthentication,
         data: {
-          title: 'New Project',
-          onEnter: checkAuthentication
+          title: 'New Project'
         },
         views: {
           'content@fullapp': {
@@ -171,8 +170,7 @@ angular
         url: '/contact',
         onEnter: checkAuthentication,
         data: {
-          title: 'Contact MERMAID',
-          onEnter: checkAuthentication
+          title: 'Contact MERMAID'
         },
         views: {
           'content@fullapp': {
