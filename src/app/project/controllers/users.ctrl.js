@@ -30,6 +30,7 @@ angular.module('app.project').controller('UsersCtrl', [
     $scope.data = {};
     $scope.project_profile_ids = [];
     $scope.tableControl.isDisabled = true;
+    $scope.tableControl.isAdmin = false;
 
     ProjectService.getMyProjectProfile(project_id).then(function(
       projectProfile

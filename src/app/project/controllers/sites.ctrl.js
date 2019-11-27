@@ -38,6 +38,7 @@ angular.module('app.project').controller('SitesCtrl', [
       contextMenu: ['row_below', 'remove_row']
     };
 
+    let siteRecordsCount = 0;
     var project_id = $stateParams.project_id;
 
     $scope.isDisabled = true;
@@ -57,9 +58,8 @@ angular.module('app.project').controller('SitesCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter sites by name, reef (type, zone, or exposure)',
-      searchIcon: 'fa-filter',
-      searchLocation: 'right',
-      disableTrackingTableState: false,
+      searchLocation: 'left',
+      disableTrackingTableState: true,
       rowFormatter: function(record, element) {
         var isInvalid =
           _.get(
@@ -135,12 +135,18 @@ angular.module('app.project').controller('SitesCtrl', [
           modal.result.then(function() {
             $scope.tableControl.refresh();
           });
+        },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
         }
       }
     };
 
     offlineservice.ProjectSitesTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
+      $scope.projectObjectsTable.count().then(function(val) {
+        siteRecordsCount = val;
+      });
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: [
           'name',
@@ -151,9 +157,46 @@ angular.module('app.project').controller('SitesCtrl', [
       });
     });
 
-    $scope.mapopts = {
-      gestureHandling: true
+    const createPopup = function(feature) {
+      return !_.isEmpty(feature)
+        ? '<a href="#/projects/' +
+            feature.project_id +
+            '/sites/' +
+            feature.id +
+            '">' +
+            feature.name +
+            '</a>' +
+            '<div><p>Reef type: <span>' +
+            feature.reeftype +
+            '</span></p><p>Reef zone: <span>' +
+            feature.reefzone +
+            '</span></p><p>Exposure: <span>' +
+            feature.reefexposure +
+            '</span></p></div>'
+        : '<p>No content</p>';
     };
+
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      return (
+        $scope.tableControl.records &&
+        siteRecordsCount &&
+        `${$scope.tableControl.records.length}/${siteRecordsCount}`
+      );
+    };
+
+    $scope.tableControl.recordsNotFiltered = function() {
+      return (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length === siteRecordsCount
+      );
+    };
+
+    $scope.mapopts = {
+      gestureHandling: true,
+      project_id: project_id,
+      popup: createPopup
+    };
+
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {
       $scope.tableControl.refresh(true);
     });

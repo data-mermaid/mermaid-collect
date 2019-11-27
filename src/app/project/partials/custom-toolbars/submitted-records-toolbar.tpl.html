@@ -1,18 +1,36 @@
-<div class="table-toolbar">
-  <div class="btn-group">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-pencil"></i>
-      Method <span class="caret"></span>
-    </button>
-  
-    <ul class="dropdown-menu">
-      <li ng-repeat="item in config.toolbar.methodTypes track by item.protocol">
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterMethod(item)">
-            {{item.name}}
-          </label>
+<div>
+    <div class="btn-group">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" ng-class="{true: 'filter-highlight-on', false: ''}[!config.toolbar.allMethods]" data-toggle="dropdown"><i class="fa fa-pencil"></i>
+          Method <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li class="select-all-filter">
+                <div class="checkbox">
+                  <label> 
+                    <input type="checkbox" ng-model="config.toolbar.allMethods" ng-change="config.toolbar.selectAllMethods(config.toolbar.allMethods)">Select All
+                  </label>
+                </div>
+              </li>
+          <li ng-repeat="item in config.toolbar.methodTypes track by item.choice">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterMethod(item)">
+                {{item.name}}
+              </label>
+            </div>
+          </li>
+        </ul>
+      </div>
+    
+      <div class="filter-wrapper" ng-hide="control.recordsNotFiltered() && control.noAppliedFilters()">
+          <div class="filter-records" > 
+            <span ng-if="!control.records">Filtering</span>
+            <i class="fa fa-filter" ng-if="control.records"></i>
+            <span class="filter-count" ng-if="control.records">{{control.getFilteredRecordsCount()}}</span>
+            Records
+          </div>
+          <div class="clear-filter" ng-if="control.records" ng-click="config.toolbar.selectAllMethods(true); config.toolbar.clearFilters();"><i class="fa fa-remove"></i></div>
         </div>
-      </li>
-    </ul>
-  </div>
+    </div>
 </div>

@@ -223,17 +223,16 @@ angular
           var table_query_params;
           var tableSettings = {};
           var defaultLimits = [10, 50, 100];
-          var pageSort = null;
           var watchers = [];
           var unWatchers = [];
           var updateOnRemoteSync;
           var tableId;
-          var defaultSortByColumn;
+          var defaultSortByColumns;
           var recordIdKey;
           var selectedRecords = {};
 
           $scope.search = null;
-          $scope.sortArgs = null;
+          $scope.sortArrArgs = null;
           $scope.selected = {};
           $scope.control.isLoading = false;
 
@@ -268,32 +267,6 @@ angular
                 return v;
             }
           };
-          var getSortedColumn = function(column_names) {
-            var cols;
-            var is_ascending = !column_names[0].startsWith('-');
-            var sort_columns = column_names;
-
-            if (is_ascending === false) {
-              sort_columns = _.map(sort_columns, function(term) {
-                if (term.startsWith('-')) {
-                  return term.slice(1);
-                }
-                return term;
-              });
-            }
-
-            cols = $scope.columns.filter(function(col) {
-              return _.isEqual(col.sort_by.sort(), sort_columns.sort());
-            });
-
-            if (cols.length !== 1) {
-              return null;
-            }
-            return {
-              column: cols[0],
-              ascending: is_ascending
-            };
-          };
 
           var getDefaultPagination = function() {
             var pagination = {
@@ -318,22 +291,11 @@ angular
 
           var buildQuery = function(params) {
             var qry = {};
-            var sorting = null;
             var search = params.search || '';
 
             qry.limit = params.limit;
             qry.page = params.page;
-
-            if (params.sortArgs) {
-              sorting =
-                params.sortArgs.column.sort_by || params.sortArgs.column.name;
-              if (!params.sortArgs.ascending) {
-                sorting = _.map(sorting, function(term) {
-                  return '-' + term;
-                });
-              }
-              qry.ordering = sorting.join(',');
-            }
+            qry.ordering = params.sortArrArgs.join(',');
 
             // Search
             if (search.length > 0) {
@@ -404,6 +366,15 @@ angular
             $location.search(p);
           };
 
+          var findSortColumnName = function(column_sortby) {
+            return _.filter(
+              $scope.sortArrArgs,
+              columnItem =>
+                columnItem === column_sortby ||
+                columnItem === `-${column_sortby}`
+            );
+          };
+
           var applyConfig = function(config) {
             disableTrackingTableState =
               config.disableTrackingTableState || false;
@@ -441,13 +412,8 @@ angular
               parsedTableConfig = JSON.parse(localStorage.getItem(tableId));
             }
 
-            if (parsedTableConfig && _.isArray(parsedTableConfig.column_name)) {
-              pageSort = parsedTableConfig.column_name.join(',');
-              if (!parsedTableConfig.asc) {
-                pageSort = '-' + pageSort;
-              }
-            }
-            defaultSortByColumn = pageSort || config.defaultSortByColumn;
+            defaultSortByColumns = (parsedTableConfig &&
+              parsedTableConfig.columns) || [config.defaultSortByColumn];
 
             watchers = config.watchers || [];
             angular.forEach(watchers, function(fx) {
@@ -461,18 +427,14 @@ angular
             if (disableTrackingTableState !== true) {
               // Update with query parameters if they exist
               table_query_params = getTableQueryParam();
-              if (!_.isEmpty(table_query_params)) {
+              if (
+                !_.isEmpty(table_query_params && table_query_params.ordering)
+              ) {
+                var tableQueryParamOrdering = table_query_params.ordering.split(
+                  ','
+                );
                 tableSettings.limit = table_query_params.limit;
-                if (table_query_params.ordering) {
-                  tableSettings.column_name = table_query_params.ordering.split(
-                    ','
-                  );
-                  if (table_query_params.ordering[0] === '-') {
-                    tableSettings.asc = false;
-                  } else {
-                    tableSettings.asc = true;
-                  }
-                }
+                tableSettings.columns = tableQueryParamOrdering;
                 localStorage.setItem(tableId, JSON.stringify(tableSettings));
               }
             } else {
@@ -485,16 +447,9 @@ angular
             };
 
             if (table_query_params.ordering) {
-              var ordering_terms = table_query_params.ordering.split(',');
-              $scope.sortArgs = getSortedColumn(ordering_terms);
-            } else if (defaultSortByColumn) {
-              if (_.includes(defaultSortByColumn, ',')) {
-                $scope.sortArgs = getSortedColumn(
-                  defaultSortByColumn.split(',')
-                );
-              } else {
-                $scope.sortArgs = getSortedColumn([defaultSortByColumn]);
-              }
+              $scope.sortArrArgs = table_query_params.ordering.split(',');
+            } else if (defaultSortByColumns.length >= 0) {
+              $scope.sortArrArgs = defaultSortByColumns;
             }
 
             updatePagination(paginationUpdates);
@@ -514,7 +469,7 @@ angular
             qry = buildQuery({
               limit: $scope.pagination.limit,
               page: $scope.pagination.page,
-              sortArgs: $scope.sortArgs,
+              sortArrArgs: $scope.sortArrArgs,
               search: $scope.search,
               filters: $scope.filters
             });
@@ -552,32 +507,84 @@ angular
             });
           };
 
+          $scope.hideColumnOrder = function() {
+            return $scope.sortArrArgs.length > 1;
+          };
+
+          $scope.checkAscColumn = function(column) {
+            $scope.sortArrArgs = $scope.sortArrArgs || [];
+            var foundColumn = findSortColumnName(column.sort_by[0]);
+            return foundColumn.length > 0 && !foundColumn[0].startsWith('-');
+          };
+
+          $scope.checkDescColumn = function(column) {
+            $scope.sortArrArgs = $scope.sortArrArgs || [];
+            var foundColumn = findSortColumnName(column.sort_by[0]);
+            return foundColumn.length > 0 && foundColumn[0].startsWith('-');
+          };
+
           $scope.sortColumn = function(column) {
+            var column_sort_by = column.sort_by[0];
+            var foundColumnName = findSortColumnName(column_sort_by)[0];
+            var pageLimit = null;
+
             if (!column.sortable) {
               return;
             }
-            $scope.sortArgs = $scope.sortArgs || {};
-            if ($scope.sortArgs.column !== column) {
-              $scope.sortArgs = {
-                column: column,
-                ascending: true
-              };
+
+            $scope.sortArrArgs = $scope.sortArrArgs || [];
+            if ($scope.sortArrArgs.includes(foundColumnName)) {
+              $scope.sortArrArgs = $scope.sortArrArgs.map(val => {
+                if (val === column_sort_by) {
+                  return `-${val}`;
+                } else if (val.substr(1) === column_sort_by) {
+                  return val.substr(1);
+                }
+                return val;
+              });
             } else {
-              $scope.sortArgs.ascending = !$scope.sortArgs.ascending;
+              $scope.sortArrArgs.push(column_sort_by);
             }
 
-            var pageLimit = null;
             if (parsedTableConfig) {
               pageLimit = parsedTableConfig.limit;
             }
             tableSettings.limit = pageLimit || $scope.limits[1];
-            tableSettings.column_name = $scope.sortArgs.column.sort_by;
-            tableSettings.asc = $scope.sortArgs.ascending;
+            tableSettings.columns = $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
               localStorage.setItem(tableId, JSON.stringify(tableSettings));
             }
 
             $scope.fetchTableRecords(true);
+          };
+
+          $scope.removeSort = function(column) {
+            var foundColumnName = findSortColumnName(column.sort_by[0])[0];
+            var filterSortColumns = _.filter(
+              $scope.sortArrArgs,
+              column => column !== foundColumnName
+            );
+
+            $scope.sortArrArgs = filterSortColumns;
+            tableSettings.columns = filterSortColumns;
+            if (disableTrackingTableState !== true) {
+              localStorage.setItem(tableId, JSON.stringify(tableSettings));
+            }
+            $scope.fetchTableRecords(true);
+          };
+
+          $scope.indexOfColumn = function(column) {
+            var foundIndex = -1;
+            var sortArr = $scope.sortArrArgs || [];
+            for (var i = 0; i < sortArr.length; i++) {
+              if (
+                sortArr[i] === column.sort_by[0] ||
+                sortArr[i] === `-${column.sort_by[0]}`
+              ) {
+                foundIndex = i + 1;
+              }
+            }
+            return foundIndex;
           };
 
           $scope.searchTable = function() {
@@ -604,17 +611,8 @@ angular
 
           $scope.pageLimitChange = function(limit) {
             tableSettings.limit = limit;
-            var pageSort = null;
-            if (parsedTableConfig) {
-              pageSort = parsedTableConfig.column_name.sort_by;
-            } else if ($scope.sortArgs && $scope.sortArgs.column) {
-              pageSort = $scope.sortArgs.column.sort_by;
-            }
 
-            if (pageSort) {
-              tableSettings.column_name = pageSort;
-              tableSettings.asc = $scope.sortArgs.ascending === true;
-            }
+            tableSettings.columns = parsedTableConfig && $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
               localStorage.setItem(tableId, JSON.stringify(tableSettings));
             }
@@ -717,6 +715,11 @@ angular
             fetch_timeout = $timeout(function() {
               $scope.fetchTableRecords(reset);
             }, 100);
+          };
+
+          $scope.control.clearSearch = function() {
+            $scope.search = null;
+            $scope.fetchTableRecords(true);
           };
 
           // WATCHES

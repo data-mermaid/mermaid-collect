@@ -30,7 +30,6 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish species by name or genus',
-      searchIcon: 'fa-filter',
       searchLocation: 'left',
       cols: [
         {

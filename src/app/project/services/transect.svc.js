@@ -17,7 +17,7 @@ angular.module('app.project').service('TransectService', [
   ) {
     'use strict';
 
-    var getFishAttributeLookup = function(observations) {
+    const getFishAttributeLookup = function(observations) {
       var obj = {};
       observations = observations || [];
       for (var n = 0; n < observations.length; n++) {
@@ -52,7 +52,7 @@ angular.module('app.project').service('TransectService', [
         });
     };
 
-    var calcObsBiomass = function(
+    const calcObsBiomass = function(
       size,
       count,
       constant_a,
@@ -82,7 +82,7 @@ angular.module('app.project').service('TransectService', [
       return ret;
     };
 
-    var calcTotalObsBiomass = function(
+    const calcTotalObsBiomass = function(
       observations,
       transectLenSurveyed,
       transectWidth
@@ -93,7 +93,6 @@ angular.module('app.project').service('TransectService', [
         })
         .then(function(fishAttributeLookups) {
           var biomassTotal;
-
           biomassTotal = _.reduce(
             observations,
             function(total, obs) {
@@ -104,6 +103,10 @@ angular.module('app.project').service('TransectService', [
               var constant_a = fishAttribute.biomass_constant_a;
               var constant_b = fishAttribute.biomass_constant_b;
               var constant_c = fishAttribute.biomass_constant_c;
+              let width = null;
+              if (transectWidth != null) {
+                width = getBeltFishWidthVal(size, transectWidth.conditions);
+              }
               var biomass =
                 calcObsBiomass(
                   size,
@@ -112,7 +115,7 @@ angular.module('app.project').service('TransectService', [
                   constant_b,
                   constant_c,
                   transectLenSurveyed,
-                  transectWidth
+                  width
                 ) || 0.0;
               return total + biomass;
             },
@@ -123,7 +126,7 @@ angular.module('app.project').service('TransectService', [
         });
     };
 
-    var createLookup = function(records) {
+    const createLookup = function(records) {
       return _.sortBy(
         _.reduce(
           records,
@@ -142,7 +145,7 @@ angular.module('app.project').service('TransectService', [
       );
     };
 
-    var setObservationIntervals = function(obs, interval_size, attr) {
+    const setObservationIntervals = function(obs, interval_size, attr) {
       var obs_count = (obs || []).length;
       attr = attr || 'interval';
 
@@ -155,7 +158,7 @@ angular.module('app.project').service('TransectService', [
       }
     };
 
-    var calcBenthicPercentages = function(
+    const calcBenthicPercentages = function(
       obsBenthics,
       benthicAttributesLookup,
       lengthAttr
@@ -241,7 +244,7 @@ angular.module('app.project').service('TransectService', [
       };
     };
 
-    var deleteSelectedTransects = function(scope, TransectMethod) {
+    const deleteSelectedTransects = function(scope, TransectMethod) {
       var records = scope.tableControl.getSelectedRecords();
       if (_.isArray(records) === false || records.length === 0) {
         return;
@@ -269,7 +272,7 @@ angular.module('app.project').service('TransectService', [
       );
     };
 
-    var downloadFieldReport = function(project_id, field_report_type) {
+    const downloadFieldReport = function(project_id, field_report_type) {
       var token = authService.getToken();
       var report_url =
         'projects/' + project_id + '/' + field_report_type + '/fieldreport/';
@@ -277,7 +280,7 @@ angular.module('app.project').service('TransectService', [
       $window.open(url);
     };
 
-    var getBenthicAttributeChoices = function() {
+    const getBenthicAttributeChoices = function() {
       return offlineservice.BenthicAttributesTable(true).then(function(table) {
         return table.filter().then(function(benthicattributes) {
           return createLookup(benthicattributes);
@@ -293,7 +296,7 @@ angular.module('app.project').service('TransectService', [
       });
     };
 
-    var getProjectManagementChoices = function(project_id) {
+    const getProjectManagementChoices = function(project_id) {
       return offlineservice
         .ProjectManagementsTable(project_id)
         .then(function(table) {
@@ -303,7 +306,7 @@ angular.module('app.project').service('TransectService', [
         });
     };
 
-    var getProjectProfileChoices = function(project_id) {
+    const getProjectProfileChoices = function(project_id) {
       return offlineservice
         .ProjectProfilesTable(project_id)
         .then(function(table) {
@@ -313,7 +316,7 @@ angular.module('app.project').service('TransectService', [
         });
     };
 
-    var getChoices = function() {
+    const getChoices = function() {
       return offlineservice.ChoicesTable(true).then(function(table) {
         return table.filter().then(function(choices) {
           var output = {};
@@ -325,7 +328,7 @@ angular.module('app.project').service('TransectService', [
       });
     };
 
-    var getLookups = function(projectId) {
+    const getLookups = function(projectId) {
       var promises = [];
 
       promises.push(getChoices());
@@ -344,26 +347,74 @@ angular.module('app.project').service('TransectService', [
       });
     };
 
-    var getWidthValueLookup = function() {
+    const evaluateConditions = function(fishSize, conditionsCombo) {
+      const results = _.map(conditionsCombo, function(cond) {
+        const op = utils.relationalOperatorFunctions[cond.operator];
+        if (op == null) {
+          return false;
+        }
+
+        return op(fishSize, cond.size);
+      });
+      return results.every(val => val === true);
+    };
+
+    const getBeltFishWidthVal = function(fishSize, beltfishWidthConditions) {
+      if (
+        fishSize == null ||
+        fishSize < 0 ||
+        beltfishWidthConditions == null ||
+        beltfishWidthConditions.length === 0
+      ) {
+        return null;
+      }
+
+      if (beltfishWidthConditions.length === 1) {
+        return beltfishWidthConditions[0].val;
+      }
+
+      let defaultCondition = null;
+      let conditions = [];
+      for (let n = 0; n < beltfishWidthConditions.length; n++) {
+        const cnd = beltfishWidthConditions[n];
+        if (cnd.operator == null || cnd.size == null) {
+          defaultCondition = cnd;
+        } else {
+          conditions.push(cnd);
+        }
+      }
+
+      let combos = utils.combinations(beltfishWidthConditions);
+      for (let i = 0; i < combos.length; i++) {
+        const combo = combos[i];
+        if (evaluateConditions(fishSize, combo)) {
+          return combo[0].val;
+        }
+      }
+      return (defaultCondition && defaultCondition.val) || null;
+    };
+
+    const getWidthValueLookup = function() {
       return offlineservice.ChoicesTable(true).then(function(table) {
         return table
           .filter({ name: 'belttransectwidths' })
           .then(function(choices) {
             const widthValueLookup = {};
             _.each(choices[0].data, function(c) {
-              widthValueLookup[c.id] = c.val;
+              widthValueLookup[c.id] = c;
             });
             return widthValueLookup;
           });
       });
     };
 
-    var TransectService = {
+    const TransectService = {
       calcBenthicPercentages: calcBenthicPercentages,
       calcObsBiomass: calcObsBiomass,
       calcTotalObsBiomass: calcTotalObsBiomass,
       deleteSelectedTransects: deleteSelectedTransects,
       downloadFieldReport: downloadFieldReport,
+      getBeltFishWidthVal: getBeltFishWidthVal,
       getBenthicAttributeChoices: getBenthicAttributeChoices,
       getChoices: getChoices,
       getLookups: getLookups,

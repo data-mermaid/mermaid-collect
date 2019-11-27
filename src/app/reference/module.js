@@ -37,7 +37,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     .state('app.reference', {
       abstract: true,
       url: '/reference',
-      loginRequired: false,
       data: {
         title: 'Reference',
         navTemplate: 'app/reference/partials/navigation.tpl.html',
@@ -47,7 +46,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.home', {
       url: '/home',
-      loginRequired: false,
       data: {
         title: 'Home',
         hideRightMenuItems: true,
@@ -61,7 +59,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.fishfamilies.fishfamily', {
       url: '/:id',
-      loginRequired: false,
       data: {
         title: 'Fish Family',
         hideRightMenuItems: true,
@@ -79,7 +76,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.fishfamilies', {
       url: '/fishattributes/families',
-      loginRequired: false,
       data: {
         title: 'Fish Families',
         hideRightMenuItems: true,
@@ -94,7 +90,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.fishgenera.fishgenus', {
       url: '/:id',
-      loginRequired: false,
       data: {
         title: 'Fish Genus',
         hideRightMenuItems: true,
@@ -115,7 +110,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.fishgenera', {
       url: '/fishattributes/genera',
-      loginRequired: false,
       data: {
         title: 'Fish Genera',
         hideRightMenuItems: true,
@@ -130,7 +124,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.fishspeciess.fishspecies', {
       url: '/:id',
-      loginRequired: false,
       data: {
         title: 'Fish Species',
         hideRightMenuItems: true,
@@ -151,7 +144,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.fishspeciess', {
       url: '/fishattributes/species',
-      loginRequired: false,
       data: {
         title: 'Fish Species',
         hideRightMenuItems: true,
@@ -166,7 +158,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.benthicattributes.benthicattribute', {
       url: '/:id',
-      loginRequired: false,
       data: {
         title: 'Benthic Attributes',
         hideRightMenuItems: true,
@@ -187,7 +178,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     })
     .state('app.reference.benthicattributes', {
       url: '/benthicattributes',
-      loginRequired: false,
       data: {
         title: 'Benthic Attributes',
         hideRightMenuItems: true

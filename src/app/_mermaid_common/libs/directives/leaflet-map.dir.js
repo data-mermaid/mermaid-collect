@@ -13,9 +13,7 @@ angular.module('mermaid.libs').directive('leafletMap', [
         geoattr: '=?'
       },
       link: function(scope, element) {
-        var defaultCenter;
-        var defaultZoom;
-        var style = {
+        const style = {
           color: '#ff0000',
           fillColor: '#ff0000',
           opacity: 0.8,
@@ -23,7 +21,7 @@ angular.module('mermaid.libs').directive('leafletMap', [
           stroke: 1
         };
 
-        var mutedStyle = {
+        const mutedStyle = {
           color: '#2D2D2D',
           fillColor: '#2D2D2D',
           opacity: 0.5,
@@ -34,15 +32,23 @@ angular.module('mermaid.libs').directive('leafletMap', [
         scope.mapopts = scope.mapopts || {};
         scope.records = scope.records || [];
         scope.geoattr = scope.geoattr || 'location';
-        scope.maprecords = L.geoJson([], {
+        const defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
+        const defaultZoom = scope.mapopts.defaultZoom || 2;
+        const popup = scope.mapopts.popup || false;
+
+        const mapRecordsProperty = {
           pointToLayer: function(feature, latlng) {
             return new L.circleMarker(latlng, style);
           }
-        });
+        };
 
-        defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
-        defaultZoom = scope.mapopts.defaultZoom || 2;
+        if (popup) {
+          mapRecordsProperty.onEachFeature = function(feature, layer) {
+            layer.bindPopup(popup(feature.properties));
+          };
+        }
 
+        scope.maprecords = L.geoJson([], mapRecordsProperty);
         scope.secondaryMapRecords = L.geoJson([], {
           pointToLayer: function(feature, latlng) {
             return new L.circleMarker(latlng, mutedStyle);
@@ -67,13 +73,24 @@ angular.module('mermaid.libs').directive('leafletMap', [
         scope.$watch(
           'records',
           function() {
-            var center = defaultCenter;
+            let center = defaultCenter;
             scope.maprecords.clearLayers();
             _.each(scope.records, function(rec) {
+              if (popup) {
+                const rec_geo_data = {
+                  id: rec.id,
+                  name: rec.name,
+                  project_id: scope.mapopts.project_id,
+                  reefexposure: rec.$$reefexposures.name,
+                  reeftype: rec.$$reeftypes.name,
+                  reefzone: rec.$$reefzones.name
+                };
+                rec[scope.geoattr].properties = rec_geo_data;
+              }
               scope.maprecords.addData(rec[scope.geoattr]);
             });
 
-            var rec_len = scope.records.length;
+            const rec_len = scope.records.length;
             if (rec_len < 2) {
               if (rec_len === 1) {
                 center = scope.maprecords.getBounds().getCenter();
