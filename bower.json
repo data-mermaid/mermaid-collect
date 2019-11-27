@@ -43,7 +43,7 @@
     "angular-local-storage": "^0.5.2",
     "leaflet": "^0.7.1",
     "leaflet-draw": "0.4.10",
-    "angular-jwt": "^0.1.9",
+    "angular-jwt": "^0.1.11",
     "angular-block-ui": "^0.2.2",
     "circular-json": "^0.5.1",
     "angular-file-saver": "^1.1.3",
