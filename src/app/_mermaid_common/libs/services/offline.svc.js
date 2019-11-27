@@ -476,7 +476,6 @@ angular.module('mermaid.libs').service('offlineservice', [
         const opts = { tableName: tableName, updatesUrl: updatesUrl };
         return OfflineTableSync.sync(table, opts)
           .then(function() {
-            OfflineTableSync.setLastAccessed(tableName);
             return table;
           })
           .catch(function(err) {

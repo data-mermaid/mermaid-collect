@@ -35,15 +35,17 @@ angular.module('mermaid.libs').directive('adminOnly', [
         }
 
         function setVisibility(project_id) {
-          ProjectService.getMyProjectProfile(project_id).then(function(
-            project_profile
-          ) {
-            if (project_profile && project_profile.is_admin) {
-              showElem(true);
-            } else {
+          ProjectService.getMyProjectProfile(project_id)
+            .then(function(project_profile) {
+              if (project_profile && project_profile.is_admin) {
+                showElem(true);
+              } else {
+                showElem(false);
+              }
+            })
+            .catch(function() {
               showElem(false);
-            }
-          });
+            });
         }
         setVisibility(project_id);
 

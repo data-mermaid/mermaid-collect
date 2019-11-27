@@ -8,7 +8,6 @@ var MERMAID_CONFIG = {
   AUTH0_AUDIENCE: '{AUTH0_AUDIENCE}',
   AUTH0_CALLBACK_URL: 'http://localhost:8888/#/callback',
 
-  AUTH0_SILENT_AUTH_REDIRECT: 'http://localhost:8888/silent.html',
   API_ROOT_URL: 'http://localhost:8080/',
   API_URL: 'http://localhost:8080/v1/',
 
