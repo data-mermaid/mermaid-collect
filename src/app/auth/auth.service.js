@@ -27,8 +27,7 @@ angular.module('app.auth').service('authService', [
 
     var mePromise = null;
     var tokenRenewalTimeout;
-    var tokenRenewLeeway = 60000; // 1 minutes
-    // var tokenRenewLeeway = 300000; // 5 minutes
+    var tokenRenewLeeway = 300000; // 5 minutes
 
     function login() {
       if (connectivity.isOnline !== true) {
