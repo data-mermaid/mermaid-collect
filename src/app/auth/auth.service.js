@@ -35,8 +35,7 @@ angular.module('app.auth').service('authService', [
         console.log("Can't login while offline");
         return $q.resolve();
       }
-      var authorizeLogin = $timeout(angularAuth0.authorize, 0);
-      return authorizeLogin;
+      return $timeout(angularAuth0.authorize, 0);
     }
 
     function getToken() {
@@ -99,7 +98,7 @@ angular.module('app.auth').service('authService', [
       // Check whether the current time is past the
       // access token's expiry time
       var expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-      return new Date().getTime() < expiresAt;
+      return getToken() != null && new Date().getTime() < expiresAt;
     }
 
     function getCurrentUser() {
@@ -134,7 +133,11 @@ angular.module('app.auth').service('authService', [
     }
 
     function renewToken() {
-      if (connectivity.isOnline === false) return;
+      const deferred = $q.deferred();
+
+      if (connectivity.isOnline === false) {
+        deferred.resolve();
+      }
 
       var callback = function(err, result) {
         if (err) {
@@ -142,16 +145,12 @@ angular.module('app.auth').service('authService', [
         } else {
           setSession(result);
         }
+        deferred.resolve();
       };
 
-      angularAuth0.renewAuth(
-        {
-          audience: APP_CONFIG.AUTH0_AUDIENCE,
-          redirectUri: APP_CONFIG.AUTH0_SILENT_AUTH_REDIRECT,
-          usePostMessage: true
-        },
-        callback
-      );
+      angularAuth0.checkSession({}, callback);
+
+      return deferred.promise;
     }
 
     function cancelScheduleRenewal() {
