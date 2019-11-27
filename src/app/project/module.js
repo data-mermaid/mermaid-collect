@@ -143,8 +143,7 @@ angular
         },
         resolve: {
           backgroundLoadChoices: _backgroundLoadChoices,
-          dataPolicies: _fetchDataPolicyChoices,
-          ProjectsTable: _getProjectsTable
+          dataPolicies: _fetchDataPolicyChoices
         }
       })
       .state('fullapp.project', {

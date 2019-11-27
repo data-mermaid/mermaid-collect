@@ -8,7 +8,6 @@ angular.module('app.project').controller('ProjectsCtrl', [
   'dataPolicies',
   'ConnectivityFactory',
   'connectivity',
-  'ProjectsTable',
   function(
     $rootScope,
     $scope,
@@ -18,8 +17,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     Button,
     dataPolicies,
     ConnectivityFactory,
-    connectivity,
-    ProjectsTable
+    connectivity
   ) {
     'use strict';
     $scope.tableControl = {};
@@ -96,8 +94,11 @@ angular.module('app.project').controller('ProjectsCtrl', [
       ]
     };
 
-    $scope.resource = new PaginatedOfflineTableWrapper(ProjectsTable, {
-      searchFields: ['name', 'countries']
+    $scope.resource = null;
+    offlineservice.ProjectsTable().then(function(table) {
+      $scope.resource = new PaginatedOfflineTableWrapper(table, {
+        searchFields: ['name', 'countries']
+      });
     });
 
     const startProject = function() {
