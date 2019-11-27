@@ -110,7 +110,6 @@
       }
     });
 
-    authService.scheduleRenewal();
     authManager.checkAuthOnRefresh();
     connectivity.ping();
   }
