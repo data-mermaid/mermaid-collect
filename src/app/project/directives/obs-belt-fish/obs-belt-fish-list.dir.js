@@ -235,7 +235,8 @@ angular.module('app.project').directive('obsBeltFishList', [
         $(window).click(function(evt) {
           if (
             evt.target.classList.contains('addRow') ||
-            fishAttributeNames.includes(evt.target.outerText)
+            fishAttributeNames.includes(evt.target.outerText) ||
+            fishAttributeNames.includes(evt.target.textContent)
           ) {
             return;
           }
