@@ -11,7 +11,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'offlineservice',
   'PaginatedOfflineTableWrapper',
   'ProjectService',
-  'OfflineTableBackup',
   'ValidateSubmitService',
   'projectProfile',
   function(
@@ -27,7 +26,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     offlineservice,
     PaginatedOfflineTableWrapper,
     ProjectService,
-    OfflineTableBackup,
     ValidateSubmitService,
     projectProfile
   ) {
@@ -403,9 +401,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           localStorage.setItem('collect_statusfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
-        backUp: function() {
-          backupRecords();
-        },
         selectAllMethods: function(allSelected) {
           const filterOptions = {
             filterTypes: this.methodTypes,
@@ -514,25 +509,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
 
     function addTransect(transect_type) {
       $state.go(transect_type.state, { id: '' });
-    }
-
-    function backupRecords() {
-      OfflineTableBackup.backup(project_id).then(function(recordCount) {
-        if (recordCount && recordCount > 0) {
-          const msg =
-            recordCount +
-            ' ' +
-            utils.pluralize(recordCount, 'record', 'records') +
-            ' backed up';
-          utils.showAlert('Backup', msg, utils.statuses.success);
-          return;
-        }
-        utils.showAlert(
-          'Backup',
-          'No records backed up',
-          utils.statuses.warning
-        );
-      });
     }
 
     function selectAllOptions(allSelected, filter_options) {
