@@ -177,7 +177,8 @@ angular.module('app.project').controller('ManagementsCtrl', [
     $scope.tableControl.recordsNotFiltered = function() {
       return (
         $scope.tableControl.records &&
-        $scope.tableControl.records.length === managementRecordsCount
+        $scope.tableControl.records.length === managementRecordsCount &&
+        !$scope.tableControl.searchFilterUsed()
       );
     };
 

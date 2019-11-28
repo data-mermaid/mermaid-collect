@@ -457,7 +457,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     $scope.tableControl.recordsNotFiltered = function() {
       return (
         $scope.tableControl.records &&
-        $scope.tableControl.records.length === collectRecordsCount
+        $scope.tableControl.records.length === collectRecordsCount &&
+        !$scope.tableControl.searchFilterUsed()
       );
     };
 
@@ -477,10 +478,13 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
 
     $q.all(promises).then(function(output) {
       collectRecordsTable = output[1];
-      collectRecordsTable.count().then(function(val) {
-        collectRecordsCount = val;
-      });
       $scope.currentUser = output[0];
+      collectRecordsTable
+        .filter({ profile: $scope.currentUser.id }, true)
+        .then(function(val) {
+          collectRecordsCount = val.length;
+        });
+
       $scope.resource = new PaginatedOfflineTableWrapper(collectRecordsTable, {
         searchFields: [
           'data.protocol',

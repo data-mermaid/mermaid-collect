@@ -187,7 +187,8 @@ angular.module('app.project').controller('SitesCtrl', [
     $scope.tableControl.recordsNotFiltered = function() {
       return (
         $scope.tableControl.records &&
-        $scope.tableControl.records.length === siteRecordsCount
+        $scope.tableControl.records.length === siteRecordsCount &&
+        !$scope.tableControl.searchFilterUsed()
       );
     };
 
