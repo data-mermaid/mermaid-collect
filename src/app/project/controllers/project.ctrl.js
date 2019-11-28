@@ -86,6 +86,9 @@ angular.module('app.project').controller('ProjectCtrl', [
       });
     };
 
+    var backupProject = function() {
+      console.log('back up project');
+    };
     var saveButton = new Button();
     saveButton.name = 'Save';
     saveButton.enabled = false;
@@ -95,7 +98,16 @@ angular.module('app.project').controller('ProjectCtrl', [
     saveButton.onlineOnly = false;
     saveButton.click = save;
 
-    $rootScope.PageHeaderButtons = [saveButton];
+    var backupProjectButton = new Button();
+    backupProjectButton.name = 'Back up';
+    backupProjectButton.enabled = true;
+    backupProjectButton.visible = connectivity.isOnline;
+    backupProjectButton.classes = 'btn-success';
+    backupProjectButton.icon = 'fa fa-save';
+    backupProjectButton.onlineOnly = false;
+    backupProjectButton.click = backupProject;
+
+    $rootScope.PageHeaderButtons = [saveButton, backupProjectButton];
 
     conn.on('project-details', function(event) {
       saveButton.visible = event.event === 'online';
