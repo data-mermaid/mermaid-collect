@@ -184,6 +184,12 @@ angular.module('app.project').controller('ManagementsCtrl', [
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
+      if (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length > managementRecordsCount
+      ) {
+        updateManagementCount();
+      }
       return (
         $scope.tableControl.records &&
         $scope.tableControl.records.length === managementRecordsCount &&
