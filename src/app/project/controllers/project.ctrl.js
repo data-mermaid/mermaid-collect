@@ -13,6 +13,7 @@ angular.module('app.project').controller('ProjectCtrl', [
   'project',
   'projectProfile',
   'dataPolicies',
+  'OfflineTableBackup',
   function(
     $rootScope,
     $scope,
@@ -27,7 +28,8 @@ angular.module('app.project').controller('ProjectCtrl', [
     projectsTable,
     project,
     projectProfile,
-    dataPolicies
+    dataPolicies,
+    OfflineTableBackup
   ) {
     'use strict';
 
@@ -86,6 +88,15 @@ angular.module('app.project').controller('ProjectCtrl', [
       });
     };
 
+    var backupProject = function() {
+      OfflineTableBackup.backupProject(project_id).then(function() {
+        utils.showAlert(
+          'Backup',
+          'Project successfully backed up',
+          utils.statuses.success
+        );
+      });
+    };
     var saveButton = new Button();
     saveButton.name = 'Save';
     saveButton.enabled = false;
@@ -95,7 +106,16 @@ angular.module('app.project').controller('ProjectCtrl', [
     saveButton.onlineOnly = false;
     saveButton.click = save;
 
-    $rootScope.PageHeaderButtons = [saveButton];
+    var backupProjectButton = new Button();
+    backupProjectButton.name = 'Back up';
+    backupProjectButton.enabled = true;
+    backupProjectButton.visible = connectivity.isOnline;
+    backupProjectButton.classes = 'btn-success';
+    backupProjectButton.icon = 'fa fa-download';
+    backupProjectButton.onlineOnly = false;
+    backupProjectButton.click = backupProject;
+
+    $rootScope.PageHeaderButtons = [saveButton, backupProjectButton];
 
     conn.on('project-details', function(event) {
       saveButton.visible = event.event === 'online';
