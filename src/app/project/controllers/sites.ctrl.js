@@ -142,11 +142,15 @@ angular.module('app.project').controller('SitesCtrl', [
       }
     };
 
+    const updateSiteCount = function() {
+      $scope.projectObjectsTable.count().then(function(count) {
+        siteRecordsCount = count;
+      });
+    };
+
     offlineservice.ProjectSitesTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
-      $scope.projectObjectsTable.count().then(function(val) {
-        siteRecordsCount = val;
-      });
+      updateSiteCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: [
           'name',
@@ -155,6 +159,11 @@ angular.module('app.project').controller('SitesCtrl', [
           '$$reefexposures.name'
         ]
       });
+      $scope.projectObjectsTable.$watch(
+        updateSiteCount,
+        null,
+        'siteRecordsCount'
+      );
     });
 
     const createPopup = function(feature) {
@@ -187,7 +196,8 @@ angular.module('app.project').controller('SitesCtrl', [
     $scope.tableControl.recordsNotFiltered = function() {
       return (
         $scope.tableControl.records &&
-        $scope.tableControl.records.length === siteRecordsCount
+        $scope.tableControl.records.length === siteRecordsCount &&
+        !$scope.tableControl.textboxFilterUsed()
       );
     };
 
