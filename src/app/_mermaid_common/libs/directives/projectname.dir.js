@@ -10,7 +10,7 @@ angular.module('mermaid.libs').directive('projectname', [
         watchId: '@'
       },
       template:
-        '<div class="projectname hidden-xs" title="{{project_name_tooltip}}">{{project_name}}</div>',
+        '<div class="projectname" title="{{project_name_tooltip}}">{{project_name}}</div>',
       link: function(scope) {
         const maxLength = scope.titlelength || 40;
         var project_id = $stateParams.project_id;
@@ -48,7 +48,9 @@ angular.module('mermaid.libs').directive('projectname', [
           });
           table.$watch(
             function(event) {
-              setProjectName(event.data[0]);
+              if (event.event === 'ot-updaterecord') {
+                setProjectName(event.data[0]);
+              }
             },
             null,
             scope.watchId
