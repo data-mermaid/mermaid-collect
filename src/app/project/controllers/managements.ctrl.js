@@ -156,14 +156,23 @@ angular.module('app.project').controller('ManagementsCtrl', [
       }
     };
 
-    offlineservice.ProjectManagementsTable(project_id).then(function(table) {
-      table.count().then(function(val) {
-        managementRecordsCount = val;
+    const updateManagementCount = function() {
+      $scope.projectObjectsTable.count().then(function(count) {
+        managementRecordsCount = count;
       });
+    };
+
+    offlineservice.ProjectManagementsTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
+      updateManagementCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name']
       });
+      $scope.projectObjectsTable.$watch(
+        updateManagementCount,
+        null,
+        'managementRecordsCount'
+      );
     });
 
     $scope.tableControl.getFilteredRecordsCount = function() {
@@ -178,7 +187,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       return (
         $scope.tableControl.records &&
         $scope.tableControl.records.length === managementRecordsCount &&
-        !$scope.tableControl.searchFilterUsed()
+        !$scope.tableControl.textboxFilterUsed()
       );
     };
 

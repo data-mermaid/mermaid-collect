@@ -278,7 +278,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       return (
         $scope.tableControl.records &&
         $scope.tableControl.records.length === submittedRecordsCount &&
-        !$scope.tableControl.searchFilterUsed()
+        !$scope.tableControl.textboxFilterUsed()
       );
     };
 

@@ -458,7 +458,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       return (
         $scope.tableControl.records &&
         $scope.tableControl.records.length === collectRecordsCount &&
-        !$scope.tableControl.searchFilterUsed()
+        !$scope.tableControl.textboxFilterUsed()
       );
     };
 

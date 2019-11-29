@@ -722,7 +722,7 @@ angular
             $scope.fetchTableRecords(true);
           };
 
-          $scope.control.searchFilterUsed = function() {
+          $scope.control.textboxFilterUsed = function() {
             if ($scope.search && $scope.search.length > 0) {
               return true;
             }
