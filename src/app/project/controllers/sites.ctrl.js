@@ -194,6 +194,12 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
+      if (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length !== siteRecordsCount
+      ) {
+        updateSiteCount();
+      }
       return (
         $scope.tableControl.records &&
         $scope.tableControl.records.length === siteRecordsCount &&
