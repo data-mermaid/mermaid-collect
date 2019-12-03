@@ -12,10 +12,10 @@ angular.module('mermaid.forms').directive('futureyear', function() {
       function validate() {
         var is_valid = true;
         var dateInput = new Date(ngModel.$modelValue).getTime();
-        var differentTime = Math.floor((today - dateInput) / 86400000);
+        var dateDifference = Math.floor((today - dateInput) / 86400000);
 
-        if (!isNaN(differentTime) && differentTime !== null) {
-          is_valid = differentTime >= 0;
+        if (!isNaN(dateDifference) && dateDifference !== null) {
+          is_valid = dateDifference >= 0;
         }
         ngModel.$setValidity(
           window.appConfig.validatorPrefix + 'futureyear',
