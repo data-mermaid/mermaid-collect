@@ -84,18 +84,6 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       });
     });
 
-    var add = function() {
-      $state.go('app.reference.benthicattribute', { id: '' });
-    };
-
-    var addButton = new Button();
-    addButton.name = 'Add Attribute';
-    addButton.enabled = true;
-    addButton.visible = !$scope.isDisabled;
-    addButton.classes = 'btn-success';
-    addButton.icon = 'fa fa-plus';
-    addButton.click = add;
-
-    $rootScope.PageHeaderButtons = [addButton];
+    $rootScope.PageHeaderButtons = [];
   }
 ]);
