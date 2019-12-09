@@ -36,6 +36,7 @@ angular.module('app.project').controller('ProjectCtrl', [
     var project_id = $stateParams.project_id;
     var _isUserProjectAdmin = false;
     var conn = new ConnectivityFactory($scope);
+    var stateName = $state.current.name;
 
     $scope.project = project;
     $scope.benthicPolicies = {};
@@ -109,7 +110,8 @@ angular.module('app.project').controller('ProjectCtrl', [
     var backupProjectButton = new Button();
     backupProjectButton.name = 'Back up';
     backupProjectButton.enabled = true;
-    backupProjectButton.visible = connectivity.isOnline;
+    backupProjectButton.visible =
+      stateName === 'app.project.project' && connectivity.isOnline;
     backupProjectButton.classes = 'btn-success';
     backupProjectButton.icon = 'fa fa-download';
     backupProjectButton.onlineOnly = false;
