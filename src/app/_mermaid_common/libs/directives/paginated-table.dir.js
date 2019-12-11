@@ -379,6 +379,7 @@ angular
             disableTrackingTableState =
               config.disableTrackingTableState || false;
             tableId = config.id;
+            var localStorageItem = localStorage.getItem(tableId);
             recordIdKey = config.recordIdKey || 'id';
             $scope.hideRowStripes = config.hideRowStripes || false;
             updateOnRemoteSync = config.updateOnRemoteSync || true;
@@ -406,11 +407,9 @@ angular
             $scope.pagination = config.pagination || {};
             $scope.filters = config.filters || {};
             $scope.hideLimits = config.hideLimits || false;
-
-            var localStorageItem = localStorage.getItem(tableId);
-            if (localStorageItem) {
-              parsedTableConfig = JSON.parse(localStorage.getItem(tableId));
-            }
+            parsedTableConfig = localStorageItem
+              ? JSON.parse(localStorage.getItem(tableId))
+              : {};
 
             defaultSortByColumns = (parsedTableConfig &&
               parsedTableConfig.columns) || [config.defaultSortByColumn];
@@ -610,9 +609,9 @@ angular
           };
 
           $scope.pageLimitChange = function(limit) {
+            parsedTableConfig.limit = limit;
             tableSettings.limit = limit;
-
-            tableSettings.columns = parsedTableConfig && $scope.sortArrArgs;
+            tableSettings.columns = $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
               localStorage.setItem(tableId, JSON.stringify(tableSettings));
             }
