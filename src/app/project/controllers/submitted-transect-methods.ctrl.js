@@ -277,7 +277,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     $scope.tableControl.recordsNotFiltered = function() {
       return (
         $scope.tableControl.records &&
-        $scope.tableControl.records.length === submittedRecordsCount
+        $scope.tableControl.records.length === submittedRecordsCount &&
+        !$scope.tableControl.textboxFilterUsed()
       );
     };
 

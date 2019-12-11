@@ -722,6 +722,13 @@ angular
             $scope.fetchTableRecords(true);
           };
 
+          $scope.control.textboxFilterUsed = function() {
+            if ($scope.search && $scope.search.length > 0) {
+              return true;
+            }
+            return false;
+          };
+
           // WATCHES
 
           var un = $scope.$watch('resource', function(n) {
