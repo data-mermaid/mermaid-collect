@@ -38,6 +38,7 @@ angular.module('app.project').controller('ProjectCtrl', [
     var conn = new ConnectivityFactory($scope);
     var stateName = $state.current.name;
 
+    console.log('project controller project ', project);
     $scope.project = project;
     $scope.benthicPolicies = {};
     $scope.isDisabled = true;

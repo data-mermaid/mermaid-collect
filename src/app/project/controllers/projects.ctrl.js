@@ -79,6 +79,12 @@ angular.module('app.project').controller('ProjectsCtrl', [
         },
         { name: 'num_sites', display: 'Number of Sites', sortable: false },
         {
+          display: 'Offline Ready',
+          sortable: false,
+          tdTemplate:
+            '<project-offline-toggle project-id="record.id"></project-offline-toggle>'
+        },
+        {
           display: 'Data Sharing',
           sortable: false,
           formatter: function(val, record) {
@@ -86,10 +92,10 @@ angular.module('app.project').controller('ProjectsCtrl', [
           }
         },
         {
-          display: 'Offline Ready',
+          display: 'Copy Project',
           sortable: false,
           tdTemplate:
-            '<project-offline-toggle project-id="record.id"></project-offline-toggle>'
+            '<a ui-sref="fullapp.project({projectId: record.id})">Copy</a>'
         }
       ]
     };

@@ -48,7 +48,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       - Copy all Sites
       - Copy all Managements
     */
-
+    var projectId = $stateParams.projectId;
     var defaultRole;
     var siteService;
     var managementService;
@@ -71,6 +71,15 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     $scope.tags = _.uniq(tags.results, 'id');
     $scope.projectStatuses = {};
     $scope.project.tags = [];
+
+    offlineservice.ProjectsTable().then(function(table) {
+      if (projectId == null) {
+        return;
+      }
+      return table.get(projectId).then(function(record) {
+        $scope.project = record;
+      });
+    });
 
     var addUser = function(model, role) {
       role = role || defaultRole;
