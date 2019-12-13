@@ -78,6 +78,31 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       }
       return table.get(projectId).then(function(record) {
         $scope.project = record;
+        offlineservice.ProjectSitesTable(projectId).then(function(site_table) {
+          site_table.filter().then(function(sites) {
+            var sitesForCopy = _.map(sites, function(site) {
+              site.country_name = site.$$countries.name;
+              site.reef_zone_name = site.$$reefzones.name;
+              site.reef_type_name = site.$$reeftypes.name;
+              site.exposure_name = site.$$reefexposures.name;
+              return site;
+            });
+            $scope.sites = sitesForCopy;
+            $scope.$broadcast('copy-project-sites', sitesForCopy);
+          });
+        });
+
+        offlineservice
+          .ProjectManagementsTable(projectId)
+          .then(function(mr_table) {
+            mr_table.filter().then(function(mrs) {
+              var mrsForCopy = _.map(mrs, function(mr) {
+                return mr;
+              });
+              $scope.managements = mrsForCopy;
+              $scope.$broadcast('copy-project-mrs', mrsForCopy);
+            });
+          });
       });
     });
 
@@ -287,7 +312,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
         var records = $scope.copyManagementControl.getSelectedRecords();
         $scope.copyManagementResource = PaginatedArrayWrapper(records);
       } else {
-        $scope.copyManagementResource = Site;
+        $scope.copyManagementResource = Management;
       }
       $scope.copyManagementControl.refresh(true);
     };

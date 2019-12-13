@@ -609,6 +609,24 @@ angular
             ]);
           };
 
+          $scope.$on('copy-project-sites', function(event, data) {
+            if (tableId === 'select_sites') {
+              data.forEach(site => {
+                $scope.toggleRow(site);
+                $scope.selected[site.id] = true;
+              });
+            }
+          });
+
+          $scope.$on('copy-project-mrs', function(event, data) {
+            if (tableId === 'select_managements') {
+              data.forEach(mr => {
+                $scope.toggleRow(mr);
+                $scope.selected[mr.id] = true;
+              });
+            }
+          });
+
           $scope.pageLimitChange = function(limit) {
             tableSettings.limit = limit;
 
