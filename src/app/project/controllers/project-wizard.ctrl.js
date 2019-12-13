@@ -78,6 +78,9 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       }
       return table.get(projectId).then(function(record) {
         $scope.project = record;
+        $scope.benthicPolicies.data_policy_benthics =
+          record.data_policy_benthiclit;
+
         offlineservice.ProjectSitesTable(projectId).then(function(site_table) {
           site_table.filter().then(function(sites) {
             var sitesForCopy = _.map(sites, function(site) {
