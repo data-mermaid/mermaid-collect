@@ -36,13 +36,13 @@ angular.module('app.project').controller('ProjectsCtrl', [
 
     const dataSharingFormatter = function(record) {
       return (
-        'Fish Belt: <em>' +
+        '<strong>Fish Belt:</strong> ' +
         dataSharingPolicies[record.data_policy_beltfish] +
         '</em><br>' +
-        'Benthics: <em>' +
+        '<strong>Benthics:</strong> ' +
         dataSharingPolicies[record.data_policy_benthiclit] +
         '</em><br>' +
-        'Bleaching: <em>' +
+        '<strong>Bleaching:</strong> ' +
         dataSharingPolicies[record.data_policy_bleachingqc] +
         '</em>'
       );
@@ -95,7 +95,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
           display: 'Copy Project',
           sortable: false,
           tdTemplate:
-            '<a ui-sref="fullapp.project({projectId: record.id})">Copy</a>'
+            '<a ui-sref="fullapp.project({projectId: record.id})"><i class="fa fa-copy" /> Copy</a>'
         }
       ]
     };
