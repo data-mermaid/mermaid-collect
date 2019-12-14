@@ -84,6 +84,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
         offlineservice.ProjectSitesTable(projectId).then(function(site_table) {
           site_table.filter().then(function(sites) {
             var sitesForCopy = _.map(sites, function(site) {
+              site.project_name = record.name;
               site.country_name = site.$$countries.name;
               site.reef_zone_name = site.$$reefzones.name;
               site.reef_type_name = site.$$reeftypes.name;
