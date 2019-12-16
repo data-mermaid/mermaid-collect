@@ -7,10 +7,9 @@ angular.module('mermaid.libs').directive('offlineControl', [
       templateUrl:
         'app/_mermaid_common/libs/directives/offline-control.tpl.html',
       link: function(scope) {
-        scope.toggle = {};
-        scope.toggle.offline = false;
+        scope.toggleOffline = false;
         scope.switchControl = function() {
-          if (scope.toggle.offline) {
+          if (scope.toggleOffline) {
             connectivity.stopPing();
           } else {
             connectivity.ping();
