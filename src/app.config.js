@@ -358,7 +358,10 @@ if (appConfig.voice_command) {
 
 appConfig.errors = [{ code: 400, message: 'Malformed request' }];
 appConfig.httpErrorWhitelist = [
-  { status: 401, detail: 'Signature has expired.' }
+  { status: 400, detail: 'Malformed request.' },
+  { status: 401, detail: 'Signature has expired.' },
+  { status: 403, detail: 'Forbidden.' },
+  { status: 404, detail: 'Not found.' }
 ];
 appConfig.defaultCacheExpire = 1; // in minutes
 appConfig.validatorPrefix = 'validator_';
