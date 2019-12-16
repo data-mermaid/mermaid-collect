@@ -8,6 +8,7 @@ angular.module('mermaid.libs').directive('offlineControl', [
         'app/_mermaid_common/libs/directives/offline-control.tpl.html',
       link: function(scope) {
         scope.toggleOffline = !connectivity.isOnline;
+
         scope.switchControl = function() {
           if (scope.toggleOffline) {
             connectivity.stopPing();
@@ -15,6 +16,16 @@ angular.module('mermaid.libs').directive('offlineControl', [
             connectivity.ping();
           }
         };
+
+        scope.$watch(
+          'toggleOffline',
+          function(isOffline) {
+            scope.toggleTooltip = isOffline
+              ? 'Toggle Online'
+              : 'Toggle Offline';
+          },
+          true
+        );
       }
     };
   }
