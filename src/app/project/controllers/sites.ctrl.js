@@ -41,7 +41,6 @@ angular.module('app.project').controller('SitesCtrl', [
 
     let siteRecordsCount = 0;
     const project_id = $stateParams.project_id;
-    $scope.project = project;
 
     $scope.isDisabled = true;
     ProjectService.getMyProjectProfile(project_id).then(function(
@@ -135,7 +134,7 @@ angular.module('app.project').controller('SitesCtrl', [
           const modal = ModalService.open(modalOptions);
           modal.result.then(function() {
             $scope.tableControl.refresh();
-            $scope.project.update();
+            project.update();
           });
         },
         clearFilters: function() {

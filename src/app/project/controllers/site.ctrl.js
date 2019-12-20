@@ -27,7 +27,6 @@ angular.module('app.project').controller('SiteCtrl', [
 
     const siteId = $stateParams.id;
     const projectId = $stateParams.project_id;
-    $scope.project = project;
     $scope.isDisabled = true;
     $scope.choices = {};
     $scope.isOnline = connectivity.isOnline;
@@ -66,7 +65,7 @@ angular.module('app.project').controller('SiteCtrl', [
             });
           }
           $scope.form.$setPristine(true);
-          $scope.project.update();
+          project.update();
         })
         .catch(function(error) {
           logger.error('save_site', error);
