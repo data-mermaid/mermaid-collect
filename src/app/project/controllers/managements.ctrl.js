@@ -193,11 +193,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       ) {
         updateManagementCount();
       }
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === managementRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.$on(ValidateDuplicationService.MR_PAGE, function() {

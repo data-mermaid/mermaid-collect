@@ -449,7 +449,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       );
     };
 
-    $scope.tableControl.noAppliedFiltered = function() {
+    $scope.tableControl.noAppliedFilters = function() {
       const searchBoxNotUsed = !$scope.tableControl.textboxFilterUsed();
 
       const methodStorageSelectAll = checkLocalStorage(

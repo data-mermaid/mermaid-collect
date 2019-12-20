@@ -275,20 +275,17 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === submittedRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.tableControl.noAppliedFilters = function() {
+      const searchBoxNotUsed = !$scope.tableControl.textboxFilterUsed();
       const methodStorage = checkLocalStorage(
         'all',
         protocolMethods,
         'submit_methodfilter'
       );
-      return methodStorage;
+      return searchBoxNotUsed && methodStorage;
     };
 
     const buttons = [];

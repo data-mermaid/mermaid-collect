@@ -201,11 +201,7 @@ angular.module('app.project').controller('SitesCtrl', [
       ) {
         updateSiteCount();
       }
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === siteRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.mapopts = {
