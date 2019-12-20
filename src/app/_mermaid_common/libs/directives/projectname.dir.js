@@ -36,6 +36,8 @@ angular.module('mermaid.libs').directive('projectname', [
             if (rec != null) {
               scope.project_name_tooltip = rec.name;
               scope.project_name = ellipsis_middle(scope.project_name_tooltip);
+            } else {
+              scope.project_name = '';
             }
           };
 
