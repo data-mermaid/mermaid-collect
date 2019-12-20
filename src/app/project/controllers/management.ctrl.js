@@ -8,6 +8,7 @@ angular.module('app.project').controller('ManagementCtrl', [
   'Button',
   'logger',
   'utils',
+  'project',
   function(
     $rootScope,
     $scope,
@@ -17,7 +18,8 @@ angular.module('app.project').controller('ManagementCtrl', [
     ManagementService,
     Button,
     logger,
-    utils
+    utils,
+    project
   ) {
     'use strict';
 
@@ -64,6 +66,7 @@ angular.module('app.project').controller('ManagementCtrl', [
             });
           }
           $scope.form.$setPristine(true);
+          project.update();
         })
         .catch(function(error) {
           logger.error('save_management', error);
