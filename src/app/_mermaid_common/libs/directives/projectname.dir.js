@@ -33,11 +33,10 @@ angular.module('mermaid.libs').directive('projectname', [
         $q.all([offlineservice.ProjectsTable()]).then(function(results) {
           const projectTable = results[0];
           const setProjectName = function(rec) {
+            scope.project_name = '';
             if (rec != null) {
               scope.project_name_tooltip = rec.name;
               scope.project_name = ellipsis_middle(scope.project_name_tooltip);
-            } else {
-              scope.project_name = '';
             }
           };
 
