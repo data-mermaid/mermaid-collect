@@ -1,5 +1,4 @@
 angular.module('app.project').controller('SiteCtrl', [
-  'APP_CONFIG',
   '$rootScope',
   '$scope',
   '$state',
@@ -10,8 +9,8 @@ angular.module('app.project').controller('SiteCtrl', [
   'utils',
   'connectivity',
   'logger',
+  'project',
   function(
-    APP_CONFIG,
     $rootScope,
     $scope,
     $state,
@@ -21,12 +20,13 @@ angular.module('app.project').controller('SiteCtrl', [
     Button,
     utils,
     connectivity,
-    logger
+    logger,
+    project
   ) {
     'use strict';
 
-    var siteId = $stateParams.id;
-    var projectId = $stateParams.project_id;
+    const siteId = $stateParams.id;
+    const projectId = $stateParams.project_id;
     $scope.isDisabled = true;
     $scope.choices = {};
     $scope.isOnline = connectivity.isOnline;
@@ -48,11 +48,11 @@ angular.module('app.project').controller('SiteCtrl', [
     });
 
     $scope.save = function() {
-      var isNew = $scope.site.id == null;
+      const isNew = $scope.site.id === null;
       SiteService.save($scope.site, { projectId: projectId })
         .then(function(savedSite) {
           if (isNew) {
-            var params = {
+            const params = {
               project_pk: projectId,
               id: savedSite.id
             };
@@ -65,6 +65,7 @@ angular.module('app.project').controller('SiteCtrl', [
             });
           }
           $scope.form.$setPristine(true);
+          project.update();
         })
         .catch(function(error) {
           logger.error('save_site', error);
@@ -73,7 +74,7 @@ angular.module('app.project').controller('SiteCtrl', [
         });
     };
 
-    var saveButton = new Button();
+    const saveButton = new Button();
     saveButton.name = 'Save';
     saveButton.enabled = false;
     saveButton.visible = true;
