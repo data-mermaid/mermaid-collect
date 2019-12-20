@@ -449,26 +449,23 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       );
     };
 
-    $scope.tableControl.recordsNotFiltered = function() {
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === collectRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
-    };
+    $scope.tableControl.noAppliedFiltered = function() {
+      const searchBoxNotUsed = !$scope.tableControl.textboxFilterUsed();
 
-    $scope.tableControl.noAppliedFilters = function() {
-      const methodStorage = checkLocalStorage(
+      const methodStorageSelectAll = checkLocalStorage(
         'all',
         protocolMethods,
         'collect_methodfilter'
       );
-      const statusStorage = checkLocalStorage(
+      const statusStorageSelectAll = checkLocalStorage(
         'all',
         statusChoices,
         'collect_statusfilter'
       );
-      return methodStorage && statusStorage;
+
+      return (
+        searchBoxNotUsed && methodStorageSelectAll && statusStorageSelectAll
+      );
     };
 
     $q.all(promises).then(function(output) {
