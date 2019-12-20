@@ -265,6 +265,9 @@ angular
             templateUrl: 'app/project/partials/managements.tpl.html',
             controller: 'ManagementsCtrl'
           }
+        },
+        resolve: {
+          project: _getProject
         }
       })
       .state('app.project.managements.management', {
@@ -281,7 +284,8 @@ angular
           }
         },
         resolve: {
-          checkId: _checkId()
+          checkId: _checkId(),
+          project: _getProject
         }
       })
       .state('app.project.submittedtransects.fishbelttransectmethod', {

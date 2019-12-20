@@ -9,6 +9,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
   'ModalService',
   'ValidateSubmitService',
   'ValidateDuplicationService',
+  'project',
   function(
     $scope,
     $state,
@@ -19,7 +20,8 @@ angular.module('app.project').controller('ManagementsCtrl', [
     PaginatedOfflineTableWrapper,
     ModalService,
     ValidateSubmitService,
-    ValidateDuplicationService
+    ValidateDuplicationService,
+    project
   ) {
     'use strict';
 
@@ -148,6 +150,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
           modal = ModalService.open(modalOptions);
           modal.result.then(function() {
             $scope.tableControl.refresh();
+            project.update();
           });
         },
         clearFilters: function() {
