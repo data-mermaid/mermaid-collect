@@ -179,11 +179,11 @@ angular.module('app.project').controller('ManagementsCtrl', [
     });
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        managementRecordsCount &&
-        `${$scope.tableControl.records.length}/${managementRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${managementRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {

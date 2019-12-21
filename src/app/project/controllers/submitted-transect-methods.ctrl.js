@@ -267,11 +267,10 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         submittedRecordsCount = val.count;
       });
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        submittedRecordsCount &&
-        `${$scope.tableControl.records.length}/${submittedRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+      return `${tableRecordsTotal}/${submittedRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {

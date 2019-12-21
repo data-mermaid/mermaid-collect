@@ -442,11 +442,11 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     };
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        collectRecordsCount &&
-        `${$scope.tableControl.records.length}/${collectRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${collectRecordsCount}`;
     };
 
     $scope.tableControl.noAppliedFilters = function() {

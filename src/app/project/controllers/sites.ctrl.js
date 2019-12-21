@@ -187,11 +187,11 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        siteRecordsCount &&
-        `${$scope.tableControl.records.length}/${siteRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${siteRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {

@@ -728,6 +728,10 @@ angular
             return false;
           };
 
+          $scope.control.getPaginationTable = function() {
+            return $scope.pagination;
+          };
+
           // WATCHES
 
           var un = $scope.$watch('resource', function(n) {
