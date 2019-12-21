@@ -55,7 +55,7 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       });
     };
 
-    var promise = offlineservice.FishFamiliesTable();
+    const promise = offlineservice.FishFamiliesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateFishFamilyCount();

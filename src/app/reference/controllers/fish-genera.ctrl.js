@@ -77,7 +77,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       });
     };
 
-    var promise = offlineservice.FishGeneraTable();
+    const promise = offlineservice.FishGeneraTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
