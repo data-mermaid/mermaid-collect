@@ -83,7 +83,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     const promise = offlineservice.FishSpeciesTable();
     $q.all([promise, promiseFishGeneraTable]).then(function(tables) {
       $scope.projectObjectsTable = tables[0];
-      updateFishSpeciesCount;
+      updateFishSpeciesCount();
       $scope.resource = new PaginatedOfflineTableWrapper(tables[0], {
         searchFields: ['$$fishgenera.name', 'name']
       });
