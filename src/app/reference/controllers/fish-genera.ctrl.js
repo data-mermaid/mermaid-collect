@@ -80,9 +80,15 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     const promise = offlineservice.FishGeneraTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
+      updateFishGenusCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['$$fishfamilies.name', 'name']
       });
+      $scope.projectObjectsTable.$watch(
+        updateFishGenusCount,
+        null,
+        'fishGenusRecordsCount'
+      );
     });
 
     $scope.tableControl.getFilteredRecordsCount = function() {
