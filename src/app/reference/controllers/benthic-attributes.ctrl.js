@@ -21,6 +21,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
 
     $scope.resource = undefined;
     $scope.tableControl = {};
+    let benthicAttributeRecordsCount = 0;
 
     $scope.tableConfig = {
       id: 'benthicattributes',
@@ -54,7 +55,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
           display: 'Region List',
           sortable: true,
           formatter: function(v) {
-            var regions = [];
+            const regions = [];
             _.each(v, function(region) {
               regions.push(
                 $filter('matchchoice')(region, utils.choices.regions)
@@ -63,16 +64,30 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
             return regions.join(', ') || '-';
           }
         }
-      ]
+      ],
+      toolbar: {
+        template: 'app/reference/partials/fish-families-toolbar.tpl.html',
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
+        }
+      }
     };
 
-    var promise = offlineservice.BenthicAttributesTable();
+    const updateBenthicAttributeCount = function() {
+      $scope.projectObjectsTable.count().then(function(count) {
+        benthicAttributeRecordsCount = count;
+      });
+    };
+
+    const promise = offlineservice.BenthicAttributesTable();
     promise.then(function(table) {
+      $scope.projectObjectsTable = table;
+      updateBenthicAttributeCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name', '$$benthicattributes.name']
       });
-      table.filter().then(function(records) {
-        var joinSchema = {
+      $scope.projectObjectsTable.filter().then(function(records) {
+        const joinSchema = {
           benthicattributes: {
             foreignKey: 'parent',
             relatedRecords: records,
@@ -80,9 +95,32 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
             relatedColumns: ['name']
           }
         };
-        table.setJoinDefn(joinSchema);
+        $scope.projectObjectsTable.setJoinDefn(joinSchema);
       });
+      $scope.projectObjectsTable.$watch(
+        updateBenthicAttributeCount,
+        null,
+        'benthicAttributeRecordsCount'
+      );
     });
+
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${benthicAttributeRecordsCount}`;
+    };
+
+    $scope.tableControl.recordsNotFiltered = function() {
+      if (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length !== benthicAttributeRecordsCount
+      ) {
+        updateBenthicAttributeCount();
+      }
+      return !$scope.tableControl.textboxFilterUsed();
+    };
 
     $rootScope.PageHeaderButtons = [];
   }
