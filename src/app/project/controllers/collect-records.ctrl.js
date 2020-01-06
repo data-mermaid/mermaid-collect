@@ -212,8 +212,14 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           sortable: true,
           formatter: function(v) {
             let val = '';
-            if (v) {
-              val = $filter('date')(new Date(v), 'dd-MMM-yyyy');
+            const dateVal = v && v.split('-').map(val => Number(val));
+            if (dateVal && dateVal.length >= 3) {
+              const newDateVal = new Date(
+                dateVal[0],
+                dateVal[1] - 1,
+                dateVal[2]
+              );
+              val = $filter('date')(newDateVal, 'dd-MMM-yyyy');
             }
             return val;
           }
