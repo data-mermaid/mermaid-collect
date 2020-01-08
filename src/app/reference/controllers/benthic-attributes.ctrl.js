@@ -66,7 +66,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
         }
       ],
       toolbar: {
-        template: 'app/reference/partials/fish-families-toolbar.tpl.html',
+        template: 'app/reference/partials/benthicattributes-toolbar.tpl.html',
         clearFilters: function() {
           $scope.tableControl.clearSearch();
         }
