@@ -7,6 +7,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
   'offlineservice',
   'utils',
   '$filter',
+  '$q',
   function(
     $scope,
     $rootScope,
@@ -15,7 +16,8 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     Button,
     offlineservice,
     utils,
-    $filter
+    $filter,
+    $q
   ) {
     'use strict';
 
@@ -38,7 +40,14 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
           tdTemplate:
             '<a ui-sref="app.reference.benthicattributes.benthicattribute({id: record.id})">{{record.name}}</a>'
         },
-        { name: '$$benthicattributes.name', display: 'Parent', sortable: true },
+        {
+          name: '$$benthicattributes.name',
+          display: 'Parent',
+          sortable: true,
+          formatter: function(v) {
+            return v || '-';
+          }
+        },
         {
           name: 'life_history',
           display: 'Life History',
@@ -83,20 +92,26 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateBenthicAttributeCount();
-      $scope.resource = new PaginatedOfflineTableWrapper(table, {
-        searchFields: ['name', '$$benthicattributes.name']
-      });
-      $scope.projectObjectsTable.filter().then(function(records) {
-        const joinSchema = {
-          benthicattributes: {
-            foreignKey: 'parent',
-            relatedRecords: records,
-            relatedKey: 'id',
-            relatedColumns: ['name']
-          }
-        };
-        $scope.projectObjectsTable.setJoinDefn(joinSchema);
-      });
+      table
+        .filter()
+        .then(function(records) {
+          var deferred = $q.defer();
+          var joinSchema = {
+            benthicattributes: {
+              foreignKey: 'parent',
+              relatedRecords: records,
+              relatedKey: 'id',
+              relatedColumns: ['name']
+            }
+          };
+          deferred.resolve(table.setJoinDefn(joinSchema));
+          return deferred.promise;
+        })
+        .then(function() {
+          $scope.resource = new PaginatedOfflineTableWrapper(table, {
+            searchFields: ['name', '$$benthicattributes.name']
+          });
+        });
       $scope.projectObjectsTable.$watch(
         updateBenthicAttributeCount,
         null,
