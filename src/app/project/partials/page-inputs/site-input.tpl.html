@@ -65,8 +65,7 @@
 
             <div ng-if="isOnline !== true">
                 <div class="clearfix"></div>
-                  <div
-                    ddlinput
+                  <autocompleteinput
                     widget-disabled="isDisabled"
                     widget-form="form"
                     widget-label="Country"
@@ -74,7 +73,7 @@
                     ng-model="site"
                     widget-required="true"
                     widget-choices="choices.countries"
-                  ></div>
+                  ></autocompleteinput>
                   <div
                     numberinput
                     widget-disabled="isDisabled"
