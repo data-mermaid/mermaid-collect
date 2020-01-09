@@ -277,28 +277,24 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         submittedRecordsCount = val.count;
       });
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        submittedRecordsCount &&
-        `${$scope.tableControl.records.length}/${submittedRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+      return `${tableRecordsTotal}/${submittedRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === submittedRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.tableControl.noAppliedFilters = function() {
+      const searchBoxNotUsed = !$scope.tableControl.textboxFilterUsed();
       const methodStorage = checkLocalStorage(
         'all',
         protocolMethods,
         'submit_methodfilter'
       );
-      return methodStorage;
+      return searchBoxNotUsed && methodStorage;
     };
 
     const buttons = [];

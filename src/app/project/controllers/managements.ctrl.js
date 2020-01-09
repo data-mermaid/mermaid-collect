@@ -179,11 +179,11 @@ angular.module('app.project').controller('ManagementsCtrl', [
     });
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        managementRecordsCount &&
-        `${$scope.tableControl.records.length}/${managementRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${managementRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
@@ -193,11 +193,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       ) {
         updateManagementCount();
       }
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === managementRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.$on(ValidateDuplicationService.MR_PAGE, function() {
