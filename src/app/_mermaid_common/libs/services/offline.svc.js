@@ -169,6 +169,12 @@ angular.module('mermaid.libs').service('offlineservice', [
           });
         })
         .then(function(delTables) {
+          return ProjectsTable(true).then(function(table) {
+            delTables.push(table);
+            return delTables;
+          });
+        })
+        .then(function(delTables) {
           delTables = [].concat.apply([], delTables);
           var deletePromises = _.map(delTables, function(table) {
             var name = table.name;

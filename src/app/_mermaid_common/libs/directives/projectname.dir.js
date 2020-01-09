@@ -1,7 +1,8 @@
 angular.module('mermaid.libs').directive('projectname', [
   '$stateParams',
   'offlineservice',
-  function($stateParams, offlineservice) {
+  '$q',
+  function($stateParams, offlineservice, $q) {
     'use strict';
     return {
       restrict: 'AE',
@@ -13,13 +14,13 @@ angular.module('mermaid.libs').directive('projectname', [
         '<div class="projectname" title="{{project_name_tooltip}}">{{project_name}}</div>',
       link: function(scope) {
         const maxLength = scope.titlelength || 40;
-        var project_id = $stateParams.project_id;
+        const projectId = $stateParams.project_id;
 
         function ellipsis_middle(str) {
           if (str.length > maxLength) {
-            var mid = (maxLength - 3) / 2;
-            var leftLength = Math.ceil(mid);
-            var rightLength = Math.floor(mid);
+            const mid = (maxLength - 3) / 2;
+            const leftLength = Math.ceil(mid);
+            const rightLength = Math.floor(mid);
             return (
               str.substr(0, leftLength) +
               '...' +
@@ -29,24 +30,20 @@ angular.module('mermaid.libs').directive('projectname', [
           return str;
         }
 
-        if (!project_id) {
-          scope.project_name = null;
-        }
-
-        offlineservice.ProjectsTable(true).then(function(table) {
-          var setProjectName = function(rec) {
+        $q.all([offlineservice.ProjectsTable()]).then(function(results) {
+          const projectTable = results[0];
+          const setProjectName = function(rec) {
+            scope.project_name = '';
             if (rec != null) {
               scope.project_name_tooltip = rec.name;
               scope.project_name = ellipsis_middle(scope.project_name_tooltip);
-            } else {
-              scope.project_name = null;
             }
           };
 
-          table.get(project_id).then(function(rec) {
+          projectTable.get(projectId).then(function(rec) {
             setProjectName(rec);
           });
-          table.$watch(
+          projectTable.$watch(
             function(event) {
               if (event.event === 'ot-updaterecord') {
                 setProjectName(event.data[0]);

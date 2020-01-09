@@ -41,7 +41,6 @@ angular.module('app.project').controller('SitesCtrl', [
 
     let siteRecordsCount = 0;
     const project_id = $stateParams.project_id;
-    $scope.project = project;
 
     $scope.isDisabled = true;
     ProjectService.getMyProjectProfile(project_id).then(function(
@@ -135,7 +134,7 @@ angular.module('app.project').controller('SitesCtrl', [
           const modal = ModalService.open(modalOptions);
           modal.result.then(function() {
             $scope.tableControl.refresh();
-            $scope.project.update();
+            project.update();
           });
         },
         clearFilters: function() {
@@ -188,11 +187,11 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        siteRecordsCount &&
-        `${$scope.tableControl.records.length}/${siteRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${siteRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
@@ -202,11 +201,7 @@ angular.module('app.project').controller('SitesCtrl', [
       ) {
         updateSiteCount();
       }
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === siteRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.mapopts = {

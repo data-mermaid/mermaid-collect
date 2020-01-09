@@ -44,7 +44,7 @@ angular
         link: function(scope, element, attr, ngModel) {
           var val;
           var $date_input = element;
-          var dataDateFormat = scope.$parent.$parent.widgetFormat;
+          var dataDateFormat = scope.$parent.widgetFormat;
           var dataMask = $date_input.attr('data-mask') || null;
           var dataMaskPlaceholder = $date_input.attr('data-mask-placeholder');
           var modalEl =
