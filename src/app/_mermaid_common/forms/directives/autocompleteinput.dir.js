@@ -132,17 +132,19 @@ angular.module('mermaid.forms').directive('autocompleteinput', [
         };
 
         var updateDisplayValue = function() {
-          var display = scope.formatValue(
-            null,
-            scope.ngModel[scope.widgetName]
-          );
-          $(element)
-            .find('input.form-control')
-            .val(display);
+          if (scope.ngModel) {
+            var display = scope.formatValue(
+              null,
+              scope.ngModel[scope.widgetName]
+            );
+            $(element)
+              .find('input.form-control')
+              .val(display);
+          }
         };
 
         var preventTagNullDisplay = function(value) {
-          if (_.isNull(value.tag)) {
+          if (value && _.isNull(value.tag)) {
             value.tag = undefined;
           }
         };

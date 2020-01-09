@@ -16,8 +16,9 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     'use strict';
     $scope.resource = null;
     $scope.tableControl = {};
+    let fishSpeciesRecordsCount = 0;
 
-    var promiseFishGeneraTable = offlineservice
+    const promiseFishGeneraTable = offlineservice
       .FishGeneraTable()
       .then(function(table) {
         return table.filter().then(function(records) {
@@ -30,7 +31,6 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish species by name or genus',
-      searchIcon: 'fa-filter',
       searchLocation: 'left',
       cols: [
         {
@@ -65,15 +65,52 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
           display: 'Biomass Constant C',
           sortable: false
         }
-      ]
+      ],
+      toolbar: {
+        template: 'app/reference/partials/fish-speciess-toolbar.tpl.html',
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
+        }
+      }
     };
 
-    var promise = offlineservice.FishSpeciesTable();
+    const updateFishSpeciesCount = function() {
+      $scope.projectObjectsTable.count().then(function(count) {
+        fishSpeciesRecordsCount = count;
+      });
+    };
+
+    const promise = offlineservice.FishSpeciesTable();
     $q.all([promise, promiseFishGeneraTable]).then(function(tables) {
+      $scope.projectObjectsTable = tables[0];
+      updateFishSpeciesCount();
       $scope.resource = new PaginatedOfflineTableWrapper(tables[0], {
         searchFields: ['$$fishgenera.name', 'name']
       });
+      $scope.projectObjectsTable.$watch(
+        updateFishSpeciesCount,
+        null,
+        'fishSpeciesRecordsCount'
+      );
     });
+
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${fishSpeciesRecordsCount}`;
+    };
+
+    $scope.tableControl.recordsNotFiltered = function() {
+      if (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length !== fishSpeciesRecordsCount
+      ) {
+        updateFishSpeciesCount();
+      }
+      return !$scope.tableControl.textboxFilterUsed();
+    };
 
     $rootScope.PageHeaderButtons = [];
   }

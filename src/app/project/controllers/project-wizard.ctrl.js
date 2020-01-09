@@ -84,13 +84,13 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       profile_promise.then(function(resp) {
         if (resp.count === 0) {
           var missing_msg = "User doesn't exist.";
-          utils.showAlert('Warning', missing_msg, utils.warning, 4000);
+          utils.showAlert('Warning', missing_msg, utils.statuses.warning, 4000);
           return;
         }
         var profile = resp.results[0];
         if (_.filter($scope.profiles, { profile: profile.id }).length > 0) {
           var msg = 'User has already been added to project.';
-          utils.showAlert('Warning', msg, utils.warning, 4000);
+          utils.showAlert('Warning', msg, utils.statuses.warning, 4000);
           return;
         }
 

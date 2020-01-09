@@ -25,9 +25,12 @@ angular.module('mermaid.libs').factory('PaginatedArrayWrapper', [
           var directions = [];
           var columns = [];
 
-          _.each(ordering.split(','), function(order_by) {
+          for (var order_by of ordering.split(',')) {
+            if (order_by.includes('__')) {
+              order_by = order_by.replace('__', '_');
+            }
             var direction = 'asc';
-            if (ordering.startsWith('-')) {
+            if (order_by.startsWith('-')) {
               direction = 'desc';
               order_by = order_by.slice(1);
             }
@@ -36,7 +39,7 @@ angular.module('mermaid.libs').factory('PaginatedArrayWrapper', [
               order_by = self.sortFields[order_by];
             }
             columns.push(order_by);
-          });
+          }
           return {
             directions: directions,
             columns: columns

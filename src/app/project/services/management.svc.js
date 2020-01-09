@@ -32,6 +32,12 @@ angular.module('app.project').service('ManagementService', [
         .ProjectManagementsTable(projectId)
         .then(function(table) {
           return table.get(managementId).then(function(management) {
+            management.no_take = (management.no_take === null) ? false : management.no_take;
+            management.open_access = (management.open_access === null) ? false : management.open_access;
+            management.periodic_closure = (management.periodic_closure === null) ? false : management.periodic_closure;
+            management.size_limits = (management.size_limits === null) ? false : management.size_limits;
+            management.gear_restriction = (management.gear_restriction === null) ? false : management.gear_restriction;
+            management.species_restriction = (management.species_restriction === null) ? false : management.species_restriction;
             return management || { project: projectId };
           });
         });

@@ -14,7 +14,6 @@ angular.module('app.project').service('CopySitesService', [
         selecting: true,
         selectingTableName: 'Sites',
         searching: true,
-        searchIcon: 'fa-filter',
         searchLocation: 'right',
         searchPlaceholder: 'Filter by name, project or country',
         rowSelect: true,

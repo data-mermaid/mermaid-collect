@@ -11,6 +11,7 @@ angular.module('app.project').controller('SitesCtrl', [
   'ValidateDuplicationService',
   'connectivity',
   'ConnectivityFactory',
+  'project',
   function(
     $scope,
     $state,
@@ -23,13 +24,13 @@ angular.module('app.project').controller('SitesCtrl', [
     ValidateSubmitService,
     ValidateDuplicationService,
     connectivity,
-    ConnectivityFactory
+    ConnectivityFactory,
+    project
   ) {
     'use strict';
 
-    var conn = new ConnectivityFactory($scope);
+    const conn = new ConnectivityFactory($scope);
     $scope.isOnline = connectivity.isOnline;
-
     this.db = {
       items: null
     };
@@ -38,7 +39,8 @@ angular.module('app.project').controller('SitesCtrl', [
       contextMenu: ['row_below', 'remove_row']
     };
 
-    var project_id = $stateParams.project_id;
+    let siteRecordsCount = 0;
+    const project_id = $stateParams.project_id;
 
     $scope.isDisabled = true;
     ProjectService.getMyProjectProfile(project_id).then(function(
@@ -57,11 +59,10 @@ angular.module('app.project').controller('SitesCtrl', [
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter sites by name, reef (type, zone, or exposure)',
-      searchIcon: 'fa-filter',
-      searchLocation: 'right',
-      disableTrackingTableState: false,
+      searchLocation: 'left',
+      disableTrackingTableState: true,
       rowFormatter: function(record, element) {
-        var isInvalid =
+        const isInvalid =
           _.get(
             record,
             'validations.results._root_.validate_similar.status'
@@ -125,22 +126,32 @@ angular.module('app.project').controller('SitesCtrl', [
           SiteService.downloadFieldReport(project_id);
         },
         copySites: function() {
-          var modal;
-          var modalOptions = {
+          const modalOptions = {
             hideHeader: true,
             controller: 'CopySitesCtrl',
             bodyTemplateUrl: 'app/project/partials/copy-sites.tpl.html'
           };
-          modal = ModalService.open(modalOptions);
+          const modal = ModalService.open(modalOptions);
           modal.result.then(function() {
             $scope.tableControl.refresh();
+            project.update();
           });
+        },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
         }
       }
     };
 
+    const updateSiteCount = function() {
+      $scope.projectObjectsTable.count().then(function(count) {
+        siteRecordsCount = count;
+      });
+    };
+
     offlineservice.ProjectSitesTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
+      updateSiteCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: [
           'name',
@@ -149,11 +160,56 @@ angular.module('app.project').controller('SitesCtrl', [
           '$$reefexposures.name'
         ]
       });
+      $scope.projectObjectsTable.$watch(
+        updateSiteCount,
+        null,
+        'siteRecordsCount'
+      );
     });
 
-    $scope.mapopts = {
-      gestureHandling: true
+    const createPopup = function(feature) {
+      return !_.isEmpty(feature)
+        ? '<a href="#/projects/' +
+            feature.project_id +
+            '/sites/' +
+            feature.id +
+            '">' +
+            feature.name +
+            '</a>' +
+            '<div><p>Reef type: <span>' +
+            feature.reeftype +
+            '</span></p><p>Reef zone: <span>' +
+            feature.reefzone +
+            '</span></p><p>Exposure: <span>' +
+            feature.reefexposure +
+            '</span></p></div>'
+        : '<p>No content</p>';
     };
+
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${siteRecordsCount}`;
+    };
+
+    $scope.tableControl.recordsNotFiltered = function() {
+      if (
+        $scope.tableControl.records &&
+        $scope.tableControl.records.length !== siteRecordsCount
+      ) {
+        updateSiteCount();
+      }
+      return !$scope.tableControl.textboxFilterUsed();
+    };
+
+    $scope.mapopts = {
+      gestureHandling: true,
+      project_id: project_id,
+      popup: createPopup
+    };
+
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {
       $scope.tableControl.refresh(true);
     });
@@ -162,7 +218,7 @@ angular.module('app.project').controller('SitesCtrl', [
       $scope.isOnline = event.event === 'online';
     });
 
-    var newSite = function() {
+    const newSite = function() {
       $state.go('app.project.sites.site', { id: '' });
     };
   }

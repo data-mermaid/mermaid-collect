@@ -7,7 +7,6 @@ angular.module('mermaid.libs').factory('PaginatedOfflineTableWrapper', [
   '$q',
   function($q) {
     'use strict';
-
     return function(offlinetable, options) {
       function PaginatedOfflineTableWrapper(offlinetable, options) {
         var self = this;
@@ -25,9 +24,9 @@ angular.module('mermaid.libs').factory('PaginatedOfflineTableWrapper', [
           var directions = [];
           var columns = [];
 
-          _.each(ordering.split(','), function(order_by) {
+          for (var order_by of ordering.split(',')) {
             var direction = 'asc';
-            if (ordering.startsWith('-')) {
+            if (order_by.startsWith('-')) {
               direction = 'desc';
               order_by = order_by.slice(1);
             }
@@ -36,7 +35,7 @@ angular.module('mermaid.libs').factory('PaginatedOfflineTableWrapper', [
               order_by = self.sortFields[order_by];
             }
             columns.push(order_by);
-          });
+          }
           return {
             directions: directions,
             columns: columns

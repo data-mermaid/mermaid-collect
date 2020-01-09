@@ -54,7 +54,6 @@ angular.module('app.project').controller('ProjectsCtrl', [
       disableTrackingTableState: true,
       searching: true,
       searchPlaceholder: 'Filter projects by name or country',
-      searchIcon: 'fa-filter',
       searchLocation: 'right',
       filters: {
         include_fields: 'countries,num_sites'
