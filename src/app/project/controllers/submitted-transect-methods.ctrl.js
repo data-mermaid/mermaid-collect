@@ -121,11 +121,21 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           display: 'Sample Date',
           sortable: true,
           formatter: function(v) {
-            let val = '';
+            let dateResult = '';
             if (v) {
-              val = $filter('date')(new Date(v), 'dd-MMM-yyyy');
+              const dateVal = v.split('-').map(function(val) {
+                return Number(val);
+              });
+              if (dateVal.length >= 3) {
+                const newDateVal = new Date(
+                  dateVal[0],
+                  dateVal[1] - 1,
+                  dateVal[2]
+                );
+                dateResult = $filter('date')(newDateVal, 'dd-MMM-yyyy');
+              }
             }
-            return val;
+            return dateResult;
           }
         },
         {
