@@ -131,7 +131,12 @@ angular.module('app.project').controller('UsersCtrl', [
           profile_promise.then(function(resp) {
             if (resp.count === 0) {
               var missing_msg = "User doesn't exist.";
-              utils.showAlert('Warning', missing_msg, utils.warning, 4000);
+              utils.showAlert(
+                'Warning',
+                missing_msg,
+                utils.statuses.warning,
+                4000
+              );
               return;
             }
             var profile = resp.results[0];
@@ -143,7 +148,7 @@ angular.module('app.project').controller('UsersCtrl', [
                   utils.showAlert(
                     'Warning',
                     duplicate_msg,
-                    utils.warning,
+                    utils.statuses.warning,
                     4000
                   );
                   return;

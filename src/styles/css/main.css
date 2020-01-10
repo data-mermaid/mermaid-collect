@@ -364,12 +364,19 @@ th.col-sortable {
     background: url(../img/sort_both.png) right center no-repeat;
     padding-left: 20px!important;
     padding-right: 20px!important;
+    
 }
 th.col-sort-desc {
     background-image: url(../img/sort_desc.png);
+    display: flex;
 }
+th.col-sort-asc:hover span.remove-col-sort,
+th.col-sort-desc:hover  span.remove-col-sort {
+  visibility: visible;
+} 
 th.col-sort-asc {
     background-image: url(../img/sort_asc.png);
+    display: flex;
      -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -496,7 +503,11 @@ th.col-sort-asc {
 }
 
 .table-toolbar {
-  width: 500px;
+  padding-bottom: 10px;
+}
+
+.right-position {
+  float: right;
 }
 
 .table-selecting {
@@ -508,8 +519,39 @@ th.col-sort-asc {
   margin-left: 10px;
 }
 
+li.select-all-filter {
+  border-bottom: 1px solid lightgray;
+}
+
 .checkbox-label {
   margin-left: 18px;
+}
+
+.filter-highlight-on {
+  background-color: #FFE083;
+}
+.filter-wrapper {
+  display: inline-flex;
+}
+
+.filter-records {
+  padding: 6px;
+  background-color: #FFE083;
+}
+
+.filter-count {
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+.clear-filter {
+  background-color: #eee;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.clear-filter:hover {
+  background-color: lightgray;
 }
 
 .note-error span.error,
@@ -722,6 +764,10 @@ btn > button {
   width: 100%;
 }
 
+.search-trigger {
+  background-color: #FFE083;
+}
+
 /* MAP DIRECTIVE */
 .mapcanvas {
   width: 100%;
@@ -800,11 +846,11 @@ btn > button {
 }
 
 .pull-left {
-  padding-right: 5px;
+  padding: 0;
 }
 
 .pull-right {
-  padding-left: 5px;
+  padding: 0 0 0 5px;
 }
 
 .underline {
@@ -1130,8 +1176,13 @@ btn > button {
 
 /* COPY RECORDS */
 
-.copy-records-toolbar label{
-  padding-left: 5px;
+.copy-records-toolbar {
+  display: flex;
+  padding-right: 100px;
+}
+
+.copy-record-select {
+  flex-grow: 1;
 }
 
 .copy-records-modal-body .modal-map-body{
@@ -1301,5 +1352,55 @@ ul li.transect-buttons[disabled] {
 .editable-row:hover .readonly-cell span{
   text-decoration-line: underline;
   text-decoration-style: dotted;
+}
+
+/* Multiple column sorts */
+.header-col-name {
+  float: left;
+}
+
+.col-sort-ordering {
+  float: right;
+  display: inline-flex;
+  align-items: center;
+}
+
+.index-col-sort {
+  cursor: initial;
+  color: #c6c6c6;
+  font-size: 11px;
+  padding-left: 5px;;
+}
+
+.remove-col-sort {
+  color: #555555;
+  visibility: hidden;
+}
+
+/* leaflet popup content style */
+.leaflet-popup-content-wrapper {
+  border-radius: 6px;
+}
+
+.leaflet-popup-content{
+  margin: 14px 6px 6px 6px;
+}
+
+.leaflet-popup-content a {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.leaflet-popup-content div {
+  border-top: 1px solid;
+}
+
+.leaflet-popup-content div p {
+  margin: 0;
+}
+
+.leaflet-popup-content div p span {
+  margin: 0;
+  font-style: italic;
 }
 

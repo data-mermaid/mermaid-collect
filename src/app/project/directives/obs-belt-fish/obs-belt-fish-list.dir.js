@@ -71,6 +71,10 @@ angular.module('app.project').directive('obsBeltFishList', [
         scope.getFishAttributes = function() {
           return scope.fishAttributeChoices;
         };
+        // console.log(scope.getFishAttributes());
+        const fishAttributeNames = scope
+          .getFishAttributes()
+          .map(attribute => attribute.display_name);
 
         scope.navReferenceLink = function(fishAttributeId) {
           if (!_.isUndefined(fishAttributeId)) {
@@ -229,7 +233,10 @@ angular.module('app.project').directive('obsBeltFishList', [
         };
 
         $(window).click(function(evt) {
-          if (evt.target.classList.contains('addRow')) {
+          if (
+            evt.target.classList.contains('addRow') ||
+            fishAttributeNames.includes(evt.target.outerText)
+          ) {
             return;
           }
           scope.stopEditing();

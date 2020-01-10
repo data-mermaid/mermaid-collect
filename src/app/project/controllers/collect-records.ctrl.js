@@ -11,7 +11,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'offlineservice',
   'PaginatedOfflineTableWrapper',
   'ProjectService',
-  'OfflineTableBackup',
   'ValidateSubmitService',
   'projectProfile',
   function(
@@ -27,16 +26,19 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     offlineservice,
     PaginatedOfflineTableWrapper,
     ProjectService,
-    OfflineTableBackup,
     ValidateSubmitService,
     projectProfile
   ) {
     'use strict';
 
-    var collectRecordsTable;
-    var addTransectGroupButton;
-    var promises;
-    var project_id = $stateParams.project_id;
+    let collectRecordsTable = {};
+    let collectRecordsCount = 0;
+    const addTransectGroupButton = new Button();
+    const project_id = $stateParams.project_id;
+    const promises = [
+      authService.getCurrentUser(),
+      offlineservice.CollectRecordsTable(project_id)
+    ];
 
     $scope.choices = {};
     $scope.tableControl = {};
@@ -50,34 +52,35 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         projectProfile.is_collector !== true);
     $scope.tableControl.isDisabled = $scope.isDisabled;
 
-    var protocolMethods = [
+    const protocolMethods = [
       ProjectService.FISH_BELT_TRANSECT_TYPE,
       ProjectService.BENTHIC_LIT_TRANSECT_TYPE,
       ProjectService.BENTHIC_PIT_TRANSECT_TYPE,
       ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
       ProjectService.BLEACHING_QC_QUADRAT_TYPE
     ];
+    const statusChoices = [null, 'ok', 'warning', 'error'];
 
-    var statusChoices = [null, 'ok', 'warning', 'error'];
-
-    var checkLocalStorage = function(item, choices, storageName) {
-      var options = JSON.parse(localStorage.getItem(storageName)) || choices;
-      if (options.indexOf(item) !== -1) {
+    const checkLocalStorage = function(item, choices, storageName) {
+      const options = JSON.parse(localStorage.getItem(storageName)) || choices;
+      if (item === 'all') {
+        return options.length === choices.length;
+      } else if (options.indexOf(item) !== -1) {
         return true;
       }
       return false;
     };
 
-    var sizeFormat = function(value) {
-      var result = '-';
-      var protocol = value.protocol;
+    const sizeFormat = function(value) {
+      let result = '-';
+      const protocol = value.protocol;
       if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
-        var width = _.get(value, 'fishbelt_transect.width');
-        var widthFilter = $filter('matchchoice')(
+        const width = _.get(value, 'fishbelt_transect.width');
+        const widthFilter = $filter('matchchoice')(
           width,
           $scope.choices.belttransectwidths
         );
-        var length = _.get(value, 'fishbelt_transect.len_surveyed');
+        const length = _.get(value, 'fishbelt_transect.len_surveyed');
 
         if (length && width) {
           result = length + 'm x ' + widthFilter.slice(0, -1) + 'm';
@@ -103,8 +106,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       hideRowStripes: true,
       searching: true,
       searchPlaceholder: 'Filter sample units by method, site, or observer',
-      searchIcon: 'fa-filter',
-      searchLocation: 'right',
+      searchLocation: 'left',
       defaultSortByColumn: 'data.protocol',
       rowFormatter: function(record, element) {
         element.addClass(ValidateSubmitService.transectStatusCssClass(record));
@@ -112,13 +114,13 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       filters: {
         profile: projectProfile.profile,
         'data.protocol': function(val) {
-          var options =
+          const options =
             JSON.parse(localStorage.getItem('collect_methodfilter')) ||
             protocolMethods;
           return options.indexOf(val) !== -1;
         },
         validations: function(val) {
-          var options =
+          const options =
             JSON.parse(localStorage.getItem('collect_statusfilter')) ||
             statusChoices;
           if (val === undefined) {
@@ -168,9 +170,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           sortable: true,
           sort_by: ['transect_number'],
           formatter: function(v) {
-            var val = '';
-            var label_val = '';
-            var protocol = v.protocol;
+            let val,
+              label_val = '';
+            let protocol = v.protocol;
             if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
               val = _.get(v, 'fishbelt_transect.number', '') || '';
               label_val = _.get(v, 'fishbelt_transect.label', '') || '';
@@ -209,11 +211,21 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           display: 'Sample Date',
           sortable: true,
           formatter: function(v) {
-            var val = '';
+            let dateResult = '';
             if (v) {
-              val = $filter('date')(new Date(v), 'dd-MMM-yyyy');
+              const dateVal = v.split('-').map(function(val) {
+                return Number(val);
+              });
+              if (dateVal.length >= 3) {
+                const newDateVal = new Date(
+                  dateVal[0],
+                  dateVal[1] - 1,
+                  dateVal[2]
+                );
+                dateResult = $filter('date')(newDateVal, 'dd-MMM-yyyy');
+              }
             }
-            return val;
+            return dateResult;
           }
         },
         {
@@ -221,7 +233,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           display: 'Observers',
           sortable: false,
           formatter: function(v) {
-            var observers = [];
+            let observers = [];
             angular.forEach(v, function(observer) {
               observers.push(observer.profile_name);
             });
@@ -252,10 +264,20 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       toolbar: {
         template:
           'app/project/partials/custom-toolbars/collect-record-toolbar.tpl.html',
+        allMethods: checkLocalStorage(
+          'all',
+          protocolMethods,
+          'collect_methodfilter'
+        ),
+        allStatus: checkLocalStorage(
+          'all',
+          statusChoices,
+          'collect_statusfilter'
+        ),
         methodTypes: [
           {
             name: 'Fish Belt',
-            protocol: protocolMethods[0],
+            choice: protocolMethods[0],
             selected: checkLocalStorage(
               protocolMethods[0],
               protocolMethods,
@@ -264,7 +286,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Benthic LIT',
-            protocol: protocolMethods[1],
+            choice: protocolMethods[1],
             selected: checkLocalStorage(
               protocolMethods[1],
               protocolMethods,
@@ -273,7 +295,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Benthic PIT',
-            protocol: protocolMethods[2],
+            choice: protocolMethods[2],
             selected: checkLocalStorage(
               protocolMethods[2],
               protocolMethods,
@@ -282,7 +304,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Bleaching',
-            protocol: protocolMethods[4],
+            choice: protocolMethods[4],
             selected: checkLocalStorage(
               protocolMethods[4],
               protocolMethods,
@@ -291,7 +313,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Habitat Complexity',
-            protocol: protocolMethods[3],
+            choice: protocolMethods[3],
             selected: checkLocalStorage(
               protocolMethods[3],
               protocolMethods,
@@ -302,7 +324,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         statusTypes: [
           {
             name: 'Saved',
-            status: statusChoices[0],
+            choice: statusChoices[0],
             selected: checkLocalStorage(
               statusChoices[0],
               statusChoices,
@@ -311,7 +333,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Validated',
-            status: statusChoices[1],
+            choice: statusChoices[1],
             selected: checkLocalStorage(
               statusChoices[1],
               statusChoices,
@@ -320,7 +342,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Warnings',
-            status: statusChoices[2],
+            choice: statusChoices[2],
             selected: checkLocalStorage(
               statusChoices[2],
               statusChoices,
@@ -329,7 +351,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           },
           {
             name: 'Errors',
-            status: statusChoices[3],
+            choice: statusChoices[3],
             selected: checkLocalStorage(
               statusChoices[3],
               statusChoices,
@@ -338,11 +360,11 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           }
         ],
         deleteSelected: function() {
-          var records = $scope.tableControl.getSelectedRecords();
+          const records = $scope.tableControl.getSelectedRecords();
           if (_.isArray(records) === false || records.length === 0) {
             return;
           }
-          var args = utils.templateArgs(records);
+          const args = utils.templateArgs(records);
           utils.showConfirmation(
             function() {
               $scope.tableControl.deleteRecords(records);
@@ -354,46 +376,71 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             utils.template(utils.messages.deleteRecordWarning, args)
           );
         },
-        filterMethod: function(showMethod, protocol) {
-          var options =
-            JSON.parse(localStorage.getItem('collect_methodfilter')) ||
-            protocolMethods;
-          if (showMethod === true) {
-            options.push(protocol);
+        filterMethod: function(item) {
+          let options = JSON.parse(
+            localStorage.getItem('collect_methodfilter')
+          ) || [...protocolMethods];
+          if (item.selected) {
+            options.push(item.choice);
           } else {
-            var index = options.indexOf(protocol);
+            const index = options.indexOf(item.choice);
             if (index !== -1) {
               options.splice(index, 1);
             }
           }
+
+          this.allMethods = options.length === protocolMethods.length;
           localStorage.setItem('collect_methodfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
-        filterStatus: function(recordStatus, status) {
-          var options =
-            JSON.parse(localStorage.getItem('collect_statusfilter')) ||
-            statusChoices;
-          if (recordStatus === true) {
-            options.push(status);
+        filterStatus: function(item) {
+          let options = JSON.parse(
+            localStorage.getItem('collect_statusfilter')
+          ) || [...statusChoices];
+
+          if (item.selected) {
+            options.push(item.choice);
           } else {
-            var index = options.indexOf(status);
+            const index = options.indexOf(item.choice);
             if (index !== -1) {
               options.splice(index, 1);
             }
           }
+
+          this.allStatus = options.length === statusChoices.length;
           localStorage.setItem('collect_statusfilter', JSON.stringify(options));
           $scope.tableControl.refresh();
         },
-        backUp: function() {
-          backupRecords();
+        selectAllMethods: function(allSelected) {
+          const filterOptions = {
+            filterTypes: this.methodTypes,
+            choices: protocolMethods,
+            storageName: 'collect_methodfilter'
+          };
+          this.allMethods = allSelected;
+          selectAllOptions(allSelected, filterOptions);
+        },
+        selectAllStatus: function(allSelected) {
+          const filterOptions = {
+            filterTypes: this.statusTypes,
+            choices: statusChoices,
+            storageName: 'collect_statusfilter'
+          };
+          this.allStatus = allSelected;
+          selectAllOptions(allSelected, filterOptions);
+        },
+        clearFilters: function() {
+          $scope.tableControl.clearSearch();
         }
       }
     };
 
     $scope.tableControl.duplicate = function(record) {
-      var transect_type = ProjectService.getTransectType(record.data.protocol);
+      const transect_type = ProjectService.getTransectType(
+        record.data.protocol
+      );
       record.clone().then(function(rec) {
-        var clear_fields = transect_type.fields || [];
+        const clear_fields = transect_type.fields || [];
         _.each(clear_fields, function(cf) {
           _.set(rec, cf, null);
         });
@@ -404,14 +451,42 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       });
     };
 
-    promises = [
-      authService.getCurrentUser(),
-      offlineservice.CollectRecordsTable(project_id)
-    ];
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${collectRecordsCount}`;
+    };
+
+    $scope.tableControl.noAppliedFilters = function() {
+      const searchBoxNotUsed = !$scope.tableControl.textboxFilterUsed();
+
+      const methodStorageSelectAll = checkLocalStorage(
+        'all',
+        protocolMethods,
+        'collect_methodfilter'
+      );
+      const statusStorageSelectAll = checkLocalStorage(
+        'all',
+        statusChoices,
+        'collect_statusfilter'
+      );
+
+      return (
+        searchBoxNotUsed && methodStorageSelectAll && statusStorageSelectAll
+      );
+    };
 
     $q.all(promises).then(function(output) {
       collectRecordsTable = output[1];
       $scope.currentUser = output[0];
+      collectRecordsTable
+        .filter({ profile: $scope.currentUser.id }, true)
+        .then(function(val) {
+          collectRecordsCount = val.length;
+        });
+
       $scope.resource = new PaginatedOfflineTableWrapper(collectRecordsTable, {
         searchFields: [
           'data.protocol',
@@ -447,30 +522,33 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       $state.go(transect_type.state, { id: '' });
     }
 
-    function backupRecords() {
-      OfflineTableBackup.backup(project_id).then(function(recordCount) {
-        if (recordCount && recordCount > 0) {
-          var msg =
-            recordCount +
-            ' ' +
-            utils.pluralize(recordCount, 'record', 'records') +
-            ' backed up';
-          utils.showAlert('Backup', msg, utils.statuses.success);
-          return;
-        }
-        utils.showAlert(
-          'Backup',
-          'No records backed up',
-          utils.statuses.warning
-        );
-      });
+    function selectAllOptions(allSelected, filter_options) {
+      const filterTypes = filter_options.filterTypes;
+      const storageName = filter_options.storageName;
+      let options = JSON.parse(localStorage.getItem(storageName)) || [
+        ...filter_options.choices
+      ];
+
+      if (allSelected) {
+        filterTypes.forEach(filterItem => {
+          if (!filterItem.selected) {
+            options.push(filterItem.choice);
+          }
+          filterItem.selected = true;
+        });
+      } else {
+        filterTypes.forEach(filterItem => (filterItem.selected = false));
+        options = [];
+      }
+      localStorage.setItem(storageName, JSON.stringify(options));
+      $scope.tableControl.refresh();
     }
 
     function loadButtons() {
-      var buttons = _.map($scope.choices.transect_types, function(
+      const buttons = _.map($scope.choices.transect_types, function(
         transect_type
       ) {
-        var btn = new Button();
+        const btn = new Button();
         btn.name = transect_type.name;
         btn.onlineOnly = false;
         btn.enabled = true;
@@ -479,7 +557,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         };
         return btn;
       });
-      addTransectGroupButton = new Button();
+
       addTransectGroupButton.name = 'Add Sample Unit';
       addTransectGroupButton.icon = 'fa-plus';
       addTransectGroupButton.classes = 'btn-success';

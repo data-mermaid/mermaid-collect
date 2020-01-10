@@ -73,6 +73,10 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
           return scope.benthicAttributeChoices;
         };
 
+        const benthicAttributeNames = scope
+          .getBenthicAttributes()
+          .map(attribute => attribute.name);
+
         scope.categoryLookup = BenthicAttributeService.getCategoryLookup(
           scope.benthicAttributeChoices
         );
@@ -176,7 +180,13 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
           scope.editableObservationIndex = null;
         };
 
-        $(window).click(function() {
+        $(window).click(function(evt) {
+          if (
+            evt.target.classList.contains('addRow') ||
+            benthicAttributeNames.includes(evt.target.outerText)
+          ) {
+            return;
+          }
           scope.stopEditing();
         });
 
