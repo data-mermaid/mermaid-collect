@@ -6,8 +6,6 @@
   <div class="form-group input" ng-class="{false: 'state-error', true: ''}[widgetForm[widgetName].$valid]">
     <div ng-switch="hasMask()" class="input-group">
       <input
-        ng-switch-when="yes"
-        bsdatepicker
         class="form-control picker-readonly"
         name="{{ widgetName }}"
         ng-model="ngModel[widgetName]"
@@ -24,7 +22,6 @@
       >
       <input
         ng-switch-default
-        bsdatepicker
         class="form-control picker-readonly"
         name="{{ widgetName }}"
         ng-model="ngModel[widgetName]"
@@ -43,6 +40,8 @@
   <div class="note">{{ widgetHelp }}</div>
   <div class="note note-error">
     <span ng-if="widgetRequired === true" class="error ng-cloak" ng-show="widgetForm[widgetName].$pristine==false && widgetForm[widgetName].$error.required==true"> {{ widgetLabel }} is required.</span>
+    <span ng-repeat="(key, value) in widgetForm[widgetName].$error | validators track by $index" class="warn ng-cloak"
+    ng-show="value" ng-bind-html="widgetForm[widgetName].validator_messages[key]"></span>
   </div>
   <div class="note note-error ng-cloak">
     <span

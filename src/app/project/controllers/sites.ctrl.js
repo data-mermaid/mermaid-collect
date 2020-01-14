@@ -11,6 +11,7 @@ angular.module('app.project').controller('SitesCtrl', [
   'ValidateDuplicationService',
   'connectivity',
   'ConnectivityFactory',
+  'project',
   function(
     $scope,
     $state,
@@ -23,13 +24,13 @@ angular.module('app.project').controller('SitesCtrl', [
     ValidateSubmitService,
     ValidateDuplicationService,
     connectivity,
-    ConnectivityFactory
+    ConnectivityFactory,
+    project
   ) {
     'use strict';
 
-    var conn = new ConnectivityFactory($scope);
+    const conn = new ConnectivityFactory($scope);
     $scope.isOnline = connectivity.isOnline;
-
     this.db = {
       items: null
     };
@@ -39,7 +40,7 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     let siteRecordsCount = 0;
-    var project_id = $stateParams.project_id;
+    const project_id = $stateParams.project_id;
 
     $scope.isDisabled = true;
     ProjectService.getMyProjectProfile(project_id).then(function(
@@ -61,7 +62,7 @@ angular.module('app.project').controller('SitesCtrl', [
       searchLocation: 'left',
       disableTrackingTableState: true,
       rowFormatter: function(record, element) {
-        var isInvalid =
+        const isInvalid =
           _.get(
             record,
             'validations.results._root_.validate_similar.status'
@@ -125,15 +126,15 @@ angular.module('app.project').controller('SitesCtrl', [
           SiteService.downloadFieldReport(project_id);
         },
         copySites: function() {
-          var modal;
-          var modalOptions = {
+          const modalOptions = {
             hideHeader: true,
             controller: 'CopySitesCtrl',
             bodyTemplateUrl: 'app/project/partials/copy-sites.tpl.html'
           };
-          modal = ModalService.open(modalOptions);
+          const modal = ModalService.open(modalOptions);
           modal.result.then(function() {
             $scope.tableControl.refresh();
+            project.update();
           });
         },
         clearFilters: function() {
@@ -186,11 +187,11 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        siteRecordsCount &&
-        `${$scope.tableControl.records.length}/${siteRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${siteRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
@@ -200,11 +201,7 @@ angular.module('app.project').controller('SitesCtrl', [
       ) {
         updateSiteCount();
       }
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === siteRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.mapopts = {
@@ -221,7 +218,7 @@ angular.module('app.project').controller('SitesCtrl', [
       $scope.isOnline = event.event === 'online';
     });
 
-    var newSite = function() {
+    const newSite = function() {
       $state.go('app.project.sites.site', { id: '' });
     };
   }

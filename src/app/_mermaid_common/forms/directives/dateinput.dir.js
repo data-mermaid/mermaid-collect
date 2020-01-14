@@ -44,7 +44,7 @@ angular
         link: function(scope, element, attr, ngModel) {
           var val;
           var $date_input = element;
-          var dataDateFormat = scope.$parent.$parent.widgetFormat;
+          var dataDateFormat = scope.$parent.widgetFormat;
           var dataMask = $date_input.attr('data-mask') || null;
           var dataMaskPlaceholder = $date_input.attr('data-mask-placeholder');
           var modalEl =
@@ -100,6 +100,7 @@ angular
               }
             }
           );
+
           // Open datepicker when clicking calendar icon - $broadcast from GlobalCtrl
           scope.$on('openDatepicker', function(e, clickEvt) {
             var $target = clickEvt.target.prev();
@@ -113,12 +114,14 @@ angular
   ])
 
   .directive('dateinput', [
+    '$timeout',
+    '$compile',
     '$rootScope',
     'utils',
-    function($rootScope, utils) {
+    function($timeout, $compile, $rootScope, utils) {
       'use strict';
       return {
-        restrict: 'A',
+        restrict: 'EA',
         required: 'ngModel',
         transclude: {
           validations: '?validations'
@@ -134,6 +137,7 @@ angular
         templateUrl: 'app/_mermaid_common/forms/directives/dateinput.tpl.html',
 
         link: function(scope, element, attrs) {
+          var validators = [];
           scope.widgetLabel = attrs.widgetLabel;
           scope.widgetHelp = attrs.widgetHelp || '';
           scope.widgetPlaceholder = attrs.widgetPlaceholder || null;
@@ -151,6 +155,20 @@ angular
             }
             return null;
           };
+
+          $timeout(function() {
+            var validatorElement = element.find('input');
+            validatorElement.attr('bsdatepicker', '');
+            if (attrs.widgetValidators) {
+              validators = attrs.widgetValidators.split(',');
+              for (var i = 0; i < validators.length; i++) {
+                var validator_params = validators[i].split('=');
+                var key = validator_params[0];
+                validatorElement.attr(key, validator_params.slice(1));
+              }
+            }
+            $compile(validatorElement)(scope);
+          });
 
           // Needs to be on $rootscope so isolated scopes also have access
           // Needs this check so that its only defined once if there are
