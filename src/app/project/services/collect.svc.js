@@ -33,8 +33,9 @@ angular.module('app.project').service('CollectService', [
               if (connectivity.isOnline !== true) {
                 savedRecord.stage = ProjectService.SAVED_STAGE;
               }
-              savedRecord.update();
-              return { record: savedRecord, isCreated: true };
+              return savedRecord.update().then(function() {
+                return { record: savedRecord, isCreated: true };
+              });
             });
           });
       }
