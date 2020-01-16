@@ -1,4 +1,4 @@
-<label class="switch-mermaid" title={{toggleTooltip}}>
+<label class="switch-mermaid" title={{toggleTooltip}} >
   <input type="checkbox" ng-model="toggleOffline" ng-click="switchControl()">
-  <span class="slider-mermaid round"></span>
+  <span class="slider-mermaid round" ng-class="{false: '', true: 'slider-disabled'}[sliderDisabled]"></span>
 </label>

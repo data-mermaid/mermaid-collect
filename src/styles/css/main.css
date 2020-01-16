@@ -1431,6 +1431,11 @@ ul li.transect-buttons[disabled] {
   transition: .4s;
 }
 
+.slider-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .slider-mermaid:before {
   position: absolute;
   content: "";
