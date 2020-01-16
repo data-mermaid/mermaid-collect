@@ -187,11 +187,11 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        siteRecordsCount &&
-        `${$scope.tableControl.records.length}/${siteRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+
+      return `${tableRecordsTotal}/${siteRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
@@ -201,11 +201,7 @@ angular.module('app.project').controller('SitesCtrl', [
       ) {
         updateSiteCount();
       }
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === siteRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.mapopts = {

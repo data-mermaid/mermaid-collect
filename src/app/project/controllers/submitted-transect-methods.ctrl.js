@@ -121,11 +121,21 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           display: 'Sample Date',
           sortable: true,
           formatter: function(v) {
-            let val = '';
+            let dateResult = '';
             if (v) {
-              val = $filter('date')(new Date(v), 'dd-MMM-yyyy');
+              const dateVal = v.split('-').map(function(val) {
+                return Number(val);
+              });
+              if (dateVal.length >= 3) {
+                const newDateVal = new Date(
+                  dateVal[0],
+                  dateVal[1] - 1,
+                  dateVal[2]
+                );
+                dateResult = $filter('date')(newDateVal, 'dd-MMM-yyyy');
+              }
             }
-            return val;
+            return dateResult;
           }
         },
         {
@@ -267,28 +277,24 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         submittedRecordsCount = val.count;
       });
     $scope.tableControl.getFilteredRecordsCount = function() {
-      return (
-        $scope.tableControl.records &&
-        submittedRecordsCount &&
-        `${$scope.tableControl.records.length}/${submittedRecordsCount}`
-      );
+      const tableRecordsTotal =
+        $scope.tableControl.getPaginationTable() &&
+        $scope.tableControl.getPaginationTable().total;
+      return `${tableRecordsTotal}/${submittedRecordsCount}`;
     };
 
     $scope.tableControl.recordsNotFiltered = function() {
-      return (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length === submittedRecordsCount &&
-        !$scope.tableControl.textboxFilterUsed()
-      );
+      return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.tableControl.noAppliedFilters = function() {
+      const searchBoxNotUsed = !$scope.tableControl.textboxFilterUsed();
       const methodStorage = checkLocalStorage(
         'all',
         protocolMethods,
         'submit_methodfilter'
       );
-      return methodStorage;
+      return searchBoxNotUsed && methodStorage;
     };
 
     const buttons = [];

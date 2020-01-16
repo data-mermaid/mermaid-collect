@@ -1,7 +1,6 @@
 angular.module('mermaid.libs').service('layoutUtils', [
   function() {
     'use strict';
-
     const activateNavItem = function(state) {
       const toQry = 'a[data-ui-sref="' + state + '"]';
       const $navItem = $(toQry);
@@ -9,7 +8,15 @@ angular.module('mermaid.libs').service('layoutUtils', [
       const navTreeLength = $navTree.length - 1; //also refers the index of menu collapse item such as Fish Name in Reference site.
 
       for (let i = navTreeLength; i >= 0; i--) {
-        $($navTree[i]).addClass('active');
+        if (
+          !(
+            $($navTree[i]).hasClass('dropdown-menu-right') ||
+            $($navTree[i]).hasClass('top-menu-link') ||
+            $($navTree[i]).has('span')
+          )
+        ) {
+          $($navTree[i]).addClass('active');
+        }
       }
     };
 
