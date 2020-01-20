@@ -1,0 +1,28 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+
+  <h1>Projects</h1>
+  <div ng-repeat="rec in projects track by $index" style="margin-bottom: 20px;">
+    <code>{{rec | json}}</code>
+  </div> 
+
+  <h1>Sites</h1>
+  <div ng-repeat="rec in sites track by $index" style="margin-bottom: 20px;">
+    <code>{{rec | json}}</code>
+  </div>  
+  
+  <h1>Managements</h1>
+  <div ng-repeat="rec in managements track by $index" style="margin-bottom: 20px;">
+    <code>{{rec | json}}</code>
+  </div>  
+  
+  <h1>Project Profiles</h1>
+  <div ng-repeat="rec in projectProfiles track by $index" style="margin-bottom: 20px;">
+    <code>{{rec | json}}</code>
+  </div>  
+  
+  <h1>Collect Records</h1>
+  <div ng-repeat="rec in collectRecords track by $index" style="margin-bottom: 20px;">
+    <code>{{rec | json}}</code>
+  </div>  
+</div>

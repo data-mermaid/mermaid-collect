@@ -1,10 +1,10 @@
 angular.module('app.project').service('SiteService', [
   '$q',
-  'offlineservice',
+  'OfflineTableUtils',
   'authService',
   'APP_CONFIG',
   '$window',
-  function($q, offlineservice, authService, APP_CONFIG, $window) {
+  function($q, OfflineTableUtils, authService, APP_CONFIG, $window) {
     'use strict';
 
     var save = function(site, options) {
@@ -21,11 +21,11 @@ angular.module('app.project').service('SiteService', [
       }
       if (!site.id) {
         site.project = projectId;
-        return offlineservice
-          .ProjectSitesTable(projectId)
-          .then(function(table) {
-            return table.create(site);
-          });
+        return OfflineTableUtils.ProjectSitesTable(projectId).then(function(
+          table
+        ) {
+          return table.create(site);
+        });
       }
       return site.update();
     };
@@ -34,7 +34,9 @@ angular.module('app.project').service('SiteService', [
       if (siteId == null) {
         return $q.resolve({ project: projectId });
       }
-      return offlineservice.ProjectSitesTable(projectId).then(function(table) {
+      return OfflineTableUtils.ProjectSitesTable(projectId).then(function(
+        table
+      ) {
         return table.get(siteId).then(function(site) {
           site = site || { project: projectId };
           if (site.location != null) {

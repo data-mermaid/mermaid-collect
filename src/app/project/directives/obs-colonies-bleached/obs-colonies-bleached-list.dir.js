@@ -1,12 +1,12 @@
 angular.module('app.project').directive('obsColoniesBleachedList', [
-  'offlineservice',
+  'OfflineTableUtils',
   'utils',
   '$timeout',
   'ModalService',
   'BenthicAttributeService',
   'ValidatorService',
   function(
-    offlineservice,
+    OfflineTableUtils,
     utils,
     $timeout,
     ModalService,
@@ -41,7 +41,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
         };
         scope.rowErrors = [];
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineTableUtils.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;

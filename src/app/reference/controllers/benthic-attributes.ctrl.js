@@ -4,7 +4,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
   '$state',
   'PaginatedOfflineTableWrapper',
   'Button',
-  'offlineservice',
+  'OfflineTableUtils',
   'utils',
   '$filter',
   '$q',
@@ -14,7 +14,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     $state,
     PaginatedOfflineTableWrapper,
     Button,
-    offlineservice,
+    OfflineTableUtils,
     utils,
     $filter,
     $q
@@ -88,7 +88,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       });
     };
 
-    const promise = offlineservice.BenthicAttributesTable();
+    const promise = OfflineTableUtils.BenthicAttributesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateBenthicAttributeCount();

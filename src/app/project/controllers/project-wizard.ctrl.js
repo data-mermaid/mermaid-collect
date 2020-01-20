@@ -4,7 +4,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
   '$state',
   '$http',
   'APP_CONFIG',
-  'offlineservice',
+  'OfflineTableUtils',
   'authService',
   'utils',
   'PaginatedArrayWrapper',
@@ -24,7 +24,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     $state,
     $http,
     APP_CONFIG,
-    offlineservice,
+    OfflineTableUtils,
     authService,
     utils,
     PaginatedArrayWrapper,
@@ -105,8 +105,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       });
     };
 
-    offlineservice
-      .ChoicesTable()
+    OfflineTableUtils.ChoicesTable()
       .then(function(table) {
         return table.filter().then(function(choices) {
           _.each(choices, function(choice_set) {

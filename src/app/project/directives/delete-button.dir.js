@@ -3,8 +3,8 @@ angular.module('app.project').directive('deleteButton', [
   '$state',
   'ProjectService',
   '$stateParams',
-  'offlineservice',
-  function(utils, $state, ProjectService, $stateParams, offlineservice) {
+  'OfflineTableUtils',
+  function(utils, $state, ProjectService, $stateParams, OfflineTableUtils) {
     'use strict';
 
     return {
@@ -41,7 +41,7 @@ angular.module('app.project').directive('deleteButton', [
               }
               return promise.then(function() {
                 $state.go(scope.state);
-                offlineservice.ProjectsTable().then(function(table) {
+                OfflineTableUtils.ProjectsTable().then(function(table) {
                   return table.get(projectId).then(function(record) {
                     return record.update();
                   });

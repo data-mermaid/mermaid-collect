@@ -8,7 +8,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'utils',
   'Button',
   'authService',
-  'offlineservice',
+  'OfflineTableUtils',
   'PaginatedOfflineTableWrapper',
   'ProjectService',
   'ValidateSubmitService',
@@ -23,7 +23,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     utils,
     Button,
     authService,
-    offlineservice,
+    OfflineTableUtils,
     PaginatedOfflineTableWrapper,
     ProjectService,
     ValidateSubmitService,
@@ -37,7 +37,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     const project_id = $stateParams.project_id;
     const promises = [
       authService.getCurrentUser(),
-      offlineservice.CollectRecordsTable(project_id)
+      OfflineTableUtils.CollectRecordsTable(project_id)
     ];
 
     $scope.choices = {};
@@ -510,7 +510,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       });
     });
 
-    offlineservice.ProjectSitesTable(project_id).then(function(table) {
+    OfflineTableUtils.ProjectSitesTable(project_id).then(function(table) {
       table.filter().then(function(sites) {
         $scope.choices.sites = _.map(sites, function(site) {
           return { id: site.id, name: site.name };

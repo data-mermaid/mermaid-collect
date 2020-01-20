@@ -3,7 +3,7 @@ angular.module('app.project').service('BenthicBaseWizardConfig', [
   '$q',
   '$filter',
   'BaseWizardConfig',
-  'offlineservice',
+  'OfflineTableUtils',
   'ValidateSubmitService',
   'ProjectService',
   function(
@@ -11,7 +11,7 @@ angular.module('app.project').service('BenthicBaseWizardConfig', [
     $q,
     $filter,
     BaseWizardConfig,
-    offlineservice,
+    OfflineTableUtils,
     ValidateSubmitService,
     ProjectService
   ) {
@@ -24,11 +24,11 @@ angular.module('app.project').service('BenthicBaseWizardConfig', [
         'app/project/protocol_wizard_configs/partials/benthic_transect.tpl.html',
       resolve: {
         sites: function() {
-          return offlineservice
-            .ProjectSitesTable(projectId)
-            .then(function(table) {
-              return table.filter();
-            });
+          return OfflineTableUtils.ProjectSitesTable(projectId).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         },
         relativedepths: function() {
           return ProjectService.fetchChoices().then(function(choices) {

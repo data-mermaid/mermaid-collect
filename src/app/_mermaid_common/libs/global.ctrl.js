@@ -4,7 +4,7 @@ angular.module('mermaid.libs').controller('GlobalCtrl', [
   'connectivity',
   'ConnectivityFactory',
   'authService',
-  'offlineservice',
+  'OfflineTableUtils',
   'utils',
   function(
     system,
@@ -12,7 +12,7 @@ angular.module('mermaid.libs').controller('GlobalCtrl', [
     connectivity,
     ConnectivityFactory,
     authService,
-    offlineservice,
+    OfflineTableUtils,
     utils
   ) {
     'use strict';
@@ -34,11 +34,11 @@ angular.module('mermaid.libs').controller('GlobalCtrl', [
 
     $scope.logout = function() {
       var lo = function() {
-        offlineservice.deleteDatabases().finally(function() {
+        OfflineTableUtils.deleteDatabases().finally(function() {
           authService.logout();
         });
       };
-      offlineservice.isSynced().then(function(is_synced) {
+      OfflineTableUtils.isSynced().then(function(is_synced) {
         if (is_synced === false) {
           utils.showConfirmation(
             lo,

@@ -5,17 +5,21 @@ angular
     '$http',
     '$q',
     'authService',
-    'offlineservice',
+    'OfflineTableUtils',
     'utils',
     'APP_CONFIG',
+    'OfflineTables',
+    'OfflineCommonTables',
     'blockUI',
     function(
       $http,
       $q,
       authService,
-      offlineservice,
+      OfflineTableUtils,
       utils,
       APP_CONFIG,
+      OfflineTables,
+      OfflineCommonTables,
       blockUI
     ) {
       'use strict';
@@ -143,7 +147,7 @@ angular
       };
 
       ProjectService.loadLookupTables = function() {
-        return offlineservice.loadLookupTables().then(function(tables) {
+        return OfflineTableUtils.loadLookupTables().then(function(tables) {
           // Format choices
           var choicesTable = _.find(tables, {
             name: APP_CONFIG.localDbName + '-choices'
@@ -155,7 +159,7 @@ angular
       var loadProject = function(projectId) {
         var promises = [];
         if (projectId != null) {
-          promises.push(offlineservice.loadProjectRelatedTables(projectId));
+          promises.push(OfflineTableUtils.loadProjectRelatedTables(projectId));
         } else {
           promises.push($q.resolve(null));
         }
@@ -191,7 +195,9 @@ angular
       ProjectService.loadProject = function(projectId) {
         var isProjectOfflinePromise;
         if (projectId != null) {
-          isProjectOfflinePromise = offlineservice.isProjectOffline(projectId);
+          isProjectOfflinePromise = OfflineTableUtils.isProjectOffline(
+            projectId
+          );
         } else {
           isProjectOfflinePromise = $q.resolve(true);
         }
@@ -208,7 +214,7 @@ angular
       };
 
       ProjectService.fetchChoices = function() {
-        return offlineservice.ChoicesTable().then(function(table) {
+        return OfflineTableUtils.ChoicesTable().then(function(table) {
           return table.filter().then(function(choices) {
             return _.reduce(
               choices,
@@ -225,7 +231,7 @@ angular
       ProjectService.getMyProjectProfile = function(project_id) {
         var promises = [
           authService.getCurrentUser(),
-          offlineservice.ProjectProfilesTable(project_id)
+          OfflineTableUtils.ProjectProfilesTable(project_id)
         ];
 
         return $q
@@ -349,6 +355,49 @@ angular
           '/transfer_sample_units/';
         var data = { from_profile: fromProfileId, to_profile: toProfileId };
         return $http.put(transformOwnershipUrl, data);
+      };
+
+      ProjectService.isProjectOffline = function(projectId) {
+        if (projectId == null) {
+          throw 'projectId is required';
+        }
+
+        const databaseNamesPromise = OfflineTableUtils.getDatabaseNames();
+        const projectTableNamePromise = OfflineTables.getProjectTableName();
+        const projectTableNamesPromise = OfflineTables.getProjectTableNames(
+          OfflineTables.PROJECT_TABLE_NAMES
+        );
+        const commonTableNamesPromise = OfflineCommonTables.getTableNames(
+          OfflineTables.TABLE_NAMES
+        );
+        const projectRecordPromise = OfflineTables.ProjectsTable(true).then(
+          function(table) {
+            return table.get(projectId).then(function(record) {
+              return record !== null;
+            });
+          }
+        );
+
+        return $q
+          .all([
+            databaseNamesPromise,
+            projectTableNamePromise,
+            projectTableNamesPromise,
+            commonTableNamesPromise,
+            projectRecordPromise
+          ])
+          .then(function(results) {
+            const databaseNames = new Set(results[0]);
+            const tables = [results[1]].concat(results[2], results[3]);
+            const projectRecord = results[4];
+
+            for (let i = 0; i < tables.length; i++) {
+              if (databaseNames.has(tables[i]) === false) {
+                return false;
+              }
+            }
+            return projectRecord !== null;
+          });
       };
 
       return ProjectService;

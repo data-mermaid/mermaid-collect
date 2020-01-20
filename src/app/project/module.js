@@ -75,21 +75,21 @@ angular
       return authService.getCurrentUser();
     };
 
-    const _fetchCollectRecord = function($stateParams, offlineservice) {
-      return offlineservice
-        .CollectRecordsTable($stateParams.project_id)
-        .then(function(table) {
-          return table.get($stateParams.id);
-        });
+    const _fetchCollectRecord = function($stateParams, OfflineTableUtils) {
+      return OfflineTableUtils.CollectRecordsTable(
+        $stateParams.project_id
+      ).then(function(table) {
+        return table.get($stateParams.id);
+      });
     };
 
     const _fetchTransectLookups = function($stateParams, TransectService) {
       return TransectService.getLookups($stateParams.project_id);
     };
 
-    const _getProject = function($stateParams, offlineservice, $q) {
+    const _getProject = function($stateParams, OfflineTableUtils, $q) {
       const projectId = $stateParams.project_id;
-      return offlineservice.ProjectsTable().then(function(table) {
+      return OfflineTableUtils.ProjectsTable().then(function(table) {
         if (projectId == null) {
           return $q.resolve({});
         }
@@ -99,8 +99,8 @@ angular
       });
     };
 
-    const _getProjectsTable = function(offlineservice) {
-      return offlineservice.ProjectsTable();
+    const _getProjectsTable = function(OfflineTableUtils) {
+      return OfflineTableUtils.ProjectsTable();
     };
 
     const checkAuthentication = function($transition$) {
@@ -625,17 +625,17 @@ angular
           }
         },
         resolve: {
-          sites: function($stateParams, offlineservice) {
+          sites: function($stateParams, OfflineTableUtils) {
             const project_id = $stateParams.project_id;
-            return offlineservice
-              .ProjectSitesTable(project_id)
-              .then(function(table) {
+            return OfflineTableUtils.ProjectSitesTable(project_id).then(
+              function(table) {
                 return table.filter().then(function(sites) {
                   return _.map(sites, function(site) {
                     return { id: site.id, name: site.name };
                   });
                 });
-              });
+              }
+            );
           }
         }
       });

@@ -5,7 +5,7 @@ angular.module('app.project').controller('ResolveDuplicateSitesCtrl', [
   '$filter',
   'similarObjs',
   'choices',
-  'offlineservice',
+  'OfflineTableUtils',
   function(
     $controller,
     $scope,
@@ -13,7 +13,7 @@ angular.module('app.project').controller('ResolveDuplicateSitesCtrl', [
     $filter,
     similarObjs,
     choices,
-    offlineservice
+    OfflineTableUtils
   ) {
     'use strict';
 
@@ -21,7 +21,7 @@ angular.module('app.project').controller('ResolveDuplicateSitesCtrl', [
     $ctrl.$uibModalInstance = $uibModalInstance;
     $ctrl.similarObjs = similarObjs;
     $ctrl.modalTitle = 'Select site to keep?';
-    $ctrl.projectTableFx = offlineservice.ProjectSitesTable;
+    $ctrl.projectTableFx = OfflineTableUtils.ProjectSitesTable;
     $ctrl.replaceEndpoint = '/find_and_replace_sites/';
     $ctrl.buttonObjLabel = 'site';
     $ctrl.note = 'Site notes will be combined into the site being kept.';

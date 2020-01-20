@@ -2,8 +2,13 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   '$rootScope',
   '$scope',
   'PaginatedOfflineTableWrapper',
-  'offlineservice',
-  function($rootScope, $scope, PaginatedOfflineTableWrapper, offlineservice) {
+  'OfflineTableUtils',
+  function(
+    $rootScope,
+    $scope,
+    PaginatedOfflineTableWrapper,
+    OfflineTableUtils
+  ) {
     'use strict';
 
     $scope.resource = null;
@@ -55,7 +60,7 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       });
     };
 
-    const promise = offlineservice.FishFamiliesTable();
+    const promise = OfflineTableUtils.FishFamiliesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateFishFamilyCount();

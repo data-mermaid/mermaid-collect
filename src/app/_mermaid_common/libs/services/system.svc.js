@@ -2,9 +2,9 @@ angular.module('mermaid.libs').service('system', [
   '$rootScope',
   '$window',
   '$timeout',
-  'offlineservice',
+  'OfflineTableUtils',
   'connectivity',
-  function($rootScope, $window, $timeout, offlineservice, connectivity) {
+  function($rootScope, $window, $timeout, OfflineTableUtils, connectivity) {
     'use strict';
 
     var DATA_REFRESH_RATE = 900000; // 15 minutes
@@ -31,7 +31,7 @@ angular.module('mermaid.libs').service('system', [
 
       $timeout.cancel(autoDataUpdateId);
       return $timeout(function() {
-        offlineservice.refreshAll().then(function() {
+        OfflineTableUtils.refreshAll().then(function() {
           autoDataUpdateId = createUpdateTimer(DATA_REFRESH_RATE);
           $rootScope.$broadcast('localdb:refreshall');
         });

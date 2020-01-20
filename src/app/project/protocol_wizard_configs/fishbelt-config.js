@@ -3,7 +3,7 @@ angular.module('app.project').service('FishBeltWizardConfig', [
   '$q',
   '$filter',
   'BaseWizardConfig',
-  'offlineservice',
+  'OfflineTableUtils',
   'ValidateSubmitService',
   'TransectService',
   'ProjectService',
@@ -12,7 +12,7 @@ angular.module('app.project').service('FishBeltWizardConfig', [
     $q,
     $filter,
     BaseWizardConfig,
-    offlineservice,
+    OfflineTableUtils,
     ValidateSubmitService,
     TransectService,
     ProjectService
@@ -37,11 +37,11 @@ angular.module('app.project').service('FishBeltWizardConfig', [
         'app/project/protocol_wizard_configs/partials/fishbelt_transect.tpl.html',
       resolve: {
         sites: function() {
-          return offlineservice
-            .ProjectSitesTable(projectId)
-            .then(function(table) {
-              return table.filter();
-            });
+          return OfflineTableUtils.ProjectSitesTable(projectId).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         },
         relativedepths: function() {
           return ProjectService.fetchChoices().then(function(choices) {

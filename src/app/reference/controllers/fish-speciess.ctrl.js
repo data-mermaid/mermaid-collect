@@ -4,27 +4,27 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
   '$filter',
   '$q',
   'PaginatedOfflineTableWrapper',
-  'offlineservice',
+  'OfflineTableUtils',
   function(
     $rootScope,
     $scope,
     $filter,
     $q,
     PaginatedOfflineTableWrapper,
-    offlineservice
+    OfflineTableUtils
   ) {
     'use strict';
     $scope.resource = null;
     $scope.tableControl = {};
     let fishSpeciesRecordsCount = 0;
 
-    const promiseFishGeneraTable = offlineservice
-      .FishGeneraTable()
-      .then(function(table) {
+    const promiseFishGeneraTable = OfflineTableUtils.FishGeneraTable().then(
+      function(table) {
         return table.filter().then(function(records) {
           $scope.tableControl.fishgenera = records;
         });
-      });
+      }
+    );
 
     $scope.tableConfig = {
       id: 'fishspecies',
@@ -80,7 +80,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       });
     };
 
-    const promise = offlineservice.FishSpeciesTable();
+    const promise = OfflineTableUtils.FishSpeciesTable();
     $q.all([promise, promiseFishGeneraTable]).then(function(tables) {
       $scope.projectObjectsTable = tables[0];
       updateFishSpeciesCount();

@@ -2,7 +2,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
   '$rootScope',
   '$scope',
   '$state',
-  'offlineservice',
+  'OfflineTableUtils',
   'PaginatedOfflineTableWrapper',
   'Button',
   'dataPolicies',
@@ -12,7 +12,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     $rootScope,
     $scope,
     $state,
-    offlineservice,
+    OfflineTableUtils,
     PaginatedOfflineTableWrapper,
     Button,
     dataPolicies,
@@ -95,7 +95,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     };
 
     $scope.resource = null;
-    offlineservice.ProjectsTable().then(function(table) {
+    OfflineTableUtils.ProjectsTable().then(function(table) {
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name', 'countries']
       });
@@ -119,7 +119,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     conn.on('project-connectivity', function(event) {
       startProjectButton.visible = event.event === 'online';
       if (event.event === 'offline') {
-        offlineservice.getOfflineProjects().then(function(results) {
+        OfflineTableUtils.getOfflineProjects().then(function(results) {
           $scope.tableConfig.filters.id = function(projectId) {
             return results[projectId];
           };

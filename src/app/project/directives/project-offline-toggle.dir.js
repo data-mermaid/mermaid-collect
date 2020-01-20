@@ -1,7 +1,7 @@
 angular.module('app.project').directive('projectOfflineToggle', [
-  'offlineservice',
+  'OfflineTableUtils',
   'ProjectService',
-  function(offlineservice, ProjectService) {
+  function(OfflineTableUtils, ProjectService) {
     'use strict';
     return {
       restrict: 'E',
@@ -19,16 +19,16 @@ angular.module('app.project').directive('projectOfflineToggle', [
         scope.toggleOffline = function() {
           var promise;
           if (scope.isAvailableOffline) {
-            promise = offlineservice.clearDatabases(scope.projectId);
+            promise = OfflineTableUtils.clearDatabases(scope.projectId);
           } else {
             promise = ProjectService.loadProject(scope.projectId);
           }
           promise.then(function() {
-            offlineservice
-              .isProjectOffline(scope.projectId)
-              .then(function(isOffline) {
-                scope.isAvailableOffline = isOffline;
-              });
+            OfflineTableUtils.isProjectOffline(scope.projectId).then(function(
+              isOffline
+            ) {
+              scope.isAvailableOffline = isOffline;
+            });
           });
         };
 
@@ -37,11 +37,11 @@ angular.module('app.project').directive('projectOfflineToggle', [
             scope.isProjectOffline = false;
             return;
           }
-          offlineservice
-            .isProjectOffline(scope.projectId)
-            .then(function(isOffline) {
-              scope.isAvailableOffline = isOffline;
-            });
+          OfflineTableUtils.isProjectOffline(scope.projectId).then(function(
+            isOffline
+          ) {
+            scope.isAvailableOffline = isOffline;
+          });
         });
       }
     };

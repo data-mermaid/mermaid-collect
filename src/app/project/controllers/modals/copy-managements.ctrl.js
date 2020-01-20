@@ -4,7 +4,7 @@ angular.module('app.project').controller('CopyManagementsCtrl', [
   '$q',
   '$stateParams',
   'Management',
-  'offlineservice',
+  'OfflineTableUtils',
   'utils',
   'Button',
   'PaginatedArrayWrapper',
@@ -15,7 +15,7 @@ angular.module('app.project').controller('CopyManagementsCtrl', [
     $q,
     $stateParams,
     Management,
-    offlineservice,
+    OfflineTableUtils,
     utils,
     Button,
     PaginatedArrayWrapper,
@@ -60,8 +60,7 @@ angular.module('app.project').controller('CopyManagementsCtrl', [
       setButtonEnable(false);
       var records = $scope.control.getSelectedRecords();
       var recordCount = records.length;
-      return offlineservice
-        .ProjectManagementsTable(projectId)
+      return OfflineTableUtils.ProjectManagementsTable(projectId)
         .then(function(managementsTable) {
           var promises = _.map(records, function(management) {
             management.predecessor = management.id;

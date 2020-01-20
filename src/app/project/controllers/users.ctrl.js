@@ -1,7 +1,7 @@
 angular.module('app.project').controller('UsersCtrl', [
   '$scope',
   '$stateParams',
-  'offlineservice',
+  'OfflineTableUtils',
   'utils',
   '$q',
   'Profile',
@@ -12,7 +12,7 @@ angular.module('app.project').controller('UsersCtrl', [
   function(
     $scope,
     $stateParams,
-    offlineservice,
+    OfflineTableUtils,
     utils,
     $q,
     Profile,
@@ -42,7 +42,7 @@ angular.module('app.project').controller('UsersCtrl', [
     });
 
     $scope.tableControl.choices = {};
-    offlineservice.ChoicesTable().then(function(table) {
+    OfflineTableUtils.ChoicesTable().then(function(table) {
       table
         .filter({
           name: 'roles'
@@ -57,8 +57,7 @@ angular.module('app.project').controller('UsersCtrl', [
     $scope.tableControl.roles = utils.roles;
 
     $scope.tableControl.removeUser = function(record) {
-      return offlineservice
-        .CollectRecordsTable(project_id)
+      return OfflineTableUtils.CollectRecordsTable(project_id)
         .then(function(table) {
           return table.count({ profile: record.profile });
         })
@@ -86,7 +85,9 @@ angular.module('app.project').controller('UsersCtrl', [
     };
 
     var userPromise = authService.getCurrentUser();
-    var projectProfilePromise = offlineservice.ProjectProfilesTable(project_id);
+    var projectProfilePromise = OfflineTableUtils.ProjectProfilesTable(
+      project_id
+    );
 
     $q.all([userPromise, projectProfilePromise]).then(function(results) {
       $scope.tableControl.currentUser = results[0];
@@ -210,7 +211,7 @@ angular.module('app.project').controller('UsersCtrl', [
             );
             msg += ' transferred';
             utils.showAlert('Success', msg, utils.statuses.success, 5000);
-            return offlineservice.CollectRecordsTable(project_id);
+            return OfflineTableUtils.CollectRecordsTable(project_id);
           })
           .catch(function(err) {
             if (err.status !== 500) {

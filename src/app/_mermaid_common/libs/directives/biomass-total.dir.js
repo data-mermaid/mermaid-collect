@@ -1,8 +1,8 @@
 angular.module('mermaid.libs').directive('biomassTotal', [
   '$timeout',
-  'offlineservice',
+  'OfflineTableUtils',
   'TransectService',
-  function($timeout, offlineservice, TransectService) {
+  function($timeout, OfflineTableUtils, TransectService) {
     'use strict';
     return {
       restrict: 'EA',

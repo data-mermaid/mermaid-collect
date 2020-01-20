@@ -26,9 +26,16 @@ angular.module('app.project').service('BaseWizardConfig', [
   '$q',
   '$filter',
   'utils',
-  'offlineservice',
+  'OfflineTableUtils',
   'TransectService',
-  function($stateParams, $q, $filter, utils, offlineservice, TransectService) {
+  function(
+    $stateParams,
+    $q,
+    $filter,
+    utils,
+    OfflineTableUtils,
+    TransectService
+  ) {
     'use strict';
     var service = {};
     var projectId = $stateParams.project_id;
@@ -40,7 +47,7 @@ angular.module('app.project').service('BaseWizardConfig', [
           .getDisplayValue(
             _.get(record.data, 'sample_event.site'),
             'name',
-            offlineservice.ProjectSitesTable(projectId)
+            OfflineTableUtils.ProjectSitesTable(projectId)
           )
           .then(function(val) {
             if (val !== null) {
@@ -64,7 +71,7 @@ angular.module('app.project').service('BaseWizardConfig', [
           .getDisplayValue(
             _.get(record.data, 'sample_event.management'),
             'name',
-            offlineservice.ProjectManagementsTable(projectId)
+            OfflineTableUtils.ProjectManagementsTable(projectId)
           )
           .then(function(val) {
             return val
@@ -117,11 +124,11 @@ angular.module('app.project').service('BaseWizardConfig', [
         'app/project/protocol_wizard_configs/partials/observers.tpl.html',
       resolve: {
         projectProfiles: function() {
-          return offlineservice
-            .ProjectProfilesTable(projectId)
-            .then(function(table) {
+          return OfflineTableUtils.ProjectProfilesTable(projectId).then(
+            function(table) {
               return table.filter();
-            });
+            }
+          );
         }
       }
     };

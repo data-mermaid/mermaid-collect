@@ -1,5 +1,5 @@
 angular.module('app.project').directive('obsBenthicLitList', [
-  'offlineservice',
+  'OfflineTableUtils',
   'TransectService',
   'utils',
   '$timeout',
@@ -7,7 +7,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
   'ValidatorService',
   'ModalService',
   function(
-    offlineservice,
+    OfflineTableUtils,
     TransectService,
     utils,
     $timeout,
@@ -92,7 +92,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
           });
         };
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineTableUtils.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;

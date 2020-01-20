@@ -3,13 +3,13 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
   '$scope',
   '$filter',
   'PaginatedOfflineTableWrapper',
-  'offlineservice',
+  'OfflineTableUtils',
   function(
     $rootScope,
     $scope,
     $filter,
     PaginatedOfflineTableWrapper,
-    offlineservice
+    OfflineTableUtils
   ) {
     'use strict';
 
@@ -17,7 +17,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     $scope.tableControl = {};
     let fishGenusRecordsCount = 0;
 
-    offlineservice.FishFamiliesTable().then(function(table) {
+    OfflineTableUtils.FishFamiliesTable().then(function(table) {
       return table.filter().then(function(records) {
         $scope.fishfamilies = records;
       });
@@ -77,7 +77,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       });
     };
 
-    const promise = offlineservice.FishGeneraTable();
+    const promise = OfflineTableUtils.FishGeneraTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateFishGenusCount();
