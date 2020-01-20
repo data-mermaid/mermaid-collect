@@ -9,23 +9,21 @@ angular.module('mermaid.libs').directive('offlineControl', [
         'app/_mermaid_common/libs/directives/offline-control.tpl.html',
       link: function(scope) {
         const conn = new ConnectivityFactory(scope);
-        scope.toggleOffline = false;
+        scope.toggleOffline = !connectivity.isOnline;
         scope.sliderDisabled = false;
 
         scope.switchControl = function() {
           if (scope.toggleOffline) {
             connectivity.setToggle(true);
-            connectivity.stopPing();
           } else {
             connectivity.setToggle(false);
-            connectivity.ping();
           }
         };
 
         conn.on('offline-control', function(event) {
           scope.toggleOffline = event.event !== 'online';
           scope.sliderDisabled =
-            event.event === 'offline' && !connectivity.toggleDisabled();
+            event.event === 'offline' && connectivity.toggleDisabled();
         });
 
         scope.$watch(
