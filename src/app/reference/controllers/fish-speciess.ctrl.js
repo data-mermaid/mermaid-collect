@@ -242,6 +242,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     fieldReportButton.classes = 'btn-success';
     fieldReportButton.icon = 'fa fa-download';
     fieldReportButton.enabled = true;
+    fieldReportButton.onlineOnly = false;
     fieldReportButton.click = function() {
       downloadFieldReport();
     };
