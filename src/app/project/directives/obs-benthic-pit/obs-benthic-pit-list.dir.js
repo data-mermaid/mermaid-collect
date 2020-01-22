@@ -207,7 +207,8 @@ angular.module('app.project').directive('obsBenthicPitList', [
         $(window).click(function(evt) {
           if (
             evt.target.classList.contains('addRow') ||
-            benthicAttributeNames.includes(evt.target.outerText)
+            benthicAttributeNames.includes(evt.target.outerText) ||
+            benthicAttributeNames.includes(evt.target.textContent)
           ) {
             return;
           }

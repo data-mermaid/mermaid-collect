@@ -322,6 +322,7 @@ input::-webkit-inner-spin-button {
 .dropdown.top-menu-link {
   margin-right: -5px;
   margin-left: 4px;
+  width: 85px;
 }
 
 .top-menu-link span a{
