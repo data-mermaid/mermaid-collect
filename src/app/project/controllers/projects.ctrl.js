@@ -99,6 +99,17 @@ angular.module('app.project').controller('ProjectsCtrl', [
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name', 'countries']
       });
+      if (!connectivity.isOnline) {
+        offlineservice.getOfflineProjects().then(function(results) {
+          $scope.tableConfig.filters.id = function(projectId) {
+            return results[projectId];
+          };
+          $scope.tableControl.refresh(true);
+        });
+      } else {
+        delete $scope.tableConfig.filters.id;
+        $scope.tableControl.refresh(true);
+      }
     });
 
     const startProject = function() {
