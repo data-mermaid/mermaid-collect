@@ -25,25 +25,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
   ) {
     'use strict';
 
-    // const projectsTableName = APP_CONFIG.localDbName + '-projects_v2';
-    // const deleteProjectPromises = {};
-    // var projectRelatedTableBaseNames = [
-    //   'projectsites',
-    //   'projectmanagements',
-    //   'project_profiles',
-    //   'collectrecords'
-    // ];
-    // var nonProjectRelatedTableNames = [
-    //   'choices',
-    //   'fishattributes',
-    //   'fishsizes',
-    //   'fishfamilies',
-    //   'fishgenera',
-    //   'fishspecies',
-    //   'benthicattributes',
-    //   'projecttags'
-    // ];
-
     const getDatabaseNames = function() {
       return Dexie.getDatabaseNames(function(names) {
         return _.filter(names, function(name) {
@@ -99,62 +80,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
           return regx.test(name);
         });
       });
-    };
-
-    // const isProjectOffline = function(projectId) {
-    //   // TODO Refactor isProjectOffline
-    //   throw 'TODO Refactor isProjectOffline';
-
-    //   if (projectId == null) {
-    //     throw 'projectId is required';
-    //   }
-    //   var baseName;
-    //   var tableName;
-    //   return getDatabaseNames().then(function(names) {
-    //     for (var i = 0; i < projectRelatedTableBaseNames.length; i++) {
-    //       baseName = projectRelatedTableBaseNames[i];
-    //       tableName = APP_CONFIG.localDbName + '-' + baseName + '-' + projectId;
-    //       if (names.indexOf(tableName) === -1) {
-    //         return false;
-    //       }
-    //     }
-
-    //     for (var j = 0; j < nonProjectRelatedTableNames.length; j++) {
-    //       baseName = nonProjectRelatedTableNames[i];
-    //       tableName = APP_CONFIG.localDbName + '-' + baseName;
-    //       if (names.indexOf(tableName) === -1) {
-    //         return false;
-    //       }
-    //     }
-
-    //     return ProjectsTable(true).then(function(table) {
-    //       return table.get(projectId).then(function(record) {
-    //         return record !== null;
-    //       });
-    //     });
-    //   });
-    // };
-
-    const getOfflineProjects = function() {
-      return ProjectsTable(true)
-        .then(function(table) {
-          return table.filter();
-        })
-        .then(function(projects) {
-          return $q.all(
-            _.map(projects, function(project) {
-              const projectId = project.id;
-              return isProjectOffline(projectId).then(function(isOffline) {
-                const o = {};
-                o[projectId] = isOffline;
-                return o;
-              });
-            })
-          );
-        })
-        .then(function(results) {
-          return _.merge.apply(_, results);
-        });
     };
 
     const _refresh = function(table, limit) {
@@ -361,8 +286,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
       isSynced: isSynced,
       deleteDatabase: deleteDatabase,
       deleteDatabases: deleteDatabases,
-      // isProjectOffline: isProjectOffline,
-      getOfflineProjects: getOfflineProjects,
       getProjectTableNames: getProjectTableNames,
       projectIdFromTableName: projectIdFromTableName,
       createOfflineTable: createOfflineTable,

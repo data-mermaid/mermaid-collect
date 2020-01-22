@@ -8,6 +8,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
   'dataPolicies',
   'ConnectivityFactory',
   'connectivity',
+  'ProjectService',
   function(
     $rootScope,
     $scope,
@@ -17,7 +18,8 @@ angular.module('app.project').controller('ProjectsCtrl', [
     Button,
     dataPolicies,
     ConnectivityFactory,
-    connectivity
+    connectivity,
+    ProjectService
   ) {
     'use strict';
     $scope.tableControl = {};
@@ -119,7 +121,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     conn.on('project-connectivity', function(event) {
       startProjectButton.visible = event.event === 'online';
       if (event.event === 'offline') {
-        OfflineTableUtils.getOfflineProjects().then(function(results) {
+        ProjectService.getOfflineProjects().then(function(results) {
           $scope.tableConfig.filters.id = function(projectId) {
             return results[projectId];
           };

@@ -24,7 +24,7 @@ angular.module('app.project').directive('projectOfflineToggle', [
             promise = ProjectService.loadProject(scope.projectId);
           }
           promise.then(function() {
-            OfflineTableUtils.isProjectOffline(scope.projectId).then(function(
+            ProjectService.isProjectOffline(scope.projectId).then(function(
               isOffline
             ) {
               scope.isAvailableOffline = isOffline;
@@ -37,7 +37,7 @@ angular.module('app.project').directive('projectOfflineToggle', [
             scope.isProjectOffline = false;
             return;
           }
-          OfflineTableUtils.isProjectOffline(scope.projectId).then(function(
+          ProjectService.isProjectOffline(scope.projectId).then(function(
             isOffline
           ) {
             scope.isAvailableOffline = isOffline;

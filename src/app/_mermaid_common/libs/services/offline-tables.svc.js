@@ -30,6 +30,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
     'use strict';
 
     const deleteProjectPromises = {};
+    const PROJECT_NAME = 'projects_v2';
     const PROJECT_SITES_NAME = 'projectsites';
     const PROJECT_MANAGEMENTS_NAME = 'projectmanagements';
     const PROJECT_PROFILES_NAME = 'project_profiles';
@@ -100,67 +101,78 @@ angular.module('mermaid.libs').service('OfflineTables', [
       resource,
       resourceUrlName,
       projectId,
-      table_name,
+      tableName,
       options,
       skipRefresh
     ) {
       let remote_url;
-      table_name = table_name || resourceUrlName;
-      table_name += '-' + projectId;
+
+      tableName += '-' + projectId;
       options = _.merge(options || {}, {
         queryArgs: { project_pk: projectId }
       });
 
+      const tableNamePromise = getProjectTableNames(
+        projectId,
+        tableName,
+        options.excludeProfileId
+      );
+
       if (resourceUrlName) {
         remote_url = buildProjectRelatedRemoteUrl(resourceUrlName, projectId);
       }
-      return OfflineTableUtils.createOfflineTable(
-        APP_CONFIG.localDbName,
-        table_name,
-        remote_url,
-        resource,
-        options,
-        _.isFunction(options.refresh)
-          ? options.refresh
-          : OfflineTableUtils.paginatedRefresh,
-        skipRefresh
-      );
+      return tableNamePromise.then(function(name) {
+        return OfflineTableUtils.createOfflineTable(
+          APP_CONFIG.localDbName,
+          name,
+          remote_url,
+          resource,
+          options,
+          _.isFunction(options.refresh)
+            ? options.refresh
+            : OfflineTableUtils.paginatedRefresh,
+          skipRefresh
+        );
+      });
     };
 
     const ProjectsTable = function(skipRefresh) {
-      const tableName = 'projects_v2';
       const updatesUrl = APP_CONFIG.apiUrl + 'projects/updates/';
       const remoteUrl = APP_CONFIG.apiUrl + 'projects/';
 
-      const refreshProjects = function(table) {
-        if (connectivity.isOnline !== true) {
-          return $q.resolve(table);
-        }
+      return getProjectTableName().then(function(name) {
+        const tableName = name;
 
-        const opts = { tableName: tableName, updatesUrl: updatesUrl };
-        return OfflineTableSync.sync(table, opts)
-          .then(function() {
-            return table;
-          })
-          .catch(function(err) {
-            logger.error('refreshProjects', err);
-            return table;
-          });
-      };
+        const refreshProjects = function(table) {
+          if (connectivity.isOnline !== true) {
+            return $q.resolve(table);
+          }
 
-      return OfflineTableUtils.createOfflineTable(
-        APP_CONFIG.localDbName,
-        tableName,
-        remoteUrl,
-        null,
-        {},
-        refreshProjects,
-        skipRefresh
-      ).then(function(table) {
-        table.create = function() {
-          throw 'Method not allowed';
+          const opts = { tableName: tableName, updatesUrl: updatesUrl };
+          return OfflineTableSync.sync(table, opts)
+            .then(function() {
+              return table;
+            })
+            .catch(function(err) {
+              logger.error('refreshProjects', err);
+              return table;
+            });
         };
-        return table;
+
+        return OfflineTableUtils.createOfflineTable(
+          APP_CONFIG.localDbName,
+          tableName,
+          remoteUrl,
+          null,
+          {},
+          refreshProjects,
+          skipRefresh
+        ).then(function(table) {
+          table.create = function() {
+            throw 'Method not allowed';
+          };
+          return table;
+        });
       });
     };
 

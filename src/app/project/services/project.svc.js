@@ -23,7 +23,7 @@ angular
       blockUI
     ) {
       'use strict';
-      var ProjectService = {};
+      const ProjectService = {};
       ProjectService.ADMIN_ROLE = 'admin';
       ProjectService.COLLECTOR_ROLE = 'collector';
       ProjectService.READONLY_ROLE = 'readonly';
@@ -397,6 +397,30 @@ angular
               }
             }
             return projectRecord !== null;
+          });
+      };
+
+      ProjectService.getOfflineProjects = function() {
+        return OfflineTables.ProjectsTable(true)
+          .then(function(table) {
+            return table.filter();
+          })
+          .then(function(projects) {
+            return $q.all(
+              _.map(projects, function(project) {
+                const projectId = project.id;
+                return ProjectService.isProjectOffline(projectId).then(function(
+                  isOffline
+                ) {
+                  const o = {};
+                  o[projectId] = isOffline;
+                  return o;
+                });
+              })
+            );
+          })
+          .then(function(results) {
+            return _.merge.apply(_, results);
           });
       };
 
