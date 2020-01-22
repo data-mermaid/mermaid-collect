@@ -1,21 +1,17 @@
 angular.module('app.reference').controller('BenthicAttributesCtrl', [
   '$scope',
   '$rootScope',
-  '$state',
   'PaginatedOfflineTableWrapper',
   'Button',
   'offlineservice',
-  'utils',
   '$filter',
   '$q',
   function(
     $scope,
     $rootScope,
-    $state,
     PaginatedOfflineTableWrapper,
     Button,
     offlineservice,
-    utils,
     $filter,
     $q
   ) {
@@ -23,7 +19,21 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
 
     $scope.resource = undefined;
     $scope.tableControl = {};
+    $scope.choices = { regions: [], benthiclifehistories: [] };
+    const fieldReportButton = new Button();
     let benthicAttributeRecordsCount = 0;
+
+    offlineservice.ChoicesTable().then(function(table) {
+      table.filter({ name: 'regions' }).then(function(region_choices) {
+        $scope.choices.regions = region_choices[0].data;
+      });
+      table
+        .filter({ name: 'benthiclifehistories' })
+        .then(function(benthiclifehistory_choices) {
+          $scope.choices.benthiclifehistories =
+            benthiclifehistory_choices[0].data;
+        });
+    });
 
     $scope.tableConfig = {
       id: 'benthicattributes',
@@ -54,7 +64,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
           sortable: true,
           formatter: function(v) {
             return (
-              $filter('matchchoice')(v, utils.choices.benthiclifehistories) ||
+              $filter('matchchoice')(v, $scope.choices.benthiclifehistories) ||
               '-'
             );
           }
@@ -67,7 +77,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
             const regions = [];
             _.each(v, function(region) {
               regions.push(
-                $filter('matchchoice')(region, utils.choices.regions)
+                $filter('matchchoice')(region, $scope.choices.regions)
               );
             });
             return regions.join(', ') || '-';
@@ -85,6 +95,54 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     const updateBenthicAttributeCount = function() {
       $scope.projectObjectsTable.count().then(function(count) {
         benthicAttributeRecordsCount = count;
+      });
+    };
+
+    const downloadFieldReport = function() {
+      const header = ['Name', 'Parent', 'Life History', 'Regions'];
+
+      $scope.projectObjectsTable.filter().then(function(records) {
+        const result = records.map(function(val) {
+          const regionsVal =
+            val.regions.length > 0
+              ? `"${val.regions.map(function(region) {
+                  return $filter('matchchoice')(region, $scope.choices.regions);
+                })}"`
+              : '';
+
+          const lifeHistoryVal = val.life_history
+            ? $filter('matchchoice')(
+                val.life_history,
+                $scope.choices.benthiclifehistories
+              )
+            : '';
+
+          return [
+            val.name,
+            val.$$benthicattributes.name,
+            lifeHistoryVal,
+            regionsVal
+          ];
+        });
+
+        result.unshift(header);
+
+        const csvContent =
+          'data:text/csv;charset=utf-8,' +
+          result
+            .map(function(val) {
+              return val.join(',');
+            })
+            .join('\n');
+
+        const encodedUri = encodeURI(csvContent);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = encodedUri;
+        downloadLink.download = 'benthic-attributes.csv';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
       });
     };
 
@@ -137,6 +195,14 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       return !$scope.tableControl.textboxFilterUsed();
     };
 
-    $rootScope.PageHeaderButtons = [];
+    fieldReportButton.name = 'Export to CSV';
+    fieldReportButton.classes = 'btn-success';
+    fieldReportButton.icon = 'fa fa-download';
+    fieldReportButton.enabled = true;
+    fieldReportButton.click = function() {
+      downloadFieldReport();
+    };
+
+    $rootScope.PageHeaderButtons = [fieldReportButton];
   }
 ]);

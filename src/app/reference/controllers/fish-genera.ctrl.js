@@ -4,17 +4,20 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
   '$filter',
   'PaginatedOfflineTableWrapper',
   'offlineservice',
+  'Button',
   function(
     $rootScope,
     $scope,
     $filter,
     PaginatedOfflineTableWrapper,
-    offlineservice
+    offlineservice,
+    Button
   ) {
     'use strict';
 
     $scope.resource = null;
     $scope.tableControl = {};
+    const fieldReportButton = new Button();
     let fishGenusRecordsCount = 0;
 
     offlineservice.FishFamiliesTable().then(function(table) {
@@ -77,6 +80,33 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       });
     };
 
+    const downloadFieldReport = function() {
+      const header = ['Name', 'Family'];
+
+      $scope.projectObjectsTable.filter().then(function(records) {
+        const result = records.map(function(val) {
+          return [val.name, val.$$fishfamilies.name];
+        });
+        result.unshift(header);
+        const csvContent =
+          'data:text/csv;charset=utf-8,' +
+          result
+            .map(function(val) {
+              return val.join(',');
+            })
+            .join('\n');
+
+        const encodedUri = encodeURI(csvContent);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = encodedUri;
+        downloadLink.download = 'fish-genera.csv';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      });
+    };
+
     const promise = offlineservice.FishGeneraTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
@@ -109,6 +139,14 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       return !$scope.tableControl.textboxFilterUsed();
     };
 
-    $rootScope.PageHeaderButtons = [];
+    fieldReportButton.name = 'Export to CSV';
+    fieldReportButton.classes = 'btn-success';
+    fieldReportButton.icon = 'fa fa-download';
+    fieldReportButton.enabled = true;
+    fieldReportButton.click = function() {
+      downloadFieldReport();
+    };
+
+    $rootScope.PageHeaderButtons = [fieldReportButton];
   }
 ]);

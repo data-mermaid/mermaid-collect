@@ -3,11 +3,19 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   '$scope',
   'PaginatedOfflineTableWrapper',
   'offlineservice',
-  function($rootScope, $scope, PaginatedOfflineTableWrapper, offlineservice) {
+  'Button',
+  function(
+    $rootScope,
+    $scope,
+    PaginatedOfflineTableWrapper,
+    offlineservice,
+    Button
+  ) {
     'use strict';
 
     $scope.resource = null;
     $scope.tableControl = {};
+    const fieldReportButton = new Button();
     let fishFamilyRecordsCount = 0;
 
     $scope.tableConfig = {
@@ -55,6 +63,33 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       });
     };
 
+    const downloadFieldReport = function() {
+      const header = ['Name'];
+
+      $scope.projectObjectsTable.filter().then(function(records) {
+        const result = records.map(function(val) {
+          return [val.name];
+        });
+        result.unshift(header);
+        const csvContent =
+          'data:text/csv;charset=utf-8,' +
+          result
+            .map(function(val) {
+              return val.join(',');
+            })
+            .join('\n');
+
+        const encodedUri = encodeURI(csvContent);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = encodedUri;
+        downloadLink.download = 'fish-families.csv';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      });
+    };
+
     const promise = offlineservice.FishFamiliesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
@@ -87,6 +122,14 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       return !$scope.tableControl.textboxFilterUsed();
     };
 
-    $rootScope.PageHeaderButtons = [];
+    fieldReportButton.name = 'Export to CSV';
+    fieldReportButton.classes = 'btn-success';
+    fieldReportButton.icon = 'fa fa-download';
+    fieldReportButton.enabled = true;
+    fieldReportButton.click = function() {
+      downloadFieldReport();
+    };
+
+    $rootScope.PageHeaderButtons = [fieldReportButton];
   }
 ]);
