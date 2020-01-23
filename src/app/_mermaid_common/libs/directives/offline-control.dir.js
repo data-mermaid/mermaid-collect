@@ -10,12 +10,16 @@ angular.module('mermaid.libs').directive('offlineControl', [
       link: function(scope) {
         const conn = new ConnectivityFactory(scope);
         scope.toggleOffline = !connectivity.isOnline;
-        scope.sliderDisabled = false;
+        scope.sliderDisabled = connectivity.toggleDisabled();
 
         scope.switchControl = function() {
           if (scope.toggleOffline) {
             connectivity.setToggle(true);
           } else {
+            if (connectivity.toggleDisabled()) {
+              scope.toggleOffline = true;
+              return;
+            }
             connectivity.setToggle(false);
           }
         };
