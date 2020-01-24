@@ -90,6 +90,12 @@ angular.module('mermaid.libs').directive('leafletMap', [
               scope.maprecords.addData(rec[scope.geoattr]);
             });
 
+            scope.map.on('zoomend', function(event) {
+              if (event.target.getZoom() === 0) {
+                scope.map.setZoom(defaultZoom);
+              }
+            });
+
             const rec_len = scope.records.length;
             if (rec_len < 2) {
               if (rec_len === 1) {
