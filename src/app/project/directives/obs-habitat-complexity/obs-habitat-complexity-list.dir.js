@@ -1,11 +1,11 @@
 angular.module('app.project').directive('obsHabitatComplexityList', [
-  'OfflineTableUtils',
+  'OfflineCommonTables',
   'utils',
   '$timeout',
   'TransectService',
   'ValidatorService',
   function(
-    OfflineTableUtils,
+    OfflineCommonTables,
     utils,
     $timeout,
     TransectService,
@@ -45,7 +45,7 @@ angular.module('app.project').directive('obsHabitatComplexityList', [
           }, 30);
         };
 
-        OfflineTableUtils.ChoicesTable(true).then(function(table) {
+        OfflineCommonTables.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;

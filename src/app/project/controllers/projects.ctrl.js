@@ -2,7 +2,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
   '$rootScope',
   '$scope',
   '$state',
-  'OfflineTableUtils',
+  'OfflineTables',
   'PaginatedOfflineTableWrapper',
   'Button',
   'dataPolicies',
@@ -13,7 +13,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     $rootScope,
     $scope,
     $state,
-    OfflineTableUtils,
+    OfflineTables,
     PaginatedOfflineTableWrapper,
     Button,
     dataPolicies,
@@ -97,7 +97,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     };
 
     $scope.resource = null;
-    OfflineTableUtils.ProjectsTable().then(function(table) {
+    OfflineTables.ProjectsTable().then(function(table) {
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name', 'countries']
       });

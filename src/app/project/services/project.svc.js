@@ -147,7 +147,7 @@ angular
       };
 
       ProjectService.loadLookupTables = function() {
-        return OfflineTableUtils.loadLookupTables().then(function(tables) {
+        return OfflineCommonTables.loadLookupTables().then(function(tables) {
           // Format choices
           var choicesTable = _.find(tables, {
             name: APP_CONFIG.localDbName + '-choices'
@@ -156,20 +156,20 @@ angular
         });
       };
 
-      var loadProject = function(projectId) {
+      const loadProject = function(projectId) {
         var promises = [];
         if (projectId != null) {
-          promises.push(OfflineTableUtils.loadProjectRelatedTables(projectId));
+          promises.push(OfflineTables.loadProjectRelatedTables(projectId));
         } else {
           promises.push($q.resolve(null));
         }
 
-        promises.push(ProjectService.loadLookupTables());
+        promises.push(OfflineCommonTables.loadLookupTables());
         return $q.all(promises);
       };
 
       ProjectService.getTransectType = function(transect_type_id) {
-        for (var i = 0; i < ProjectService.transect_types.length; i++) {
+        for (let i = 0; i < ProjectService.transect_types.length; i++) {
           if (ProjectService.transect_types[i].id === transect_type_id) {
             return ProjectService.transect_types[i];
           }
@@ -193,11 +193,9 @@ angular
       };
 
       ProjectService.loadProject = function(projectId) {
-        var isProjectOfflinePromise;
+        let isProjectOfflinePromise;
         if (projectId != null) {
-          isProjectOfflinePromise = OfflineTableUtils.isProjectOffline(
-            projectId
-          );
+          isProjectOfflinePromise = ProjectService.isProjectOffline(projectId);
         } else {
           isProjectOfflinePromise = $q.resolve(true);
         }
@@ -214,7 +212,7 @@ angular
       };
 
       ProjectService.fetchChoices = function() {
-        return OfflineTableUtils.ChoicesTable().then(function(table) {
+        return OfflineCommonTables.ChoicesTable().then(function(table) {
           return table.filter().then(function(choices) {
             return _.reduce(
               choices,
@@ -231,7 +229,7 @@ angular
       ProjectService.getMyProjectProfile = function(project_id) {
         var promises = [
           authService.getCurrentUser(),
-          OfflineTableUtils.ProjectProfilesTable(project_id)
+          OfflineTables.ProjectProfilesTable(project_id)
         ];
 
         return $q
@@ -363,13 +361,12 @@ angular
         }
 
         const databaseNamesPromise = OfflineTableUtils.getDatabaseNames();
-        const projectTableNamePromise = OfflineTables.getProjectTableName();
+        const projectTableNamePromise = OfflineTables.getProjectsTableName();
         const projectTableNamesPromise = OfflineTables.getProjectTableNames(
+          projectId,
           OfflineTables.PROJECT_TABLE_NAMES
         );
-        const commonTableNamesPromise = OfflineCommonTables.getTableNames(
-          OfflineTables.TABLE_NAMES
-        );
+        const commonTableNamesPromise = OfflineCommonTables.getTableNames();
         const projectRecordPromise = OfflineTables.ProjectsTable(true).then(
           function(table) {
             return table.get(projectId).then(function(record) {

@@ -47,7 +47,7 @@ angular.module('app.project').service('BaseWizardConfig', [
           .getDisplayValue(
             _.get(record.data, 'sample_event.site'),
             'name',
-            OfflineTableUtils.ProjectSitesTable(projectId)
+            OfflineTables.ProjectSitesTable(projectId)
           )
           .then(function(val) {
             if (val !== null) {

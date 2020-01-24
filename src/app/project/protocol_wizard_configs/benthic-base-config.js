@@ -24,7 +24,7 @@ angular.module('app.project').service('BenthicBaseWizardConfig', [
         'app/project/protocol_wizard_configs/partials/benthic_transect.tpl.html',
       resolve: {
         sites: function() {
-          return OfflineTableUtils.ProjectSitesTable(projectId).then(function(
+          return OfflineTables.ProjectSitesTable(projectId).then(function(
             table
           ) {
             return table.filter();

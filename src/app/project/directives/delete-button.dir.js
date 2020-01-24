@@ -41,7 +41,7 @@ angular.module('app.project').directive('deleteButton', [
               }
               return promise.then(function() {
                 $state.go(scope.state);
-                OfflineTableUtils.ProjectsTable().then(function(table) {
+                OfflineTables.ProjectsTable().then(function(table) {
                   return table.get(projectId).then(function(record) {
                     return record.update();
                   });

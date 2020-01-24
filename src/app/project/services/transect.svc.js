@@ -4,7 +4,8 @@ angular.module('app.project').service('TransectService', [
   '$window',
   'APP_CONFIG',
   'utils',
-  'OfflineTableUtils',
+  'OfflineCommonTables',
+  'OfflineTables',
   'authService',
   function(
     $q,
@@ -12,7 +13,8 @@ angular.module('app.project').service('TransectService', [
     $window,
     APP_CONFIG,
     utils,
-    OfflineTableUtils,
+    OfflineCommonTables,
+    OfflineTables,
     authService
   ) {
     'use strict';
@@ -31,7 +33,7 @@ angular.module('app.project').service('TransectService', [
       var filterFunc = function(val) {
         return fish_attributes.indexOf(val) !== -1;
       };
-      return OfflineTableUtils.FishAttributesTable()
+      return OfflineCommonTables.FishAttributesTable()
         .then(function(table) {
           return table.filter({ id: filterFunc });
         })
@@ -280,7 +282,7 @@ angular.module('app.project').service('TransectService', [
     };
 
     const getBenthicAttributeChoices = function() {
-      return OfflineTableUtils.BenthicAttributesTable(true).then(function(
+      return OfflineCommonTables.BenthicAttributesTable(true).then(function(
         table
       ) {
         return table.filter().then(function(benthicattributes) {
@@ -290,9 +292,7 @@ angular.module('app.project').service('TransectService', [
     };
 
     var getProjectSiteChoices = function(project_id) {
-      return OfflineTableUtils.ProjectSitesTable(project_id).then(function(
-        table
-      ) {
+      return OfflineTables.ProjectSitesTable(project_id).then(function(table) {
         return table.filter().then(function(sites) {
           return createLookup(sites);
         });
@@ -300,17 +300,17 @@ angular.module('app.project').service('TransectService', [
     };
 
     const getProjectManagementChoices = function(project_id) {
-      return OfflineTableUtils.ProjectManagementsTable(project_id).then(
-        function(table) {
-          return table.filter().then(function(managements) {
-            return createLookup(managements);
-          });
-        }
-      );
+      return OfflineTables.ProjectManagementsTable(project_id).then(function(
+        table
+      ) {
+        return table.filter().then(function(managements) {
+          return createLookup(managements);
+        });
+      });
     };
 
     const getProjectProfileChoices = function(project_id) {
-      return OfflineTableUtils.ProjectProfilesTable(project_id).then(function(
+      return OfflineTables.ProjectProfilesTable(project_id).then(function(
         table
       ) {
         return table.filter().then(function(project_profiles) {
@@ -320,7 +320,7 @@ angular.module('app.project').service('TransectService', [
     };
 
     const getChoices = function() {
-      return OfflineTableUtils.ChoicesTable(true).then(function(table) {
+      return OfflineCommonTables.ChoicesTable(true).then(function(table) {
         return table.filter().then(function(choices) {
           var output = {};
           _.each(choices, function(c) {
@@ -398,7 +398,7 @@ angular.module('app.project').service('TransectService', [
     };
 
     const getWidthValueLookup = function() {
-      return OfflineTableUtils.ChoicesTable(true).then(function(table) {
+      return OfflineCommonTables.ChoicesTable(true).then(function(table) {
         return table
           .filter({ name: 'belttransectwidths' })
           .then(function(choices) {

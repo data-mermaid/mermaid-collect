@@ -3,7 +3,6 @@ angular.module('app.project').controller('ManagementModalCtrl', [
   '$uibModalInstance',
   'pageContent',
   '$stateParams',
-  'OfflineTableUtils',
   'ProjectService',
   'ManagementService',
   function(
@@ -11,7 +10,6 @@ angular.module('app.project').controller('ManagementModalCtrl', [
     $uibModalInstance,
     pageContent,
     $stateParams,
-    OfflineTableUtils,
     ProjectService,
     ManagementService
   ) {

@@ -1,10 +1,10 @@
 angular.module('app.project').service('ManagementService', [
   '$q',
-  'OfflineTableUtils',
+  'OfflineTables',
   'authService',
   'APP_CONFIG',
   '$window',
-  function($q, OfflineTableUtils, authService, APP_CONFIG, $window) {
+  function($q, OfflineTables, authService, APP_CONFIG, $window) {
     'use strict';
 
     var save = function(management, options) {
@@ -15,11 +15,11 @@ angular.module('app.project').service('ManagementService', [
 
       if (!management.id) {
         management.project = projectId;
-        return OfflineTableUtils.ProjectManagementsTable(projectId).then(
-          function(table) {
-            return table.create(management);
-          }
-        );
+        return OfflineTables.ProjectManagementsTable(projectId).then(function(
+          table
+        ) {
+          return table.create(management);
+        });
       }
       return management.update();
     };
@@ -28,7 +28,7 @@ angular.module('app.project').service('ManagementService', [
       if (managementId == null) {
         return $q.resolve({ project: projectId });
       }
-      return OfflineTableUtils.ProjectManagementsTable(projectId).then(function(
+      return OfflineTables.ProjectManagementsTable(projectId).then(function(
         table
       ) {
         return table.get(managementId).then(function(management) {

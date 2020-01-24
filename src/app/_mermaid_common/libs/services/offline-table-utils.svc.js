@@ -5,8 +5,8 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
   '$q',
   '$http',
   'OfflineTable',
-  'OfflineTableGroup',
-  'utils',
+  // 'OfflineTableGroup',
+  // 'utils',
   'resourceutils',
   'authService',
   'connectivity',
@@ -25,6 +25,13 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
   ) {
     'use strict';
 
+    const UUID_REGEX_STR =
+      '([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}';
+    const uuidRegEx = new RegExp(UUID_REGEX_STR);
+    const projectTableRegEx = new RegExp(
+      `${APP_CONFIG.localDbName}-.*-${UUID_REGEX_STR}-${UUID_REGEX_STR}`
+    );
+
     const getDatabaseNames = function() {
       return Dexie.getDatabaseNames(function(names) {
         return _.filter(names, function(name) {
@@ -33,6 +40,65 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
       });
     };
 
+    const getProjectIdFromTableName = function(name) {
+      if (projectTableRegEx.test(name)) {
+        const parts = name.split(uuidRegEx);
+        if (parts.length > 0) {
+          return parts[1];
+        }
+      }
+      return null;
+    };
+
+    const getProfileIdFromTableName = function(name) {
+      if (projectTableRegEx.test(name)) {
+        const uuids = name.split(uuidRegEx);
+        return uuids[2];
+      } else if (uuidRegEx.test(name)) {
+        const uuids = name.split(uuidRegEx);
+        return uuids[1];
+      }
+      return null;
+    };
+
+    const getTableProfileIds = function() {
+      return getDatabaseNames().then(function(names) {
+        const profileIds = new Set();
+        for (let i = 0; i < names.length; i++) {
+          const name = names[i];
+          const profileId = getProfileIdFromTableName(name);
+          if (profileId) {
+            profileIds.add(profileId);
+          }
+        }
+        return Array.from(profileIds);
+      });
+    };
+
+    const getTableProjectIds = function() {
+      return getDatabaseNames().then(function(names) {
+        const projectIds = new Set();
+        for (let i = 0; i < names.length; i++) {
+          const name = names[i];
+          const projectId = getProjectIdFromTableName(name);
+          if (projectId) {
+            projectIds.add(projectId);
+          }
+        }
+        return Array.from(projectIds);
+      });
+    };
+
+    /*
+    ([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}
+
+    1. get list of profile ids
+    2. get a list of project tables for id
+    3. get list of common tables
+    4. delete project tables by profile id
+    5. delete common tables if only 1 profile id
+
+    */
     const deleteDatabases = function() {
       // TODO refactor deleteDatabases
       throw 'TODO refactor deleteDatabases';
@@ -70,29 +136,17 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
         });
     };
 
-    const getProjectTableNames = function() {
-      var regStr =
-        APP_CONFIG.localDbName +
-        '-.*-([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}';
-      var regx = new RegExp(regStr);
-      return getDatabaseNames().then(function(names) {
-        return _.filter(names, function(name) {
-          return regx.test(name);
-        });
-      });
-    };
-
     const _refresh = function(table, limit) {
       if (connectivity.isOnline !== true) {
         return $q.resolve(table);
       }
-      var options = table.getOptions() || {};
-      var qry = options.queryArgs || {};
+      const options = table.getOptions() || {};
+      const qry = options.queryArgs || {};
+
       if (authService.isAuthenticated() !== true && options.isPublic !== true) {
         console.warn('[%s] Table refresh skipped.', table.name);
         return $q.resolve(table);
       }
-
       return table.count({}, true).then(function(recordCount) {
         if (recordCount === 0) {
           var promise;
@@ -173,43 +227,7 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
         });
     };
 
-    const refreshAll = function() {
-      // TODO: refactor refreshAll
-      throw 'TODO: refactor refreshAll';
-
-      // Check if records are synced
-      const projectTablesPromise = getProjectTableNames()
-        .then(function(names) {
-          const projectIds = new Set();
-          for (var n = 0; n < names.length; n++) {
-            const projectId = projectIdFromTableName(names[n]);
-            if (projectId === null) {
-              continue;
-            }
-            projectIds.add(projectId);
-          }
-          return Array.from(projectIds);
-        })
-        .then(function(projectIds) {
-          return checkRemoteProjectStatus(projectIds);
-        })
-        .then(function(projectStatuses) {
-          return $q.all(
-            _.map(projectStatuses, function(status, projectId) {
-              if (status === false) {
-                return deleteProjectDatabases(projectId, true);
-              }
-              return loadProjectRelatedTables(projectId);
-            })
-          );
-        });
-
-      const lookupTablesPromise = loadLookupTables(false);
-      return $q.all([projectTablesPromise, lookupTablesPromise]);
-    };
-
     const createOfflineTable = function(
-      dbName,
       tableName,
       remoteUrl,
       resource,
@@ -220,9 +238,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
       let table;
       let deferred = $q.defer();
       let promise;
-
-      tableName = dbName + '-' + tableName;
-      tableName = tableName.replace(/\//g, '-');
 
       promise = deferred.promise;
       // tables[tableName] = promise;
@@ -282,11 +297,15 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
     };
 
     return {
-      refreshAll: refreshAll,
+      UUID_REGEX_STR: UUID_REGEX_STR,
       isSynced: isSynced,
+      checkRemoteProjectStatus: checkRemoteProjectStatus,
       deleteDatabase: deleteDatabase,
       deleteDatabases: deleteDatabases,
-      getProjectTableNames: getProjectTableNames,
+      getDatabaseNames: getDatabaseNames,
+      getProjectIdFromTableName: getProjectIdFromTableName,
+      getTableProfileIds: getTableProfileIds,
+      getTableProjectIds: getTableProjectIds,
       projectIdFromTableName: projectIdFromTableName,
       createOfflineTable: createOfflineTable,
       paginatedRefresh: paginatedRefresh

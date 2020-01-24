@@ -1,10 +1,22 @@
 angular.module('mermaid.libs').service('system', [
+  '$q',
   '$rootScope',
   '$window',
   '$timeout',
   'OfflineTableUtils',
+  'OfflineTables',
+  'OfflineCommonTables',
   'connectivity',
-  function($rootScope, $window, $timeout, OfflineTableUtils, connectivity) {
+  function(
+    $q,
+    $rootScope,
+    $window,
+    $timeout,
+    OfflineTableUtils,
+    OfflineTables,
+    OfflineCommonTables,
+    connectivity
+  ) {
     'use strict';
 
     var DATA_REFRESH_RATE = 900000; // 15 minutes
@@ -20,7 +32,28 @@ angular.module('mermaid.libs').service('system', [
       }
     };
 
-    var createUpdateTimer = function(refresh_rate) {
+    const refreshAll = function() {
+      // Check if records are synced
+      const projectTablesPromise = OfflineTables.getTableProjectIds()
+        .then(function(projectIds) {
+          return OfflineTableUtils.checkRemoteProjectStatus(projectIds);
+        })
+        .then(function(projectStatuses) {
+          return $q.all(
+            _.map(projectStatuses, function(status, projectId) {
+              if (status === false) {
+                return OfflineTables.deleteProjectDatabases(projectId, true);
+              }
+              return OfflineTables.loadProjectRelatedTables(projectId);
+            })
+          );
+        });
+
+      const lookupTablesPromise = OfflineCommonTables.loadLookupTables(false);
+      return $q.all([projectTablesPromise, lookupTablesPromise]);
+    };
+
+    const createUpdateTimer = function(refresh_rate) {
       if (!isAutoUpdateRunning) {
         return null;
       }
@@ -31,14 +64,14 @@ angular.module('mermaid.libs').service('system', [
 
       $timeout.cancel(autoDataUpdateId);
       return $timeout(function() {
-        OfflineTableUtils.refreshAll().then(function() {
+        refreshAll().then(function() {
           autoDataUpdateId = createUpdateTimer(DATA_REFRESH_RATE);
           $rootScope.$broadcast('localdb:refreshall');
         });
       }, refresh_rate);
     };
 
-    var startAutoDataUpdate = function() {
+    const startAutoDataUpdate = function() {
       if (isAutoUpdateRunning === true) {
         return;
       }
@@ -46,12 +79,12 @@ angular.module('mermaid.libs').service('system', [
       autoDataUpdateId = createUpdateTimer(0);
     };
 
-    var stopAutoDataUpdate = function() {
+    const stopAutoDataUpdate = function() {
       $timeout.cancel(autoDataUpdateId);
       isAutoUpdateRunning = false;
     };
 
-    var system = {
+    const system = {
       reloadPage: function() {
         if (!connectivity.isOnline) {
           console.log("Can't update MERMAID application while offline");
@@ -60,6 +93,7 @@ angular.module('mermaid.libs').service('system', [
         $window.location.reload();
       },
       createUpdateTimer: createUpdateTimer,
+      refreshAll: refreshAll,
       startAutoDataUpdate: startAutoDataUpdate,
       stopAutoDataUpdate: stopAutoDataUpdate
     };

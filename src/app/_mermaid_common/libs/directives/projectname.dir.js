@@ -1,8 +1,8 @@
 angular.module('mermaid.libs').directive('projectname', [
   '$stateParams',
-  'OfflineTableUtils',
+  'OfflineTables',
   '$q',
-  function($stateParams, OfflineTableUtils, $q) {
+  function($stateParams, OfflineTables, $q) {
     'use strict';
     return {
       restrict: 'AE',
@@ -30,7 +30,7 @@ angular.module('mermaid.libs').directive('projectname', [
           return str;
         }
 
-        $q.all([OfflineTableUtils.ProjectsTable()]).then(function(results) {
+        $q.all([OfflineTables.ProjectsTable()]).then(function(results) {
           const projectTable = results[0];
           const setProjectName = function(rec) {
             scope.project_name = '';

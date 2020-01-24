@@ -40,6 +40,15 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
     const BENTHIC_ATTRIBUTES_NAME = 'benthicattributes';
     // const PROJECT_TAGS_NAME = 'projecttags';
 
+    const COMMON_TABLE_NAMES = [
+      CHOICES_NAME,
+      FISH_SIZES_NAME,
+      FISH_FAMILIES_NAME,
+      FISH_GENERA_NAME,
+      FISH_SPECIES_NAME,
+      BENTHIC_ATTRIBUTES_NAME
+    ];
+
     let choicesPromise = null;
 
     const ChoicesTable = function(skipRefresh) {
@@ -81,7 +90,6 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       };
 
       choicesPromise = OfflineTableUtils.createOfflineTable(
-        APP_CONFIG.localDbName,
         CHOICES_NAME,
         null,
         Choice,
@@ -111,7 +119,6 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
 
     const FishSizesTable = function(skipRefresh) {
       return OfflineTableUtils.createOfflineTable(
-        APP_CONFIG.localDbName,
         FISH_SIZES_NAME,
         null,
         FishSize,
@@ -126,7 +133,6 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
 
     const FishFamiliesTable = function(skipRefresh) {
       return OfflineTableUtils.createOfflineTable(
-        APP_CONFIG.localDbName,
         FISH_FAMILIES_NAME,
         APP_CONFIG.apiUrl + 'fishfamilies/',
         FishFamily,
@@ -141,7 +147,6 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
 
     const FishGeneraTable = function(skipRefresh) {
       return OfflineTableUtils.createOfflineTable(
-        APP_CONFIG.localDbName,
         FISH_GENERA_NAME,
         APP_CONFIG.apiUrl + 'fishgenera/',
         FishGenus,
@@ -181,7 +186,6 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       };
 
       return OfflineTableUtils.createOfflineTable(
-        APP_CONFIG.localDbName,
         FISH_SPECIES_NAME,
         APP_CONFIG.apiUrl + 'fishspecies/',
         FishSpecies,
@@ -221,7 +225,6 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       };
 
       return OfflineTableUtils.createOfflineTable(
-        APP_CONFIG.localDbName,
         BENTHIC_ATTRIBUTES_NAME,
         APP_CONFIG.apiUrl + 'benthicattributes/',
         BenthicAttribute,
@@ -232,6 +235,22 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
         refreshBenthicAttributes,
         skipRefresh
       );
+    };
+
+    const getTableNames = function(baseNames) {
+      let isMulti = true;
+
+      baseNames = baseNames || COMMON_TABLE_NAMES;
+
+      if (angular.isArray(baseNames) === false) {
+        baseNames = [baseNames];
+        isMulti = false;
+      }
+
+      const results = baseNames.map(function(baseName) {
+        return `${APP_CONFIG.localDbName}-${baseName}`;
+      });
+      return isMulti === false ? results[0] : results;
     };
 
     const loadLookupTables = function(skipRefresh) {
@@ -248,14 +267,16 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
     };
 
     return {
-      ChoicesTable,
-      FishAttributesTable,
-      FishSizesTable,
-      FishFamiliesTable,
-      FishGeneraTable,
-      FishSpeciesTable,
-      BenthicAttributesTable,
-      loadLookupTables
+      COMMON_TABLE_NAMES: COMMON_TABLE_NAMES,
+      ChoicesTable: ChoicesTable,
+      FishAttributesTable: FishAttributesTable,
+      FishSizesTable: FishSizesTable,
+      FishFamiliesTable: FishFamiliesTable,
+      FishGeneraTable: FishGeneraTable,
+      FishSpeciesTable: FishSpeciesTable,
+      BenthicAttributesTable: BenthicAttributesTable,
+      getTableNames: getTableNames,
+      loadLookupTables: loadLookupTables
     };
   }
 ]);

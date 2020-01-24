@@ -23,7 +23,7 @@
 
  options.joinDefn (object):
   
-  Below is joining to an array rather than to an another OfflineTable.  
+  Below is joining to an array rather than to an another OfflineTables.  
   Join attributes are prefixed with $$.
   In the example below, to access joined fields/values you would do ...
 

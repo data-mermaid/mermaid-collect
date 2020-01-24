@@ -2,9 +2,17 @@ angular.module('app.sandbox').controller('SandboxCtrl', [
   '$scope',
   'OfflineTables',
   'OfflineCommonTables',
-  function($scope, OfflineTables, OfflineCommonTables) {
+  'OfflineTableUtils',
+  function($scope, OfflineTables, OfflineCommonTables, OfflineTableUtils) {
     'use strict';
     const projectId = 'ac4083a0-cba4-43e8-9955-982f6e2aa8d7';
+
+    OfflineTableUtils.getTableProfileIds().then(function(profileIds) {
+      console.log('profileIds', profileIds);
+    });
+    OfflineTableUtils.getTableProjectIds().then(function(projectIds) {
+      console.log('projectIds', projectIds);
+    });
 
     OfflineTables.ProjectsTable()
       .then(function(table) {

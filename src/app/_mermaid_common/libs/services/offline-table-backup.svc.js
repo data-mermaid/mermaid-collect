@@ -20,7 +20,7 @@ angular.module('mermaid.libs').service('OfflineTableBackup', [
     };
 
     var getProjectName = function(projectId) {
-      return OfflineTableUtils.ProjectsTable(projectId)
+      return OfflineTables.ProjectsTable(projectId)
         .then(function(table) {
           return table.get(projectId);
         })

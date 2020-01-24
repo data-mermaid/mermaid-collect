@@ -2,7 +2,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
   '$scope',
   '$state',
   '$stateParams',
-  'OfflineTableUtils',
+  'OfflineTables',
   'ProjectService',
   'ManagementService',
   'PaginatedOfflineTableWrapper',
@@ -14,7 +14,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
     $scope,
     $state,
     $stateParams,
-    OfflineTableUtils,
+    OfflineTables,
     ProjectService,
     ManagementService,
     PaginatedOfflineTableWrapper,
@@ -165,7 +165,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       });
     };
 
-    OfflineTableUtils.ProjectManagementsTable(project_id).then(function(table) {
+    OfflineTables.ProjectManagementsTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
       updateManagementCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {

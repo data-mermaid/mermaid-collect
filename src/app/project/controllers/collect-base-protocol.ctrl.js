@@ -19,7 +19,7 @@ angular.module('app.project').controller('CollectBaseProtocol', [
   '$state',
   '$stateParams',
   '$q',
-  'OfflineTableUtils',
+  'OfflineTables',
   'ProjectService',
   'CollectService',
   'ValidateSubmitService',
@@ -33,7 +33,7 @@ angular.module('app.project').controller('CollectBaseProtocol', [
     $state,
     $stateParams,
     $q,
-    OfflineTableUtils,
+    OfflineTables,
     ProjectService,
     CollectService,
     ValidateSubmitService,
@@ -132,7 +132,7 @@ angular.module('app.project').controller('CollectBaseProtocol', [
     $rootScope.PageHeaderButtons = $ctrl.stagedButtonGroup.getButtons();
 
     $ctrl.fetchRecord = function() {
-      OfflineTableUtils.CollectRecordsTable($ctrl.projectId)
+      OfflineTables.CollectRecordsTable($ctrl.projectId)
         .then(function(table) {
           return table.get($ctrl.recordId);
         })

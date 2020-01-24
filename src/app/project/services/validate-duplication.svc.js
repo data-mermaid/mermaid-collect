@@ -1,8 +1,7 @@
 angular.module('app.project').service('ValidateDuplicationService', [
-  'APP_CONFIG',
-  'OfflineTableUtils',
+  'OfflineTables',
   '$rootScope',
-  function(APP_CONFIG, OfflineTableUtils, $rootScope) {
+  function(OfflineTables, $rootScope) {
     'use strict';
 
     var OK_VALIDATION_STATUS = 'ok';
@@ -21,13 +20,13 @@ angular.module('app.project').service('ValidateDuplicationService', [
     };
 
     var watchMRs = function(project) {
-      OfflineTableUtils.ProjectManagementsTable(project).then(function(table) {
+      OfflineTables.ProjectManagementsTable(project).then(function(table) {
         watch(table, MR_PAGE, project, checkInvalidMRs);
       });
     };
 
     var watchSites = function(project) {
-      OfflineTableUtils.ProjectSitesTable(project).then(function(table) {
+      OfflineTables.ProjectSitesTable(project).then(function(table) {
         watch(table, SITE_PAGE, project, checkInvalidSites);
       });
     };
@@ -48,13 +47,13 @@ angular.module('app.project').service('ValidateDuplicationService', [
     };
 
     var checkInvalidSites = function(project) {
-      return OfflineTableUtils.ProjectSitesTable(project).then(function(table) {
+      return OfflineTables.ProjectSitesTable(project).then(function(table) {
         return checkInvalid(table, SITE_PAGE);
       });
     };
 
     var checkInvalidMRs = function(project) {
-      return OfflineTableUtils.ProjectManagementsTable(project).then(function(
+      return OfflineTables.ProjectManagementsTable(project).then(function(
         table
       ) {
         return checkInvalid(table, MR_PAGE);

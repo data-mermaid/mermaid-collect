@@ -2,7 +2,7 @@ angular.module('app.project').controller('SitesCtrl', [
   '$scope',
   '$state',
   '$stateParams',
-  'OfflineTableUtils',
+  'OfflineTables',
   'ProjectService',
   'SiteService',
   'PaginatedOfflineTableWrapper',
@@ -16,7 +16,7 @@ angular.module('app.project').controller('SitesCtrl', [
     $scope,
     $state,
     $stateParams,
-    OfflineTableUtils,
+    OfflineTables,
     ProjectService,
     SiteService,
     PaginatedOfflineTableWrapper,
@@ -149,7 +149,7 @@ angular.module('app.project').controller('SitesCtrl', [
       });
     };
 
-    OfflineTableUtils.ProjectSitesTable(project_id).then(function(table) {
+    OfflineTables.ProjectSitesTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
       updateSiteCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {

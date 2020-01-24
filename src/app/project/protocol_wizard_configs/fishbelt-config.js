@@ -37,7 +37,7 @@ angular.module('app.project').service('FishBeltWizardConfig', [
         'app/project/protocol_wizard_configs/partials/fishbelt_transect.tpl.html',
       resolve: {
         sites: function() {
-          return OfflineTableUtils.ProjectSitesTable(projectId).then(function(
+          return OfflineTables.ProjectSitesTable(projectId).then(function(
             table
           ) {
             return table.filter();
