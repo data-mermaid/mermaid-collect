@@ -277,12 +277,14 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
 
     var selectedSitesMessage = function() {
       var records = $scope.copySiteControl.getSelectedRecords();
-      var recordCount = records.length;
       var result =
-        (recordCount === 0 ? 'No' : recordCount) +
-        ' ' +
-        utils.pluralize(recordCount, 'site', 'sites') +
-        ' selected';
+        records.length > 0
+          ? `${recordCount} ${utils.pluralize(
+              recordCount,
+              'site',
+              'sites'
+            )} selected`
+          : '';
       return result;
     };
 
@@ -298,16 +300,15 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
 
     var selectedManagementMessage = function() {
       var records = $scope.copyManagementControl.getSelectedRecords();
-      var recordCount = records.length;
       var result =
-        (recordCount === 0 ? 'No' : recordCount) +
-        ' ' +
-        utils.pluralize(
-          recordCount,
-          'management regime',
-          'management regimes'
-        ) +
-        ' selected';
+        records.length > 0
+          ? `${recordCount} ${utils.pluralize(
+              recordCount,
+              'management regime',
+              'management regimes'
+            )} selected`
+          : '';
+
       return result;
     };
 
