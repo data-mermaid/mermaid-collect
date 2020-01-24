@@ -3,7 +3,7 @@ angular.module('app.project').service('FishBeltWizardConfig', [
   '$q',
   '$filter',
   'BaseWizardConfig',
-  'OfflineTableUtils',
+  'OfflineTables',
   'ValidateSubmitService',
   'TransectService',
   'ProjectService',
@@ -12,7 +12,7 @@ angular.module('app.project').service('FishBeltWizardConfig', [
     $q,
     $filter,
     BaseWizardConfig,
-    OfflineTableUtils,
+    OfflineTables,
     ValidateSubmitService,
     TransectService,
     ProjectService

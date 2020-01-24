@@ -2,16 +2,24 @@
 
 angular.module('mermaid.libs').service('OfflineTableBackup', [
   '$q',
-  'OfflineTableUtils',
+  'OfflineCommonTables',
+  'OfflineTables',
   'authService',
   'utils',
   'FileSaver',
-  function($q, OfflineTableUtils, authService, utils, FileSaver) {
+  function(
+    $q,
+    OfflineCommonTables,
+    OfflineTables,
+    authService,
+    utils,
+    FileSaver
+  ) {
     'use strict';
 
     var getRecords = function(projectId) {
       return authService.getCurrentUser().then(function(currentUser) {
-        return OfflineTableUtils.CollectRecordsTable(projectId).then(function(
+        return OfflineTables.CollectRecordsTable(projectId).then(function(
           table
         ) {
           return table.filter({ profile: currentUser.id }, true);
@@ -60,8 +68,8 @@ angular.module('mermaid.libs').service('OfflineTableBackup', [
     };
 
     const getTables = function(projectId) {
-      const p1 = OfflineTableUtils.loadProjectRelatedTables(projectId, true);
-      const p2 = OfflineTableUtils.loadLookupTables();
+      const p1 = OfflineTables.loadProjectRelatedTables(projectId, true);
+      const p2 = OfflineCommonTables.loadLookupTables();
       return $q.all([p1, p2]).then(function(data) {
         return _.flatten(data);
       });

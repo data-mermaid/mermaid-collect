@@ -3,8 +3,8 @@ angular.module('app.project').directive('deleteButton', [
   '$state',
   'ProjectService',
   '$stateParams',
-  'OfflineTableUtils',
-  function(utils, $state, ProjectService, $stateParams, OfflineTableUtils) {
+  'OfflineTables',
+  function(utils, $state, ProjectService, $stateParams, OfflineTables) {
     'use strict';
 
     return {

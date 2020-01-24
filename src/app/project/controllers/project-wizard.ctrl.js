@@ -13,8 +13,6 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
   'ErrorRenderer',
   'blockUI',
   'Site',
-  'Management',
-  '$stateParams',
   'CopySitesService',
   'CopyManagementsService',
   'tags',
@@ -33,8 +31,6 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     ErrorRenderer,
     blockUI,
     Site,
-    Management,
-    $stateParams,
     CopySitesService,
     CopyManagementsService,
     tags

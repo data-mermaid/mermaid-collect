@@ -3,16 +3,14 @@ angular.module('app.project').service('BenthicBaseWizardConfig', [
   '$q',
   '$filter',
   'BaseWizardConfig',
-  'OfflineTableUtils',
-  'ValidateSubmitService',
+  'OfflineTables',
   'ProjectService',
   function(
     $stateParams,
     $q,
     $filter,
     BaseWizardConfig,
-    OfflineTableUtils,
-    ValidateSubmitService,
+    OfflineTables,
     ProjectService
   ) {
     'use strict';

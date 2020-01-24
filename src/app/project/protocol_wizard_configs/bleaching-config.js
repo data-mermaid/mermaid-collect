@@ -3,14 +3,14 @@ angular.module('app.project').service('BleachingWizardConfig', [
   '$q',
   'BaseWizardConfig',
   'ValidateSubmitService',
-  'OfflineTableUtils',
+  'OfflineTables',
   'TransectService',
   function(
     $stateParams,
     $q,
     BaseWizardConfig,
     ValidateSubmitService,
-    OfflineTableUtils,
+    OfflineTables,
     TransectService
   ) {
     'use strict';
