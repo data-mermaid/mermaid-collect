@@ -28,13 +28,17 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     const fieldReportButton = new Button();
     let fishSpeciesRecordsCount = 0;
 
-    const promiseFishGeneraTable = offlineservice
-      .FishGeneraTable()
-      .then(function(table) {
-        return table.filter().then(function(records) {
-          $scope.tableControl.fishgenera = records;
-        });
+    offlineservice.FishGeneraTable().then(function(table) {
+      return table.filter().then(function(records) {
+        $scope.tableControl.fishgenera = records;
       });
+    });
+
+    offlineservice.FishFamiliesTable().then(function(table) {
+      return table.filter().then(function(records) {
+        $scope.tableControl.fishfamilies = records;
+      });
+    });
 
     offlineservice.ChoicesTable().then(function(table) {
       table.filter({ name: 'regions' }).then(function(region_choices) {
@@ -66,12 +70,13 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       searching: true,
       searchPlaceholder: 'Filter fish species by name or genus',
       searchLocation: 'left',
+      defaultSortByColumn: '$$fishgenera.name',
       cols: [
         {
           name: 'name',
           display: 'Name',
           sortable: true,
-          sort_by: ['$$fishgenera.name', 'name'],
+          sort_by: ['name'],
           tdTemplate:
             '<a ui-sref="app.reference.fishspeciess.fishspecies({id: record.id})">{{record.display_name}}</a>'
         },
@@ -118,6 +123,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       const header = [
         'Genus',
         'Species',
+        'Family',
         'Biomass Constant A',
         'Biomass Constant B',
         'Biomass Constant C',
@@ -134,11 +140,21 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
 
       $scope.projectObjectsTable.filter().then(function(records) {
         const result = records.map(function(val) {
+          const familyId = $filter('matchchoice')(
+            val.genus,
+            $scope.tableControl.fishgenera,
+            'family'
+          );
+
           const genus = $filter('matchchoice')(
             val.genus,
             $scope.tableControl.fishgenera
           );
           const species = val.name;
+          const family = $filter('matchchoice')(
+            familyId,
+            $scope.tableControl.fishfamilies
+          );
 
           const lengthtypes = $filter('matchchoice')(
             val.max_length_type,
@@ -170,6 +186,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
           return [
             genus,
             species,
+            family,
             val.biomass_constant_a,
             val.biomass_constant_b,
             val.biomass_constant_c,
@@ -207,10 +224,10 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     };
 
     const promise = offlineservice.FishSpeciesTable();
-    $q.all([promise, promiseFishGeneraTable]).then(function(tables) {
-      $scope.projectObjectsTable = tables[0];
+    promise.then(function(tables) {
+      $scope.projectObjectsTable = tables;
       updateFishSpeciesCount();
-      $scope.resource = new PaginatedOfflineTableWrapper(tables[0], {
+      $scope.resource = new PaginatedOfflineTableWrapper(tables, {
         searchFields: ['$$fishgenera.name', 'name']
       });
       $scope.projectObjectsTable.$watch(
