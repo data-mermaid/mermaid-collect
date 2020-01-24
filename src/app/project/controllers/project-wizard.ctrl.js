@@ -48,11 +48,12 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       - Copy all Sites
       - Copy all Managements
     */
-
+    var projectId = $stateParams.projectId;
     var defaultRole;
     var siteService;
     var managementService;
 
+    $scope.isActive = false;
     $scope.isCreating = false;
     $scope.currentStep = 1;
     $scope.currentUser = null;
@@ -71,6 +72,44 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     $scope.tags = _.uniq(tags.results, 'id');
     $scope.projectStatuses = {};
     $scope.project.tags = [];
+
+    offlineservice.ProjectsTable().then(function(table) {
+      if (projectId == null) {
+        return;
+      }
+      return table.get(projectId).then(function(record) {
+        $scope.project = record;
+        $scope.benthicPolicies.data_policy_benthics =
+          record.data_policy_benthiclit;
+
+        offlineservice.ProjectSitesTable(projectId).then(function(site_table) {
+          site_table.filter().then(function(sites) {
+            var sitesForCopy = _.map(sites, function(site) {
+              site.project_name = record.name;
+              site.country_name = site.$$countries.name;
+              site.reef_zone_name = site.$$reefzones.name;
+              site.reef_type_name = site.$$reeftypes.name;
+              site.exposure_name = site.$$reefexposures.name;
+              return site;
+            });
+            $scope.sites = sitesForCopy;
+            $scope.$broadcast('copy-project-sites', sitesForCopy);
+          });
+        });
+
+        offlineservice
+          .ProjectManagementsTable(projectId)
+          .then(function(mr_table) {
+            mr_table.filter().then(function(mrs) {
+              var mrsForCopy = _.map(mrs, function(mr) {
+                return mr;
+              });
+              $scope.managements = mrsForCopy;
+              $scope.$broadcast('copy-project-mrs', mrsForCopy);
+            });
+          });
+      });
+    });
 
     var addUser = function(model, role) {
       role = role || defaultRole;
@@ -180,18 +219,9 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
 
     // Sort out refreshing map because it's rendered
     // before the containing div is hidden.
-    $scope.invalidateMap = function(attempts) {
-      attempts = attempts || 0;
-      attempts += 1;
-      if ($('[data-smart-wizard-pane="3"]').css('display') !== 'none') {
-        $scope.map.invalidateSize();
-        return;
-      }
-      if (attempts === 5) {
-        return;
-      }
+    $scope.activateMap = function() {
       $timeout(function() {
-        $scope.invalidateMap(attempts);
+        $scope.isActive = true;
       }, 100);
     };
 
@@ -241,10 +271,13 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       var records = $scope.copySiteControl.getSelectedRecords();
       var recordCount = records.length;
       var result =
-        (recordCount === 0 ? 'No' : recordCount) +
-        ' ' +
-        utils.pluralize(recordCount, 'site', 'sites') +
-        ' selected';
+        recordCount > 0
+          ? `${recordCount} ${utils.pluralize(
+              recordCount,
+              'site',
+              'sites'
+            )} selected`
+          : '';
       return result;
     };
 
@@ -262,14 +295,14 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       var records = $scope.copyManagementControl.getSelectedRecords();
       var recordCount = records.length;
       var result =
-        (recordCount === 0 ? 'No' : recordCount) +
-        ' ' +
-        utils.pluralize(
-          recordCount,
-          'management regime',
-          'management regimes'
-        ) +
-        ' selected';
+        recordCount > 0
+          ? `${recordCount} ${utils.pluralize(
+              recordCount,
+              'management regime',
+              'management regimes'
+            )} selected`
+          : '';
+
       return result;
     };
 
@@ -278,7 +311,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
         var records = $scope.copyManagementControl.getSelectedRecords();
         $scope.copyManagementResource = PaginatedArrayWrapper(records);
       } else {
-        $scope.copyManagementResource = Site;
+        $scope.copyManagementResource = Management;
       }
       $scope.copyManagementControl.refresh(true);
     };
