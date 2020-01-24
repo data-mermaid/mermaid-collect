@@ -66,11 +66,10 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
 
     $scope.tableConfig = {
       id: 'fishspecies',
-      defaultSortByColumn: 'name',
+      defaultSortByColumn: '$$fishgenera.name',
       searching: true,
       searchPlaceholder: 'Filter fish species by name or genus',
       searchLocation: 'left',
-      defaultSortByColumn: '$$fishgenera.name',
       cols: [
         {
           name: 'name',
