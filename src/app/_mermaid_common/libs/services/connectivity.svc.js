@@ -24,8 +24,9 @@ angular.module('mermaid.libs').service('connectivity', [
       isToggleOffline = val;
       if (isToggleOffline) {
         stopPing();
+      } else {
+        ping();
       }
-      ping();
     };
 
     var toggleDisabled = function() {
