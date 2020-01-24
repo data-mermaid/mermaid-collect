@@ -1,7 +1,7 @@
 angular.module('mermaid.libs').service('FishAttributeService', [
   '$q',
-  'OfflineTableUtils',
-  function($q, OfflineTableUtils) {
+  'OfflineCommonTables',
+  function($q, OfflineCommonTables) {
     'use strict';
     let PROPOSED_RECORD = 10;
     let FAMILY_RANK = 'family';
@@ -12,7 +12,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = OfflineTableUtils.FishSpeciesTable().then(function(
+        savePromise = OfflineCommonTables.FishSpeciesTable().then(function(
           fishSpeciesTable
         ) {
           return fishSpeciesTable.create(fishAttribute);
@@ -27,7 +27,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = OfflineTableUtils.FishGeneraTable().then(function(
+        savePromise = OfflineCommonTables.FishGeneraTable().then(function(
           fishGenusTable
         ) {
           return fishGenusTable.create(fishAttribute);
@@ -42,7 +42,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = OfflineTableUtils.FishFamiliesTable().then(function(
+        savePromise = OfflineCommonTables.FishFamiliesTable().then(function(
           fishFamiliesTable
         ) {
           return fishFamiliesTable.create(fishAttribute);
@@ -54,7 +54,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let getFishFamily = function(fishAttributeId, skipRefresh) {
-      return OfflineTableUtils.FishFamiliesTable(skipRefresh).then(function(
+      return OfflineCommonTables.FishFamiliesTable(skipRefresh).then(function(
         table
       ) {
         return table.get(fishAttributeId);
@@ -62,7 +62,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let getFishGenus = function(fishAttributeId, skipRefresh) {
-      return OfflineTableUtils.FishGeneraTable(skipRefresh).then(function(
+      return OfflineCommonTables.FishGeneraTable(skipRefresh).then(function(
         table
       ) {
         return table.get(fishAttributeId);
@@ -70,7 +70,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let getFishSpecies = function(fishAttributeId, skipRefresh) {
-      return OfflineTableUtils.FishSpeciesTable(skipRefresh).then(function(
+      return OfflineCommonTables.FishSpeciesTable(skipRefresh).then(function(
         table
       ) {
         return table.get(fishAttributeId);
@@ -78,7 +78,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let fetchFishGenera = function(qry, skipRefresh) {
-      return OfflineTableUtils.FishGeneraTable(skipRefresh).then(function(
+      return OfflineCommonTables.FishGeneraTable(skipRefresh).then(function(
         table
       ) {
         return table.filter(qry);
@@ -86,7 +86,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let fetchFishFamilies = function(qry, skipRefresh) {
-      return OfflineTableUtils.FishFamiliesTable(skipRefresh).then(function(
+      return OfflineCommonTables.FishFamiliesTable(skipRefresh).then(function(
         table
       ) {
         return table.filter(qry);
@@ -94,7 +94,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let fetchFishSpecies = function(qry, skipRefresh) {
-      return OfflineTableUtils.FishSpeciesTable(skipRefresh).then(function(
+      return OfflineCommonTables.FishSpeciesTable(skipRefresh).then(function(
         table
       ) {
         return table.filter(qry);
@@ -117,7 +117,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let fetchFishAttributes = function(qry, skipRefresh) {
-      return OfflineTableUtils.FishAttributesTable(skipRefresh)
+      return OfflineCommonTables.FishAttributesTable(skipRefresh)
         .then(function(table) {
           return table.filter(qry);
         })

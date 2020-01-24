@@ -10,6 +10,7 @@ angular.module('app.project').directive('projectOfflineToggle', [
       },
       templateUrl: 'app/project/directives/project-offline-toggle.tpl.html',
       link: function(scope) {
+        // TODO: Not updating
         scope.isAvailableOffline = false;
         scope.messages = {
           true: 'Project is available for working offline',
