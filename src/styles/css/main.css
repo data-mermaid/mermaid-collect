@@ -852,7 +852,7 @@ btn > button {
 }
 
 .pull-right {
-  padding: 0 0 0 5px;
+  padding: 0 5px;
 }
 
 .underline {
@@ -1181,10 +1181,12 @@ btn > button {
 .copy-records-toolbar {
   display: flex;
   padding-right: 100px;
+  flex-direction: column;
 }
 
-.copy-record-select {
-  flex-grow: 1;
+.copy-record-message {
+  font-weight: bold;
+  font-style: italic;
 }
 
 .copy-records-modal-body .modal-map-body{

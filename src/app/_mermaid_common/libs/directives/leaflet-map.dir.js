@@ -91,6 +91,7 @@ angular.module('mermaid.libs').directive('leafletMap', [
             });
 
             const rec_len = scope.records.length;
+
             if (rec_len < 2) {
               if (rec_len === 1) {
                 center = scope.maprecords.getBounds().getCenter();
