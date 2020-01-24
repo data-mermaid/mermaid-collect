@@ -90,7 +90,6 @@ angular.module('mermaid.libs').directive('leafletMap', [
               scope.maprecords.addData(rec[scope.geoattr]);
             });
 
-            const initialZoom = scope.map.getZoom();
             const rec_len = scope.records.length;
 
             if (rec_len < 2) {
@@ -100,7 +99,6 @@ angular.module('mermaid.libs').directive('leafletMap', [
               scope.map.setView(center, defaultZoom);
             } else {
               scope.map.fitBounds(scope.maprecords.getBounds());
-              scope.map.setZoom(initialZoom);
             }
           },
           true

@@ -53,6 +53,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     var siteService;
     var managementService;
 
+    $scope.isActive = false;
     $scope.isCreating = false;
     $scope.currentStep = 1;
     $scope.currentUser = null;
@@ -218,18 +219,9 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
 
     // Sort out refreshing map because it's rendered
     // before the containing div is hidden.
-    $scope.invalidateMap = function(attempts) {
-      attempts = attempts || 0;
-      attempts += 1;
-      if ($('[data-smart-wizard-pane="3"]').css('display') !== 'none') {
-        $scope.map.invalidateSize();
-        return;
-      }
-      if (attempts === 5) {
-        return;
-      }
+    $scope.activateMap = function() {
       $timeout(function() {
-        $scope.invalidateMap(attempts);
+        $scope.isActive = true;
       }, 100);
     };
 

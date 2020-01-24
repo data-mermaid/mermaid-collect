@@ -18,7 +18,7 @@
               </a>
             </li>
             <li data-smart-wizard-tab="3">
-              <a href="#" ng-click="invalidateMap()">
+              <a href="#" ng-click="activateMap()">
                 <span class="step">3</span>
                 <span class="title">Select Sites</span>
               </a>
@@ -62,16 +62,17 @@
           <div class="tab-pane" data-smart-wizard-pane="3">
             <div class="widget-body">
               <paginatedtable
-              resource="copySiteResource"
-              config="copySiteConfig"
-              control="copySiteControl"
+                resource="copySiteResource"
+                config="copySiteConfig"
+                control="copySiteControl"
               ></paginatedtable>
               <div class="map-body">
                 <div class="row" style="height: 400px;">
                     <leaflet-map
-                    map="map"
-                    records="selectedSiteRecords"
-                    mapopts="mapopts"
+                      ng-if="isActive"  
+                      map="map"
+                      records="selectedSiteRecords"
+                      mapopts="mapopts"
                     ></leaflet-map>
                   </div>
                 </div>
@@ -186,7 +187,7 @@
                   <li class="previous" data-smart-wizard-prev ng-hide="currentStep == 1">
                     <a href="#" class="btn btn-lg btn-default"> Back </a>
                   </li>
-                  <li class="next" data-smart-wizard-next ng-click="invalidateMap()" ng-show="currentStep == 1 || currentStep == 2 || currentStep == 5">
+                  <li class="next" data-smart-wizard-next ng-click="activateMap()" ng-show="currentStep == 1 || currentStep == 2 || currentStep == 5">
                     <a href="#" class="btn btn-lg btn-success txt-color-white"> Next </a>
                   </li>
                   <li class="pull-right disabled" ng-show="(currentStep == 3 && selectedSiteRecords.length === 0) || (currentStep == 4 && selectedManagementRecords.length === 0)">
@@ -198,7 +199,7 @@
                   <li class="pull-right" data-smart-wizard-next ng-show="currentStep == 4 && selectedManagementRecords.length > 0" ng-click="copySelectedManagements()">
                     <a class="btn btn-lg btn-default"> Copy selected to project </a>
                   </li>
-                  <li class="next" data-smart-wizard-next ng-click="invalidateMap()" ng-show="currentStep == 3 || currentStep == 4">
+                  <li class="next" data-smart-wizard-next ng-click="activateMap()" ng-show="currentStep == 3 || currentStep == 4">
                     <a href="#" class="btn btn-lg bg-color-blueDark txt-color-white"> Skip </a>
                   </li>
                   <li class="pull-right" ng-show="project.name != null && isCreating !== true && currentStep == 6">
