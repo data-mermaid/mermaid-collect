@@ -277,8 +277,9 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
 
     var selectedSitesMessage = function() {
       var records = $scope.copySiteControl.getSelectedRecords();
+      var recordCount = records.length;
       var result =
-        records.length > 0
+        recordCount > 0
           ? `${recordCount} ${utils.pluralize(
               recordCount,
               'site',
@@ -300,8 +301,9 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
 
     var selectedManagementMessage = function() {
       var records = $scope.copyManagementControl.getSelectedRecords();
+      var recordCount = records.length;
       var result =
-        records.length > 0
+        recordCount > 0
           ? `${recordCount} ${utils.pluralize(
               recordCount,
               'management regime',
