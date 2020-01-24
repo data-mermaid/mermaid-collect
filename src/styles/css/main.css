@@ -735,6 +735,7 @@ btn > button {
 
 .page-footer a.link {
   color: white;
+  padding-left: 10px;
 }
 
 .reduce-font-70 {
@@ -1405,5 +1406,71 @@ ul li.transect-buttons[disabled] {
 .leaflet-popup-content div p span {
   margin: 0;
   font-style: italic;
+}
+
+
+.switch-mermaid {
+  position: relative;
+  display: inline-block;
+  width: 27.5px;
+  height: 15px;
+}
+
+.switch-mermaid input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider-mermaid {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.slider-mermaid:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider-mermaid {
+  background-color: #CC0A00;
+}
+
+input:focus + .slider-mermaid {
+  box-shadow: 0 0 1px #CC0A00;
+}
+
+input:checked + .slider-mermaid:before {
+  -webkit-transform: translateX(12px);
+  -ms-transform: translateX(12px);
+  transform: translateX(12px);
+}
+
+/* Rounded sliders */
+.slider-mermaid.round {
+  border-radius: 34px;
+}
+
+.slider-mermaid.round:before {
+  border-radius: 50%;
 }
 

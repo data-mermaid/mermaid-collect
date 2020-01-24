@@ -105,6 +105,15 @@ angular.module('app.project').controller('ProjectsCtrl', [
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name', 'countries']
       });
+      $scope.tableConfig.isFiltering = !connectivity.isOnline;
+      if (!connectivity.isOnline) {
+        offlineservice.getOfflineProjects().then(function(results) {
+          $scope.tableConfig.filters.id = function(projectId) {
+            return results[projectId];
+          };
+          $scope.tableConfig.isFiltering = false;
+        });
+      }
     });
 
     const startProject = function() {
@@ -130,6 +139,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
             return results[projectId];
           };
           $scope.tableControl.refresh(true);
+          $scope.tableConfig.isFiltering = false;
         });
       } else {
         delete $scope.tableConfig.filters.id;

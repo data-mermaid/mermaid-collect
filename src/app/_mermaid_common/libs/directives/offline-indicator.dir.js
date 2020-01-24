@@ -7,9 +7,9 @@ angular.module('mermaid.libs').directive('offlineIndicator', [
       restrict: 'E',
       template: '<span ng-show="isOffline"><span>',
       link: function(scope) {
-        var conn = new ConnectivityFactory(scope);
+        const conn = new ConnectivityFactory(scope);
         scope.isOffline = !connectivity.isOnline;
-        conn.on('offline-indicator-dir123', function(event) {
+        conn.on('offline-indicator', function(event) {
           scope.isOffline = event.event !== 'online';
         });
       }
