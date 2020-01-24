@@ -24,13 +24,13 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
     logger
   ) {
     'use strict';
-
+    const TABLE_NAME_DELIMITER = ':::';
     const UUID_REGEX_STR =
       '([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}';
     const uuidRegEx = new RegExp(UUID_REGEX_STR);
-    const projectTableRegEx = new RegExp(
-      `${APP_CONFIG.localDbName}-.*-${UUID_REGEX_STR}-${UUID_REGEX_STR}`
-    );
+    // const projectTableRegEx = new RegExp(
+    //   `${APP_CONFIG.localDbName}${TABLE_NAME_DELIMITER}.*${TABLE_NAME_DELIMITER}${UUID_REGEX_STR}-${UUID_REGEX_STR}`
+    // );
 
     const getDatabaseNames = function() {
       return Dexie.getDatabaseNames(function(names) {
@@ -40,25 +40,32 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
       });
     };
 
-    const getProjectIdFromTableName = function(name) {
-      if (projectTableRegEx.test(name)) {
-        const parts = name.split(uuidRegEx);
-        if (parts.length > 0) {
-          return parts[1];
-        }
+    const splitTableName = function(tableName) {
+      if (tableName == null) {
+        return null;
       }
-      return null;
+
+      const name = {};
+      const parts = tableName.split(TABLE_NAME_DELIMITER);
+      const partsLen = parts.length;
+      name.prefix = parts[0];
+      name.baseName = parts[1];
+      name.profileId =
+        partsLen > 2 && uuidRegEx.test(parts[2]) ? parts[2] : null;
+      name.projectId =
+        partsLen > 3 && uuidRegEx.test(parts[3]) ? parts[3] : null;
+
+      return name;
+    };
+
+    const getProjectIdFromTableName = function(name) {
+      const tableNameObj = splitTableName(name);
+      return tableNameObj.projectId;
     };
 
     const getProfileIdFromTableName = function(name) {
-      if (projectTableRegEx.test(name)) {
-        const uuids = name.split(uuidRegEx);
-        return uuids[2];
-      } else if (uuidRegEx.test(name)) {
-        const uuids = name.split(uuidRegEx);
-        return uuids[1];
-      }
-      return null;
+      const tableNameObj = splitTableName(name);
+      return tableNameObj.profileId;
     };
 
     const getTableProfileIds = function() {
@@ -87,53 +94,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
         }
         return Array.from(projectIds);
       });
-    };
-
-    /*
-    ([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}
-
-    1. get list of profile ids
-    2. get a list of project tables for id
-    3. get list of common tables
-    4. delete project tables by profile id
-    5. delete common tables if only 1 profile id
-
-    */
-    const deleteDatabases = function() {
-      // TODO refactor deleteDatabases
-      throw 'TODO refactor deleteDatabases';
-      return getDatabaseNames()
-        .then(function(names) {
-          return _.compact(_.uniq(_.map(names, projectIdFromTableName)));
-        })
-        .then(function(projectIds) {
-          return $q.all(_.map(projectIds, fetchProjectTablesForRemoval));
-        })
-        .then(function(delTables) {
-          return loadLookupTables(true).then(function(lookupTables) {
-            return delTables.concat(lookupTables);
-          });
-        })
-        .then(function(delTables) {
-          return ProjectsTable(true).then(function(table) {
-            delTables.push(table);
-            return delTables;
-          });
-        })
-        .then(function(delTables) {
-          delTables = [].concat.apply([], delTables);
-          var deletePromises = _.map(delTables, function(table) {
-            var name = table.name;
-            if (table.closeDbGroup) {
-              table.closeDbGroup();
-            } else {
-              table.db.close();
-            }
-            return Dexie.delete(name);
-          });
-          deletePromises.push(OfflineTableSync.destroy());
-          return $q.all(deletePromises);
-        });
     };
 
     const _refresh = function(table, limit) {
@@ -240,8 +200,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
       let promise;
 
       promise = deferred.promise;
-      // tables[tableName] = promise;
-      //TODO: createOffline table should pass promise if called more than once
 
       options = options || {};
       table = new OfflineTable(tableName, remoteUrl, options);
@@ -271,44 +229,33 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
       return Dexie.delete(name);
     };
 
-    const isSynced = function() {
-      throw 'TODO Refactor isSynced';
-      const db_prefix = 'mermaid-collect-';
-
-      return Dexie.getDatabaseNames().then(function(names) {
-        var is_synced_promises = [];
-        // Get database names
-        _.each(names, function(name) {
-          if (name != null && name.startsWith(db_prefix)) {
-            var table = new OfflineTable(name);
-            is_synced_promises.push(table.isSynced());
-          }
+    const isSynced = function(tables) {
+      tables = tables || [];
+      return $q
+        .all(
+          _.map(tables, function(table) {
+            return table.isSynced();
+          })
+        )
+        .then(function(syncedResults) {
+          return syncedResults.indexOf(false) === -1;
         });
-
-        return $q.all(is_synced_promises).then(function(results) {
-          for (var i = 0; i < results.length; i++) {
-            if (results[i] === false) {
-              return false;
-            }
-          }
-          return true;
-        });
-      });
     };
 
     return {
+      TABLE_NAME_DELIMITER: TABLE_NAME_DELIMITER,
       UUID_REGEX_STR: UUID_REGEX_STR,
       isSynced: isSynced,
       checkRemoteProjectStatus: checkRemoteProjectStatus,
       deleteDatabase: deleteDatabase,
-      deleteDatabases: deleteDatabases,
       getDatabaseNames: getDatabaseNames,
       getProjectIdFromTableName: getProjectIdFromTableName,
       getTableProfileIds: getTableProfileIds,
       getTableProjectIds: getTableProjectIds,
       projectIdFromTableName: projectIdFromTableName,
       createOfflineTable: createOfflineTable,
-      paginatedRefresh: paginatedRefresh
+      paginatedRefresh: paginatedRefresh,
+      splitTableName: splitTableName
     };
   }
 ]);

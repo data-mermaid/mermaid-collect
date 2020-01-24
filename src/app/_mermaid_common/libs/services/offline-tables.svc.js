@@ -46,17 +46,17 @@ angular.module('mermaid.libs').service('OfflineTables', [
     const getProjectsTableName = function(excludeProfileId) {
       return authService.getProfileId().then(function(profileId) {
         if (excludeProfileId === true) {
-          return `${APP_CONFIG.localDbName}-${PROJECT_NAME}`;
+          return `${APP_CONFIG.localDbName}${
+            OfflineTableUtils.TABLE_NAME_DELIMITER
+          }${PROJECT_NAME}`;
         }
-        return `${APP_CONFIG.localDbName}-${PROJECT_NAME}-${profileId}`;
+        return `${
+          APP_CONFIG.localDbName
+        }${OfflineTableUtils.TABLE_NAME_DELIMITER}${PROJECT_NAME}${OfflineTableUtils.TABLE_NAME_DELIMITER}${profileId}`;
       });
     };
 
-    const getProjectTableNames = function(
-      projectId,
-      baseNames,
-      excludeProfileId
-    ) {
+    const getProjectTableNames = function(projectId, baseNames) {
       let isMulti = true;
 
       baseNames = baseNames || PROJECT_TABLE_NAMES;
@@ -68,12 +68,9 @@ angular.module('mermaid.libs').service('OfflineTables', [
 
       return authService.getProfileId().then(function(profileId) {
         const results = baseNames.map(function(baseName) {
-          if (excludeProfileId === true) {
-            return `${APP_CONFIG.localDbName}-${baseName}-${projectId}`;
-          }
           return `${
             APP_CONFIG.localDbName
-          }-${baseName}-${projectId}-${profileId}`;
+          }${OfflineTableUtils.TABLE_NAME_DELIMITER}${baseName}${OfflineTableUtils.TABLE_NAME_DELIMITER}${profileId}${OfflineTableUtils.TABLE_NAME_DELIMITER}${projectId}`;
         });
         return isMulti === false ? results[0] : results;
       });
@@ -85,14 +82,11 @@ angular.module('mermaid.libs').service('OfflineTables', [
         .then(function(results) {
           const profileId = results[0];
           const names = results[1];
-          const regx = new RegExp(
-            `${APP_CONFIG.localDbName}-.*-${
-              OfflineTableUtils.UUID_REGEX_STR
-            }-${profileId}`
-          );
-
           const filteredList = _.filter(names, function(name) {
-            return regx.test(name);
+            const tableNameObj = OfflineTableUtils.splitTableName(name);
+            return (
+              tableNameObj.projectId && tableNameObj.profileId === profileId
+            );
           });
 
           return Array.from(
@@ -328,25 +322,30 @@ angular.module('mermaid.libs').service('OfflineTables', [
     };
 
     const CollectRecordsTable = function(projectId, skipRefresh) {
-      return buildProjectRelatedTable(
-        CollectRecord,
-        'collectrecords',
+      const projectSitesTablePromise = ProjectSitesTable(projectId, true);
+      const projectManagementsTablePromise = ProjectManagementsTable(
         projectId,
-        COLLECT_RECORDS_NAME,
-        {
-          joinDefn: {
-            sites:
-              'data.sample_event.site -> mermaid-projectsites-' +
-              projectId +
-              '.id, name',
-            managements:
-              'data.sample_event.management -> mermaid-projectmanagements-' +
-              projectId +
-              '.id, name'
-          }
-        },
-        skipRefresh
+        true
       );
+      return $q
+        .all([projectSitesTablePromise, projectManagementsTablePromise])
+        .then(function(results) {
+          const sitesTableName = results[0].name;
+          const managementTableName = results[1].name;
+          return buildProjectRelatedTable(
+            CollectRecord,
+            'collectrecords',
+            projectId,
+            COLLECT_RECORDS_NAME,
+            {
+              joinDefn: {
+                sites: `data.sample_event.site -> ${sitesTableName}.id, name`,
+                managements: `data.sample_event.management -> ${managementTableName}.id, name`
+              }
+            },
+            skipRefresh
+          );
+        });
     };
 
     const clearDatabases = function(projectId) {
@@ -374,7 +373,6 @@ angular.module('mermaid.libs').service('OfflineTables', [
       } else {
         tablesPromise = fetchProjectTablesForRemoval(projectId);
       }
-
       const tableRemovalPromise = tablesPromise.then(function(tables) {
         const deletePromises = _.map(tables, function(table) {
           const name = table.name;
@@ -404,20 +402,40 @@ angular.module('mermaid.libs').service('OfflineTables', [
       return deleteProjectPromises[projectId];
     };
 
+    const deleteProjectsDatabase = function(force) {
+      return ProjectsTable()
+        .then(function(table) {
+          if (force) {
+            return table;
+          } else {
+            return OfflineTableUtils.isSynced([table]).then(function() {
+              return table;
+            });
+          }
+        })
+        .then(function(table) {
+          const name = table.name;
+          if (table.closeDbGroup) {
+            table.closeDbGroup();
+          } else {
+            table.db.close();
+          }
+          return OfflineTableUtils.deleteDatabase(name).then(function() {
+            return OfflineTableSync.removeLastAccessed(name);
+          });
+        });
+    };
+
     const fetchProjectTablesForRemoval = function(projectId) {
       return loadProjectRelatedTables(projectId, true).then(function(tables) {
-        return $q
-          .all(
-            _.map(tables, function(table) {
-              return table.isSynced();
-            })
-          )
-          .then(function(syncedResults) {
-            if (syncedResults.indexOf(false) !== -1) {
-              return $q.reject('Offline table not saved to server.');
-            }
-            return tables;
-          });
+        return OfflineTableUtils.isSynced(tables).then(function(
+          isTablesSynced
+        ) {
+          if (isTablesSynced === false) {
+            return $q.reject('Offline table not saved to server.');
+          }
+          return tables;
+        });
       });
     };
 
@@ -440,6 +458,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
       ProjectSitesTable: ProjectSitesTable,
       clearDatabases: clearDatabases,
       deleteProjectDatabases: deleteProjectDatabases,
+      deleteProjectsDatabase: deleteProjectsDatabase,
       fetchProjectTablesForRemoval: fetchProjectTablesForRemoval,
       getTableProjectIds: getTableProjectIds,
       getProjectsTableName: getProjectsTableName,

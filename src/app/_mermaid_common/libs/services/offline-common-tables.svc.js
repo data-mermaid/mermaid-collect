@@ -237,6 +237,38 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       );
     };
 
+    const deleteCommonTables = function(force) {
+      let tablesPromise;
+      if (force) {
+        tablesPromise = loadLookupTables(true);
+      } else {
+        let tables;
+        tablesPromise = loadLookupTables()
+          .then(function(tableResults) {
+            tables = tableResults;
+            return OfflineTableUtils.isSynced(tables);
+          })
+          .then(function() {
+            return tables;
+          });
+      }
+      return tablesPromise.then(function(tables) {
+        const deletePromises = _.map(tables, function(table) {
+          const name = table.name;
+
+          if (table.closeDbGroup) {
+            table.closeDbGroup();
+          } else {
+            table.db.close();
+          }
+          return OfflineTableUtils.deleteDatabase(name).then(function() {
+            return OfflineTableSync.removeLastAccessed(name);
+          });
+        });
+        return $q.all(deletePromises);
+      });
+    };
+
     const getTableNames = function(baseNames) {
       let isMulti = true;
 
@@ -275,6 +307,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       FishGeneraTable: FishGeneraTable,
       FishSpeciesTable: FishSpeciesTable,
       BenthicAttributesTable: BenthicAttributesTable,
+      deleteCommonTables: deleteCommonTables,
       getTableNames: getTableNames,
       loadLookupTables: loadLookupTables
     };
