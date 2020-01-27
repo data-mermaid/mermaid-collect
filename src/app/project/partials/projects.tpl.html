@@ -12,7 +12,7 @@
           <div>
             <div class="widget-body">
               <div
-                ng-if="tableConfig != null && resource != null"
+                ng-if="tableConfig != null && resource != null && !tableConfig.isFiltering"
                 paginatedtable
                 resource="resource"
                 config="tableConfig"
