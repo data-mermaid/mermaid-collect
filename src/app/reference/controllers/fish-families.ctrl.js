@@ -3,12 +3,14 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   '$scope',
   'PaginatedOfflineTableWrapper',
   'offlineservice',
+  'TransectExportService',
   'Button',
   function(
     $rootScope,
     $scope,
     PaginatedOfflineTableWrapper,
     offlineservice,
+    TransectExportService,
     Button
   ) {
     'use strict';
@@ -16,6 +18,7 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
     $scope.resource = null;
     $scope.tableControl = {};
     const fieldReportButton = new Button();
+    const reportHeader = ['Name'];
     let fishFamilyRecordsCount = 0;
 
     $scope.tableConfig = {
@@ -63,30 +66,15 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       });
     };
 
-    const downloadFieldReport = function() {
-      const header = ['Name'];
-
+    const downloadFishFamiliesReport = function() {
       $scope.projectObjectsTable.filter().then(function(records) {
-        const result = records.map(function(val) {
-          return [val.name];
-        });
-        result.unshift(header);
-        const csvContent =
-          'data:text/csv;charset=utf-8,' +
-          result
-            .map(function(val) {
-              return val.join(',');
-            })
-            .join('\n');
+        const content = TransectExportService.fishFamiliesReport(records);
 
-        const encodedUri = encodeURI(csvContent);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = encodedUri;
-        downloadLink.download = 'fish-families.csv';
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        TransectExportService.downloadAsCSV(
+          'fish-families',
+          reportHeader,
+          content
+        );
       });
     };
 
@@ -128,7 +116,7 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
     fieldReportButton.enabled = true;
     fieldReportButton.onlineOnly = false;
     fieldReportButton.click = function() {
-      downloadFieldReport();
+      downloadFishFamiliesReport();
     };
 
     $rootScope.PageHeaderButtons = [fieldReportButton];

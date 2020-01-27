@@ -5,6 +5,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
   '$q',
   'PaginatedOfflineTableWrapper',
   'offlineservice',
+  'TransectExportService',
   'Button',
   function(
     $rootScope,
@@ -13,6 +14,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     $q,
     PaginatedOfflineTableWrapper,
     offlineservice,
+    TransectExportService,
     Button
   ) {
     'use strict';
@@ -26,6 +28,23 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       lengthtypes: []
     };
     const fieldReportButton = new Button();
+    const reportHeader = [
+      'Genus',
+      'Species',
+      'Family',
+      'Biomass Constant A',
+      'Biomass Constant B',
+      'Biomass Constant C',
+      'Max Length (cm)',
+      'Max Length Type',
+      'Trophic Level',
+      'Vulnerability',
+      'Regions',
+      'Climate Score',
+      'Trophic Group',
+      'Functional Group',
+      'Group Size'
+    ];
     let fishSpeciesRecordsCount = 0;
 
     offlineservice.FishGeneraTable().then(function(table) {
@@ -118,107 +137,19 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       });
     };
 
-    const downloadFieldReport = function() {
-      const header = [
-        'Genus',
-        'Species',
-        'Family',
-        'Biomass Constant A',
-        'Biomass Constant B',
-        'Biomass Constant C',
-        'Max Length (cm)',
-        'Max Length Type',
-        'Trophic Level',
-        'Vulnerability',
-        'Regions',
-        'Climate Score',
-        'Trophic Group',
-        'Functional Group',
-        'Group Size'
-      ];
-
+    const downloadFishSpeciessReport = function() {
       $scope.projectObjectsTable.filter().then(function(records) {
-        const result = records.map(function(val) {
-          const familyId = $filter('matchchoice')(
-            val.genus,
-            $scope.tableControl.fishgenera,
-            'family'
-          );
+        const content = TransectExportService.fishSpeciessReport(
+          records,
+          $scope.tableControl,
+          $scope.choices
+        );
 
-          const genus = $filter('matchchoice')(
-            val.genus,
-            $scope.tableControl.fishgenera
-          );
-          const species = val.name;
-          const family = $filter('matchchoice')(
-            familyId,
-            $scope.tableControl.fishfamilies
-          );
-
-          const lengthtypes = $filter('matchchoice')(
-            val.max_length_type,
-            $scope.choices.lengthtypes
-          );
-
-          const regions =
-            val.regions.length > 0
-              ? `"${val.regions.map(function(region) {
-                  return $filter('matchchoice')(region, $scope.choices.regions);
-                })}"`
-              : '';
-
-          const fishgrouptrophics = $filter('matchchoice')(
-            val.trophic_group,
-            $scope.choices.fishgrouptrophics
-          );
-
-          const fishgroupfunctions = $filter('matchchoice')(
-            val.functional_group,
-            $scope.choices.fishgroupfunctions
-          );
-
-          const fishgroupsizes = $filter('matchchoice')(
-            val.group_size,
-            $scope.choices.fishgroupsizes
-          );
-
-          return [
-            genus,
-            species,
-            family,
-            val.biomass_constant_a,
-            val.biomass_constant_b,
-            val.biomass_constant_c,
-            val.max_length,
-            lengthtypes,
-            val.trophic_level,
-            val.vulnerability,
-            regions,
-            val.climate_score,
-            fishgrouptrophics,
-            fishgroupfunctions,
-            fishgroupsizes
-          ];
-        });
-
-        result.unshift(header);
-
-        const csvContent =
-          'data:text/csv;charset=utf-8,' +
-          result
-            .map(function(val) {
-              return val.join(',');
-            })
-            .join('\n');
-
-        const encodedUri = encodeURI(csvContent);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = encodedUri;
-        downloadLink.download = 'fish-species.csv';
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        TransectExportService.downloadAsCSV(
+          'fish-species',
+          reportHeader,
+          content
+        );
       });
     };
 
@@ -260,7 +191,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     fieldReportButton.enabled = true;
     fieldReportButton.onlineOnly = false;
     fieldReportButton.click = function() {
-      downloadFieldReport();
+      downloadFishSpeciessReport();
     };
 
     $rootScope.PageHeaderButtons = [fieldReportButton];

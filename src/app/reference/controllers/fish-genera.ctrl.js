@@ -4,6 +4,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
   '$filter',
   'PaginatedOfflineTableWrapper',
   'offlineservice',
+  'TransectExportService',
   'Button',
   function(
     $rootScope,
@@ -11,6 +12,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     $filter,
     PaginatedOfflineTableWrapper,
     offlineservice,
+    TransectExportService,
     Button
   ) {
     'use strict';
@@ -18,6 +20,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     $scope.resource = null;
     $scope.tableControl = {};
     const fieldReportButton = new Button();
+    const reportHeader = ['Name', 'Family'];
     let fishGenusRecordsCount = 0;
 
     offlineservice.FishFamiliesTable().then(function(table) {
@@ -80,30 +83,15 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       });
     };
 
-    const downloadFieldReport = function() {
-      const header = ['Name', 'Family'];
-
+    const downloadFishGeneraReport = function() {
       $scope.projectObjectsTable.filter().then(function(records) {
-        const result = records.map(function(val) {
-          return [val.name, val.$$fishfamilies.name];
-        });
-        result.unshift(header);
-        const csvContent =
-          'data:text/csv;charset=utf-8,' +
-          result
-            .map(function(val) {
-              return val.join(',');
-            })
-            .join('\n');
+        const content = TransectExportService.fishGeneraReport(records);
 
-        const encodedUri = encodeURI(csvContent);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = encodedUri;
-        downloadLink.download = 'fish-genera.csv';
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        TransectExportService.downloadAsCSV(
+          'fish-genera',
+          reportHeader,
+          content
+        );
       });
     };
 
@@ -145,7 +133,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     fieldReportButton.enabled = true;
     fieldReportButton.onlineOnly = false;
     fieldReportButton.click = function() {
-      downloadFieldReport();
+      downloadFishGeneraReport();
     };
 
     $rootScope.PageHeaderButtons = [fieldReportButton];

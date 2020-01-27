@@ -4,6 +4,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
   'PaginatedOfflineTableWrapper',
   'Button',
   'offlineservice',
+  'TransectExportService',
   '$filter',
   '$q',
   function(
@@ -12,6 +13,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     PaginatedOfflineTableWrapper,
     Button,
     offlineservice,
+    TransectExportService,
     $filter,
     $q
   ) {
@@ -21,6 +23,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     $scope.tableControl = {};
     $scope.choices = { regions: [], benthiclifehistories: [] };
     const fieldReportButton = new Button();
+    const reportHeader = ['Name', 'Parent', 'Life History', 'Regions'];
     let benthicAttributeRecordsCount = 0;
 
     offlineservice.ChoicesTable().then(function(table) {
@@ -98,51 +101,18 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       });
     };
 
-    const downloadFieldReport = function() {
-      const header = ['Name', 'Parent', 'Life History', 'Regions'];
-
+    const downloadBenthicAttributesReport = function() {
       $scope.projectObjectsTable.filter().then(function(records) {
-        const result = records.map(function(val) {
-          const regionsVal =
-            val.regions.length > 0
-              ? `"${val.regions.map(function(region) {
-                  return $filter('matchchoice')(region, $scope.choices.regions);
-                })}"`
-              : '';
+        const content = TransectExportService.benthicAttributesReport(
+          records,
+          $scope.choices
+        );
 
-          const lifeHistoryVal = val.life_history
-            ? $filter('matchchoice')(
-                val.life_history,
-                $scope.choices.benthiclifehistories
-              )
-            : '';
-
-          return [
-            val.name,
-            val.$$benthicattributes.name,
-            lifeHistoryVal,
-            regionsVal
-          ];
-        });
-
-        result.unshift(header);
-
-        const csvContent =
-          'data:text/csv;charset=utf-8,' +
-          result
-            .map(function(val) {
-              return val.join(',');
-            })
-            .join('\n');
-
-        const encodedUri = encodeURI(csvContent);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = encodedUri;
-        downloadLink.download = 'benthic-attributes.csv';
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        TransectExportService.downloadAsCSV(
+          'benthic-attributes',
+          reportHeader,
+          content
+        );
       });
     };
 
@@ -201,7 +171,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     fieldReportButton.enabled = true;
     fieldReportButton.onlineOnly = false;
     fieldReportButton.click = function() {
-      downloadFieldReport();
+      downloadBenthicAttributesReport();
     };
 
     $rootScope.PageHeaderButtons = [fieldReportButton];
