@@ -3,14 +3,14 @@ angular.module('app.project').service('CollectService', [
   'logger',
   'ProjectService',
   'ValidateSubmitService',
-  'OfflineTableUtils',
+  'OfflineTables',
   'connectivity',
   function(
     $q,
     logger,
     ProjectService,
     ValidateSubmitService,
-    OfflineTableUtils,
+    OfflineTables,
     connectivity
   ) {
     'use strict';
@@ -26,7 +26,7 @@ angular.module('app.project').service('CollectService', [
       record.stage = ProjectService.SAVING_STAGE;
       if (!record.id) {
         record.profile = options.profileId;
-        return OfflineTableUtils.CollectRecordsTable(options.projectId).then(
+        return OfflineTables.CollectRecordsTable(options.projectId).then(
           function(table) {
             return table.create(record).then(function(savedRecord) {
               if (connectivity.isOnline !== true) {
@@ -74,7 +74,7 @@ angular.module('app.project').service('CollectService', [
             }
             return promise
               .then(function() {
-                return OfflineTableUtils.CollectRecordsTable(record.project);
+                return OfflineTables.CollectRecordsTable(record.project);
               })
               .then(function(table) {
                 return table.get(validatedRecord.id);

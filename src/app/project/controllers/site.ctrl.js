@@ -48,7 +48,7 @@ angular.module('app.project').controller('SiteCtrl', [
     });
 
     $scope.save = function() {
-      const isNew = $scope.site.id === null;
+      const isNew = $scope.site.id == null;
       SiteService.save($scope.site, { projectId: projectId })
         .then(function(savedSite) {
           if (isNew) {

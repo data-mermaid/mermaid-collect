@@ -1,6 +1,6 @@
 angular.module('mermaid.libs').service('BenthicAttributeService', [
-  'OfflineTableUtils',
-  function(OfflineTableUtils) {
+  'OfflineCommonTables',
+  function(OfflineCommonTables) {
     'use strict';
 
     let PROPOSED_RECORD = 10;
@@ -8,7 +8,9 @@ angular.module('mermaid.libs').service('BenthicAttributeService', [
     let save = function(benthicAttribute) {
       if (!benthicAttribute.id) {
         benthicAttribute.status = PROPOSED_RECORD;
-        return OfflineTableUtils.BenthicAttributesTable().then(function(table) {
+        return OfflineCommonTables.BenthicAttributesTable().then(function(
+          table
+        ) {
           return table.create(benthicAttribute);
         });
       }
@@ -16,7 +18,7 @@ angular.module('mermaid.libs').service('BenthicAttributeService', [
     };
 
     let getBenthicAttribute = function(benthicAttributeId, skipRefresh) {
-      return OfflineTableUtils.BenthicAttributesTable(skipRefresh).then(
+      return OfflineCommonTables.BenthicAttributesTable(skipRefresh).then(
         function(table) {
           return table.get(benthicAttributeId);
         }
@@ -24,7 +26,7 @@ angular.module('mermaid.libs').service('BenthicAttributeService', [
     };
 
     let fetchBenthicAttributes = function(qry, skipRefresh) {
-      return OfflineTableUtils.BenthicAttributesTable(skipRefresh).then(
+      return OfflineCommonTables.BenthicAttributesTable(skipRefresh).then(
         function(table) {
           return table.filter(qry);
         }
