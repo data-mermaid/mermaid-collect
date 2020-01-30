@@ -16,6 +16,7 @@
     'APP_CONFIG',
     'layoutUtils',
     'system',
+    'offlineservice',
     // '$urlRouter',
     'ConnectivityFactory'
   ];
@@ -33,11 +34,14 @@
     APP_CONFIG,
     layoutUtils,
     system,
+    offlineservice,
     // $urlRouter,
     ConnectivityFactory
   ) {
     const conn = new ConnectivityFactory($rootScope);
     let handleAuth;
+
+    offlineservice.syncAndDeleteV1Tables();
 
     if (authService.getToken() != null) {
       handleAuth = authService.renewToken();

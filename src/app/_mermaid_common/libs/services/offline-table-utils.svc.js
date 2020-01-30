@@ -28,9 +28,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
     const UUID_REGEX_STR =
       '([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}';
     const uuidRegEx = new RegExp(UUID_REGEX_STR);
-    // const projectTableRegEx = new RegExp(
-    //   `${APP_CONFIG.localDbName}${TABLE_NAME_DELIMITER}.*${TABLE_NAME_DELIMITER}${UUID_REGEX_STR}-${UUID_REGEX_STR}`
-    // );
 
     const getDatabaseNames = function() {
       return Dexie.getDatabaseNames(function(names) {

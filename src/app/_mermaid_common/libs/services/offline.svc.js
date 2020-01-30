@@ -21,6 +21,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   'FishSpecies',
   'connectivity',
   'OfflineTableSync',
+  'OfflineTableUtils',
   'logger',
   function(
     APP_CONFIG,
@@ -43,6 +44,7 @@ angular.module('mermaid.libs').service('offlineservice', [
     FishSpecies,
     connectivity,
     OfflineTableSync,
+    OfflineTableUtils,
     logger
   ) {
     'use strict';
@@ -874,6 +876,33 @@ angular.module('mermaid.libs').service('offlineservice', [
       return $q.all(promises);
     };
 
+    const syncAndDeleteV1Tables = function() {
+      const uuidRegEx = new RegExp(OfflineTableUtils.UUID_REGEX_STR);
+      return getDatabaseNames()
+        .then(function(tableNames) {
+          return _.filter(tableNames, function(tableName) {
+            const tableNameObj = OfflineTableUtils.splitTableName(tableName);
+            return tableNameObj.profileId == null && uuidRegEx.test(tableName);
+          });
+        })
+        .then(function(oldTableNames) {
+          return Array.from(
+            new Set(
+              _.map(oldTableNames, function(oldTableName) {
+                return oldTableName.split(uuidRegEx)[1];
+              })
+            )
+          );
+        })
+        .then(function(projectIds) {
+          return $q.all(
+            _.map(projectIds, function(projectId) {
+              return deleteProjectDatabases(projectId);
+            })
+          );
+        });
+    };
+
     var offlineutils = {
       getTableByName: getTableByName,
       databaseExists: databaseExists,
@@ -920,7 +949,8 @@ angular.module('mermaid.libs').service('offlineservice', [
       getOfflineProjects: getOfflineProjects,
       getProjectTableNames: getProjectTableNames,
       loadLookupTables: loadLookupTables,
-      projectIdFromTableName: projectIdFromTableName
+      projectIdFromTableName: projectIdFromTableName,
+      syncAndDeleteV1Tables: syncAndDeleteV1Tables
     };
 
     return offlineutils;
