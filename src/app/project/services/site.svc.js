@@ -4,7 +4,15 @@ angular.module('app.project').service('SiteService', [
   'authService',
   'APP_CONFIG',
   '$window',
-  function($q, offlineservice, authService, APP_CONFIG, $window) {
+  'TransectExportService',
+  function(
+    $q,
+    offlineservice,
+    authService,
+    APP_CONFIG,
+    $window,
+    TransectExportService
+  ) {
     'use strict';
 
     var save = function(site, options) {
@@ -53,10 +61,45 @@ angular.module('app.project').service('SiteService', [
       $window.open(url);
     };
 
+    const downloadSites = function(projectId) {
+      const name = 'sites';
+      const headers = [
+        'Country',
+        'Name',
+        'Latitude',
+        'Longitude',
+        'Reef type',
+        'Reef zone',
+        'Reef exposure',
+        'Notes'
+      ];
+      return offlineservice
+        .ProjectSitesTable(projectId)
+        .then(function(table) {
+          return table.filter();
+        })
+        .then(function(records) {
+          const content = _.map(records, function(record) {
+            return [
+              record.$$countries.name,
+              record.name,
+              record.location.coordinates[1],
+              record.location.coordinates[0],
+              record.$$reeftypes.name,
+              record.$$reefzones.name,
+              record.$$reefexposures.name,
+              record.notes
+            ];
+          });
+          return TransectExportService.downloadAsCSV(name, headers, content);
+        });
+    };
+
     return {
       save: save,
       fetchData: fetchData,
-      downloadFieldReport: downloadFieldReport
+      downloadFieldReport: downloadFieldReport,
+      downloadSites: downloadSites
     };
   }
 ]);
