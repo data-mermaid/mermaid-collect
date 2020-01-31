@@ -42,7 +42,11 @@ angular.module('mermaid.libs').service('system', [
           return $q.all(
             _.map(projectStatuses, function(status, projectId) {
               if (status === false) {
-                return OfflineTables.deleteProjectDatabases(projectId, true);
+                return OfflineTables.deleteProjectDatabases(
+                  projectId,
+                  true,
+                  true
+                );
               }
               return OfflineTables.loadProjectRelatedTables(projectId);
             })
