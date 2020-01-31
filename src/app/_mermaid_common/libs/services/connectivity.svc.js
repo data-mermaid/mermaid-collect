@@ -10,13 +10,27 @@ angular.module('mermaid.libs').service('connectivity', [
     var pingId = null;
     var oldPingState = null;
     var pingState = true;
+    var isToggleOffline = false;
 
     var isOnline = function() {
-      return pingState && navigator.onLine;
+      return pingState && navigator.onLine && isToggleOffline === false;
     };
 
     var checkOnline = function() {
       $rootScope.$broadcast('online', isOnline() === true);
+    };
+
+    var setToggle = function(val) {
+      isToggleOffline = val;
+      if (isToggleOffline) {
+        stopPing();
+      } else {
+        ping();
+      }
+    };
+
+    var toggleDisabled = function() {
+      return !pingState && !navigator.onLine;
     };
 
     var stopPing = function() {
@@ -40,7 +54,7 @@ angular.module('mermaid.libs').service('connectivity', [
           function() {
             oldPingState = pingState;
             pingState = true;
-            if (oldPingState != pingState) {
+            if (oldPingState != pingState || !isToggleOffline) {
               checkOnline();
             }
           },
@@ -61,7 +75,9 @@ angular.module('mermaid.libs').service('connectivity', [
 
     var service = {
       ping: ping,
-      stopPing: stopPing
+      stopPing: stopPing,
+      setToggle: setToggle,
+      toggleDisabled: toggleDisabled
     };
 
     Object.defineProperty(service, 'isOnline', {

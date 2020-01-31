@@ -158,6 +158,9 @@ angular
         data: {
           title: 'New Project'
         },
+        params: {
+          projectId: null
+        },
         views: {
           'content@fullapp': {
             templateUrl: 'app/project/partials/project-wizard.tpl.html',

@@ -38,13 +38,13 @@ angular.module('app.project').controller('ProjectsCtrl', [
 
     const dataSharingFormatter = function(record) {
       return (
-        'Fish Belt: <em>' +
+        '<strong>Fish Belt:</strong> ' +
         dataSharingPolicies[record.data_policy_beltfish] +
         '</em><br>' +
-        'Benthics: <em>' +
+        '<strong>Benthics:</strong> ' +
         dataSharingPolicies[record.data_policy_benthiclit] +
         '</em><br>' +
-        'Bleaching: <em>' +
+        '<strong>Bleaching:</strong> ' +
         dataSharingPolicies[record.data_policy_bleachingqc] +
         '</em>'
       );
@@ -81,6 +81,12 @@ angular.module('app.project').controller('ProjectsCtrl', [
         },
         { name: 'num_sites', display: 'Number of Sites', sortable: false },
         {
+          display: 'Offline Ready',
+          sortable: false,
+          tdTemplate:
+            '<project-offline-toggle project-id="record.id"></project-offline-toggle>'
+        },
+        {
           display: 'Data Sharing',
           sortable: false,
           formatter: function(val, record) {
@@ -88,10 +94,10 @@ angular.module('app.project').controller('ProjectsCtrl', [
           }
         },
         {
-          display: 'Offline Ready',
+          display: 'Copy Project',
           sortable: false,
           tdTemplate:
-            '<project-offline-toggle project-id="record.id"></project-offline-toggle>'
+            '<a ui-sref="fullapp.project({projectId: record.id})"><i class="fa fa-copy" /> Copy</a>'
         }
       ]
     };
@@ -101,6 +107,15 @@ angular.module('app.project').controller('ProjectsCtrl', [
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name', 'countries']
       });
+      $scope.tableConfig.isFiltering = !connectivity.isOnline;
+      if (!connectivity.isOnline) {
+        offlineservice.getOfflineProjects().then(function(results) {
+          $scope.tableConfig.filters.id = function(projectId) {
+            return results[projectId];
+          };
+          $scope.tableConfig.isFiltering = false;
+        });
+      }
     });
 
     const startProject = function() {
@@ -126,6 +141,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
             return results[projectId];
           };
           $scope.tableControl.refresh(true);
+          $scope.tableConfig.isFiltering = false;
         });
       } else {
         delete $scope.tableConfig.filters.id;

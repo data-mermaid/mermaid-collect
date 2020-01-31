@@ -1,9 +1,9 @@
 <div class="copy-records-toolbar">
-    <div class="copy-record-select">
+    <div>
         <input type="checkbox" name="viewSelectedOnly" ng-model="config.toolbar.viewSelectedOnly" ng-change="config.toolbar.toggleViewSelectedOnly(config.toolbar.viewSelectedOnly)"/>  
         <label for="viewSelectedOnly">
             View selected only
         </label>
     </div>
-    <div ng-show="config.selecting">{{config.toolbar.message()}}</div>
+    <div ng-show="config.selecting" class="copy-record-message">{{config.toolbar.message()}}</div>
 </div>
