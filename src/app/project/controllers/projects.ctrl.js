@@ -109,7 +109,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
       });
       $scope.tableConfig.isFiltering = !connectivity.isOnline;
       if (!connectivity.isOnline) {
-        offlineservice.getOfflineProjects().then(function(results) {
+        ProjectService.getOfflineProjects().then(function(results) {
           $scope.tableConfig.filters.id = function(projectId) {
             return results[projectId];
           };
