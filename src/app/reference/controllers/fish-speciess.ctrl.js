@@ -5,30 +5,87 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
   '$q',
   'PaginatedOfflineTableWrapper',
   'offlineservice',
+  'TransectExportService',
+  'Button',
   function(
     $rootScope,
     $scope,
     $filter,
     $q,
     PaginatedOfflineTableWrapper,
-    offlineservice
+    offlineservice,
+    TransectExportService,
+    Button
   ) {
     'use strict';
     $scope.resource = null;
     $scope.tableControl = {};
+    $scope.choices = {
+      regions: [],
+      fishgroupfunctions: [],
+      fishgrouptrophics: [],
+      fishgroupsizes: [],
+      lengthtypes: []
+    };
+    const fieldReportButton = new Button();
+    const reportHeader = [
+      'Genus',
+      'Species',
+      'Family',
+      'Biomass Constant A',
+      'Biomass Constant B',
+      'Biomass Constant C',
+      'Max Length (cm)',
+      'Max Length Type',
+      'Trophic Level',
+      'Vulnerability',
+      'Regions',
+      'Climate Score',
+      'Trophic Group',
+      'Functional Group',
+      'Group Size'
+    ];
     let fishSpeciesRecordsCount = 0;
 
-    const promiseFishGeneraTable = offlineservice
-      .FishGeneraTable()
-      .then(function(table) {
-        return table.filter().then(function(records) {
-          $scope.tableControl.fishgenera = records;
-        });
+    offlineservice.FishGeneraTable().then(function(table) {
+      return table.filter().then(function(records) {
+        $scope.tableControl.fishgenera = records;
       });
+    });
+
+    offlineservice.FishFamiliesTable().then(function(table) {
+      return table.filter().then(function(records) {
+        $scope.tableControl.fishfamilies = records;
+      });
+    });
+
+    offlineservice.ChoicesTable().then(function(table) {
+      table.filter({ name: 'regions' }).then(function(region_choices) {
+        $scope.choices.regions = region_choices[0].data;
+      });
+      table
+        .filter({ name: 'fishgroupfunctions' })
+        .then(function(fishgroupfunction_choices) {
+          $scope.choices.fishgroupfunctions = fishgroupfunction_choices[0].data;
+        });
+      table
+        .filter({ name: 'fishgrouptrophics' })
+        .then(function(fishgrouptrophic_choices) {
+          $scope.choices.fishgrouptrophics = fishgrouptrophic_choices[0].data;
+        });
+      table
+        .filter({ name: 'fishgroupsizes' })
+        .then(function(fishgroupsize_choices) {
+          $scope.choices.fishgroupsizes = fishgroupsize_choices[0].data;
+        });
+      table.filter({ name: 'lengthtypes' }).then(function(lengthtype_choices) {
+        $scope.choices.lengthtypes = lengthtype_choices[0].data;
+      });
+    });
 
     $scope.tableConfig = {
       id: 'fishspecies',
-      defaultSortByColumn: 'name',
+      defaultSortByColumn: '$$fishgenera.name',
       searching: true,
       searchPlaceholder: 'Filter fish species by name or genus',
       searchLocation: 'left',
@@ -37,7 +94,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
           name: 'name',
           display: 'Name',
           sortable: true,
-          sort_by: ['$$fishgenera.name', 'name'],
+          sort_by: ['name'],
           tdTemplate:
             '<a ui-sref="app.reference.fishspeciess.fishspecies({id: record.id})">{{record.display_name}}</a>'
         },
@@ -80,11 +137,27 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       });
     };
 
+    const downloadFishSpeciessReport = function() {
+      $scope.projectObjectsTable.filter().then(function(records) {
+        const content = TransectExportService.fishSpeciessReport(
+          records,
+          $scope.tableControl,
+          $scope.choices
+        );
+
+        TransectExportService.downloadAsCSV(
+          'fish-species',
+          reportHeader,
+          content
+        );
+      });
+    };
+
     const promise = offlineservice.FishSpeciesTable();
-    $q.all([promise, promiseFishGeneraTable]).then(function(tables) {
-      $scope.projectObjectsTable = tables[0];
+    promise.then(function(tables) {
+      $scope.projectObjectsTable = tables;
       updateFishSpeciesCount();
-      $scope.resource = new PaginatedOfflineTableWrapper(tables[0], {
+      $scope.resource = new PaginatedOfflineTableWrapper(tables, {
         searchFields: ['$$fishgenera.name', 'name']
       });
       $scope.projectObjectsTable.$watch(
@@ -112,6 +185,15 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       return !$scope.tableControl.textboxFilterUsed();
     };
 
-    $rootScope.PageHeaderButtons = [];
+    fieldReportButton.name = 'Export to CSV';
+    fieldReportButton.classes = 'btn-success';
+    fieldReportButton.icon = 'fa fa-download';
+    fieldReportButton.enabled = true;
+    fieldReportButton.onlineOnly = false;
+    fieldReportButton.click = function() {
+      downloadFishSpeciessReport();
+    };
+
+    $rootScope.PageHeaderButtons = [fieldReportButton];
   }
 ]);
