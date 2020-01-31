@@ -30,15 +30,15 @@
 angular.module('mermaid.libs').service('OfflineTableSync', [
   '$http',
   '$q',
-  'APP_CONFIG',
   'utils',
-  function($http, $q, APP_CONFIG, utils) {
+  function($http, $q, utils) {
     'use strict';
 
     var db;
     var table;
 
     var service = {};
+    const APP_CONFIG = window.appConfig; // Doing this to fix karma tests
     var databaseName = `${APP_CONFIG.localDbName}${
       APP_CONFIG.localDbNameDelimiter
     }offlinetables`;
