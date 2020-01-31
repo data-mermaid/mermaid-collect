@@ -51,6 +51,15 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
 
     let choicesPromise = null;
 
+    const getFullName = function(baseName) {
+      if (baseName.indexOf(APP_CONFIG.localDbName) === 0) {
+        console.warn(`${baseName} looks like it already a full name.`);
+      }
+      return `${APP_CONFIG.localDbName}${
+        OfflineTableUtils.TABLE_NAME_DELIMITER
+      }${baseName}`;
+    };
+
     const ChoicesTable = function(skipRefresh) {
       if (choicesPromise !== null) {
         return choicesPromise;
@@ -90,7 +99,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       };
 
       choicesPromise = OfflineTableUtils.createOfflineTable(
-        CHOICES_NAME,
+        getFullName(CHOICES_NAME),
         null,
         Choice,
         {
@@ -119,7 +128,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
 
     const FishSizesTable = function(skipRefresh) {
       return OfflineTableUtils.createOfflineTable(
-        FISH_SIZES_NAME,
+        getFullName(FISH_SIZES_NAME),
         null,
         FishSize,
         {
@@ -133,7 +142,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
 
     const FishFamiliesTable = function(skipRefresh) {
       return OfflineTableUtils.createOfflineTable(
-        FISH_FAMILIES_NAME,
+        getFullName(FISH_FAMILIES_NAME),
         APP_CONFIG.apiUrl + 'fishfamilies/',
         FishFamily,
         {
@@ -147,12 +156,12 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
 
     const FishGeneraTable = function(skipRefresh) {
       return OfflineTableUtils.createOfflineTable(
-        FISH_GENERA_NAME,
+        getFullName(FISH_GENERA_NAME),
         APP_CONFIG.apiUrl + 'fishgenera/',
         FishGenus,
         {
           joinDefn: {
-            fishfamilies: 'family -> mermaid-fishfamilies.id, name'
+            fishfamilies: `family -> ${getFullName('fishfamilies')}.id, name`
           },
           limit: 1000,
           isPublic: true
@@ -186,12 +195,12 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       };
 
       return OfflineTableUtils.createOfflineTable(
-        FISH_SPECIES_NAME,
+        getFullName(FISH_SPECIES_NAME),
         APP_CONFIG.apiUrl + 'fishspecies/',
         FishSpecies,
         {
           joinDefn: {
-            fishgenera: 'genus -> mermaid-fishgenera.id, name'
+            fishgenera: `genus -> ${getFullName('fishgenera')}.id, name`
           },
           limit: 3000,
           isPublic: true
@@ -225,7 +234,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       };
 
       return OfflineTableUtils.createOfflineTable(
-        BENTHIC_ATTRIBUTES_NAME,
+        getFullName(BENTHIC_ATTRIBUTES_NAME),
         APP_CONFIG.apiUrl + 'benthicattributes/',
         BenthicAttribute,
         {
@@ -280,7 +289,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       }
 
       const results = baseNames.map(function(baseName) {
-        return `${APP_CONFIG.localDbName}-${baseName}`;
+        return getFullName(baseName);
       });
       return isMulti === false ? results[0] : results;
     };

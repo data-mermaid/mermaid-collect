@@ -30,15 +30,18 @@
 angular.module('mermaid.libs').service('OfflineTableSync', [
   '$http',
   '$q',
+  'APP_CONFIG',
   'utils',
-  function($http, $q, utils) {
+  function($http, $q, APP_CONFIG, utils) {
     'use strict';
 
     var db;
     var table;
 
     var service = {};
-    var databaseName = 'mermaid-offlinetables';
+    var databaseName = `${APP_CONFIG.localDbName}${
+      APP_CONFIG.localDbNameDelimiter
+    }offlinetables`;
     var tableSchema = {};
 
     service.LOCAL_CREATE = 10;

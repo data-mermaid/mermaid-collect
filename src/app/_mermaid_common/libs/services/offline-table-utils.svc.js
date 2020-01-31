@@ -24,7 +24,7 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
     logger
   ) {
     'use strict';
-    const TABLE_NAME_DELIMITER = ':::';
+    const TABLE_NAME_DELIMITER = APP_CONFIG.localDbNameDelimiter;
     const UUID_REGEX_STR =
       '([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}';
     const uuidRegEx = new RegExp(UUID_REGEX_STR);
