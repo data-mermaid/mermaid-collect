@@ -131,7 +131,6 @@ angular
               mermaidChoices[records[i].name] = records[i].data;
             }
           });
-          // console.log(table);
         }
       };
 
