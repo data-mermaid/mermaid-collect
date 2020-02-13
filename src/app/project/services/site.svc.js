@@ -54,13 +54,6 @@ angular.module('app.project').service('SiteService', [
       });
     };
 
-    var downloadFieldReport = function(project_id) {
-      var token = authService.getToken();
-      var report_url = 'projects/' + project_id + '/sites/fieldreport/';
-      var url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
-      $window.open(url);
-    };
-
     const downloadSites = function(projectId) {
       const name = 'sites';
       const headers = [
@@ -98,7 +91,6 @@ angular.module('app.project').service('SiteService', [
     return {
       save: save,
       fetchData: fetchData,
-      downloadFieldReport: downloadFieldReport,
       downloadSites: downloadSites
     };
   }
