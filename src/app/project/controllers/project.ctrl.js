@@ -106,6 +106,7 @@ angular.module('app.project').controller('ProjectCtrl', [
     saveButton.icon = 'fa fa-save';
     saveButton.onlineOnly = false;
     saveButton.click = save;
+    $scope.save = save;
 
     var backupProjectButton = new Button();
     backupProjectButton.name = 'Back up';

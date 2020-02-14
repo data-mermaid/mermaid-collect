@@ -68,6 +68,7 @@ angular.module('app.project').controller('BleachingQuadCollMethodCtrl', [
     saveButton.icon = 'fa fa-save';
     saveButton.onlineOnly = false;
     saveButton.click = save;
+    $scope.save = save;
 
     $rootScope.PageHeaderButtons = [saveButton];
 

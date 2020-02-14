@@ -30,7 +30,7 @@ angular
       transectLookups
     ) {
       'use strict';
-
+      console.log('habitat transect submit');
       const conn = new ConnectivityFactory($scope);
       const projectId = $stateParams.project_id;
       let _isRoleDisabled = ProjectService.isFormDisabled(
@@ -78,6 +78,7 @@ angular
       saveButton.icon = 'fa fa-save';
       saveButton.onlineOnly = false;
       saveButton.click = save;
+      $scope.save = save;
 
       $rootScope.PageHeaderButtons = [saveButton];
 
