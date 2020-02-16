@@ -34,6 +34,7 @@
     relatedRecords: Array of related records to join to,
     name: 'Join name, used as an attribute in the OfflineRecord to store join fields/values',
     relatedKey: '<key in related table to join to>',
+    relateFunction: Function invoked per iteration it must return true (match) or false (no match).
     relatedColumns: Array of attributes to copy across from the related recods/table
   }
 
@@ -43,6 +44,9 @@
     relatedRecords: countries,
     name: 'countries',
     relatedKey: 'id',
+    relateFunction: function(record) {
+      return record.val === 1;
+    },
     relatedColumns: ['name']
   }
 
@@ -432,24 +436,28 @@ angular.module('mermaid.libs').factory('OfflineTable', [
           var foreignKey = joinSchema.foreignKey;
           var relatedKey = joinSchema.relatedKey;
 
-          var noMatchRecord = _.zipObject(
-            relatedColumns,
-            _.map(relatedColumns, function() {
-              return null;
-            })
-          );
-
           where[relatedKey] = null;
           return _.map(records, function(obj) {
             obj[tablePrefix] = obj[tablePrefix] || {};
-            where[relatedKey] = _.get(obj, foreignKey);
-            var match = _.find(relatedRecords, where);
 
-            if (match === undefined) {
-              obj[tablePrefix] = noMatchRecord;
+            if (_.isFunction(joinSchema.relateFunction)) {
+              where = function(relatedRecord) {
+                return joinSchema.relateFunction(
+                  obj,
+                  relatedRecord,
+                  joinSchema
+                );
+              };
             } else {
-              obj[tablePrefix] = _.assign({}, _.pick(match, relatedColumns));
+              where[relatedKey] = _.get(obj, foreignKey);
             }
+
+            var matches = _.filter(relatedRecords, where);
+            obj[tablePrefix] = [];
+            obj[tablePrefix] = _.map(matches, function(match) {
+              return _.assign({}, _.pick(match, relatedColumns));
+            });
+
             return obj;
           });
         };
