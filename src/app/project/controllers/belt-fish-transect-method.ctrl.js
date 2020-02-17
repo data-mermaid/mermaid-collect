@@ -37,9 +37,9 @@ angular.module('app.project').controller('BeltFishTransectMethodCtrl', [
     $scope.choices = transectLookups.choices;
     $scope.project_profiles = transectLookups.project_profiles;
     $scope.record = record;
-    $scope.fishAttributes = $scope.fishAttributes = function() {
+    $scope.fishAttributes = function() {
       const site = _.get($scope.record, 'data.sample_event.site');
-      return ProjectService.filterFishAttributesBySite(
+      return ProjectService.filterAttributesBySite(
         fishAttributes,
         site,
         $scope.choices

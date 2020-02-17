@@ -353,7 +353,7 @@ angular
         return $http.put(transformOwnershipUrl, data);
       };
 
-      ProjectService.filterFishAttributesBySite = function(
+      ProjectService.filterAttributesBySite = function(
         attributes,
         site,
         choices

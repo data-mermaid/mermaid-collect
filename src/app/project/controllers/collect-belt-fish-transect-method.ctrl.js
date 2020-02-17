@@ -40,7 +40,7 @@ angular.module('app.project').controller('CollectBeltFishTransectMethodCtrl', [
     $scope.wizardConfig = FishBeltWizardConfig;
     $scope.fishAttributes = function() {
       const site = _.get($ctrl.collectRecord, 'data.sample_event.site');
-      return ProjectService.filterFishAttributesBySite(
+      return ProjectService.filterAttributesBySite(
         fishAttributes,
         site,
         $scope.choices
