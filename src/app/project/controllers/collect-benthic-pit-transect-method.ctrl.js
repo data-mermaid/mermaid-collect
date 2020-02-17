@@ -44,7 +44,7 @@ angular
       $ctrl.protocol = ProjectService.BENTHIC_PIT_TRANSECT_TYPE;
       $scope.wizardConfig = BenthicPITWizardConfig;
       $scope.benthicAttributes = function() {
-        const site = _.get($ctrl.collectRecord, 'data.sample_event.site');
+        const site = _.get($scope.record, 'data.sample_event.site');
         return ProjectService.filterAttributesBySite(
           benthicAttributes,
           site,

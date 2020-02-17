@@ -54,7 +54,7 @@ angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
 
     $scope.wizardConfig = BleachingWizardConfig;
     $scope.benthicAttributes = function() {
-      const site = _.get($ctrl.collectRecord, 'data.sample_event.site');
+      const site = _.get($scope.record, 'data.sample_event.site');
       return ProjectService.filterAttributesBySite(
         benthicAttributes,
         site,
