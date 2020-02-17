@@ -4,6 +4,7 @@ angular
   .service('ProjectService', [
     '$http',
     '$q',
+    '$filter',
     'authService',
     'offlineservice',
     'utils',
@@ -12,6 +13,7 @@ angular
     function(
       $http,
       $q,
+      $filter,
       authService,
       offlineservice,
       utils,
@@ -349,6 +351,39 @@ angular
           '/transfer_sample_units/';
         var data = { from_profile: fromProfileId, to_profile: toProfileId };
         return $http.put(transformOwnershipUrl, data);
+      };
+
+      ProjectService.filterFishAttributesBySite = function(
+        attributes,
+        site,
+        choices
+      ) {
+        if (site == null) {
+          return attributes;
+        }
+
+        // There should be none or 1 site region.
+        const siteRegions = $filter('matchchoice')(
+          site,
+          choices.sites,
+          '$$regions'
+        );
+        const siteRegion = siteRegions.length > 0 ? siteRegions[0] : null;
+        if (siteRegion === null) {
+          return attributes;
+        }
+
+        // If attribute does not have a region it should be included,
+        // else only include attributes where at least one
+        // attribute region matches site region.
+        return _.filter(attributes, function(attribute) {
+          const attributeRegions = attribute.regions || [];
+
+          if (attributeRegions.length === 0) {
+            return true;
+          }
+          return attributeRegions.indexOf(siteRegion.id) !== -1;
+        });
       };
 
       return ProjectService;
