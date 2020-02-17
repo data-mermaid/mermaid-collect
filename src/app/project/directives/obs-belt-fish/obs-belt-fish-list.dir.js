@@ -74,6 +74,7 @@ angular.module('app.project').directive('obsBeltFishList', [
           }
           return scope.fishAttributeChoices;
         };
+
         const fishAttributeNames = scope
           .getFishAttributes()
           .map(attribute => attribute.display_name);
