@@ -46,7 +46,7 @@
     name: 'countries',
     relatedKey: 'id',
     many: true,
-    relateFunction: function(record) {
+    relateFunction: function(record, relatedRecord, joinSchema) {
       return record.val === 1;
     },
     relatedColumns: ['name']

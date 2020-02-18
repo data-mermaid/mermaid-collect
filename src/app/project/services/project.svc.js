@@ -352,13 +352,17 @@ angular
         var data = { from_profile: fromProfileId, to_profile: toProfileId };
         return $http.put(transformOwnershipUrl, data);
       };
-
+      /** Filter attributes by site by matching regions.
+       * @param  {Array} attributes: Array of attributes to filter
+       * @param  {String} siteId: Filter attributes by this site id
+       * @param  {Object} choices: List of sites choices, `choices.sites`
+       */
       ProjectService.filterAttributesBySite = function(
         attributes,
         siteId,
         choices
       ) {
-        if (siteId == null) {
+        if (siteId == null || _.has(choices, 'sites') === false) {
           return attributes;
         }
 
