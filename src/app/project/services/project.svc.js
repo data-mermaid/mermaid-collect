@@ -7,7 +7,6 @@ angular
     '$filter',
     'authService',
     'offlineservice',
-    'utils',
     'APP_CONFIG',
     'blockUI',
     function(
@@ -22,6 +21,7 @@ angular
     ) {
       'use strict';
       var ProjectService = {};
+      var mermaidChoices = {};
       ProjectService.ADMIN_ROLE = 'admin';
       ProjectService.COLLECTOR_ROLE = 'collector';
       ProjectService.READONLY_ROLE = 'readonly';
@@ -138,7 +138,7 @@ angular
         if (table != null) {
           table.filter().then(function(records) {
             for (var i = 0; i < records.length; i++) {
-              utils.choices[records[i].name] = records[i].data;
+              mermaidChoices[records[i].name] = records[i].data;
             }
           });
         }
