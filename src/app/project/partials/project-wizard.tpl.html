@@ -184,10 +184,10 @@
                   <li class="pull-left">
                     <a href="#" class="btn btn-lg btn-default"> Cancel </a>
                   </li>
-                  <li class="previous" data-smart-wizard-prev ng-hide="currentStep == 1">
+                  <li class="previous" data-smart-wizard-prev ng-click="currentStep == 4 && activateMap()" ng-hide="currentStep == 1">
                     <a href="#" class="btn btn-lg btn-default"> Back </a>
                   </li>
-                  <li class="next" data-smart-wizard-next ng-click="activateMap()" ng-show="currentStep == 1 || currentStep == 2 || currentStep == 5">
+                  <li class="next" data-smart-wizard-next ng-click="currentStep == 2 && activateMap()" ng-show="currentStep == 1 || currentStep == 2 || currentStep == 5">
                     <a href="#" class="btn btn-lg btn-success txt-color-white"> Next </a>
                   </li>
                   <li class="pull-right disabled" ng-show="(currentStep == 3 && selectedSiteRecords.length === 0) || (currentStep == 4 && selectedManagementRecords.length === 0)">
@@ -199,7 +199,7 @@
                   <li class="pull-right" data-smart-wizard-next ng-show="currentStep == 4 && selectedManagementRecords.length > 0" ng-click="copySelectedManagements()">
                     <a class="btn btn-lg btn-default"> Copy selected to project </a>
                   </li>
-                  <li class="next" data-smart-wizard-next ng-click="activateMap()" ng-show="currentStep == 3 || currentStep == 4">
+                  <li class="next" data-smart-wizard-next ng-show="currentStep == 3 || currentStep == 4">
                     <a href="#" class="btn btn-lg bg-color-blueDark txt-color-white"> Skip </a>
                   </li>
                   <li class="pull-right" ng-show="project.name != null && isCreating !== true && currentStep == 6">
