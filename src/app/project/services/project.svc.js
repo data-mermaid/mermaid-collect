@@ -4,11 +4,20 @@ angular
   .service('ProjectService', [
     '$http',
     '$q',
+    '$filter',
     'authService',
     'offlineservice',
     'APP_CONFIG',
     'blockUI',
-    function($http, $q, authService, offlineservice, APP_CONFIG, blockUI) {
+    function(
+      $http,
+      $q,
+      $filter,
+      authService,
+      offlineservice,
+      APP_CONFIG,
+      blockUI
+    ) {
       'use strict';
       var ProjectService = {};
       var mermaidChoices = {};
@@ -341,6 +350,42 @@ angular
           '/transfer_sample_units/';
         var data = { from_profile: fromProfileId, to_profile: toProfileId };
         return $http.put(transformOwnershipUrl, data);
+      };
+      /** Filter attributes by site by matching regions.
+       * @param  {Array} attributes: Array of attributes to filter
+       * @param  {String} siteId: Filter attributes by this site id
+       * @param  {Object} choices: List of sites choices, `choices.sites`
+       */
+      ProjectService.filterAttributesBySite = function(
+        attributes,
+        siteId,
+        choices
+      ) {
+        if (siteId == null || _.has(choices, 'sites') === false) {
+          return attributes;
+        }
+
+        // There should be none or 1 site region.
+        const siteRegion = $filter('matchchoice')(
+          siteId,
+          choices.sites,
+          '$$regions'
+        );
+
+        if (siteRegion === null) {
+          return attributes;
+        }
+
+        // If attribute does not have a region it should be included,
+        // else only include attributes where at least one
+        // attribute region matches site region.
+        return _.filter(attributes, function(attribute) {
+          const attributeRegions = attribute.regions || [];
+          if (attributeRegions.length === 0) {
+            return true;
+          }
+          return attributeRegions.indexOf(siteRegion.id) !== -1;
+        });
       };
 
       return ProjectService;

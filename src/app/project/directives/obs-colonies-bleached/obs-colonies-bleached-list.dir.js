@@ -70,6 +70,9 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
         loadBenthicAttributesLookup();
 
         scope.getBenthicAttributes = function() {
+          if (_.isFunction(scope.benthicAttributeChoices)) {
+            return scope.benthicAttributeChoices();
+          }
           return scope.benthicAttributeChoices;
         };
 

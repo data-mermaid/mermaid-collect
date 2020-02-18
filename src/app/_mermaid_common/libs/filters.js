@@ -32,7 +32,13 @@ angular
 
   .filter('matchchoice', function() {
     return function(val, choices, displayAttr) {
-      var rec = _.find(choices, function(o) {
+      let _choices;
+      if (_.isFunction(choices)) {
+        _choices = choices();
+      } else {
+        _choices = choices;
+      }
+      var rec = _.find(_choices, function(o) {
         return o.id == val;
       });
       var res = null;

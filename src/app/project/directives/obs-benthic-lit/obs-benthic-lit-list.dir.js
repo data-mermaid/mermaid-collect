@@ -60,6 +60,9 @@ angular.module('app.project').directive('obsBenthicLitList', [
         loadBenthicAttributesLookup();
 
         scope.getBenthicAttributes = function() {
+          if (_.isFunction(scope.benthicAttributeChoices)) {
+            return scope.benthicAttributeChoices();
+          }
           return scope.benthicAttributeChoices;
         };
 

@@ -53,7 +53,14 @@ angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
     };
 
     $scope.wizardConfig = BleachingWizardConfig;
-    $scope.benthicAttributes = benthicAttributes;
+    $scope.benthicAttributes = function() {
+      const site = _.get($scope.record, 'data.sample_event.site');
+      return ProjectService.filterAttributesBySite(
+        benthicAttributes,
+        site,
+        $scope.choices
+      );
+    };
     $scope.protocolSampleUnitDetailsForm =
       'app/project/partials/forms/bleachingprotocol.quadcoll.form.tpl.html';
     $scope.protocolObservationsForm =

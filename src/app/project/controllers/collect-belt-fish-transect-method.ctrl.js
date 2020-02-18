@@ -38,7 +38,14 @@ angular.module('app.project').controller('CollectBeltFishTransectMethodCtrl', [
     $ctrl.state = 'app.project.records.collectfishbelt';
     $ctrl.protocol = ProjectService.FISH_BELT_TRANSECT_TYPE;
     $scope.wizardConfig = FishBeltWizardConfig;
-    $scope.fishAttributes = fishAttributes;
+    $scope.fishAttributes = function() {
+      const site = _.get($scope.record, 'data.sample_event.site');
+      return ProjectService.filterAttributesBySite(
+        fishAttributes,
+        site,
+        $scope.choices
+      );
+    };
     $scope.protocolSampleUnitDetailsForm =
       'app/project/partials/forms/fishbeltprotocol.transect.form.tpl.html';
     $scope.protocolObservationsForm =
