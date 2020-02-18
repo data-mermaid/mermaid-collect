@@ -32,6 +32,8 @@ angular.module('app.project').directive('obsBenthicPitList', [
         const $table = $(element).find('table');
         let modal;
 
+        scope.notFoundMessage =
+          "Benthic attribute cannot be found in site's region.";
         scope.categoryLookup = {};
         scope.benthicAttributesLookup = {};
         scope.isDisabled = utils.truthy(scope.isDisabled);

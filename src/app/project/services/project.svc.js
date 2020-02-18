@@ -372,7 +372,7 @@ angular
           '$$regions'
         );
 
-        if (siteRegion === null) {
+        if (siteRegion === null || _.keys(siteRegion).length === 0) {
           return attributes;
         }
 

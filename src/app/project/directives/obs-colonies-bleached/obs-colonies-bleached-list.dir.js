@@ -29,6 +29,8 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
         let modal;
         const $table = $(element).find('table');
 
+        scope.notFoundMessage =
+          "Benthic attribute cannot be found in site's region.";
         scope.formCtrl = formCtrl;
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};

@@ -31,7 +31,7 @@ angular
   })
 
   .filter('matchchoice', function() {
-    return function(val, choices, displayAttr) {
+    return function(val, choices, displayAttr, message) {
       let _choices;
       if (_.isFunction(choices)) {
         _choices = choices();
@@ -48,6 +48,8 @@ angular
         } else {
           res = rec.name || rec.label;
         }
+      } else if (val != null) {
+        res = message;
       }
       return res;
     };

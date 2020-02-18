@@ -27,7 +27,7 @@
         </td>
 
         <td class="readonly-cell">
-          <span class="readonly-cell text-left">{{::obs.fish_attribute | matchchoice:fishAttributeChoices:"display_name"}} </span><obs-validation-tooltip
+          <span class="readonly-cell text-left">{{::obs.fish_attribute | matchchoice:fishAttributeChoices:"display_name":notFoundMessage}} </span><obs-validation-tooltip
               validations="[
                 {
                   'isValid': validator.requiresvalue(obs.fish_attribute) === true,
@@ -104,6 +104,7 @@
             widget-new-record-modal-config="modalConfig"
             widget-modal-trigger="modalTrigger(obs)"
             drop-up-enabled="true"
+            widget-no-match-message="{{notFoundMessage}}"
           >
             <appendaddon>
               <a
