@@ -355,20 +355,20 @@ angular
 
       ProjectService.filterAttributesBySite = function(
         attributes,
-        site,
+        siteId,
         choices
       ) {
-        if (site == null) {
+        if (siteId == null) {
           return attributes;
         }
 
         // There should be none or 1 site region.
-        const siteRegions = $filter('matchchoice')(
-          site,
+        const siteRegion = $filter('matchchoice')(
+          siteId,
           choices.sites,
           '$$regions'
         );
-        const siteRegion = siteRegions.length > 0 ? siteRegions[0] : null;
+
         if (siteRegion === null) {
           return attributes;
         }
@@ -378,7 +378,6 @@ angular
         // attribute region matches site region.
         return _.filter(attributes, function(attribute) {
           const attributeRegions = attribute.regions || [];
-
           if (attributeRegions.length === 0) {
             return true;
           }
