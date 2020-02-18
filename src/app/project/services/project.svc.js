@@ -15,7 +15,6 @@ angular
       $filter,
       authService,
       offlineservice,
-      utils,
       APP_CONFIG,
       blockUI
     ) {
