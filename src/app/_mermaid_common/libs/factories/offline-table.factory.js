@@ -35,7 +35,8 @@
     name: 'Join name, used as an attribute in the OfflineRecord to store join fields/values',
     relatedKey: '<key in related table to join to>',
     relateFunction: Function invoked per iteration it must return true (match) or false (no match).
-    relatedColumns: Array of attributes to copy across from the related recods/table
+    relatedColumns: Array of attributes to copy across from the related recods/table.
+    many: (boolean) If result of the join is an Array of results or just one object. defaults: false
   }
 
   example 1:
@@ -44,6 +45,7 @@
     relatedRecords: countries,
     name: 'countries',
     relatedKey: 'id',
+    many: true,
     relateFunction: function(record) {
       return record.val === 1;
     },
@@ -435,6 +437,7 @@ angular.module('mermaid.libs').factory('OfflineTable', [
           var relatedColumns = joinSchema.relatedColumns;
           var foreignKey = joinSchema.foreignKey;
           var relatedKey = joinSchema.relatedKey;
+          var many = joinSchema.many || false;
 
           where[relatedKey] = null;
           return _.map(records, function(obj) {
@@ -453,11 +456,16 @@ angular.module('mermaid.libs').factory('OfflineTable', [
             }
 
             var matches = _.filter(relatedRecords, where);
-            obj[tablePrefix] = [];
-            obj[tablePrefix] = _.map(matches, function(match) {
-              return _.assign({}, _.pick(match, relatedColumns));
-            });
 
+            obj[tablePrefix] = null;
+            if (many === true) {
+              obj[tablePrefix] = _.map(matches, function(match) {
+                return _.assign({}, _.pick(match, relatedColumns));
+              });
+            } else {
+              const match = matches.length > 0 ? matches[0] : {};
+              obj[tablePrefix] = _.assign({}, _.pick(match, relatedColumns));
+            }
             return obj;
           });
         };
