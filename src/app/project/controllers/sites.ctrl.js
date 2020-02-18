@@ -123,7 +123,7 @@ angular.module('app.project').controller('SitesCtrl', [
           newSite();
         },
         exportSites: function() {
-          SiteService.downloadFieldReport(project_id);
+          SiteService.downloadSites(project_id);
         },
         copySites: function() {
           const modalOptions = {
