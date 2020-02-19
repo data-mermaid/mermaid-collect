@@ -1,13 +1,13 @@
 <div>
-  <div class="btn-group">
-    <div class="filter-wrapper" ng-hide="control.recordsNotFiltered()">
+  <div class="btn-group" ng-if="control.textboxFilterUsed()">
+    <div class="filter-wrapper">
       <div class="filter-records" > 
         <span ng-if="!control.records">Filtering</span>
-        <i class="fa fa-filter" ng-if="control.records"></i>
+        <i class="fa fa-filter"></i>
         <span class="filter-count" ng-if="control.records">{{control.getFilteredRecordsCount()}}</span>
         Records
       </div>
-      <div class="clear-filter" ng-if="control.records" ng-click="config.toolbar.clearFilters();"><i class="fa fa-remove"></i></div>
+      <div class="clear-filter" ng-click="config.toolbar.clearFilters();"><i class="fa fa-remove"></i></div>
     </div>
   </div>
 </div>
