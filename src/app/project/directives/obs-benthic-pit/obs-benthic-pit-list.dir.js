@@ -56,11 +56,9 @@ angular.module('app.project').directive('obsBenthicPitList', [
 
         const loadBenthicAttributesLookup = function() {
           scope.benthicAttributesLookup = utils.createLookup(
-            scope.benthicAttributeChoices
+            scope.benthicAttributeChoices()
           );
         };
-
-        loadBenthicAttributesLookup();
 
         scope.getBenthicAttributes = function() {
           if (_.isFunction(scope.benthicAttributeChoices)) {
@@ -234,6 +232,8 @@ angular.module('app.project').directive('obsBenthicPitList', [
           },
           true
         );
+
+        loadBenthicAttributesLookup();
       }
     };
   }
