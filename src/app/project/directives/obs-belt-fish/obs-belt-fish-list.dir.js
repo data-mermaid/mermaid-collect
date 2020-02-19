@@ -66,16 +66,11 @@ angular.module('app.project').directive('obsBeltFishList', [
         };
 
         const loadFishAttributesLookup = function() {
-          fishAttributesLookup = utils.createLookup(scope.fishAttributeChoices);
+          fishAttributesLookup = utils.createLookup(scope.getFishAttributes());
         };
 
-        loadFishAttributesLookup();
-
         scope.getFishAttributes = function() {
-          if (_.isFunction(scope.fishAttributeChoices)) {
-            return scope.fishAttributeChoices();
-          }
-          return scope.fishAttributeChoices;
+          return scope.fishAttributeChoices.filtered;
         };
 
         const fishAttributeNames = scope
@@ -315,6 +310,8 @@ angular.module('app.project').directive('obsBeltFishList', [
           },
           true
         );
+
+        loadFishAttributesLookup();
       }
     };
   }
