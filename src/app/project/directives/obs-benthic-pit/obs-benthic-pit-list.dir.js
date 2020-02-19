@@ -56,15 +56,12 @@ angular.module('app.project').directive('obsBenthicPitList', [
 
         const loadBenthicAttributesLookup = function() {
           scope.benthicAttributesLookup = utils.createLookup(
-            scope.benthicAttributeChoices()
+            scope.getBenthicAttributes()
           );
         };
 
         scope.getBenthicAttributes = function() {
-          if (_.isFunction(scope.benthicAttributeChoices)) {
-            return scope.benthicAttributeChoices();
-          }
-          return scope.benthicAttributeChoices;
+          return scope.benthicAttributeChoices.filtered;
         };
 
         const benthicAttributeNames = scope
@@ -72,7 +69,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
           .map(attribute => attribute.name);
 
         scope.categoryLookup = BenthicAttributeService.getCategoryLookup(
-          scope.benthicAttributeChoices
+          scope.getBenthicAttributes()
         );
 
         scope.modalConfig = {
@@ -85,6 +82,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
           modal = ModalService.open(scope.modalConfig);
           modal.result.then(function(record) {
             scope.benthicAttributeChoices.push(record);
+            scope.getBenthicAttributes();
             loadBenthicAttributesLookup();
             observation.attribute = record.id;
             utils.showAlert(

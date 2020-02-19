@@ -70,10 +70,7 @@ angular.module('app.project').directive('obsBeltFishList', [
         };
 
         scope.getFishAttributes = function() {
-          if (_.isFunction(scope.fishAttributeChoices)) {
-            return scope.fishAttributeChoices();
-          }
-          return scope.fishAttributeChoices;
+          return scope.fishAttributeChoices.filtered;
         };
 
         const fishAttributeNames = scope

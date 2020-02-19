@@ -66,15 +66,12 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
 
         const loadBenthicAttributesLookup = function() {
           scope.benthicAttributesLookup = utils.createLookup(
-            scope.benthicAttributeChoices()
+            scope.getBenthicAttributes()
           );
         };
 
         scope.getBenthicAttributes = function() {
-          if (_.isFunction(scope.benthicAttributeChoices)) {
-            return scope.benthicAttributeChoices();
-          }
-          return scope.benthicAttributeChoices;
+          return scope.benthicAttributeChoices.filtered;
         };
 
         const benthicAttributeNames = scope
@@ -82,7 +79,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
           .map(attribute => attribute.name);
 
         scope.categoryLookup = BenthicAttributeService.getCategoryLookup(
-          scope.benthicAttributeChoices
+          scope.getBenthicAttributes()
         );
 
         scope.modalTrigger = function(observation) {
