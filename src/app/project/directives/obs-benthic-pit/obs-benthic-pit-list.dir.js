@@ -82,7 +82,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
           modal = ModalService.open(scope.modalConfig);
           modal.result.then(function(record) {
             scope.benthicAttributeChoices.push(record);
-            scope.getBenthicAttributes();
             loadBenthicAttributesLookup();
             observation.attribute = record.id;
             utils.showAlert(
