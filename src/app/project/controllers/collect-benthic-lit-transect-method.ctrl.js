@@ -43,14 +43,17 @@ angular
       $ctrl.state = 'app.project.records.collectbenthiclit';
       $ctrl.protocol = ProjectService.BENTHIC_LIT_TRANSECT_TYPE;
       $scope.wizardConfig = BenthicLITWizardConfig;
-      $scope.benthicAttributes = function() {
-        const site = _.get($scope.record, 'data.sample_event.site');
-        return ProjectService.filterAttributesBySite(
-          benthicAttributes,
-          site,
-          $scope.choices
-        );
-      };
+      Object.defineProperty(benthicAttributes, 'filtered', {
+        get() {
+          const site = _.get($scope.record, 'data.sample_event.site');
+          return ProjectService.filterAttributesBySite(
+            benthicAttributes,
+            site,
+            $scope.choices
+          );
+        }
+      });
+      $scope.benthicAttributes = benthicAttributes;
       $scope.protocolSampleUnitDetailsForm =
         'app/project/partials/forms/benthiclitprotocol.transect.form.tpl.html';
       $scope.protocolObservationsForm =
