@@ -32,6 +32,8 @@ angular.module('app.project').directive('obsBenthicPitList', [
         const $table = $(element).find('table');
         let modal;
 
+        scope.notFoundMessage =
+          "Benthic attribute cannot be found in site's region.";
         scope.categoryLookup = {};
         scope.benthicAttributesLookup = {};
         scope.isDisabled = utils.truthy(scope.isDisabled);
@@ -54,14 +56,12 @@ angular.module('app.project').directive('obsBenthicPitList', [
 
         const loadBenthicAttributesLookup = function() {
           scope.benthicAttributesLookup = utils.createLookup(
-            scope.benthicAttributeChoices
+            scope.getBenthicAttributes()
           );
         };
 
-        loadBenthicAttributesLookup();
-
         scope.getBenthicAttributes = function() {
-          return scope.benthicAttributeChoices;
+          return scope.benthicAttributeChoices.filtered;
         };
 
         const benthicAttributeNames = scope
@@ -69,7 +69,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
           .map(attribute => attribute.name);
 
         scope.categoryLookup = BenthicAttributeService.getCategoryLookup(
-          scope.benthicAttributeChoices
+          scope.getBenthicAttributes()
         );
 
         scope.modalConfig = {
@@ -207,7 +207,8 @@ angular.module('app.project').directive('obsBenthicPitList', [
         $(window).click(function(evt) {
           if (
             evt.target.classList.contains('addRow') ||
-            benthicAttributeNames.includes(evt.target.outerText)
+            benthicAttributeNames.includes(evt.target.outerText) ||
+            benthicAttributeNames.includes(evt.target.textContent)
           ) {
             return;
           }
@@ -228,6 +229,8 @@ angular.module('app.project').directive('obsBenthicPitList', [
           },
           true
         );
+
+        loadBenthicAttributesLookup();
       }
     };
   }

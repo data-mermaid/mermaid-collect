@@ -27,6 +27,7 @@
   widget-allow-invalid: ng-model-option
   widget-placeholder: text placeholder
   widget-callback: ie "onSelect()". Function definition/logic goes in the controller.
+  widget-no-match-message: Message to display if a record id exists but not match can be found in choices.
 
   ADD/EDIT Select choices:
 
@@ -68,7 +69,8 @@ angular.module('mermaid.forms').directive('autocompleteinput', [
         widgetType: '@',
         widgetName: '@',
         widgetNewRecordLabel: '@',
-        widgetIgnoreDirty: '@'
+        widgetIgnoreDirty: '@',
+        widgetNoMatchMessage: '@'
         // dropUpEnabled: '=?'
       },
       templateUrl:
@@ -101,9 +103,12 @@ angular.module('mermaid.forms').directive('autocompleteinput', [
 
         scope.formatValue = function($item, $model) {
           var selectedChoice = _.find(scope.widgetChoices, { id: $model });
-          return selectedChoice
-            ? selectedChoice[scope.displayAttribute]
-            : $model;
+
+          if (selectedChoice) {
+            return selectedChoice[scope.displayAttribute];
+          }
+
+          return $model != null ? scope.widgetNoMatchMessage || $model : '';
         };
 
         var regexFilter = function(val, records) {

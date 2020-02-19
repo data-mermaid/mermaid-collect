@@ -15,6 +15,7 @@ angular.module('mermaid.libs').factory('PaginatedOfflineTableWrapper', [
         self.offlinetable = offlinetable;
         self.searchFields = options.searchFields || [];
         self.sortFields = options.sortFields || {};
+        self.lastQueryOutput = null;
 
         var parseOrdering = function(ordering) {
           if (ordering == null) {
@@ -83,13 +84,6 @@ angular.module('mermaid.libs').factory('PaginatedOfflineTableWrapper', [
             {}
           );
 
-          var output = {
-            count: 0,
-            next: null,
-            previous: null,
-            results: []
-          };
-
           var promises = [
             offlinetable.count(query_params),
             offlinetable.filter(query_params)
@@ -130,6 +124,13 @@ angular.module('mermaid.libs').factory('PaginatedOfflineTableWrapper', [
           }
 
           return $q.all(promises).then(function(data) {
+            const output = {
+              count: 0,
+              next: null,
+              previous: null,
+              results: []
+            };
+
             output.count = data[0];
             output.results = filter(data[1]);
             if (page * limit < output.count) {
@@ -138,6 +139,8 @@ angular.module('mermaid.libs').factory('PaginatedOfflineTableWrapper', [
             if (page > 1) {
               output.previous = true;
             }
+
+            self.lastQueryOutput = output;
             return output;
           });
         };

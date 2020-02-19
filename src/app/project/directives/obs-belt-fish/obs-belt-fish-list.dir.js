@@ -1,4 +1,5 @@
 angular.module('app.project').directive('obsBeltFishList', [
+  '$q',
   '$window',
   '$state',
   'offlineservice',
@@ -9,6 +10,7 @@ angular.module('app.project').directive('obsBeltFishList', [
   'TransectService',
   'ModalService',
   function(
+    $q,
     $window,
     $state,
     offlineservice,
@@ -38,6 +40,7 @@ angular.module('app.project').directive('obsBeltFishList', [
         let modal;
         let fishAttributesLookup = {};
 
+        scope.notFoundMessage = "Fish name cannot be found in site's region.";
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
         scope.fishsize_choices = {};
@@ -63,36 +66,63 @@ angular.module('app.project').directive('obsBeltFishList', [
         };
 
         const loadFishAttributesLookup = function() {
-          fishAttributesLookup = utils.createLookup(scope.fishAttributeChoices);
+          fishAttributesLookup = utils.createLookup(scope.getFishAttributes());
         };
-
-        loadFishAttributesLookup();
 
         scope.getFishAttributes = function() {
-          return scope.fishAttributeChoices;
+          return scope.fishAttributeChoices.filtered;
         };
-        // console.log(scope.getFishAttributes());
+
         const fishAttributeNames = scope
           .getFishAttributes()
           .map(attribute => attribute.display_name);
 
         scope.navReferenceLink = function(fishAttributeId) {
           if (!_.isUndefined(fishAttributeId)) {
-            const rank = fishAttributesLookup[fishAttributeId].$$taxonomic_rank;
+            let promise = null;
             let state = null;
+            console.log(fishAttributesLookup[fishAttributeId]);
+            const rank = _.get(
+              fishAttributesLookup[fishAttributeId],
+              '$$taxonomic_rank'
+            );
+            console.log('rank', rank);
 
-            if (rank === FishAttributeService.SPECIES_RANK) {
-              state = 'app.reference.fishspeciess.fishspecies';
-            } else if (rank === FishAttributeService.GENUS_RANK) {
-              state = 'app.reference.fishgenera.fishgenus';
+            if (rank == null) {
+              promise = FishAttributeService.fetchFishAttributes({
+                id: fishAttributeId
+              }).then(function(records) {
+                if (records.length === 0) {
+                  return null;
+                }
+                return _.get(records[0], '$$taxonomic_rank');
+              });
             } else {
-              state = 'app.reference.fishfamilies.fishfamily';
+              promise = $q.resolve(rank);
             }
 
-            $window.open(
-              $state.href(state, { id: fishAttributeId }, { absolute: true }),
-              '_blank'
-            );
+            promise.then(function(rank) {
+              if (rank === FishAttributeService.SPECIES_RANK) {
+                state = 'app.reference.fishspeciess.fishspecies';
+              } else if (rank === FishAttributeService.GENUS_RANK) {
+                state = 'app.reference.fishgenera.fishgenus';
+              } else if (rank === FishAttributeService.FAMILY_RANK) {
+                state = 'app.reference.fishfamilies.fishfamily';
+              } else {
+                utils.showAlert(
+                  'Error',
+                  'Attribute cannot be found.',
+                  utils.statuses.error,
+                  5000
+                );
+                return;
+              }
+
+              $window.open(
+                $state.href(state, { id: fishAttributeId }, { absolute: true }),
+                '_blank'
+              );
+            });
           }
         };
 
@@ -235,7 +265,8 @@ angular.module('app.project').directive('obsBeltFishList', [
         $(window).click(function(evt) {
           if (
             evt.target.classList.contains('addRow') ||
-            fishAttributeNames.includes(evt.target.outerText)
+            fishAttributeNames.includes(evt.target.outerText) ||
+            fishAttributeNames.includes(evt.target.textContent)
           ) {
             return;
           }
@@ -279,6 +310,8 @@ angular.module('app.project').directive('obsBeltFishList', [
           },
           true
         );
+
+        loadFishAttributesLookup();
       }
     };
   }
