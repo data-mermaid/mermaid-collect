@@ -85,7 +85,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
 
     $scope.tableConfig = {
       id: 'fishspecies',
-      defaultSortByColumn: '$$fishgenera.name',
+      defaultSortByColumn: 'display_name',
       searching: true,
       searchPlaceholder: 'Filter fish species by name or genus',
       searchLocation: 'left',
@@ -94,18 +94,9 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
           name: 'name',
           display: 'Name',
           sortable: true,
-          sort_by: ['name'],
+          sort_by: ['display_name'],
           tdTemplate:
             '<a ui-sref="app.reference.fishspeciess.fishspecies({id: record.id})">{{record.display_name}}</a>'
-        },
-        {
-          name: 'genus',
-          display: 'Genus',
-          sortable: true,
-          sort_by: ['$$fishgenera.name'],
-          formatter: function(v) {
-            return $filter('matchchoice')(v, $scope.tableControl.fishgenera);
-          }
         },
         {
           name: 'biomass_constant_a',
