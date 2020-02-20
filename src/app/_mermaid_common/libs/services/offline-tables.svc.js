@@ -11,6 +11,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
   'ProjectManagement',
   'ProjectProfile',
   'CollectRecord',
+  'SpatialUtils',
   'logger',
   function(
     $q,
@@ -25,6 +26,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
     ProjectManagement,
     ProjectProfile,
     CollectRecord,
+    SpatialUtils,
     logger
   ) {
     'use strict';
@@ -244,6 +246,18 @@ angular.module('mermaid.libs').service('OfflineTables', [
                   relatedRecords: choices.reefExposuresChoices,
                   relatedKey: 'id',
                   relatedColumns: ['name']
+                },
+                regions: {
+                  foreignKey: 'location',
+                  relatedKey: 'geom',
+                  relatedRecords: choices.regionsChoices,
+                  relateFunction: function(obj, relatedRecord) {
+                    return SpatialUtils.pointInPolygon(
+                      obj.location,
+                      relatedRecord.geom
+                    );
+                  },
+                  relatedColumns: ['id', 'name']
                 }
               }
             },
