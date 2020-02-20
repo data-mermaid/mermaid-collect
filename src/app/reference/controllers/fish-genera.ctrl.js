@@ -23,7 +23,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     const reportHeader = ['Name', 'Family'];
     let fishGenusRecordsCount = 0;
 
-    OfflineTableUtils.FishFamiliesTable().then(function(table) {
+    OfflineCommonTables.FishFamiliesTable().then(function(table) {
       return table.filter().then(function(records) {
         $scope.fishfamilies = records;
       });
