@@ -1,8 +1,7 @@
 angular.module('mermaid.libs').directive('projectname', [
   '$stateParams',
   'OfflineTables',
-  '$q',
-  function($stateParams, OfflineTables, $q) {
+  function($stateParams, OfflineTables) {
     'use strict';
     return {
       restrict: 'AE',
@@ -30,8 +29,7 @@ angular.module('mermaid.libs').directive('projectname', [
           return str;
         }
 
-        $q.all([OfflineTables.ProjectsTable()]).then(function(results) {
-          const projectTable = results[0];
+        OfflineTables.ProjectsTable().then(function(projectsTable) {
           const setProjectName = function(rec) {
             scope.project_name = '';
             if (rec != null) {
@@ -40,10 +38,11 @@ angular.module('mermaid.libs').directive('projectname', [
             }
           };
 
-          projectTable.get(projectId).then(function(rec) {
+          projectsTable.get(projectId).then(function(rec) {
             setProjectName(rec);
           });
-          projectTable.$watch(
+
+          projectsTable.$watch(
             function(event) {
               if (event.event === 'ot-updaterecord') {
                 setProjectName(event.data[0]);

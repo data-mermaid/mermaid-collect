@@ -45,8 +45,8 @@ angular.module('mermaid.libs').service('offlineservice', [
     FishSpecies,
     connectivity,
     OfflineTableSync,
-    SpatialUtils,
     OfflineTableUtils,
+    SpatialUtils,
     logger
   ) {
     'use strict';
