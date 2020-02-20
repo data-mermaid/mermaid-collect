@@ -219,7 +219,6 @@ angular.module('mermaid.libs').factory('OfflineTable', [
         options = options || {};
 
         var self = this;
-        var listeners = [];
         var schemaDefn = {};
         // var remoteTimestamp = options.remoteTimestamp || 'updated_on';
         var deleteExisting = options.deleteExisting || false;
