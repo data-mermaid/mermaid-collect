@@ -28,7 +28,7 @@
         </td>
 
         <td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
-          <span class="text-left">{{::obs.attribute | matchchoice:benthicAttributeChoices}} </span><obs-validation-tooltip
+          <span class="text-left">{{::obs.attribute | matchchoice:benthicAttributeChoices:"name":notFoundMessage}} </span><obs-validation-tooltip
               validations="[
                 {
                   'isValid': validator.requiresvalue(obs.attribute) === true,
@@ -80,6 +80,7 @@
             widget-new-record-modal-config="modalConfig"
             widget-modal-trigger="modalTrigger(obs)"
             drop-up-enabled="true"
+            widget-no-match-message="{{notFoundMessage}}"
           >
             <appendaddon >
               <a

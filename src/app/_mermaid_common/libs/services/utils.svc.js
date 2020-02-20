@@ -5,7 +5,6 @@ angular.module('mermaid.libs').service('utils', [
     'use strict';
 
     var utils = {
-      choices: {},
       messages: {
         deleteRecordWarning:
           'Deleting {{count}} record{{plural}}. Are you sure?'

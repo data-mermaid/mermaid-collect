@@ -67,7 +67,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     $scope.selectedSiteRecords = [];
     $scope.selectedManagementRecords = [];
     $scope.profilesTableControl = {};
-    $scope.choices = utils.choices;
+    $scope.choices = {};
     $scope.profilesResource = new PaginatedArrayWrapper($scope.profiles);
     $scope.benthicPolicies = {};
     $scope.organization = {};

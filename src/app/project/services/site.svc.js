@@ -1,10 +1,8 @@
 angular.module('app.project').service('SiteService', [
   '$q',
   'OfflineTables',
-  'authService',
-  'APP_CONFIG',
-  '$window',
-  function($q, OfflineTables, authService, APP_CONFIG, $window) {
+  'TransectExportService',
+  function($q, OfflineTables, TransectExportService) {
     'use strict';
 
     var save = function(site, options) {
@@ -44,17 +42,43 @@ angular.module('app.project').service('SiteService', [
       });
     };
 
-    var downloadFieldReport = function(project_id) {
-      var token = authService.getToken();
-      var report_url = 'projects/' + project_id + '/sites/fieldreport/';
-      var url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
-      $window.open(url);
+    const downloadSites = function(projectId) {
+      const name = 'sites';
+      const headers = [
+        'Country',
+        'Name',
+        'Latitude',
+        'Longitude',
+        'Reef type',
+        'Reef zone',
+        'Reef exposure',
+        'Notes'
+      ];
+      return OfflineTables.ProjectSitesTable(projectId)
+        .then(function(table) {
+          return table.filter();
+        })
+        .then(function(records) {
+          const content = _.map(records, function(record) {
+            return [
+              record.$$countries.name,
+              record.name,
+              record.location.coordinates[1],
+              record.location.coordinates[0],
+              record.$$reeftypes.name,
+              record.$$reefzones.name,
+              record.$$reefexposures.name,
+              record.notes
+            ];
+          });
+          return TransectExportService.downloadAsCSV(name, headers, content);
+        });
     };
 
     return {
       save: save,
       fetchData: fetchData,
-      downloadFieldReport: downloadFieldReport
+      downloadSites: downloadSites
     };
   }
 ]);

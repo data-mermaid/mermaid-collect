@@ -31,8 +31,14 @@ angular
   })
 
   .filter('matchchoice', function() {
-    return function(val, choices, displayAttr) {
-      var rec = _.find(choices, function(o) {
+    return function(val, choices, displayAttr, message) {
+      let _choices;
+      if (_.isFunction(choices)) {
+        _choices = choices();
+      } else {
+        _choices = choices;
+      }
+      var rec = _.find(_choices, function(o) {
         return o.id == val;
       });
       var res = null;
@@ -42,6 +48,8 @@ angular
         } else {
           res = rec.name || rec.label;
         }
+      } else if (val != null) {
+        res = message;
       }
       return res;
     };

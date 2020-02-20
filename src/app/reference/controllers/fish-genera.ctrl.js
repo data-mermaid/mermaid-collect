@@ -3,18 +3,24 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
   '$scope',
   '$filter',
   'PaginatedOfflineTableWrapper',
-  'OfflineTableUtils',
+  'OfflineCommonTables',
+  'TransectExportService',
+  'Button',
   function(
     $rootScope,
     $scope,
     $filter,
     PaginatedOfflineTableWrapper,
-    OfflineTableUtils
+    OfflineCommonTables,
+    TransectExportService,
+    Button
   ) {
     'use strict';
 
     $scope.resource = null;
     $scope.tableControl = {};
+    const fieldReportButton = new Button();
+    const reportHeader = ['Name', 'Family'];
     let fishGenusRecordsCount = 0;
 
     OfflineTableUtils.FishFamiliesTable().then(function(table) {
@@ -77,7 +83,19 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       });
     };
 
-    const promise = OfflineTableUtils.FishGeneraTable();
+    const downloadFishGeneraReport = function() {
+      $scope.projectObjectsTable.filter().then(function(records) {
+        const content = TransectExportService.fishGeneraReport(records);
+
+        TransectExportService.downloadAsCSV(
+          'fish-genera',
+          reportHeader,
+          content
+        );
+      });
+    };
+
+    const promise = OfflineCommonTables.FishGeneraTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateFishGenusCount();
@@ -109,6 +127,15 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       return !$scope.tableControl.textboxFilterUsed();
     };
 
-    $rootScope.PageHeaderButtons = [];
+    fieldReportButton.name = 'Export to CSV';
+    fieldReportButton.classes = 'btn-success';
+    fieldReportButton.icon = 'fa fa-download';
+    fieldReportButton.enabled = true;
+    fieldReportButton.onlineOnly = false;
+    fieldReportButton.click = function() {
+      downloadFishGeneraReport();
+    };
+
+    $rootScope.PageHeaderButtons = [fieldReportButton];
   }
 ]);

@@ -22,6 +22,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   'connectivity',
   'OfflineTableSync',
   'OfflineTableUtils',
+  'SpatialUtils',
   'logger',
   function(
     APP_CONFIG,
@@ -44,6 +45,7 @@ angular.module('mermaid.libs').service('offlineservice', [
     FishSpecies,
     connectivity,
     OfflineTableSync,
+    SpatialUtils,
     OfflineTableUtils,
     logger
   ) {
@@ -530,11 +532,13 @@ angular.module('mermaid.libs').service('offlineservice', [
           var reefTypeChoices = convertToChoices('reeftypes', choices);
           var reefZoneChoices = convertToChoices('reefzones', choices);
           var reefExposuresChoices = convertToChoices('reefexposures', choices);
+          var regionsChoices = convertToChoices('regions', choices);
           return {
             countryChoices: countryChoices,
             reefTypeChoices: reefTypeChoices,
             reefZoneChoices: reefZoneChoices,
-            reefExposuresChoices: reefExposuresChoices
+            reefExposuresChoices: reefExposuresChoices,
+            regionsChoices: regionsChoices
           };
         })
         .then(function(choices) {
@@ -568,6 +572,18 @@ angular.module('mermaid.libs').service('offlineservice', [
                   relatedRecords: choices.reefExposuresChoices,
                   relatedKey: 'id',
                   relatedColumns: ['name']
+                },
+                regions: {
+                  foreignKey: 'location',
+                  relatedKey: 'geom',
+                  relatedRecords: choices.regionsChoices,
+                  relateFunction: function(obj, relatedRecord) {
+                    return SpatialUtils.pointInPolygon(
+                      obj.location,
+                      relatedRecord.geom
+                    );
+                  },
+                  relatedColumns: ['id', 'name']
                 }
               }
             },

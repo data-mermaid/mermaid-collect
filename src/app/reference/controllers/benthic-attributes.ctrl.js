@@ -1,21 +1,21 @@
 angular.module('app.reference').controller('BenthicAttributesCtrl', [
   '$scope',
   '$rootScope',
-  '$state',
   'PaginatedOfflineTableWrapper',
   'Button',
   'OfflineTableUtils',
-  'utils',
+  'OfflineCommonTables',
+  'TransectExportService',
   '$filter',
   '$q',
   function(
     $scope,
     $rootScope,
-    $state,
     PaginatedOfflineTableWrapper,
     Button,
+    OfflineCommonTables,
+    TransectExportService,
     OfflineTableUtils,
-    utils,
     $filter,
     $q
   ) {
@@ -23,7 +23,22 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
 
     $scope.resource = undefined;
     $scope.tableControl = {};
+    $scope.choices = { regions: [], benthiclifehistories: [] };
+    const fieldReportButton = new Button();
+    const reportHeader = ['Name', 'Parent', 'Life History', 'Regions'];
     let benthicAttributeRecordsCount = 0;
+
+    OfflineCommonTables.ChoicesTable().then(function(table) {
+      table.filter({ name: 'regions' }).then(function(region_choices) {
+        $scope.choices.regions = region_choices[0].data;
+      });
+      table
+        .filter({ name: 'benthiclifehistories' })
+        .then(function(benthiclifehistory_choices) {
+          $scope.choices.benthiclifehistories =
+            benthiclifehistory_choices[0].data;
+        });
+    });
 
     $scope.tableConfig = {
       id: 'benthicattributes',
@@ -54,7 +69,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
           sortable: true,
           formatter: function(v) {
             return (
-              $filter('matchchoice')(v, utils.choices.benthiclifehistories) ||
+              $filter('matchchoice')(v, $scope.choices.benthiclifehistories) ||
               '-'
             );
           }
@@ -67,7 +82,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
             const regions = [];
             _.each(v, function(region) {
               regions.push(
-                $filter('matchchoice')(region, utils.choices.regions)
+                $filter('matchchoice')(region, $scope.choices.regions)
               );
             });
             return regions.join(', ') || '-';
@@ -85,6 +100,21 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     const updateBenthicAttributeCount = function() {
       $scope.projectObjectsTable.count().then(function(count) {
         benthicAttributeRecordsCount = count;
+      });
+    };
+
+    const downloadBenthicAttributesReport = function() {
+      $scope.projectObjectsTable.filter().then(function(records) {
+        const content = TransectExportService.benthicAttributesReport(
+          records,
+          $scope.choices
+        );
+
+        TransectExportService.downloadAsCSV(
+          'benthic-attributes',
+          reportHeader,
+          content
+        );
       });
     };
 
@@ -137,6 +167,15 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       return !$scope.tableControl.textboxFilterUsed();
     };
 
-    $rootScope.PageHeaderButtons = [];
+    fieldReportButton.name = 'Export to CSV';
+    fieldReportButton.classes = 'btn-success';
+    fieldReportButton.icon = 'fa fa-download';
+    fieldReportButton.enabled = true;
+    fieldReportButton.onlineOnly = false;
+    fieldReportButton.click = function() {
+      downloadBenthicAttributesReport();
+    };
+
+    $rootScope.PageHeaderButtons = [fieldReportButton];
   }
 ]);

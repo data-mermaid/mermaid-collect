@@ -34,7 +34,9 @@
     relatedRecords: Array of related records to join to,
     name: 'Join name, used as an attribute in the OfflineRecord to store join fields/values',
     relatedKey: '<key in related table to join to>',
-    relatedColumns: Array of attributes to copy across from the related recods/table
+    relateFunction: Function invoked per iteration it must return true (match) or false (no match).
+    relatedColumns: Array of attributes to copy across from the related recods/table.
+    many: (boolean) If result of the join is an Array of results or just one object. defaults: false
   }
 
   example 1:
@@ -43,6 +45,10 @@
     relatedRecords: countries,
     name: 'countries',
     relatedKey: 'id',
+    many: true,
+    relateFunction: function(record, relatedRecord, joinSchema) {
+      return record.val === 1;
+    },
     relatedColumns: ['name']
   }
 
@@ -431,23 +437,33 @@ angular.module('mermaid.libs').factory('OfflineTable', [
           var relatedColumns = joinSchema.relatedColumns;
           var foreignKey = joinSchema.foreignKey;
           var relatedKey = joinSchema.relatedKey;
-
-          var noMatchRecord = _.zipObject(
-            relatedColumns,
-            _.map(relatedColumns, function() {
-              return null;
-            })
-          );
+          var many = joinSchema.many || false;
 
           where[relatedKey] = null;
           return _.map(records, function(obj) {
             obj[tablePrefix] = obj[tablePrefix] || {};
-            where[relatedKey] = _.get(obj, foreignKey);
-            var match = _.find(relatedRecords, where);
 
-            if (match === undefined) {
-              obj[tablePrefix] = noMatchRecord;
+            if (_.isFunction(joinSchema.relateFunction)) {
+              where = function(relatedRecord) {
+                return joinSchema.relateFunction(
+                  obj,
+                  relatedRecord,
+                  joinSchema
+                );
+              };
             } else {
+              where[relatedKey] = _.get(obj, foreignKey);
+            }
+
+            var matches = _.filter(relatedRecords, where);
+
+            obj[tablePrefix] = null;
+            if (many === true) {
+              obj[tablePrefix] = _.map(matches, function(match) {
+                return _.assign({}, _.pick(match, relatedColumns));
+              });
+            } else {
+              const match = matches.length > 0 ? matches[0] : {};
               obj[tablePrefix] = _.assign({}, _.pick(match, relatedColumns));
             }
             return obj;

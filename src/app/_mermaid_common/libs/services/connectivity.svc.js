@@ -13,7 +13,7 @@ angular.module('mermaid.libs').service('connectivity', [
     var isToggleOffline = false;
 
     var isOnline = function() {
-      return pingState && navigator.onLine && isToggleOffline === false;
+      return pingState === true && navigator.onLine && isToggleOffline !== true;
     };
 
     var checkOnline = function() {
@@ -30,7 +30,7 @@ angular.module('mermaid.libs').service('connectivity', [
     };
 
     var toggleDisabled = function() {
-      return !pingState && !navigator.onLine;
+      return pingState !== true && !navigator.onLine;
     };
 
     var stopPing = function() {

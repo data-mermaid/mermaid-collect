@@ -2,17 +2,23 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   '$rootScope',
   '$scope',
   'PaginatedOfflineTableWrapper',
-  'OfflineTableUtils',
+  'OfflineCommonTables',
+  'TransectExportService',
+  'Button',
   function(
     $rootScope,
     $scope,
     PaginatedOfflineTableWrapper,
-    OfflineTableUtils
+    OfflineCommonTables,
+    TransectExportService,
+    Button
   ) {
     'use strict';
 
     $scope.resource = null;
     $scope.tableControl = {};
+    const fieldReportButton = new Button();
+    const reportHeader = ['Name'];
     let fishFamilyRecordsCount = 0;
 
     $scope.tableConfig = {
@@ -60,7 +66,19 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       });
     };
 
-    const promise = OfflineTableUtils.FishFamiliesTable();
+    const downloadFishFamiliesReport = function() {
+      $scope.projectObjectsTable.filter().then(function(records) {
+        const content = TransectExportService.fishFamiliesReport(records);
+
+        TransectExportService.downloadAsCSV(
+          'fish-families',
+          reportHeader,
+          content
+        );
+      });
+    };
+
+    const promise = OfflineCommonTables.FishFamiliesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateFishFamilyCount();
@@ -92,6 +110,15 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       return !$scope.tableControl.textboxFilterUsed();
     };
 
-    $rootScope.PageHeaderButtons = [];
+    fieldReportButton.name = 'Export to CSV';
+    fieldReportButton.classes = 'btn-success';
+    fieldReportButton.icon = 'fa fa-download';
+    fieldReportButton.enabled = true;
+    fieldReportButton.onlineOnly = false;
+    fieldReportButton.click = function() {
+      downloadFishFamiliesReport();
+    };
+
+    $rootScope.PageHeaderButtons = [fieldReportButton];
   }
 ]);

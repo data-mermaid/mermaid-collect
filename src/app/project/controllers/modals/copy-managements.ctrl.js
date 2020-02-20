@@ -46,7 +46,6 @@ angular.module('app.project').controller('CopyManagementsCtrl', [
     service = _.assign(CopyManagementsService, {});
     $scope.control = service.control;
     $scope.resource = service.resource;
-    $scope.choices = utils.choices;
     $scope.config = service.config;
     $scope.config.filters = _.merge($scope.config.filters, srcRecordFilter);
     $scope.config.toolbar.toggleViewSelectedOnly = toggleViewSelectedOnly;
