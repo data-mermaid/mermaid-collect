@@ -32,13 +32,12 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
     'use strict';
 
     const CHOICES_NAME = 'choices';
-    // const FISH_ATTRIBUTES_NAME = 'fishattributes';
+    const FISH_ATTRIBUTES_NAME = 'fishattributes'; // Table Group
     const FISH_SIZES_NAME = 'fishsizes';
     const FISH_FAMILIES_NAME = 'fishfamilies';
     const FISH_GENERA_NAME = 'fishgenera';
     const FISH_SPECIES_NAME = 'fishspecies';
     const BENTHIC_ATTRIBUTES_NAME = 'benthicattributes';
-    // const PROJECT_TAGS_NAME = 'projecttags';
 
     const COMMON_TABLE_NAMES = [
       CHOICES_NAME,
@@ -122,7 +121,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
           FishFamiliesTable(skipRefresh)
         ])
         .then(function(responses) {
-          return OfflineTableGroup('fishattributes', responses);
+          return OfflineTableGroup(FISH_ATTRIBUTES_NAME, responses);
         });
     };
 

@@ -68,13 +68,14 @@ angular
     };
 
     const _getMyProjectProfile = function($q, $stateParams, ProjectService) {
-      return ProjectService.getMyProjectProfile($stateParams.project_id);
-      // .then(function(projectProfile) {
-      //   if (projectProfile === null) {
-      //     return $q.reject('Project profile is null');
-      //   }
-      //   return projectProfile;
-      // });
+      return ProjectService.getMyProjectProfile($stateParams.project_id).then(
+        function(projectProfile) {
+          if (projectProfile === null) {
+            return $q.reject('Project profile is null');
+          }
+          return projectProfile;
+        }
+      );
     };
 
     const _fetchCurrentUser = function(authService) {

@@ -148,18 +148,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
       return _refresh(table, limit);
     };
 
-    const projectIdFromTableName = function(tableName) {
-      var parts = tableName
-        .split('-')
-        .reverse()
-        .join('-')
-        .split('-', 5);
-      if (parts.length < 5) {
-        return null;
-      }
-      return parts.reverse().join('-');
-    };
-
     const checkRemoteProjectStatus = function(projectIds) {
       return $q
         .all(
@@ -249,7 +237,6 @@ angular.module('mermaid.libs').service('OfflineTableUtils', [
       getProjectIdFromTableName: getProjectIdFromTableName,
       getTableProfileIds: getTableProfileIds,
       getTableProjectIds: getTableProjectIds,
-      projectIdFromTableName: projectIdFromTableName,
       createOfflineTable: createOfflineTable,
       paginatedRefresh: paginatedRefresh,
       splitTableName: splitTableName

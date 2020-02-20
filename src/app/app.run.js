@@ -17,6 +17,7 @@
     'layoutUtils',
     'system',
     'offlineservice',
+    'utils',
     // '$urlRouter',
     'ConnectivityFactory'
   ];
@@ -35,13 +36,19 @@
     layoutUtils,
     system,
     offlineservice,
+    utils,
     // $urlRouter,
     ConnectivityFactory
   ) {
     const conn = new ConnectivityFactory($rootScope);
     let handleAuth;
 
-    offlineservice.syncAndDeleteV1Tables();
+    offlineservice.syncAndDeleteV1Tables().catch(function(error) {
+      if (error.key) {
+        utils.errorAlert(error.message);
+      }
+      console.error(error);
+    });
 
     if (authService.getToken() != null) {
       handleAuth = authService.renewToken();

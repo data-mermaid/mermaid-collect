@@ -45,13 +45,8 @@ angular.module('mermaid.libs').service('OfflineTables', [
       COLLECT_RECORDS_NAME
     ];
 
-    const getProjectsTableName = function(excludeProfileId) {
+    const getProjectsTableName = function() {
       return authService.getProfileId().then(function(profileId) {
-        if (excludeProfileId === true) {
-          return `${APP_CONFIG.localDbName}${
-            OfflineTableUtils.TABLE_NAME_DELIMITER
-          }${PROJECT_NAME}`;
-        }
         return `${
           APP_CONFIG.localDbName
         }${OfflineTableUtils.TABLE_NAME_DELIMITER}${PROJECT_NAME}${OfflineTableUtils.TABLE_NAME_DELIMITER}${profileId}`;

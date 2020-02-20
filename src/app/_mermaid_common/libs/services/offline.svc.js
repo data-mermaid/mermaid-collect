@@ -100,7 +100,10 @@ angular.module('mermaid.libs').service('offlineservice', [
         );
         return isSyncedPromise.then(function(syncedResults) {
           if (syncedResults.indexOf(false) !== -1) {
-            return $q.reject('Offline table not saved to server.');
+            return $q.reject({
+              key: 'notsynced',
+              message: 'Offline table not saved to server.'
+            });
           }
           return tables;
         });

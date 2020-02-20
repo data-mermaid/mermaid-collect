@@ -133,6 +133,10 @@ angular.module('app.auth').service('authService', [
     }
 
     function getProfileId() {
+      if (profileIdPromise != null) {
+        return profileIdPromise;
+      }
+
       profileIdPromise = getCurrentUser()
         .then(function(user) {
           return user.id;
