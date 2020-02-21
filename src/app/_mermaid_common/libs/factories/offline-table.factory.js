@@ -512,7 +512,10 @@ angular.module('mermaid.libs').factory('OfflineTable', [
             var joinPromises = [];
             if (tableJoinSchema) {
               _.each(tableJoinSchema, function(schema, key) {
-                if (schema.relatedRecords) {
+                if (
+                  schema.relatedRecords ||
+                  _.isFunction(schema.relateFunction)
+                ) {
                   joinPromises.push(
                     $q.resolve(join(key, arr, schema.relatedRecords, schema))
                   );
