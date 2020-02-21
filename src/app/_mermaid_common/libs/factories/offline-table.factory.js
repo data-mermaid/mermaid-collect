@@ -62,7 +62,8 @@
 // ot-deleterecord-error
 
 angular.module('mermaid.libs').service('OfflineTableEvents', [
-  function() {
+  'utils',
+  function(utils) {
     'use strict';
     const listeners = {};
 
@@ -83,6 +84,8 @@ angular.module('mermaid.libs').service('OfflineTableEvents', [
             break;
           }
         }
+      } else {
+        keyName = utils.generateUuid();
       }
 
       if (isNew) {

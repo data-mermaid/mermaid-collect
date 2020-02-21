@@ -32,6 +32,11 @@ angular.module('mermaid.libs').controller('GlobalCtrl', [
       return $q
         .all([projectIdsPromise, profileIdsPromise])
         .then(function(results) {
+          if (results == null || results[0] == null || results[1] == null) {
+            return $q.reject(
+              'Databases cannot be removed, missing profile and project details.'
+            );
+          }
           const projectIds = results[0];
           profileIds = results[1];
           return $q.all(
