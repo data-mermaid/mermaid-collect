@@ -49,6 +49,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
     ];
 
     let choicesPromise = null;
+    let fishSpeciesPromise = null;
 
     const getFullName = function(baseName) {
       if (baseName.indexOf(APP_CONFIG.localDbName) === 0) {
@@ -172,7 +173,11 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
 
     const FishSpeciesTable = function(skipRefresh) {
       const refreshFishSpecies = function(table, options) {
-        return table
+        if (fishSpeciesPromise != null) {
+          return fishSpeciesPromise;
+        }
+
+        fishSpeciesPromise = table
           .filter({
             status: 10, // PROPOSED_RECORD
             $$synced: false
@@ -190,7 +195,12 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
           })
           .then(function() {
             return OfflineTableUtils.paginatedRefresh(table, options);
+          })
+          .finally(function() {
+            fishSpeciesPromise = null;
           });
+
+        return fishSpeciesPromise;
       };
 
       return OfflineTableUtils.createOfflineTable(
