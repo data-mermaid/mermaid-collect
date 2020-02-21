@@ -71,9 +71,38 @@ angular.module('mermaid.libs').service('offlineservice', [
       'projecttags'
     ];
 
-    var getTableByName = function(name) {
-      tables = tables || {};
-      return tables[name];
+    const getTableByName = function(tableParts, skipRefresh) {
+      const tableNameMap = {
+        benthicattributes: BenthicAttributesTable,
+        fishfamilies: FishFamiliesTable,
+        fishgenera: FishGeneraTable,
+        fishsizes: FishSizesTable,
+        fishspecies: FishSpeciesTable,
+        choices: ChoicesTable,
+        projects_v2: ProjectsTable,
+        projectmanagements: ProjectManagementsTable,
+        collectrecords: CollectRecordsTable,
+        project_profiles: ProjectProfilesTable,
+        projectsites: ProjectSitesTable
+      };
+
+      if (tableParts.baseName === 'offlinetables') {
+        // Mocking OfflineTable factory so table can be removed
+        return $q.resolve({
+          name: `${tableParts.prefix}-${tableParts.baseName}`,
+          isSynced: function() {
+            return $q.resolve(true);
+          }
+        });
+      }
+
+      if (tableParts.projectId) {
+        return tableNameMap[tableParts.baseName](
+          tableParts.projectId,
+          skipRefresh
+        );
+      }
+      return tableNameMap[tableParts.baseName](skipRefresh);
     };
 
     var databaseExists = function(name) {
@@ -895,35 +924,76 @@ angular.module('mermaid.libs').service('offlineservice', [
       return $q.all(promises);
     };
 
-    const syncAndDeleteV1Tables = function() {
-      const uuidRegEx = new RegExp(OfflineTableUtils.UUID_REGEX_STR);
+    const syncAndDeleteV1Tables = function(retryCount) {
+      if (retryCount == null) {
+        retryCount = 0;
+      }
+
+      if (retryCount > 1) {
+        return $q.reject({
+          key: 'notsynced',
+          message: 'Offline table not saved to server.'
+        });
+      }
       return getDatabaseNames()
         .then(function(tableNames) {
-          return _.filter(tableNames, function(tableName) {
-            const tableNameObj = OfflineTableUtils.splitTableName(tableName);
-            return tableNameObj.profileId == null && uuidRegEx.test(tableName);
+          return tableNames.filter(function(tableName) {
+            return tableName.startsWith(`${APP_CONFIG.localDbName}-`);
           });
         })
-        .then(function(oldTableNames) {
-          return Array.from(
-            new Set(
-              _.map(oldTableNames, function(oldTableName) {
-                return oldTableName.split(uuidRegEx)[1];
-              })
-            )
-          );
+        .then(function(filteredTableNames) {
+          return filteredTableNames.map(function(name) {
+            let projectId = null;
+            const parts = name.split('-');
+            const prefix = parts.shift();
+            const baseName = parts.shift();
+            if (parts.length > 0) {
+              projectId = parts.join('-');
+            }
+            return {
+              prefix: prefix,
+              baseName: baseName,
+              projectId: projectId
+            };
+          });
         })
-        .then(function(projectIds) {
+        .then(function(nameObjs) {
           return $q.all(
-            _.map(projectIds, function(projectId) {
-              return deleteProjectDatabases(projectId);
+            nameObjs.map(function(nameObj) {
+              return getTableByName(nameObj, retryCount === 0).then(function(
+                table
+              ) {
+                return table.isSynced().then(function(isSynced) {
+                  return {
+                    table: table,
+                    isSynced: isSynced
+                  };
+                });
+              });
             })
           );
+        })
+        .then(function(syncObjs) {
+          const refreshTablePromises = [];
+          syncObjs.forEach(function(syncObj) {
+            if (syncObj.isSynced) {
+              Dexie.delete(syncObj.table.name);
+            } else {
+              refreshTablePromises.push(syncObj.table.refresh());
+            }
+          });
+          return refreshTablePromises;
+        })
+        .then(function(refreshTablePromises) {
+          if (refreshTablePromises.length > 0) {
+            retryCount = retryCount + 1;
+            return syncAndDeleteV1Tables(retryCount);
+          }
+          return $q.resolve(true);
         });
     };
 
     var offlineutils = {
-      getTableByName: getTableByName,
       databaseExists: databaseExists,
       refreshAll: refreshAll,
       isSynced: function() {
