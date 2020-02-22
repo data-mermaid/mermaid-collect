@@ -44,8 +44,6 @@ angular.module('mermaid.libs').factory('OfflineTableGroup', [
             })
           )
           .then(function(results) {
-            console.log('results', results);
-
             return results.indexOf(false) === -1;
           });
       };

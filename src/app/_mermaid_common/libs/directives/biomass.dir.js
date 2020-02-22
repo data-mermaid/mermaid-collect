@@ -1,7 +1,7 @@
 angular.module('mermaid.libs').directive('biomass', [
-  'offlineservice',
+  'OfflineCommonTables',
   'TransectService',
-  function(offlineservice, TransectService) {
+  function(OfflineCommonTables, TransectService) {
     'use strict';
     return {
       restrict: 'EA',
@@ -66,7 +66,7 @@ angular.module('mermaid.libs').directive('biomass', [
           ) {
             _update_biomass();
           } else {
-            offlineservice.FishAttributesTable(true).then(function(table) {
+            OfflineCommonTables.FishAttributesTable(true).then(function(table) {
               if (angular.isDefined(scope.obs.fish_attribute)) {
                 table.get(scope.obs.fish_attribute).then(function(fa) {
                   if (fa !== null) {

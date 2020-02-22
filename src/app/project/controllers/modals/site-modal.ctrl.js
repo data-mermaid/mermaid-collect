@@ -5,7 +5,6 @@ angular
     $uibModalInstance,
     pageContent,
     $stateParams,
-    offlineservice,
     ProjectService,
     SiteService
   ) {

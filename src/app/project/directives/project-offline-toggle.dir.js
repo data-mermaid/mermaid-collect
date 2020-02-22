@@ -1,7 +1,9 @@
 angular.module('app.project').directive('projectOfflineToggle', [
-  'offlineservice',
+  '$timeout',
+  'OfflineTableUtils',
+  'OfflineTables',
   'ProjectService',
-  function(offlineservice, ProjectService) {
+  function($timeout, OfflineTableUtils, OfflineTables, ProjectService) {
     'use strict';
     return {
       restrict: 'E',
@@ -10,38 +12,48 @@ angular.module('app.project').directive('projectOfflineToggle', [
       },
       templateUrl: 'app/project/directives/project-offline-toggle.tpl.html',
       link: function(scope) {
-        scope.isAvailableOffline = false;
+        scope.isDisabled = false;
+        scope.isAvailableOffline = null;
         scope.messages = {
           true: 'Project is available for working offline',
           false: 'Project is not available for working offline'
         };
 
         scope.toggleOffline = function() {
+          if (scope.isDisabled) {
+            return;
+          }
+          scope.isDisabled = true;
           var promise;
           if (scope.isAvailableOffline) {
-            promise = offlineservice.clearDatabases(scope.projectId);
+            promise = OfflineTables.deleteProjectDatabases(
+              scope.projectId,
+              false,
+              true
+            );
           } else {
             promise = ProjectService.loadProject(scope.projectId);
           }
-          promise.then(function() {
-            offlineservice
-              .isProjectOffline(scope.projectId)
-              .then(function(isOffline) {
-                scope.isAvailableOffline = isOffline;
-              });
-          });
+          return promise
+            .then(function() {
+              scope.isAvailableOffline = !scope.isAvailableOffline;
+              $timeout(function() {
+                ProjectService.isProjectOffline(scope.projectId).then(function(
+                  isOffline
+                ) {
+                  scope.isAvailableOffline = isOffline;
+                });
+              }, 1000);
+            })
+            .finally(function() {
+              scope.isDisabled = false;
+            });
         };
 
-        scope.$watch('projectId', function() {
-          if (scope.projectId == null) {
-            scope.isProjectOffline = false;
-            return;
-          }
-          offlineservice
-            .isProjectOffline(scope.projectId)
-            .then(function(isOffline) {
-              scope.isAvailableOffline = isOffline;
-            });
+        ProjectService.isProjectOffline(scope.projectId).then(function(
+          isOffline
+        ) {
+          scope.isAvailableOffline = isOffline;
         });
       }
     };

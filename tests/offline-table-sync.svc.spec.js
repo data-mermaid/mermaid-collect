@@ -1,4 +1,5 @@
 describe('OfflineTableSync factory sync', function() {
+  'use strict';
   var originalTimeout;
   var $rootScope;
   var $q;

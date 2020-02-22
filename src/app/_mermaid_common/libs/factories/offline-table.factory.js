@@ -61,13 +61,80 @@
 // ot-deleterecord
 // ot-deleterecord-error
 
+angular.module('mermaid.libs').service('OfflineTableEvents', [
+  'utils',
+  function(utils) {
+    'use strict';
+    const listeners = {};
+
+    const addListener = function(uniqueId, callback, context, keyName) {
+      let _cb = callback;
+      let _context = context;
+      let _keyName = keyName;
+      let isNew = true;
+
+      if (keyName != null) {
+        for (let i = 0; i < listeners.length; i++) {
+          const entry = listeners[i];
+          if (entry[2] === keyName) {
+            _cb = entry[0];
+            _context = entry[1];
+            _keyName = entry[2];
+            isNew = false;
+            break;
+          }
+        }
+      } else {
+        keyName = utils.generateUuid();
+      }
+
+      if (isNew) {
+        listeners[uniqueId] = listeners[uniqueId] || [];
+        listeners[uniqueId].push([_cb, _context, _keyName]);
+      }
+
+      // an off function for cancelling the listener
+      return function() {
+        var i = listeners[uniqueId].findIndex(function(parts) {
+          return (
+            parts[0] === _cb && parts[1] === _context && parts[2] === _keyName
+          );
+        });
+        if (i > -1) {
+          listeners[uniqueId].splice(i, 1);
+        }
+      };
+    };
+
+    const clearListeners = function(uniqueId) {
+      listeners[uniqueId] = [];
+    };
+
+    const notify = function(uniqueId, event, data) {
+      if (_.isArray(listeners[uniqueId]) === false) {
+        return;
+      }
+
+      angular.forEach(listeners[uniqueId].slice(), function(parts) {
+        parts[0].call(parts[1], { event: event, data: data });
+      });
+    };
+
+    return {
+      addListener: addListener,
+      clearListeners: clearListeners,
+      notify: notify
+    };
+  }
+]);
+
 angular.module('mermaid.libs').factory('OfflineTable', [
-  '$rootScope',
   '$q',
   '$http',
   'ErrorService',
   'connectivity',
-  function($rootScope, $q, $http, ErrorService, connectivity) {
+  'OfflineTableEvents',
+  function($q, $http, ErrorService, connectivity, OfflineTableEvents) {
     'use strict';
     var DB_VERSION = 1;
 
@@ -155,7 +222,6 @@ angular.module('mermaid.libs').factory('OfflineTable', [
         options = options || {};
 
         var self = this;
-        var listeners = [];
         var schemaDefn = {};
         // var remoteTimestamp = options.remoteTimestamp || 'updated_on';
         var deleteExisting = options.deleteExisting || false;
@@ -351,51 +417,20 @@ angular.module('mermaid.libs').factory('OfflineTable', [
         }
 
         self.$$notify = function(event, data) {
-          angular.forEach(listeners.slice(), function(parts) {
-            parts[0].call(parts[1], { event: event, data: data });
-          });
+          OfflineTableEvents.notify(self.name, event, data);
         };
 
         self.$watch = function(cb, context, keyName) {
-          var _cb = cb;
-          var _context = context;
-          var _keyName = keyName;
-          var isNew = true;
-          // Check if callback already exists
-          if (keyName != null) {
-            for (var i = 0; i < listeners.length; i++) {
-              var entry = listeners[i];
-              if (entry[2] === keyName) {
-                _cb = entry[0];
-                _context = entry[1];
-                _keyName = entry[2];
-                isNew = false;
-                break;
-              }
-            }
-          }
-
-          if (isNew) {
-            listeners.push([_cb, _context, _keyName]);
-          }
-
-          // an off function for cancelling the listener
-          return function() {
-            var i = listeners.findIndex(function(parts) {
-              return (
-                parts[0] === _cb &&
-                parts[1] === _context &&
-                parts[2] === _keyName
-              );
-            });
-            if (i > -1) {
-              listeners.splice(i, 1);
-            }
-          };
+          return OfflineTableEvents.addListener(
+            self.name,
+            cb,
+            context,
+            keyName
+          );
         };
 
         self.$clearListeners = function() {
-          listeners = [];
+          OfflineTableEvents.clearListeners(self.name);
         };
 
         self.getPrimaryKeyName = function() {
@@ -480,7 +515,10 @@ angular.module('mermaid.libs').factory('OfflineTable', [
             var joinPromises = [];
             if (tableJoinSchema) {
               _.each(tableJoinSchema, function(schema, key) {
-                if (schema.relatedRecords) {
+                if (
+                  schema.relatedRecords ||
+                  _.isFunction(schema.relateFunction)
+                ) {
                   joinPromises.push(
                     $q.resolve(join(key, arr, schema.relatedRecords, schema))
                   );

@@ -4,6 +4,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   'APP_CONFIG',
   '$q',
   '$http',
+  '$injector',
   'OfflineTable',
   'OfflineTableGroup',
   'utils',
@@ -27,6 +28,7 @@ angular.module('mermaid.libs').service('offlineservice', [
     APP_CONFIG,
     $q,
     $http,
+    $injector,
     OfflineTable,
     OfflineTableGroup,
     utils,
@@ -69,9 +71,38 @@ angular.module('mermaid.libs').service('offlineservice', [
       'projecttags'
     ];
 
-    var getTableByName = function(name) {
-      tables = tables || {};
-      return tables[name];
+    const getTableByName = function(tableParts, skipRefresh) {
+      const tableNameMap = {
+        benthicattributes: BenthicAttributesTable,
+        fishfamilies: FishFamiliesTable,
+        fishgenera: FishGeneraTable,
+        fishsizes: FishSizesTable,
+        fishspecies: FishSpeciesTable,
+        choices: ChoicesTable,
+        projects_v2: ProjectsTable,
+        projectmanagements: ProjectManagementsTable,
+        collectrecords: CollectRecordsTable,
+        project_profiles: ProjectProfilesTable,
+        projectsites: ProjectSitesTable
+      };
+
+      if (tableParts.baseName === 'offlinetables') {
+        // Mocking OfflineTable factory so table can be removed
+        return $q.resolve({
+          name: `${tableParts.prefix}-${tableParts.baseName}`,
+          isSynced: function() {
+            return $q.resolve(true);
+          }
+        });
+      }
+
+      if (tableParts.projectId) {
+        return tableNameMap[tableParts.baseName](
+          tableParts.projectId,
+          skipRefresh
+        );
+      }
+      return tableNameMap[tableParts.baseName](skipRefresh);
     };
 
     var databaseExists = function(name) {
@@ -98,7 +129,10 @@ angular.module('mermaid.libs').service('offlineservice', [
         );
         return isSyncedPromise.then(function(syncedResults) {
           if (syncedResults.indexOf(false) !== -1) {
-            return $q.reject('Offline table not saved to server.');
+            return $q.reject({
+              key: 'notsynced',
+              message: 'Offline table not saved to server.'
+            });
           }
           return tables;
         });
@@ -890,8 +924,88 @@ angular.module('mermaid.libs').service('offlineservice', [
       return $q.all(promises);
     };
 
+    const syncAndDeleteV1Tables = function(retryCount) {
+      const ProjectService = $injector.get('ProjectService');
+      if (retryCount == null) {
+        retryCount = 0;
+      }
+
+      if (retryCount > 1) {
+        return $q.reject({
+          key: 'notsynced',
+          message: 'Offline table not saved to server.'
+        });
+      }
+
+      return getDatabaseNames()
+        .then(function(tableNames) {
+          return tableNames.filter(function(tableName) {
+            return tableName.startsWith(`${APP_CONFIG.localDbName}-`);
+          });
+        })
+        .then(function(filteredTableNames) {
+          // Parse old MERMAID IndexedDB table names
+          return filteredTableNames.map(function(name) {
+            let projectId = null;
+            const parts = name.split('-');
+            const prefix = parts.shift();
+            const baseName = parts.shift();
+            if (parts.length > 0) {
+              projectId = parts.join('-');
+            }
+            return {
+              prefix: prefix,
+              baseName: baseName,
+              projectId: projectId
+            };
+          });
+        })
+        .then(function(nameObjs) {
+          // Fetch OfflineTable instances for old tables
+          // and check if they are synced.
+          return $q.all(
+            nameObjs.map(function(nameObj) {
+              return getTableByName(nameObj, retryCount === 0).then(function(
+                table
+              ) {
+                return table.isSynced().then(function(isSynced) {
+                  return {
+                    table: table,
+                    isSynced: isSynced,
+                    projectId: nameObj.projectId
+                  };
+                });
+              });
+            })
+          );
+        })
+        .then(function(syncObjs) {
+          // Delete tables that are synced.
+          const refreshTablePromises = [];
+          syncObjs.forEach(function(syncObj) {
+            if (syncObj.isSynced) {
+              Dexie.delete(syncObj.table.name);
+              if (syncObj.projectId != null) {
+                ProjectService.loadProject(syncObj.projectId);
+              }
+            } else {
+              refreshTablePromises.push(syncObj.table.refresh());
+            }
+          });
+          return refreshTablePromises;
+        })
+        .then(function(refreshTablePromises) {
+          // if tables had to be refreshed because they
+          // weren't synced, run this whole process again.
+          if (refreshTablePromises.length > 0) {
+            retryCount = retryCount + 1;
+            return syncAndDeleteV1Tables(retryCount);
+          }
+          return $q.resolve(true);
+        });
+    };
+
     var offlineutils = {
-      getTableByName: getTableByName,
       databaseExists: databaseExists,
       refreshAll: refreshAll,
       isSynced: function() {
@@ -936,7 +1050,8 @@ angular.module('mermaid.libs').service('offlineservice', [
       getOfflineProjects: getOfflineProjects,
       getProjectTableNames: getProjectTableNames,
       loadLookupTables: loadLookupTables,
-      projectIdFromTableName: projectIdFromTableName
+      projectIdFromTableName: projectIdFromTableName,
+      syncAndDeleteV1Tables: syncAndDeleteV1Tables
     };
 
     return offlineutils;

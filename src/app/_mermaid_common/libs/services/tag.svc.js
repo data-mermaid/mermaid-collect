@@ -1,8 +1,8 @@
 angular.module('mermaid.libs').service('TagService', [
   '$q',
-  'offlineservice',
+  'OfflineTableUtils',
   'Tag',
-  function($q, offlineservice, Tag) {
+  function($q, OfflineTableUtils, Tag) {
     'use strict';
 
     let fetchTags = function() {

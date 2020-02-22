@@ -3,7 +3,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
   '$scope',
   '$filter',
   'PaginatedOfflineTableWrapper',
-  'offlineservice',
+  'OfflineCommonTables',
   'TransectExportService',
   'Button',
   function(
@@ -11,7 +11,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     $scope,
     $filter,
     PaginatedOfflineTableWrapper,
-    offlineservice,
+    OfflineCommonTables,
     TransectExportService,
     Button
   ) {
@@ -23,7 +23,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     const reportHeader = ['Name', 'Family'];
     let fishGenusRecordsCount = 0;
 
-    offlineservice.FishFamiliesTable().then(function(table) {
+    OfflineCommonTables.FishFamiliesTable().then(function(table) {
       return table.filter().then(function(records) {
         $scope.fishfamilies = records;
       });
@@ -95,7 +95,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       });
     };
 
-    const promise = offlineservice.FishGeneraTable();
+    const promise = OfflineCommonTables.FishGeneraTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateFishGenusCount();

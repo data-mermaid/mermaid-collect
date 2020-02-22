@@ -1,10 +1,16 @@
 angular.module('app.project').directive('obsHabitatComplexityList', [
-  'offlineservice',
+  'OfflineCommonTables',
   'utils',
   '$timeout',
   'TransectService',
   'ValidatorService',
-  function(offlineservice, utils, $timeout, TransectService, ValidatorService) {
+  function(
+    OfflineCommonTables,
+    utils,
+    $timeout,
+    TransectService,
+    ValidatorService
+  ) {
     'use strict';
     return {
       restrict: 'EA',
@@ -39,7 +45,7 @@ angular.module('app.project').directive('obsHabitatComplexityList', [
           }, 30);
         };
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineCommonTables.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;

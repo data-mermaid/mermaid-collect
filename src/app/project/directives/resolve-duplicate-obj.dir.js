@@ -3,14 +3,14 @@ angular.module('app.project').directive('resolveDuplicateObj', [
   '$stateParams',
   'ModalService',
   'ProjectService',
-  'offlineservice',
+  'OfflineTableUtils',
   'ValidateDuplicationService',
   function(
     $q,
     $stateParams,
     ModalService,
     ProjectService,
-    offlineservice,
+    OfflineTableUtils,
     ValidateDuplicationService
   ) {
     'use strict';
@@ -18,9 +18,10 @@ angular.module('app.project').directive('resolveDuplicateObj', [
       restrict: 'E',
       scope: {
         table: '=',
-        controller: '@',
+        controller: '@'
       },
-      template: '<a href ng-if="$parent.$parent.isDisabled !== true">Resolve</a>',
+      template:
+        '<a href ng-if="$parent.$parent.isDisabled !== true">Resolve</a>',
       link: function(scope, element) {
         let modal;
         let projectId = $stateParams.project_id;
@@ -29,25 +30,26 @@ angular.module('app.project').directive('resolveDuplicateObj', [
           event.preventDefault();
 
           let fetchSimilarObjs = function() {
-            return ValidateDuplicationService.groupSimilarObjs(scope.table).then(
-              function(groupedSimilarObjs) {
-                let fetchObjPromises = _.map(groupedSimilarObjs, function(
-                  similarObjsSet
-                ) {
-                  return scope.table.filter({
-                    id: function(val) {
-                      return similarObjsSet.indexOf(val) !== -1;
-                    }
-                  });
+            return ValidateDuplicationService.groupSimilarObjs(
+              scope.table
+            ).then(function(groupedSimilarObjs) {
+              let fetchObjPromises = _.map(groupedSimilarObjs, function(
+                similarObjsSet
+              ) {
+                return scope.table.filter({
+                  id: function(val) {
+                    return similarObjsSet.indexOf(val) !== -1;
+                  }
                 });
-                return $q.all(fetchObjPromises);
-              }
-            );
+              });
+              return $q.all(fetchObjPromises);
+            });
           };
 
           let modalOptions = {
             controller: scope.controller,
-            bodyTemplateUrl: 'app/project/partials/resolve-duplicate-objs.tpl.html',
+            bodyTemplateUrl:
+              'app/project/partials/resolve-duplicate-objs.tpl.html',
             resolve: {
               similarObjs: function() {
                 return fetchSimilarObjs(projectId);

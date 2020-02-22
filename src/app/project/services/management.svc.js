@@ -1,10 +1,10 @@
 angular.module('app.project').service('ManagementService', [
   '$q',
-  'offlineservice',
+  'OfflineTables',
   'authService',
   'APP_CONFIG',
   '$window',
-  function($q, offlineservice, authService, APP_CONFIG, $window) {
+  function($q, OfflineTables, authService, APP_CONFIG, $window) {
     'use strict';
 
     var save = function(management, options) {
@@ -15,11 +15,11 @@ angular.module('app.project').service('ManagementService', [
 
       if (!management.id) {
         management.project = projectId;
-        return offlineservice
-          .ProjectManagementsTable(projectId)
-          .then(function(table) {
-            return table.create(management);
-          });
+        return OfflineTables.ProjectManagementsTable(projectId).then(function(
+          table
+        ) {
+          return table.create(management);
+        });
       }
       return management.update();
     };
@@ -28,19 +28,31 @@ angular.module('app.project').service('ManagementService', [
       if (managementId == null) {
         return $q.resolve({ project: projectId });
       }
-      return offlineservice
-        .ProjectManagementsTable(projectId)
-        .then(function(table) {
-          return table.get(managementId).then(function(management) {
-            management.no_take = (management.no_take === null) ? false : management.no_take;
-            management.open_access = (management.open_access === null) ? false : management.open_access;
-            management.periodic_closure = (management.periodic_closure === null) ? false : management.periodic_closure;
-            management.size_limits = (management.size_limits === null) ? false : management.size_limits;
-            management.gear_restriction = (management.gear_restriction === null) ? false : management.gear_restriction;
-            management.species_restriction = (management.species_restriction === null) ? false : management.species_restriction;
-            return management || { project: projectId };
-          });
+      return OfflineTables.ProjectManagementsTable(projectId).then(function(
+        table
+      ) {
+        return table.get(managementId).then(function(management) {
+          management.no_take =
+            management.no_take === null ? false : management.no_take;
+          management.open_access =
+            management.open_access === null ? false : management.open_access;
+          management.periodic_closure =
+            management.periodic_closure === null
+              ? false
+              : management.periodic_closure;
+          management.size_limits =
+            management.size_limits === null ? false : management.size_limits;
+          management.gear_restriction =
+            management.gear_restriction === null
+              ? false
+              : management.gear_restriction;
+          management.species_restriction =
+            management.species_restriction === null
+              ? false
+              : management.species_restriction;
+          return management || { project: projectId };
         });
+      });
     };
 
     var downloadFieldReport = function(projectId) {

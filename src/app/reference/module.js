@@ -156,11 +156,11 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         }
       },
       resolve: {
-        fishSpeciesTable: function(offlineservice) {
-          return offlineservice.FishSpeciesTable();
+        fishSpeciesTable: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishSpeciesTable();
         },
-        fishSpeciesCount: function(offlineservice) {
-          return offlineservice.FishSpeciesTable().then(function(table) {
+        fishSpeciesCount: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishSpeciesTable().then(function(table) {
             return table.count();
           });
         }

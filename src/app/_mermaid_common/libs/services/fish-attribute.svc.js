@@ -1,7 +1,7 @@
 angular.module('mermaid.libs').service('FishAttributeService', [
   '$q',
-  'offlineservice',
-  function($q, offlineservice) {
+  'OfflineCommonTables',
+  function($q, OfflineCommonTables) {
     'use strict';
     let PROPOSED_RECORD = 10;
     let FAMILY_RANK = 'family';
@@ -12,11 +12,11 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = offlineservice
-          .FishSpeciesTable()
-          .then(function(fishSpeciesTable) {
-            return fishSpeciesTable.create(fishAttribute);
-          });
+        savePromise = OfflineCommonTables.FishSpeciesTable().then(function(
+          fishSpeciesTable
+        ) {
+          return fishSpeciesTable.create(fishAttribute);
+        });
       } else {
         savePromise = fishAttribute.update();
       }
@@ -27,11 +27,11 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = offlineservice
-          .FishGeneraTable()
-          .then(function(fishGenusTable) {
-            return fishGenusTable.create(fishAttribute);
-          });
+        savePromise = OfflineCommonTables.FishGeneraTable().then(function(
+          fishGenusTable
+        ) {
+          return fishGenusTable.create(fishAttribute);
+        });
       } else {
         savePromise = fishAttribute.update();
       }
@@ -42,11 +42,11 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = offlineservice
-          .FishFamiliesTable()
-          .then(function(fishFamiliesTable) {
-            return fishFamiliesTable.create(fishAttribute);
-          });
+        savePromise = OfflineCommonTables.FishFamiliesTable().then(function(
+          fishFamiliesTable
+        ) {
+          return fishFamiliesTable.create(fishAttribute);
+        });
       } else {
         savePromise = fishAttribute.update();
       }
@@ -54,41 +54,49 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let getFishFamily = function(fishAttributeId, skipRefresh) {
-      return offlineservice
-        .FishFamiliesTable(skipRefresh)
-        .then(function(table) {
-          return table.get(fishAttributeId);
-        });
+      return OfflineCommonTables.FishFamiliesTable(skipRefresh).then(function(
+        table
+      ) {
+        return table.get(fishAttributeId);
+      });
     };
 
     let getFishGenus = function(fishAttributeId, skipRefresh) {
-      return offlineservice.FishGeneraTable(skipRefresh).then(function(table) {
+      return OfflineCommonTables.FishGeneraTable(skipRefresh).then(function(
+        table
+      ) {
         return table.get(fishAttributeId);
       });
     };
 
     let getFishSpecies = function(fishAttributeId, skipRefresh) {
-      return offlineservice.FishSpeciesTable(skipRefresh).then(function(table) {
+      return OfflineCommonTables.FishSpeciesTable(skipRefresh).then(function(
+        table
+      ) {
         return table.get(fishAttributeId);
       });
     };
 
     let fetchFishGenera = function(qry, skipRefresh) {
-      return offlineservice.FishGeneraTable(skipRefresh).then(function(table) {
+      return OfflineCommonTables.FishGeneraTable(skipRefresh).then(function(
+        table
+      ) {
         return table.filter(qry);
       });
     };
 
     let fetchFishFamilies = function(qry, skipRefresh) {
-      return offlineservice
-        .FishFamiliesTable(skipRefresh)
-        .then(function(table) {
-          return table.filter(qry);
-        });
+      return OfflineCommonTables.FishFamiliesTable(skipRefresh).then(function(
+        table
+      ) {
+        return table.filter(qry);
+      });
     };
 
     let fetchFishSpecies = function(qry, skipRefresh) {
-      return offlineservice.FishSpeciesTable(skipRefresh).then(function(table) {
+      return OfflineCommonTables.FishSpeciesTable(skipRefresh).then(function(
+        table
+      ) {
         return table.filter(qry);
       });
     };
@@ -109,8 +117,7 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let fetchFishAttributes = function(qry, skipRefresh) {
-      return offlineservice
-        .FishAttributesTable(skipRefresh)
+      return OfflineCommonTables.FishAttributesTable(skipRefresh)
         .then(function(table) {
           return table.filter(qry);
         })

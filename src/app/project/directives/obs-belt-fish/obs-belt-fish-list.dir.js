@@ -2,7 +2,7 @@ angular.module('app.project').directive('obsBeltFishList', [
   '$q',
   '$window',
   '$state',
-  'offlineservice',
+  'OfflineCommonTables',
   'utils',
   '$timeout',
   'FishAttributeService',
@@ -13,7 +13,7 @@ angular.module('app.project').directive('obsBeltFishList', [
     $q,
     $window,
     $state,
-    offlineservice,
+    OfflineCommonTables,
     utils,
     $timeout,
     FishAttributeService,
@@ -148,7 +148,7 @@ angular.module('app.project').directive('obsBeltFishList', [
           });
         };
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineCommonTables.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;
@@ -156,7 +156,7 @@ angular.module('app.project').directive('obsBeltFishList', [
           });
         });
 
-        offlineservice.FishSizesTable(true).then(function(table) {
+        OfflineCommonTables.FishSizesTable(true).then(function(table) {
           return table.filter().then(function(fishsizes) {
             _.each(_.sortBy(fishsizes, 'val'), function(fishsize) {
               let key = fishsize.fish_bin_size;
