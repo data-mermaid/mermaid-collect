@@ -47,6 +47,7 @@ angular.module('app.project').controller('BeltFishTransectMethodCtrl', [
         );
       }
     });
+    $scope.fishAttributes = fishAttributes;
 
     $scope.protocolSampleUnitDetailsForm =
       'app/project/partials/forms/fishbeltprotocol.transect.form.tpl.html';
