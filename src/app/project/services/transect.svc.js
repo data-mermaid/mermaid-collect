@@ -154,8 +154,15 @@ angular.module('app.project').service('TransectService', [
         return;
       }
 
+      if (interval_size == null) {
+        return;
+      }
       for (var i = 1; i <= obs_count; i++) {
-        _.set(obs[i - 1], attr, i * interval_size);
+        let interval = i * interval_size;
+        if (Number.isInteger(interval) === false) {
+          interval = interval.toFixed(2);
+        }
+        _.set(obs[i - 1], attr, interval);
       }
     };
 

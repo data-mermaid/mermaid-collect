@@ -53,10 +53,6 @@ angular.module('app.project').directive('obsHabitatComplexityList', [
           });
         });
 
-        scope.displayInterval = function(interval) {
-          return interval ? interval + 'm' : '';
-        };
-
         scope.navInputs = function($event, obs, isRowEnd, $index) {
           isRowEnd = isRowEnd || false;
           if (!$event) {
