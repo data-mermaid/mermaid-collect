@@ -20,6 +20,14 @@ angular.module('mermaid.libs').controller('FishSpeciesModalCtrl', [
       $scope.fishGenusChoices = records;
     });
 
+    $scope.fishGenusLookup = function(genusId) {
+      const result = _.filter($scope.fishGenusChoices, { id: genusId });
+      if (result.length > 0) {
+        return result[0].name;
+      }
+      return '';
+    };
+
     $scope.$watch(
       'record',
       function() {
