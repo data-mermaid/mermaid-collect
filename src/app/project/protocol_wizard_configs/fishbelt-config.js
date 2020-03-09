@@ -78,7 +78,7 @@ angular.module('app.project').service('FishBeltWizardConfig', [
               return TransectService.calcTotalObsBiomass(
                 record.data.obs_belt_fishes,
                 _.get(record.data, 'fishbelt_transect.len_surveyed'),
-                _.get(width, 'val')
+                width
               );
             }
           });
