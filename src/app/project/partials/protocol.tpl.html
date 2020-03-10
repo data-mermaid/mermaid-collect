@@ -147,9 +147,8 @@
 
       <!-- DELETE BUTTON -->
       <delete-button
-        is-disabled="!(record.data.created_on || record.created_on)"
+        is-disabled="!record.id && !record.data.id"
         record="record"
-        state="(record.validations === null || record.validations.status === 'error' || record.validations.status === 'warning' || record.validations.status === 'ok')?'app.project.records':'app.project.submittedtransects'"
       ></delete-button>
     </form>
   </section>
