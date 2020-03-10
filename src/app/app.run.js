@@ -17,7 +17,8 @@
     'layoutUtils',
     'system',
     // '$urlRouter',
-    'ConnectivityFactory'
+    'ConnectivityFactory',
+    'utils'
   ];
 
   function run(
@@ -34,10 +35,13 @@
     layoutUtils,
     system,
     // $urlRouter,
-    ConnectivityFactory
+    ConnectivityFactory,
+    utils
   ) {
     const conn = new ConnectivityFactory($rootScope);
     let handleAuth;
+
+    utils.batchRemoveNonce();
 
     if (authService.getToken() != null) {
       handleAuth = authService.renewToken();

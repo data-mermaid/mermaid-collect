@@ -309,6 +309,16 @@ angular.module('mermaid.libs').service('utils', [
         '<=': function(a, b) {
           return a <= b;
         }
+      },
+      batchRemoveNonce: function() {
+        let n = 0;
+        for (let key in window.localStorage) {
+          if (key.indexOf('com.auth0.auth.') !== -1) {
+            window.localStorage.removeItem(key);
+            n++;
+          }
+        }
+        console.log('{} items removed from localstoarge.', n);
       }
     };
     return utils;
