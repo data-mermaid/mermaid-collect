@@ -27,7 +27,7 @@
           <div class="clearfix" ng-show="modalSection === 2">
             <br>
             <div class="propose-email-mock">
-              <p>I'd like to propose a new species called <strong>{{fishGenera[record.genus]}} {{record.name}}</strong>.</p>
+              <p>I'd like to propose a new species called <strong>{{fishGenusLookup(record.genus)}} {{record.name}}</strong>.</p>
               <br />
               <p>Details</p>
               <p>User: <strong>{{full_name}}</strong></p>
