@@ -25,6 +25,10 @@ angular.module('app.project').directive('obsHabitatComplexityList', [
         'app/project/directives/obs-habitat-complexity/obs-habitat-complexity-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
         const $table = $(element).find('table');
+
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsHabitatComplexitys);
+        scope.isReady = true;
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
         scope.editableObservationIndex = null;
@@ -93,6 +97,7 @@ angular.module('app.project').directive('obsHabitatComplexityList', [
               ]);
             }
 
+            newRecord.$$uid = utils.generateUuid();
             scope.obsHabitatComplexitys.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);
