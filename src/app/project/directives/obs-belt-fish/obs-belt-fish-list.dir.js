@@ -40,6 +40,10 @@ angular.module('app.project').directive('obsBeltFishList', [
         let modal;
         let fishAttributesLookup = {};
 
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsBeltFishes);
+        scope.isReady = true;
+
         scope.notFoundMessage = "Fish name cannot be found in site's region.";
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
@@ -86,7 +90,6 @@ angular.module('app.project').directive('obsBeltFishList', [
               fishAttributesLookup[fishAttributeId],
               '$$taxonomic_rank'
             );
-            console.log('rank', rank);
 
             if (rank == null) {
               promise = FishAttributeService.fetchFishAttributes({
@@ -207,11 +210,10 @@ angular.module('app.project').directive('obsBeltFishList', [
                 '$$uid'
               ]);
             }
-
+            newRecord.$$uid = utils.generateUuid();
             scope.obsBeltFishes.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);
-
             setInputFocus(nextIndex, 0);
           }
         };

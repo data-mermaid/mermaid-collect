@@ -103,8 +103,11 @@ angular.module('mermaid.libs').service('utils', [
         attribute = attribute || '$$uid';
         if (_.isArray(records)) {
           for (let i = 0; i < records.length; i++) {
-            uid = records[i][attribute] || utils.generateUuid();
-            records[i][attribute] = uid;
+            if (records[i][attribute] != null) {
+              continue;
+            }
+
+            records[i][attribute] = utils.generateUuid();
           }
         } else {
           uid = records[attribute] || utils.generateUuid();
