@@ -31,6 +31,10 @@ angular.module('app.project').directive('obsBenthicLitList', [
         let modal;
         let watchTimeoutPromise;
 
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsBenthicLits);
+        scope.isReady = true;
+
         scope.notFoundMessage =
           "Benthic attribute cannot be found in site's region.";
         scope.observation_calcs = {};
@@ -134,6 +138,8 @@ angular.module('app.project').directive('obsBenthicLitList', [
                 '$$uid'
               ]);
             }
+
+            newRecord.$$uid = utils.generateUuid();
             scope.obsBenthicLits.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);

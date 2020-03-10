@@ -29,6 +29,10 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
         let modal;
         const $table = $(element).find('table');
 
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsColoniesBleached);
+        scope.isReady = true;
+
         scope.notFoundMessage =
           "Benthic attribute cannot be found in site's region.";
         scope.formCtrl = formCtrl;
@@ -130,6 +134,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
             count_dead: 0
           }; // simple add row
 
+          newRecord.$$uid = utils.generateUuid();
           scope.obsColoniesBleached.splice(nextIndex, 0, newRecord);
           formCtrl.$setDirty();
           scope.startEditing(null, scope.obsColoniesBleached.length - 1);
