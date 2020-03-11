@@ -24,6 +24,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
         benthicAttributeChoices: '=',
         transectLengthSurveyed: '=',
         intervalSize: '=',
+        intervalStart: '=',
         isDisabled: '=?'
       },
       templateUrl:
@@ -162,21 +163,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
           formCtrl.$setDirty();
         };
 
-        scope.$watch(
-          'intervalSize',
-          function(newVal, oldVal) {
-            if (newVal == null || newVal === oldVal) {
-              return;
-            }
-
-            TransectService.setObservationIntervals(
-              scope.obsBenthicPits,
-              scope.intervalSize
-            );
-          },
-          true
-        );
-
         scope.startEditing = function(evt, idx) {
           if (evt) {
             evt.stopPropagation();
@@ -220,6 +206,22 @@ angular.module('app.project').directive('obsBenthicPitList', [
           scope.stopEditing();
         });
 
+        scope.$watchGroup(['intervalSize', 'intervalStart'], function(
+          newVal,
+          oldVal
+        ) {
+          if (newVal == null || newVal === oldVal) {
+            return;
+          }
+
+          TransectService.setObservationIntervals(
+            scope.obsBenthicPits,
+            scope.intervalSize,
+            null,
+            scope.intervalStart
+          );
+        });
+
         scope.$watch(
           'obsBenthicPits',
           function(newVal, oldVal) {
@@ -229,7 +231,9 @@ angular.module('app.project').directive('obsBenthicPitList', [
 
             TransectService.setObservationIntervals(
               scope.obsBenthicPits,
-              scope.intervalSize
+              scope.intervalSize,
+              null,
+              scope.intervalStart
             );
           },
           true

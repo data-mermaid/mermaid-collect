@@ -31,7 +31,7 @@ angular
       $ctrl.projectProfile = projectProfile;
       $ctrl.transectLookups = transectLookups;
       $ctrl.defaultSchema = {
-        data: { benthic_transect: {}, sample_event: {} }
+        data: { benthic_transect: {}, sample_event: {}, interval_start: 1.0 }
       };
       //**************************************
 
