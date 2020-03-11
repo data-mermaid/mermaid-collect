@@ -44,6 +44,17 @@ angular.module('app.project').service('BenthicPITWizardConfig', [
       }
     };
 
+    service.interval_start = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/interval_start.tpl.html',
+      ignoreButtonText: function(record) {
+        var val = $filter('null_blank')(
+          _.get(record.data, 'benthicpit.interval_start')
+        );
+        return $q.resolve('Leave Interval start as ' + val);
+      }
+    };
+
     return service;
   }
 ]);
