@@ -146,9 +146,18 @@ angular.module('app.project').service('TransectService', [
       );
     };
 
-    const setObservationIntervals = function(obs, interval_size, attr) {
+    const setObservationIntervals = function(
+      obs,
+      interval_size,
+      attr,
+      interval_start
+    ) {
       var obs_count = (obs || []).length;
       attr = attr || 'interval';
+
+      if (interval_start == null) {
+        interval_start = 1.0;
+      }
 
       if (obs_count === 0) {
         return;
@@ -157,12 +166,15 @@ angular.module('app.project').service('TransectService', [
       if (interval_size == null) {
         return;
       }
+
+      let interval = interval_start;
       for (var i = 1; i <= obs_count; i++) {
-        let interval = i * interval_size;
         if (Number.isInteger(interval) === false) {
-          interval = interval.toFixed(2);
+          _.set(obs[i - 1], attr, interval.toFixed(2));
+        } else {
+          _.set(obs[i - 1], attr, interval);
         }
-        _.set(obs[i - 1], attr, interval);
+        interval += interval_size;
       }
     };
 

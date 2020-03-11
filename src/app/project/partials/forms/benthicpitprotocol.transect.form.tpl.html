@@ -84,6 +84,28 @@
     <div class="clearfix">
       <div
         class="col-xs-5"
+        numberinput
+        widget-disabled="isDisabled"
+        widget-form="form"
+        widget-name="interval_start"
+        ng-model="record.data"
+        widget-label="Interval start"
+        widget-required="true"
+        widget-append="m"
+        widget-validators="decimal='4:2',minvalue='0:t'"
+      >
+        <validations>
+          <input-validation-alert
+            identifier="interval_start"
+            identifier-validations="record.validations.results.interval_start"
+          ></input-validation-alert>
+        </validations>
+      </div>
+
+      <div class="col-xs-1"></div>
+
+      <div
+        class="col-xs-5"
         ddlinput
         widget-disabled="isDisabled"
         widget-form="form"
