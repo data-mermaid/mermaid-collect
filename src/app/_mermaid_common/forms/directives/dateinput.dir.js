@@ -61,7 +61,9 @@ angular
                 modalEl.addClass('active');
               }
               $dateInput.select();
+              $dateInput.datepicker('setDate', ngModel.$modelValue);
             },
+
             onClose: function() {
               if (modalEl) {
                 modalEl.removeClass('active');
@@ -74,9 +76,8 @@ angular
                 (inst.selectedMonth + 1) +
                 '-' +
                 inst.selectedDay;
-              scope.$apply(function() {
-                ngModel.$setViewValue(val);
-              });
+              ngModel.$setViewValue(val, true);
+              ngModel.$modelValue = val;
             }
           });
 
