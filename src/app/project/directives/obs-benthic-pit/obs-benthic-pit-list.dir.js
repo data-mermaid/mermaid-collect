@@ -30,7 +30,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
       templateUrl:
         'app/project/directives/obs-benthic-pit/obs-benthic-pit-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        const $table = $(element).find('table');
         let modal;
 
         scope.isReady = false;
@@ -52,7 +51,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
@@ -145,7 +144,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
             scope.obsBenthicPits.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);
-
             setInputFocus(nextIndex, 1);
           }
         };

@@ -27,7 +27,6 @@ angular.module('app.project').directive('obsBenthicLitList', [
       templateUrl:
         'app/project/directives/obs-benthic-lit/obs-benthic-lit-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        const $table = $(element).find('table');
         let modal;
         let watchTimeoutPromise;
 
@@ -50,7 +49,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
