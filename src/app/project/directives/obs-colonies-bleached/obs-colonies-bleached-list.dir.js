@@ -27,7 +27,6 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
         'app/project/directives/obs-colonies-bleached/obs-colonies-bleached-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
         let modal;
-        const $table = $(element).find('table');
 
         scope.isReady = false;
         utils.assignUniqueId(scope.obsColoniesBleached);
@@ -61,7 +60,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();

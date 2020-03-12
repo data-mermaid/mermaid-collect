@@ -36,7 +36,6 @@ angular.module('app.project').directive('obsBeltFishList', [
       templateUrl:
         'app/project/directives/obs-belt-fish/obs-belt-fish-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        const $table = $(element).find('table');
         let modal;
         let fishAttributesLookup = {};
 
@@ -62,7 +61,7 @@ angular.module('app.project').directive('obsBeltFishList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
