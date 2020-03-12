@@ -60,6 +60,7 @@ angular
               if (modalEl) {
                 modalEl.addClass('active');
               }
+              $dateInput.select();
             },
             onClose: function() {
               if (modalEl) {

@@ -18,6 +18,7 @@
         ng-disabled="widgetDisabled"
         ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
         focusinput
+        autocomplete="off"
       >
       <input
         ng-switch-default
@@ -31,6 +32,7 @@
         ng-disabled="widgetDisabled"
         ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
         focusinput
+        autocomplete="off"
       >
       <span class="input-group-addon cursor-pointer" ng-click="openDatepicker($event)"><i class="fa fa-calendar" style="pointer-events: none;"></i></span>
     </div>
