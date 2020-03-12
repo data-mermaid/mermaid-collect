@@ -24,6 +24,7 @@
   widget-minlength: ng-minlength
   widget-init-value: Set the initial value of the model
   widget-validators: Comma delimited list of validator directives
+  widget-onblur: Pass a function that fires everytime the input loses focus.
 
   widget-type : [inline_inputs - horizontally inputs ] [ otherwise - vertically inputs]
  */
@@ -49,6 +50,7 @@ angular.module('mermaid.forms').directive('numberinput', [
         widgetAllowInvalid: '=?',
         widgetDisabled: '=?',
         widgetReadonly: '=?',
+        widgetOnblur: '=?',
         widgetChange: '&',
         widgetType: '@',
         widgetName: '@'
@@ -83,6 +85,10 @@ angular.module('mermaid.forms').directive('numberinput', [
           scope.checkSymbol = 'input symbolinput';
         } else {
           scope.checkSymbol = 'input';
+        }
+
+        if (_.isFunction(scope.widgetOnblur)) {
+          element.find('input').on('blur', scope.widgetOnblur);
         }
 
         // Attempt to cast model val as number for view and validators

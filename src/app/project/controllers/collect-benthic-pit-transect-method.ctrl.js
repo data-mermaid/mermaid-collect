@@ -31,7 +31,7 @@ angular
       $ctrl.projectProfile = projectProfile;
       $ctrl.transectLookups = transectLookups;
       $ctrl.defaultSchema = {
-        data: { benthic_transect: {}, sample_event: {}, interval_start: 1.0 }
+        data: { benthic_transect: {}, sample_event: {}, interval_size: null }
       };
       //**************************************
 
@@ -61,5 +61,12 @@ angular
         'app/project/partials/forms/benthicpitprotocol.observations.form.tpl.html';
 
       $ctrl.init();
+
+      $scope.setDefaultIntervalStart = function() {
+        const size = $scope.record.data.interval_size;
+        if ($scope.record.data.interval_start == null && size != null) {
+          $scope.record.data.interval_start = size;
+        }
+      };
     }
   ]);
