@@ -42,15 +42,17 @@ angular
         },
 
         link: function(scope, element, attr, ngModel) {
-          var val;
-          var $date_input = element;
-          var dataDateFormat = scope.$parent.widgetFormat;
-          var dataMask = $date_input.attr('data-mask') || null;
-          var dataMaskPlaceholder = $date_input.attr('data-mask-placeholder');
-          var modalEl =
+          let val;
+          const $dateInput = $(element);
+          const $dateInputIcon = $dateInput.parent().find('.input-group-addon');
+          const dataDateFormat = scope.$parent.widgetFormat;
+          const dataMask = $dateInput.attr('data-mask') || null;
+          const dataMaskPlaceholder = $dateInput.attr('data-mask-placeholder');
+          const modalEl =
             angular.element(document.querySelector('.modal')) || null;
 
-          $date_input.datepicker({
+          $dateInput.datepicker({
+            keyboardNavigation: false,
             dateFormat: dataDateFormat,
             prevText: '<i class="fa fa-chevron-left"></i>',
             nextText: '<i class="fa fa-chevron-right"></i>',
@@ -78,7 +80,7 @@ angular
           });
 
           if (dataMask && dataMaskPlaceholder) {
-            $date_input.mask(dataMask, {
+            $dateInput.mask(dataMask, {
               placeholder: dataMaskPlaceholder
             });
           }
@@ -96,17 +98,13 @@ angular
               }
 
               if (n !== o && ngModel.$modelValue !== val) {
-                $date_input.datepicker('setDate', ngModel.$modelValue);
+                $dateInput.datepicker('setDate', ngModel.$modelValue);
               }
             }
           );
 
-          // Open datepicker when clicking calendar icon - $broadcast from GlobalCtrl
-          scope.$on('openDatepicker', function(e, clickEvt) {
-            var $target = clickEvt.target.prev();
-            if ($target.get(0) === $date_input.get(0)) {
-              $target.datepicker('show');
-            }
+          $dateInputIcon.click(function() {
+            $dateInput.datepicker('show');
           });
         }
       };
@@ -116,9 +114,8 @@ angular
   .directive('dateinput', [
     '$timeout',
     '$compile',
-    '$rootScope',
     'utils',
-    function($timeout, $compile, $rootScope, utils) {
+    function($timeout, $compile, utils) {
       'use strict';
       return {
         restrict: 'EA',
@@ -137,7 +134,7 @@ angular
         templateUrl: 'app/_mermaid_common/forms/directives/dateinput.tpl.html',
 
         link: function(scope, element, attrs) {
-          var validators = [];
+          let validators = [];
           scope.widgetLabel = attrs.widgetLabel;
           scope.widgetHelp = attrs.widgetHelp || '';
           scope.widgetPlaceholder = attrs.widgetPlaceholder || null;
@@ -157,27 +154,18 @@ angular
           };
 
           $timeout(function() {
-            var validatorElement = element.find('input');
+            const validatorElement = element.find('input');
             validatorElement.attr('bsdatepicker', '');
             if (attrs.widgetValidators) {
               validators = attrs.widgetValidators.split(',');
-              for (var i = 0; i < validators.length; i++) {
-                var validator_params = validators[i].split('=');
-                var key = validator_params[0];
-                validatorElement.attr(key, validator_params.slice(1));
+              for (let i = 0; i < validators.length; i++) {
+                const validatorParams = validators[i].split('=');
+                const key = validatorParams[0];
+                validatorElement.attr(key, validatorParams.slice(1));
               }
             }
             $compile(validatorElement)(scope);
           });
-
-          // Needs to be on $rootscope so isolated scopes also have access
-          // Needs this check so that its only defined once if there are
-          // multiple directives on page
-          if (!angular.isDefined($rootScope.openDatepicker)) {
-            $rootScope.openDatepicker = function(evt) {
-              $rootScope.$broadcast('openDatepicker', evt);
-            };
-          }
         }
       };
     }
