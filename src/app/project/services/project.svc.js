@@ -74,6 +74,7 @@ angular
             'data.sample_event.sample_time',
             'data.obs_belt_fishes'
           ],
+          obsFields: ['data.obs_belt_fishes'],
           method: 'beltfishtransectmethods',
           protocol: 'fishbelt'
         },
@@ -88,6 +89,7 @@ angular
             'data.sample_event.sample_time',
             'data.obs_benthic_lits'
           ],
+          obsFields: ['data.obs_benthic_lits'],
           method: 'benthiclittransectmethods',
           protocol: 'benthiclit'
         },
@@ -102,6 +104,7 @@ angular
             'data.sample_event.sample_time',
             'data.obs_benthic_pits'
           ],
+          obsFields: ['data.obs_benthic_pits'],
           method: 'benthicpittransectmethods',
           protocol: 'benthicpit'
         },
@@ -116,6 +119,7 @@ angular
             'data.sample_event.sample_time',
             'data.obs_habitat_complexities'
           ],
+          obsFields: ['data.obs_habitat_complexities'],
           method: 'habitatcomplexitytransectmethods',
           protocol: 'habitatcomplexity'
         },
@@ -131,10 +135,29 @@ angular
             'data.obs_colonies_bleached',
             'data.obs_quadrat_benthic_percent'
           ],
+          obsFields: [
+            'data.obs_colonies_bleached',
+            'data.obs_quadrat_benthic_percent'
+          ],
           method: 'bleachingquadratcollectionmethods',
           protocol: ProjectService.BLEACHING_QC_QUADRAT_TYPE
         }
       ];
+
+      ProjectService.getObservationAttributeNames = function(record) {
+        const obsFields = _.flatten(
+          _.map(ProjectService.transect_types, 'obsFields')
+        );
+        const matchedObsFields = [];
+        for (let i = 0; i < obsFields.length; i++) {
+          const obsFieldName = obsFields[i];
+          const hasKey = _.has(record, obsFieldName);
+          if (hasKey === true) {
+            matchedObsFields.push(obsFieldName);
+          }
+        }
+        return matchedObsFields;
+      };
 
       var formatChoices = function(table) {
         // Format choices

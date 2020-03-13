@@ -140,6 +140,14 @@ angular.module('app.project').controller('CollectBaseProtocol', [
           if ($scope.form) {
             $scope.form.$setPristine();
           }
+          const obsFieldNames = ProjectService.getObservationAttributeNames(
+            record
+          );
+          if (obsFieldNames && obsFieldNames.length > 0) {
+            for (let n = 0; n < obsFieldNames.length; n++) {
+              utils.assignUniqueId(_.get(record, obsFieldNames[n]));
+            }
+          }
           $scope.record = record;
         })
         .finally(function() {
