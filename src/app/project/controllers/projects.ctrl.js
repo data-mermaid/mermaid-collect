@@ -2,22 +2,24 @@ angular.module('app.project').controller('ProjectsCtrl', [
   '$rootScope',
   '$scope',
   '$state',
-  'offlineservice',
+  'OfflineTables',
   'PaginatedOfflineTableWrapper',
   'Button',
   'dataPolicies',
   'ConnectivityFactory',
   'connectivity',
+  'ProjectService',
   function(
     $rootScope,
     $scope,
     $state,
-    offlineservice,
+    OfflineTables,
     PaginatedOfflineTableWrapper,
     Button,
     dataPolicies,
     ConnectivityFactory,
-    connectivity
+    connectivity,
+    ProjectService
   ) {
     'use strict';
     $scope.tableControl = {};
@@ -101,13 +103,13 @@ angular.module('app.project').controller('ProjectsCtrl', [
     };
 
     $scope.resource = null;
-    offlineservice.ProjectsTable().then(function(table) {
+    OfflineTables.ProjectsTable().then(function(table) {
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name', 'countries']
       });
       $scope.tableConfig.isFiltering = !connectivity.isOnline;
       if (!connectivity.isOnline) {
-        offlineservice.getOfflineProjects().then(function(results) {
+        ProjectService.getOfflineProjects().then(function(results) {
           $scope.tableConfig.filters.id = function(projectId) {
             return results[projectId];
           };
@@ -134,7 +136,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     conn.on('project-connectivity', function(event) {
       startProjectButton.visible = event.event === 'online';
       if (event.event === 'offline') {
-        offlineservice.getOfflineProjects().then(function(results) {
+        ProjectService.getOfflineProjects().then(function(results) {
           $scope.tableConfig.filters.id = function(projectId) {
             return results[projectId];
           };

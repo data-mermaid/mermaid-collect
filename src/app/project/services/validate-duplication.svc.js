@@ -1,8 +1,7 @@
 angular.module('app.project').service('ValidateDuplicationService', [
-  'APP_CONFIG',
-  'offlineservice',
+  'OfflineTables',
   '$rootScope',
-  function(APP_CONFIG, offlineservice, $rootScope) {
+  function(OfflineTables, $rootScope) {
     'use strict';
 
     var OK_VALIDATION_STATUS = 'ok';
@@ -21,13 +20,13 @@ angular.module('app.project').service('ValidateDuplicationService', [
     };
 
     var watchMRs = function(project) {
-      offlineservice.ProjectManagementsTable(project).then(function(table) {
+      OfflineTables.ProjectManagementsTable(project).then(function(table) {
         watch(table, MR_PAGE, project, checkInvalidMRs);
       });
     };
 
     var watchSites = function(project) {
-      offlineservice.ProjectSitesTable(project).then(function(table) {
+      OfflineTables.ProjectSitesTable(project).then(function(table) {
         watch(table, SITE_PAGE, project, checkInvalidSites);
       });
     };
@@ -48,17 +47,17 @@ angular.module('app.project').service('ValidateDuplicationService', [
     };
 
     var checkInvalidSites = function(project) {
-      return offlineservice.ProjectSitesTable(project).then(function(table) {
+      return OfflineTables.ProjectSitesTable(project).then(function(table) {
         return checkInvalid(table, SITE_PAGE);
       });
     };
 
     var checkInvalidMRs = function(project) {
-      return offlineservice
-        .ProjectManagementsTable(project)
-        .then(function(table) {
-          return checkInvalid(table, MR_PAGE);
-        });
+      return OfflineTables.ProjectManagementsTable(project).then(function(
+        table
+      ) {
+        return checkInvalid(table, MR_PAGE);
+      });
     };
 
     var groupSimilarObjs = function(projectTable) {
@@ -72,7 +71,8 @@ angular.module('app.project').service('ValidateDuplicationService', [
           );
         }
       };
-      return projectTable.filter(similarRecordFilter)
+      return projectTable
+        .filter(similarRecordFilter)
         .then(function(invalidRecords) {
           return _.map(invalidRecords, function(invalidRecord) {
             var matches =

@@ -5,7 +5,7 @@ angular.module('app.project').controller('ResolveDuplicateMRsCtrl', [
   '$filter',
   'similarObjs',
   'choices',
-  'offlineservice',
+  'OfflineTables',
   function(
     $controller,
     $scope,
@@ -13,7 +13,7 @@ angular.module('app.project').controller('ResolveDuplicateMRsCtrl', [
     $filter,
     similarObjs,
     choices,
-    offlineservice
+    OfflineTables
   ) {
     'use strict';
 
@@ -21,7 +21,7 @@ angular.module('app.project').controller('ResolveDuplicateMRsCtrl', [
     $ctrl.$uibModalInstance = $uibModalInstance;
     $ctrl.similarObjs = similarObjs;
     $ctrl.modalTitle = 'Select management regime to keep?';
-    $ctrl.projectTableFx = offlineservice.ProjectManagementsTable;
+    $ctrl.projectTableFx = OfflineTables.ProjectManagementsTable;
     $ctrl.replaceEndpoint = '/find_and_replace_managements/';
     $ctrl.buttonObjLabel = 'MR';
     $ctrl.note =

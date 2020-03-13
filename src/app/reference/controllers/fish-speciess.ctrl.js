@@ -1,10 +1,9 @@
 angular.module('app.reference').controller('FishSpeciessCtrl', [
   '$rootScope',
   '$scope',
-  '$filter',
   '$q',
   'PaginatedOfflineTableWrapper',
-  'offlineservice',
+  'OfflineCommonTables',
   'TransectExportService',
   'FishAttributeService',
   'fishSpeciesTable',
@@ -13,10 +12,9 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
   function(
     $rootScope,
     $scope,
-    $filter,
     $q,
     PaginatedOfflineTableWrapper,
-    offlineservice,
+    OfflineCommonTables,
     TransectExportService,
     FishAttributeService,
     fishSpeciesTable,
@@ -93,8 +91,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
       const familiesPromise = FishAttributeService.fetchFishFamilies();
       const generaPromise = FishAttributeService.fetchFishGenera();
       const fishSpeciesPromise = fishSpeciesTable.filter();
-      const choicesPromise = offlineservice
-        .ChoicesTable()
+      const choicesPromise = OfflineCommonTables.ChoicesTable()
         .then(function(table) {
           return table.filter();
         })

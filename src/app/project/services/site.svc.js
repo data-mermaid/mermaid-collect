@@ -1,18 +1,8 @@
 angular.module('app.project').service('SiteService', [
   '$q',
-  'offlineservice',
-  'authService',
-  'APP_CONFIG',
-  '$window',
+  'OfflineTables',
   'TransectExportService',
-  function(
-    $q,
-    offlineservice,
-    authService,
-    APP_CONFIG,
-    $window,
-    TransectExportService
-  ) {
+  function($q, OfflineTables, TransectExportService) {
     'use strict';
 
     var save = function(site, options) {
@@ -29,11 +19,9 @@ angular.module('app.project').service('SiteService', [
       }
       if (!site.id) {
         site.project = projectId;
-        return offlineservice
-          .ProjectSitesTable(projectId)
-          .then(function(table) {
-            return table.create(site);
-          });
+        return OfflineTables.ProjectSitesTable(projectId).then(function(table) {
+          return table.create(site);
+        });
       }
       return site.update();
     };
@@ -42,7 +30,7 @@ angular.module('app.project').service('SiteService', [
       if (siteId == null) {
         return $q.resolve({ project: projectId });
       }
-      return offlineservice.ProjectSitesTable(projectId).then(function(table) {
+      return OfflineTables.ProjectSitesTable(projectId).then(function(table) {
         return table.get(siteId).then(function(site) {
           site = site || { project: projectId };
           if (site.location != null) {
@@ -66,8 +54,7 @@ angular.module('app.project').service('SiteService', [
         'Reef exposure',
         'Notes'
       ];
-      return offlineservice
-        .ProjectSitesTable(projectId)
+      return OfflineTables.ProjectSitesTable(projectId)
         .then(function(table) {
           return table.filter();
         })

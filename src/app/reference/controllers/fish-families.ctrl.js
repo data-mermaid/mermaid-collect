@@ -2,14 +2,14 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   '$rootScope',
   '$scope',
   'PaginatedOfflineTableWrapper',
-  'offlineservice',
+  'OfflineCommonTables',
   'TransectExportService',
   'Button',
   function(
     $rootScope,
     $scope,
     PaginatedOfflineTableWrapper,
-    offlineservice,
+    OfflineCommonTables,
     TransectExportService,
     Button
   ) {
@@ -78,7 +78,7 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       });
     };
 
-    const promise = offlineservice.FishFamiliesTable();
+    const promise = OfflineCommonTables.FishFamiliesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateFishFamilyCount();

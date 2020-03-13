@@ -25,6 +25,7 @@ angular.module('app.auth').service('authService', [
   ) {
     'use strict';
 
+    var profileIdPromise = null;
     var mePromise = null;
     var tokenRenewalTimeout;
     var tokenRenewLeeway = 300000; // 5 minutes
@@ -131,6 +132,21 @@ angular.module('app.auth').service('authService', [
       return $q.resolve(null);
     }
 
+    function getProfileId() {
+      if (profileIdPromise != null) {
+        return profileIdPromise;
+      }
+
+      profileIdPromise = getCurrentUser()
+        .then(function(user) {
+          return user.id;
+        })
+        .finally(function() {
+          profileIdPromise = null;
+        });
+      return profileIdPromise;
+    }
+
     function renewToken() {
       const deferred = $q.defer();
 
@@ -176,6 +192,7 @@ angular.module('app.auth').service('authService', [
       logout: logout,
       isAuthenticated: isAuthenticated,
       getCurrentUser: getCurrentUser,
+      getProfileId: getProfileId,
       scheduleRenewal: scheduleRenewal,
       cancelScheduleRenewal: cancelScheduleRenewal,
       renewToken: renewToken

@@ -3,14 +3,15 @@
 angular.module('mermaid.libs').service('connectivity', [
   '$window',
   '$rootScope',
-  function($window, $rootScope) {
+  'localStorageService',
+  function($window, $rootScope, localStorageService) {
     'use strict';
 
     var pingInterval = 30 * 1000; // 30 secs
     var pingId = null;
     var oldPingState = null;
     var pingState = true;
-    var isToggleOffline = false;
+    var isToggleOffline = localStorageService.get('offline-toggle') === true;
 
     var isOnline = function() {
       return pingState === true && navigator.onLine && isToggleOffline !== true;
@@ -23,8 +24,10 @@ angular.module('mermaid.libs').service('connectivity', [
     var setToggle = function(val) {
       isToggleOffline = val;
       if (isToggleOffline) {
+        localStorageService.set('offline-toggle', true);
         stopPing();
       } else {
+        localStorageService.remove('offline-toggle');
         ping();
       }
     };

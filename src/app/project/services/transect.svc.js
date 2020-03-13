@@ -4,7 +4,8 @@ angular.module('app.project').service('TransectService', [
   '$window',
   'APP_CONFIG',
   'utils',
-  'offlineservice',
+  'OfflineCommonTables',
+  'OfflineTables',
   'authService',
   function(
     $q,
@@ -12,7 +13,8 @@ angular.module('app.project').service('TransectService', [
     $window,
     APP_CONFIG,
     utils,
-    offlineservice,
+    OfflineCommonTables,
+    OfflineTables,
     authService
   ) {
     'use strict';
@@ -31,8 +33,7 @@ angular.module('app.project').service('TransectService', [
       var filterFunc = function(val) {
         return fish_attributes.indexOf(val) !== -1;
       };
-      return offlineservice
-        .FishAttributesTable()
+      return OfflineCommonTables.FishAttributesTable()
         .then(function(table) {
           return table.filter({ id: filterFunc });
         })
@@ -145,9 +146,18 @@ angular.module('app.project').service('TransectService', [
       );
     };
 
-    const setObservationIntervals = function(obs, interval_size, attr) {
+    const setObservationIntervals = function(
+      obs,
+      interval_size,
+      attr,
+      interval_start
+    ) {
       var obs_count = (obs || []).length;
       attr = attr || 'interval';
+
+      if (interval_start == null) {
+        interval_start = 1.0;
+      }
 
       if (obs_count === 0) {
         return;
@@ -156,12 +166,15 @@ angular.module('app.project').service('TransectService', [
       if (interval_size == null) {
         return;
       }
+
+      let interval = interval_start;
       for (var i = 1; i <= obs_count; i++) {
-        let interval = i * interval_size;
         if (Number.isInteger(interval) === false) {
-          interval = interval.toFixed(2);
+          _.set(obs[i - 1], attr, interval.toFixed(2));
+        } else {
+          _.set(obs[i - 1], attr, interval);
         }
-        _.set(obs[i - 1], attr, interval);
+        interval += interval_size;
       }
     };
 
@@ -288,7 +301,9 @@ angular.module('app.project').service('TransectService', [
     };
 
     const getBenthicAttributeChoices = function() {
-      return offlineservice.BenthicAttributesTable(true).then(function(table) {
+      return OfflineCommonTables.BenthicAttributesTable(true).then(function(
+        table
+      ) {
         return table.filter().then(function(benthicattributes) {
           return createLookup(benthicattributes);
         });
@@ -296,7 +311,7 @@ angular.module('app.project').service('TransectService', [
     };
 
     var getProjectSiteChoices = function(project_id) {
-      return offlineservice.ProjectSitesTable(project_id).then(function(table) {
+      return OfflineTables.ProjectSitesTable(project_id).then(function(table) {
         return table.filter().then(function(sites) {
           return createLookup(sites);
         });
@@ -304,27 +319,27 @@ angular.module('app.project').service('TransectService', [
     };
 
     const getProjectManagementChoices = function(project_id) {
-      return offlineservice
-        .ProjectManagementsTable(project_id)
-        .then(function(table) {
-          return table.filter().then(function(managements) {
-            return createLookup(managements);
-          });
+      return OfflineTables.ProjectManagementsTable(project_id).then(function(
+        table
+      ) {
+        return table.filter().then(function(managements) {
+          return createLookup(managements);
         });
+      });
     };
 
     const getProjectProfileChoices = function(project_id) {
-      return offlineservice
-        .ProjectProfilesTable(project_id)
-        .then(function(table) {
-          return table.filter().then(function(project_profiles) {
-            return project_profiles;
-          });
+      return OfflineTables.ProjectProfilesTable(project_id).then(function(
+        table
+      ) {
+        return table.filter().then(function(project_profiles) {
+          return project_profiles;
         });
+      });
     };
 
     const getChoices = function() {
-      return offlineservice.ChoicesTable(true).then(function(table) {
+      return OfflineCommonTables.ChoicesTable(true).then(function(table) {
         return table.filter().then(function(choices) {
           var output = {};
           _.each(choices, function(c) {
@@ -402,7 +417,7 @@ angular.module('app.project').service('TransectService', [
     };
 
     const getWidthValueLookup = function() {
-      return offlineservice.ChoicesTable(true).then(function(table) {
+      return OfflineCommonTables.ChoicesTable(true).then(function(table) {
         return table
           .filter({ name: 'belttransectwidths' })
           .then(function(choices) {

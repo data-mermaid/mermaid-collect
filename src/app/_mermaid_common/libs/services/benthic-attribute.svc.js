@@ -1,6 +1,6 @@
 angular.module('mermaid.libs').service('BenthicAttributeService', [
-  'offlineservice',
-  function(offlineservice) {
+  'OfflineCommonTables',
+  function(OfflineCommonTables) {
     'use strict';
 
     let PROPOSED_RECORD = 10;
@@ -8,7 +8,9 @@ angular.module('mermaid.libs').service('BenthicAttributeService', [
     let save = function(benthicAttribute) {
       if (!benthicAttribute.id) {
         benthicAttribute.status = PROPOSED_RECORD;
-        return offlineservice.BenthicAttributesTable().then(function(table) {
+        return OfflineCommonTables.BenthicAttributesTable().then(function(
+          table
+        ) {
           return table.create(benthicAttribute);
         });
       }
@@ -16,19 +18,19 @@ angular.module('mermaid.libs').service('BenthicAttributeService', [
     };
 
     let getBenthicAttribute = function(benthicAttributeId, skipRefresh) {
-      return offlineservice
-        .BenthicAttributesTable(skipRefresh)
-        .then(function(table) {
+      return OfflineCommonTables.BenthicAttributesTable(skipRefresh).then(
+        function(table) {
           return table.get(benthicAttributeId);
-        });
+        }
+      );
     };
 
     let fetchBenthicAttributes = function(qry, skipRefresh) {
-      return offlineservice
-        .BenthicAttributesTable(skipRefresh)
-        .then(function(table) {
+      return OfflineCommonTables.BenthicAttributesTable(skipRefresh).then(
+        function(table) {
           return table.filter(qry);
-        });
+        }
+      );
     };
 
     let getCategoryLookup = function(benthicAttributes) {

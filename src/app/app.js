@@ -35,7 +35,8 @@ angular
     'app.fulllayout',
     'app.profile',
     'app.project',
-    'app.reference'
+    'app.reference',
+    'app.sandbox'
   ])
   .constant('APP_CONFIG', window.appConfig)
   .constant('SESSION_ID', new Date().getTime())

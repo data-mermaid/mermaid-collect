@@ -2,9 +2,11 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
   '$scope',
   '$timeout',
   '$state',
+  '$stateParams',
   '$http',
   'APP_CONFIG',
-  'offlineservice',
+  'OfflineCommonTables',
+  'OfflineTables',
   'authService',
   'utils',
   'PaginatedArrayWrapper',
@@ -13,18 +15,19 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
   'ErrorRenderer',
   'blockUI',
   'Site',
-  'Management',
-  '$stateParams',
   'CopySitesService',
   'CopyManagementsService',
+  'Management',
   'tags',
   function(
     $scope,
     $timeout,
     $state,
+    $stateParams,
     $http,
     APP_CONFIG,
-    offlineservice,
+    OfflineCommonTables,
+    OfflineTables,
     authService,
     utils,
     PaginatedArrayWrapper,
@@ -33,10 +36,9 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     ErrorRenderer,
     blockUI,
     Site,
-    Management,
-    $stateParams,
     CopySitesService,
     CopyManagementsService,
+    Management,
     tags
   ) {
     'use strict';
@@ -73,7 +75,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
     $scope.projectStatuses = {};
     $scope.project.tags = [];
 
-    offlineservice.ProjectsTable().then(function(table) {
+    OfflineTables.ProjectsTable().then(function(table) {
       if (projectId == null) {
         return;
       }
@@ -82,7 +84,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
         $scope.benthicPolicies.data_policy_benthics =
           record.data_policy_benthiclit;
 
-        offlineservice.ProjectSitesTable(projectId).then(function(site_table) {
+        OfflineTables.ProjectSitesTable(projectId).then(function(site_table) {
           site_table.filter().then(function(sites) {
             var sitesForCopy = _.map(sites, function(site) {
               site.project_name = record.name;
@@ -97,17 +99,17 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
           });
         });
 
-        offlineservice
-          .ProjectManagementsTable(projectId)
-          .then(function(mr_table) {
-            mr_table.filter().then(function(mrs) {
-              var mrsForCopy = _.map(mrs, function(mr) {
-                return mr;
-              });
-              $scope.managements = mrsForCopy;
-              $scope.$broadcast('copy-project-mrs', mrsForCopy);
+        OfflineTables.ProjectManagementsTable(projectId).then(function(
+          mr_table
+        ) {
+          mr_table.filter().then(function(mrs) {
+            var mrsForCopy = _.map(mrs, function(mr) {
+              return mr;
             });
+            $scope.managements = mrsForCopy;
+            $scope.$broadcast('copy-project-mrs', mrsForCopy);
           });
+        });
       });
     });
 
@@ -144,8 +146,7 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       });
     };
 
-    offlineservice
-      .ChoicesTable()
+    OfflineCommonTables.ChoicesTable()
       .then(function(table) {
         return table.filter().then(function(choices) {
           _.each(choices, function(choice_set) {

@@ -2,7 +2,7 @@ angular.module('app.project').directive('obsBeltFishList', [
   '$q',
   '$window',
   '$state',
-  'offlineservice',
+  'OfflineCommonTables',
   'utils',
   '$timeout',
   'FishAttributeService',
@@ -13,7 +13,7 @@ angular.module('app.project').directive('obsBeltFishList', [
     $q,
     $window,
     $state,
-    offlineservice,
+    OfflineCommonTables,
     utils,
     $timeout,
     FishAttributeService,
@@ -36,9 +36,12 @@ angular.module('app.project').directive('obsBeltFishList', [
       templateUrl:
         'app/project/directives/obs-belt-fish/obs-belt-fish-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        const $table = $(element).find('table');
         let modal;
         let fishAttributesLookup = {};
+
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsBeltFishes);
+        scope.isReady = true;
 
         scope.notFoundMessage = "Fish name cannot be found in site's region.";
         scope.isDisabled = utils.truthy(scope.isDisabled);
@@ -58,7 +61,7 @@ angular.module('app.project').directive('obsBeltFishList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
@@ -86,7 +89,6 @@ angular.module('app.project').directive('obsBeltFishList', [
               fishAttributesLookup[fishAttributeId],
               '$$taxonomic_rank'
             );
-            console.log('rank', rank);
 
             if (rank == null) {
               promise = FishAttributeService.fetchFishAttributes({
@@ -148,7 +150,7 @@ angular.module('app.project').directive('obsBeltFishList', [
           });
         };
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineCommonTables.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;
@@ -156,7 +158,7 @@ angular.module('app.project').directive('obsBeltFishList', [
           });
         });
 
-        offlineservice.FishSizesTable(true).then(function(table) {
+        OfflineCommonTables.FishSizesTable(true).then(function(table) {
           return table.filter().then(function(fishsizes) {
             _.each(_.sortBy(fishsizes, 'val'), function(fishsize) {
               let key = fishsize.fish_bin_size;
@@ -207,11 +209,10 @@ angular.module('app.project').directive('obsBeltFishList', [
                 '$$uid'
               ]);
             }
-
+            newRecord.$$uid = utils.generateUuid();
             scope.obsBeltFishes.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);
-
             setInputFocus(nextIndex, 0);
           }
         };

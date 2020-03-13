@@ -1,5 +1,5 @@
 angular.module('app.project').directive('obsBenthicPitList', [
-  'offlineservice',
+  'OfflineCommonTables',
   'utils',
   '$timeout',
   'TransectService',
@@ -7,7 +7,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
   'ValidatorService',
   'BenthicAttributeService',
   function(
-    offlineservice,
+    OfflineCommonTables,
     utils,
     $timeout,
     TransectService,
@@ -24,13 +24,17 @@ angular.module('app.project').directive('obsBenthicPitList', [
         benthicAttributeChoices: '=',
         transectLengthSurveyed: '=',
         intervalSize: '=',
+        intervalStart: '=',
         isDisabled: '=?'
       },
       templateUrl:
         'app/project/directives/obs-benthic-pit/obs-benthic-pit-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        const $table = $(element).find('table');
         let modal;
+
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsBenthicPits);
+        scope.isReady = true;
 
         scope.notFoundMessage =
           "Benthic attribute cannot be found in site's region.";
@@ -47,7 +51,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
@@ -92,7 +96,7 @@ angular.module('app.project').directive('obsBenthicPitList', [
           });
         };
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineCommonTables.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;
@@ -136,10 +140,10 @@ angular.module('app.project').directive('obsBenthicPitList', [
               ]);
             }
 
+            newRecord.$$uid = utils.generateUuid();
             scope.obsBenthicPits.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);
-
             setInputFocus(nextIndex, 1);
           }
         };
@@ -156,21 +160,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
           }
           formCtrl.$setDirty();
         };
-
-        scope.$watch(
-          'intervalSize',
-          function(newVal, oldVal) {
-            if (newVal == null || newVal === oldVal) {
-              return;
-            }
-
-            TransectService.setObservationIntervals(
-              scope.obsBenthicPits,
-              scope.intervalSize
-            );
-          },
-          true
-        );
 
         scope.startEditing = function(evt, idx) {
           if (evt) {
@@ -215,6 +204,22 @@ angular.module('app.project').directive('obsBenthicPitList', [
           scope.stopEditing();
         });
 
+        scope.$watchGroup(['intervalSize', 'intervalStart'], function(
+          newVal,
+          oldVal
+        ) {
+          if (newVal == null || newVal === oldVal) {
+            return;
+          }
+
+          TransectService.setObservationIntervals(
+            scope.obsBenthicPits,
+            scope.intervalSize,
+            null,
+            scope.intervalStart
+          );
+        });
+
         scope.$watch(
           'obsBenthicPits',
           function(newVal, oldVal) {
@@ -224,7 +229,9 @@ angular.module('app.project').directive('obsBenthicPitList', [
 
             TransectService.setObservationIntervals(
               scope.obsBenthicPits,
-              scope.intervalSize
+              scope.intervalSize,
+              null,
+              scope.intervalStart
             );
           },
           true

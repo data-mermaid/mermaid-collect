@@ -1,9 +1,10 @@
-<hoverinfo message="messages[isAvailableOffline]">
+<hoverinfo message="messages[isAvailableOffline]" ng-if="scope.isAvailableOffline !== null">
   <a
     offlinehide
     ng-class="{false: 'btn-default', true: 'btn-success'}[isAvailableOffline]"
     class="btn btn-md btn-default project-offline"
     ng-click="toggleOffline()"
+    ng-disabled="isDisabled"
   >
     <i
       class="fa fa-lg"

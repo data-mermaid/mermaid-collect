@@ -3,7 +3,8 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
   '$rootScope',
   'PaginatedOfflineTableWrapper',
   'Button',
-  'offlineservice',
+  'OfflineTableUtils',
+  'OfflineCommonTables',
   'TransectExportService',
   '$filter',
   '$q',
@@ -12,8 +13,9 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     $rootScope,
     PaginatedOfflineTableWrapper,
     Button,
-    offlineservice,
+    OfflineCommonTables,
     TransectExportService,
+    OfflineTableUtils,
     $filter,
     $q
   ) {
@@ -26,7 +28,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     const reportHeader = ['Name', 'Parent', 'Life History', 'Regions'];
     let benthicAttributeRecordsCount = 0;
 
-    offlineservice.ChoicesTable().then(function(table) {
+    OfflineCommonTables.ChoicesTable().then(function(table) {
       table.filter({ name: 'regions' }).then(function(region_choices) {
         $scope.choices.regions = region_choices[0].data;
       });
@@ -116,7 +118,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       });
     };
 
-    const promise = offlineservice.BenthicAttributesTable();
+    const promise = OfflineTableUtils.BenthicAttributesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateBenthicAttributeCount();

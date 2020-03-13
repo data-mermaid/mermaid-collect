@@ -1,5 +1,5 @@
 <div class="smart-form">
-  <table class="table table-bordered obs-table" style="border-collapse: separate;">
+  <table class="table table-bordered obs-table" style="border-collapse: separate;" ng-if="isReady">
     <thead>
       <tr>
         <th></th>
@@ -12,7 +12,7 @@
     </thead>
     <tbody ng-if="obsBeltFishes.length > 0">
       <tr
-        ng-repeat="obs in obsBeltFishes track by $index"
+        ng-repeat="obs in obsBeltFishes track by obs.$$uid"
         class="cursor-pointer"
         ng-click="startEditing($event, $index)"
         ng-class="{'editable-row': editableObservationIndex !== $index}"
