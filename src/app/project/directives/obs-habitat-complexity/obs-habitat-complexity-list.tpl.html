@@ -10,7 +10,7 @@
     </thead>
     <tbody ng-if="obsHabitatComplexitys.length > 0">
       <tr
-        ng-repeat="obs in obsHabitatComplexitys track by $index"
+        ng-repeat="obs in obsHabitatComplexitys track by obs.$$uid"
         ng-click="startEditing($event, $index)"
         class="cursor-pointer"
         ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
