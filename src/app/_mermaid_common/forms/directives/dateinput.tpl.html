@@ -10,15 +10,15 @@
         name="{{ widgetName }}"
         ng-model="ngModel[widgetName]"
         type="text"
-        readonly="readonly"
         placeholder="{{ widgetPlaceholder }}"
         ng-required="widgetRequired"
         data-dateformat="widgetFormat"
-        data-mask="widgetMask"
+        data-mask="{{ widgetMask }}"
         data-mask-placeholder="-"
         ng-disabled="widgetDisabled"
         ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
         focusinput
+        autocomplete="off"
       >
       <input
         ng-switch-default
@@ -26,15 +26,15 @@
         name="{{ widgetName }}"
         ng-model="ngModel[widgetName]"
         type="text"
-        readonly="readonly"
         placeholder="{{ widgetPlaceholder }}"
         ng-required="widgetRequired"
         data-dateformat="widgetFormat"
         ng-disabled="widgetDisabled"
         ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
         focusinput
+        autocomplete="off"
       >
-      <span class="input-group-addon" ng-click="openDatepicker($event)"><i class="fa fa-calendar" style="pointer-events: none;"></i></span>
+      <span class="input-group-addon cursor-pointer" ng-click="openDatepicker($event)"><i class="fa fa-calendar" style="pointer-events: none;"></i></span>
     </div>
   </div>
   <div class="note">{{ widgetHelp }}</div>

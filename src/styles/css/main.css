@@ -1474,3 +1474,14 @@ input:checked + .slider-mermaid:before {
   border-radius: 50%;
 }
 
+
+.ui-datepicker-calendar .ui-state-active {
+  background-color:#c0e5f7 !important;
+  font-weight: bold;
+}
+
+.ui-datepicker-calendar  .ui-state-highlight {
+  background-color: #ebebeb !important;
+  color: #333 !important;
+  text-shadow: none !important;
+}
