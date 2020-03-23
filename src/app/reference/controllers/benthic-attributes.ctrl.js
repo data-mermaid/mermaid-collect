@@ -13,9 +13,9 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     $rootScope,
     PaginatedOfflineTableWrapper,
     Button,
+    OfflineTableUtils,
     OfflineCommonTables,
     TransectExportService,
-    OfflineTableUtils,
     $filter,
     $q
   ) {
@@ -118,7 +118,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       });
     };
 
-    const promise = OfflineTableUtils.BenthicAttributesTable();
+    const promise = OfflineCommonTables.BenthicAttributesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateBenthicAttributeCount();
