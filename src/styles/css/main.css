@@ -782,6 +782,7 @@ btn > button {
 
 .widget-body.map-body {
   padding: 0 13px !important;
+  overflow: hidden;
 }
 
 .dotted-underline {
@@ -1484,4 +1485,44 @@ input:checked + .slider-mermaid:before {
   background-color: #ebebeb !important;
   color: #333 !important;
   text-shadow: none !important;
+}
+
+.leaflet-navbar {
+  background: rgba(255, 255, 255, 1);
+  position: absolute; 
+  width: 300px;
+  height: 400px;
+  right: -300px;
+  top: 0px;
+  z-index: 1;
+  transition: .5s right;
+}
+
+.leaflet-navbar.open {
+  right: 0px;
+}
+
+.leaflet-navbar .leaflet-hamburger {
+  position: absolute;
+  background: rgba(255, 255, 255, 1);
+  height: 150px;
+  width: 25px;
+  cursor: pointer;
+  top: 10%;
+  left: -25px;
+  border-right: 1px solid;
+  transition: .5s right;
+}
+
+.leaflet-hamburger span {
+  display: inline-block;
+  position: relative;
+  transform: rotate(-90deg);
+  top: 60px;
+  left: -54px;
+  font-size: 1.75rem;
+}
+
+.atlas-layers {
+  max-height: 90vh;
 }

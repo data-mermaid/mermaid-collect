@@ -31,6 +31,14 @@
             <h2></h2>
           </header>
           <div class="widget-body map-body">
+            <div class="leaflet-navbar" ng-class="{false: '', true: 'open'}[toggleNav]">
+              <div class="leaflet-hamburger" ng-click="toggleNav = !toggleNav">
+                <span>Allen&nbsp;Coral&nbsp;Atlas</span>
+              </div>
+              <div class="atlas-layers">
+                <h2>Atlas</h2>
+              </div>
+            </div>
             <div class="row" style="height: 400px;">
               <leaflet-map 
                 records="tableControl.records"
