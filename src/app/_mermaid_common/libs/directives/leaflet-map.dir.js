@@ -70,6 +70,15 @@ angular.module('mermaid.libs').directive('leafletMap', [
         scope.map.addLayer(scope.secondaryMapRecords);
         scope.map.addLayer(scope.maprecords);
 
+        const vectorTileConfig = {
+          url: `http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_benthic_expanded@EPSG%3A900913@pbf/{z}/{x}/{y}.pbf`,
+          tms: true
+        };
+
+        const vectorTileLayer = new L.TileLayer.MVTSource(vectorTileConfig);
+        console.log('vector 1 ', vectorTileLayer);
+        scope.map.addLayer(vectorTileLayer);
+
         scope.$watch(
           'records',
           function() {
