@@ -203,11 +203,13 @@ angular.module('mermaid.libs').service('OfflineTables', [
             'reefexposures',
             choices
           );
+          const regionsChoices = convertToChoices('regions', choices);
           return {
             countryChoices: countryChoices,
             reefTypeChoices: reefTypeChoices,
             reefZoneChoices: reefZoneChoices,
-            reefExposuresChoices: reefExposuresChoices
+            reefExposuresChoices: reefExposuresChoices,
+            regionsChoices: regionsChoices
           };
         })
         .then(function(choices) {
