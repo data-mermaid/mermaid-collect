@@ -108,8 +108,5 @@ angular.module('app.project').controller('CopySitesCtrl', [
     };
 
     $scope.$modalButtons = [copyButton, cancelButton];
-    $scope.mapopts = {
-      gestureHandling: true
-    };
   }
 ]);

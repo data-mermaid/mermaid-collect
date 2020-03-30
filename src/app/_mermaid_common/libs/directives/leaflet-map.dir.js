@@ -1,6 +1,6 @@
 /* globals L */
 
-angular.module('mermaid.libs').directive('leafletMap', [
+angular.module('mermaid.libs').directive('mapbox', [
   function() {
     'use strict';
     return {
@@ -12,72 +12,132 @@ angular.module('mermaid.libs').directive('leafletMap', [
         secondaryRecords: '=?',
         geoattr: '=?'
       },
-      link: function(scope, element) {
-        const style = {
-          color: '#ff0000',
-          fillColor: '#ff0000',
-          opacity: 0.8,
-          radius: 4,
-          stroke: 1
-        };
-
-        const mutedStyle = {
-          color: '#2D2D2D',
-          fillColor: '#2D2D2D',
-          opacity: 0.5,
-          radius: 4,
-          stroke: 1
+      link: function(scope) {
+        const worldBaseMap = {
+          version: 8,
+          name: 'World Map',
+          sources: {
+            worldmap: {
+              type: 'raster',
+              tiles: [
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+              ]
+            }
+          },
+          layers: [
+            {
+              id: 'base-map',
+              type: 'raster',
+              source: 'worldmap'
+            }
+          ]
         };
 
         scope.mapopts = scope.mapopts || {};
         scope.records = scope.records || [];
         scope.geoattr = scope.geoattr || 'location';
         const defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
-        const defaultZoom = scope.mapopts.defaultZoom || 2;
+        const defaultZoom = scope.mapopts.defaultZoom || 1;
         const popup = scope.mapopts.popup || false;
+        const navigation = new mapboxgl.NavigationControl({
+          showCompass: false,
+          showZoom: true
+        });
 
-        const mapRecordsProperty = {
-          pointToLayer: function(feature, latlng) {
-            return new L.circleMarker(latlng, style);
-          }
-        };
+        const mapBox = new mapboxgl.Map({
+          container: 'map',
+          style: worldBaseMap,
+          center: defaultCenter, // starting position [lng, lat]
+          zoom: defaultZoom, // starting zoom
+          maxZoom: 16
+        });
 
-        if (popup) {
-          mapRecordsProperty.onEachFeature = function(feature, layer) {
-            layer.bindPopup(popup(feature.properties));
-          };
-        }
+        mapBox.addControl(navigation, 'top-left');
 
-        scope.maprecords = L.geoJson([], mapRecordsProperty);
-        scope.secondaryMapRecords = L.geoJson([], {
-          pointToLayer: function(feature, latlng) {
-            return new L.circleMarker(latlng, mutedStyle);
+        mapBox.scrollZoom.disable();
+        mapBox.dragRotate.disable();
+        mapBox.touchZoomRotate.disableRotation();
+        mapBox.scrollZoom.setWheelZoomRate(0.02); // Default 1/450
+
+        mapBox.on('wheel', event => {
+          if (event.originalEvent.ctrlKey) {
+            event.originalEvent.preventDefault();
+            if (!mapBox.scrollZoom._enabled) mapBox.scrollZoom.enable();
+          } else {
+            if (mapBox.scrollZoom._enabled) mapBox.scrollZoom.disable();
           }
         });
 
-        element.addClass('mapcanvas');
-        scope.map = scope.map || L.map(element[0], scope.mapopts);
+        mapBox.on('load', function() {
+          mapBox.addSource('mapMarkers', {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: []
+            }
+          });
 
-        L.tileLayer(
-          '//server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-          {
-            attribution: 'Basemap &copy; esri',
-            maxZoom: 18,
-            subdomains: ['a', 'b', 'c']
+          mapBox.addSource('secondaryMapMarkers', {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: []
+            }
+          });
+
+          mapBox.addLayer({
+            id: 'mapMarkers',
+            source: 'mapMarkers',
+            type: 'circle',
+            paint: {
+              'circle-radius': 3,
+              'circle-color': '#223b53',
+              'circle-stroke-color': '#ff0000',
+              'circle-stroke-width': 2,
+              'circle-opacity': 0.8
+            }
+          });
+
+          if (popup) {
+            mapBox.on('click', 'mapMarkers', function(e) {
+              const coordinates = e.features[0].geometry.coordinates.slice();
+              const description = popup(e.features[0].properties);
+
+              while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+              }
+
+              new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(description)
+                .addTo(mapBox);
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            mapBox.on('mouseenter', 'mapMarkers', function() {
+              mapBox.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            mapBox.on('mouseleave', 'mapMarkers', function() {
+              mapBox.getCanvas().style.cursor = '';
+            });
           }
-        ).addTo(scope.map);
-
-        scope.map.addLayer(scope.secondaryMapRecords);
-        scope.map.addLayer(scope.maprecords);
+        });
 
         scope.$watch(
           'records',
           function() {
-            let center = defaultCenter;
-            scope.maprecords.clearLayers();
+            const bounds = new mapboxgl.LngLatBounds();
+            let data = {
+              type: 'FeatureCollection',
+              features: []
+            };
+
             _.each(scope.records, function(rec) {
+              let rec_geo_data = {};
               if (popup) {
-                const rec_geo_data = {
+                rec_geo_data = {
                   id: rec.id,
                   name: rec.name,
                   project_id: scope.mapopts.project_id,
@@ -85,32 +145,23 @@ angular.module('mermaid.libs').directive('leafletMap', [
                   reeftype: rec.$$reeftypes.name,
                   reefzone: rec.$$reefzones.name
                 };
-                rec[scope.geoattr].properties = rec_geo_data;
               }
-              scope.maprecords.addData(rec[scope.geoattr]);
+              const recPoint = {
+                type: 'Feature',
+                geometry: rec.location,
+                properties: rec_geo_data
+              };
+              bounds.extend(rec.location.coordinates);
+              data.features.push(recPoint);
             });
 
-            const rec_len = scope.records.length;
-
-            if (rec_len < 2) {
-              if (rec_len === 1) {
-                center = scope.maprecords.getBounds().getCenter();
-              }
-              scope.map.setView(center, defaultZoom);
-            } else {
-              scope.map.fitBounds(scope.maprecords.getBounds());
+            if (mapBox.getSource('mapMarkers') !== undefined) {
+              mapBox.getSource('mapMarkers').setData(data);
             }
-          },
-          true
-        );
 
-        scope.$watch(
-          'secondaryRecords',
-          function() {
-            scope.secondaryMapRecords.clearLayers();
-            _.each(scope.secondaryRecords, function(rec) {
-              scope.secondaryMapRecords.addData(rec[scope.geoattr]);
-            });
+            if (scope.records.length > 0) {
+              mapBox.fitBounds(bounds, { padding: 50, animate: false });
+            }
           },
           true
         );
