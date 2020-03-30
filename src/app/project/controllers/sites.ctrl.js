@@ -207,7 +207,6 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     $scope.mapopts = {
-      gestureHandling: true,
       project_id: project_id,
       popup: createPopup
     };

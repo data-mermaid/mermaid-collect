@@ -226,8 +226,6 @@ angular.module('app.project').controller('ProjectWizardCtrl', [
       }, 100);
     };
 
-    $scope.mapopts = { gestureHandling: true };
-
     $scope.setBenthicPolicies = function(policy) {
       $scope.project.data_policy_benthiclit = policy;
       $scope.project.data_policy_benthicpit = policy;
