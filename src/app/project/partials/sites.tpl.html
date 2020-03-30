@@ -31,6 +31,111 @@
             <h2></h2>
           </header>
           <div class="widget-body map-body">
+            <div class="leaflet-navbar" ng-class="{false: '', true: 'open'}[toggleNav]">
+              <div class="leaflet-hamburger" ng-click="toggleNav = !toggleNav">
+                <span>Allen&nbsp;Coral&nbsp;Atlas</span>
+              </div>
+              <div class="atlas-layers">
+                <details>
+                  <summary>
+                    <div class="atlas-legend">
+                      <input type="checkbox">
+                      <label> 
+                        Geomorphic Analysis
+                      </label>
+                    </div>
+                  </summary>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Algae
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Benthic Microalgae
+                    </label>
+                  </div>
+                </details>
+                <details>
+                  <summary>
+                    <div class="atlas-legend">
+                      <input type="checkbox">
+                      <label> 
+                        Benthic Analysis
+                      </label>
+                    </div>
+                  </summary>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Algae
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Benthic Microalgae
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Blue Hole
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Breaking Waves
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Channel
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Cloud-Shade
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Coral
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Coral/Algae
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Deep
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Land
+                    </label>
+                  </div>
+                  <div class="atlas-legend-item">
+                    <input type="checkbox">
+                    <label> 
+                      Mangrove
+                    </label>
+                  </div>
+                </details>
+              </div>
+            </div>
             <div class="row" style="height: 400px;">
               <leaflet-map 
                 records="tableControl.records"
