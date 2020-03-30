@@ -1,3 +1,5 @@
+/* globals mapboxgl */
+
 angular.module('mermaid.libs').directive('mapboxGl', [
   function() {
     'use strict';
