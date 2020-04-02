@@ -5,13 +5,14 @@ angular.module('mermaid.libs').directive('mapboxGl', [
     'use strict';
     return {
       restrict: 'EA',
+      transclude: true,
       scope: {
-        map: '=?',
         mapopts: '=?',
         records: '=?',
-        secondaryRecords: '=?',
         geoattr: '=?'
       },
+      template:
+        '<div id="map" class="row" style="height: 400px;"><legend-slider></legend-slider>',
       link: function(scope) {
         const worldBaseMap = {
           version: 8,
@@ -77,11 +78,71 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             }
           });
 
-          mapBox.addSource('secondaryMapMarkers', {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: []
+          // mapBox.addSource('atlas-geomorphic', {
+          //   type: 'vector',
+          //   tiles: [
+          //     'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_geomorphic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
+          //   ],
+          //   scheme: 'tms',
+          //   minZoom: 0,
+          //   maxZoom: 24
+          // });
+
+          // mapBox.addLayer({
+          //   id: 'geomorphic',
+          //   type: 'fill',
+          //   source: 'atlas-geomorphic',
+          //   'source-layer': 'reef_polygons_geomorphic_expanded',
+          //   paint: {
+          //     'fill-color': '#f70000',
+          //     'fill-opacity': 1
+          //   }
+          // });
+
+          mapBox.addSource('atlas-benthic', {
+            type: 'vector',
+            tiles: [
+              'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_benthic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
+            ],
+            scheme: 'tms',
+            minZoom: 0,
+            maxZoom: 24
+          });
+
+          mapBox.addLayer({
+            id: 'atlas-benthic',
+            type: 'fill',
+            source: 'atlas-benthic',
+            'source-layer': 'reef_polygons_benthic_expanded',
+            paint: {
+              'fill-color': [
+                'case',
+                ['==', ['get', 'benthic'], 'Deep'],
+                'rgb(225, 225, 225)',
+                ['==', ['get', 'benthic'], 'Land'],
+                'rgb(61, 166, 27)',
+                ['==', ['get', 'benthic'], 'Sand'],
+                'rgb(254, 254, 190)',
+                ['==', ['get', 'benthic'], 'Seagrass'],
+                'rgb(145, 198, 3)',
+                ['==', ['get', 'benthic'], 'Rubble'],
+                'rgb(253, 167, 130)',
+                'rgb(255, 203, 201)' // Default / other
+              ],
+              'fill-opacity': [
+                'case',
+                ['==', ['get', 'benthic'], 'Deep'],
+                1,
+                ['==', ['get', 'benthic'], 'Land'],
+                1,
+                ['==', ['get', 'benthic'], 'Sand'],
+                1,
+                ['==', ['get', 'benthic'], 'Seagrass'],
+                1,
+                ['==', ['get', 'benthic'], 'Rubble'],
+                1,
+                1 // Default / other
+              ]
             }
           });
 
@@ -157,6 +218,16 @@ angular.module('mermaid.libs').directive('mapboxGl', [
 
             if (mapBox.getSource('mapMarkers') !== undefined) {
               mapBox.getSource('mapMarkers').setData(data);
+              const results = mapBox.querySourceFeatures('atlas-benthic', {
+                sourceLayer: 'reef_polygons_benthic_expanded'
+              });
+
+              if (results.length > 0) {
+                const benthicProperties = results.map(value => {
+                  return value.properties.benthic;
+                });
+                scope.benthicLegends = [...new Set(benthicProperties)];
+              }
             }
 
             if (scope.records.length > 0) {

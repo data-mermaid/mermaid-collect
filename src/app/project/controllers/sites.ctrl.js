@@ -31,7 +31,6 @@ angular.module('app.project').controller('SitesCtrl', [
 
     const conn = new ConnectivityFactory($scope);
     $scope.isOnline = connectivity.isOnline;
-    $scope.toggleNav = false;
 
     this.db = {
       items: null

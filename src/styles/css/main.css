@@ -1382,7 +1382,7 @@ ul li.transect-buttons[disabled] {
   visibility: hidden;
 }
 
-/* leaflet popup content style */
+/* mapbox popup content style */
 .mapboxgl-popup {
   border-radius: 6px;
 }
@@ -1538,3 +1538,5 @@ input:checked + .slider-mermaid:before {
   display: block;
   margin: 10px;
 }
+
+
