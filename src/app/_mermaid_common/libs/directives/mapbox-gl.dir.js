@@ -64,33 +64,38 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           return array.length > 0 ? arrayExp : 0;
         };
 
+        const opacityValue = applyOpacityExpression(
+          JSON.parse(localStorage.getItem('benthic_legend'))
+        );
+
         scope.mapopts = scope.mapopts || {};
         scope.records = scope.records || [];
         scope.geoattr = scope.geoattr || 'location';
-        scope.fillOpacityExpression = applyOpacityExpression(
-          JSON.parse(localStorage.getItem('benthic_legend'))
-        ) || [
-          'case',
-          ['==', ['get', 'benthic'], 'Deep'],
-          1,
-          ['==', ['get', 'benthic'], 'Land'],
-          1,
-          ['==', ['get', 'benthic'], 'Sand'],
-          1,
-          ['==', ['get', 'benthic'], 'Seagrass'],
-          1,
-          ['==', ['get', 'benthic'], 'Rubble'],
-          1,
-          ['==', ['get', 'benthic'], 'Unknown'],
-          1,
-          ['==', ['get', 'benthic'], 'Microalgal Mats'],
-          1,
-          ['==', ['get', 'benthic'], 'Rock'],
-          1,
-          ['==', ['get', 'benthic'], 'Coral/Alage'],
-          1,
-          0 // Default / other
-        ];
+        scope.fillOpacityExpression =
+          opacityValue === 0 || opacityValue
+            ? opacityValue
+            : [
+                'case',
+                ['==', ['get', 'benthic'], 'Deep'],
+                1,
+                ['==', ['get', 'benthic'], 'Land'],
+                1,
+                ['==', ['get', 'benthic'], 'Sand'],
+                1,
+                ['==', ['get', 'benthic'], 'Seagrass'],
+                1,
+                ['==', ['get', 'benthic'], 'Rubble'],
+                1,
+                ['==', ['get', 'benthic'], 'Unknown'],
+                1,
+                ['==', ['get', 'benthic'], 'Microalgal Mats'],
+                1,
+                ['==', ['get', 'benthic'], 'Rock'],
+                1,
+                ['==', ['get', 'benthic'], 'Coral/Alage'],
+                1,
+                0 // Default / other
+              ];
 
         const defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
         const defaultZoom = scope.mapopts.defaultZoom || 1;
@@ -108,29 +113,20 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           maxZoom: 16
         });
 
-        mapBox.addControl(navigation, 'top-left');
-
-        mapBox.scrollZoom.disable();
-        mapBox.dragRotate.disable();
-        mapBox.touchZoomRotate.disableRotation();
-        mapBox.scrollZoom.setWheelZoomRate(0.02); // Default 1/450
-
-        mapBox.on('wheel', event => {
-          if (event.originalEvent.ctrlKey) {
-            event.originalEvent.preventDefault();
-            if (!mapBox.scrollZoom._enabled) mapBox.scrollZoom.enable();
-          } else {
-            if (mapBox.scrollZoom._enabled) mapBox.scrollZoom.disable();
-          }
-        });
-
-        mapBox.on('load', function() {
+        const initLoadMapLayers = function() {
           mapBox.addSource('mapMarkers', {
             type: 'geojson',
             data: {
               type: 'FeatureCollection',
               features: []
             }
+          });
+
+          mapBox.addSource('atlas-planet', {
+            type: 'raster',
+            tiles: [
+              'https://allencoralatlas.org/tiles/planet/visual/2019/{z}/{x}/{y}'
+            ]
           });
 
           mapBox.addSource('atlas-benthic', {
@@ -140,7 +136,17 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             ],
             scheme: 'tms',
             minZoom: 0,
-            maxZoom: 24
+            maxZoom: 18
+          });
+
+          mapBox.addLayer({
+            id: 'atlas-planet',
+            type: 'raster',
+            source: 'atlas-planet',
+            'source-layer': 'planet',
+            paint: {
+              'raster-opacity': scope.satelliteOpacity
+            }
           });
 
           mapBox.addLayer({
@@ -185,6 +191,25 @@ angular.module('mermaid.libs').directive('mapboxGl', [
               'circle-stroke-color': '#ff0000',
               'circle-stroke-width': 2,
               'circle-opacity': 0.8
+            }
+          });
+        };
+
+        mapBox.once('load', function() {
+          initLoadMapLayers();
+          mapBox.addControl(navigation, 'top-left');
+
+          mapBox.scrollZoom.disable();
+          mapBox.dragRotate.disable();
+          mapBox.touchZoomRotate.disableRotation();
+          mapBox.scrollZoom.setWheelZoomRate(0.02); // Default 1/450
+
+          mapBox.on('wheel', event => {
+            if (event.originalEvent.ctrlKey) {
+              event.originalEvent.preventDefault();
+              if (!mapBox.scrollZoom._enabled) mapBox.scrollZoom.enable();
+            } else {
+              if (mapBox.scrollZoom._enabled) mapBox.scrollZoom.disable();
             }
           });
 

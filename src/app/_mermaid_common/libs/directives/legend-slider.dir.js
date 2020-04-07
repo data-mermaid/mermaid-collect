@@ -7,7 +7,6 @@ angular.module('mermaid.libs').directive('legendSlider', [
       templateUrl: 'app/_mermaid_common/libs/directives/legend-slider.tpl.html',
       link: function(scope) {
         scope.toggleNav = false;
-        scope.selected = true;
         scope.benthicOptions = [];
         scope.selectAllBenthic = undefined;
         scope.benthicColors = scope.$parent.benthicLayerColors;
