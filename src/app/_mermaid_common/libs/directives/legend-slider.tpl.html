@@ -28,15 +28,16 @@
     <details>
       <summary>
         <div class="atlas-legend">
-          <input type="checkbox">
+          <input type="checkbox" ng-model="selectAllBenthic" ng-change="filterAll()">
           <label> 
             Benthic Analysis
           </label>
         </div>
       </summary>
-      <div ng-repeat="benthic in $parent.benthicLegends" class="atlas-legend-item">
-        <input type="checkbox" ng-model="selected" ng-change="filterLegend(benthic)">
-        <label>{{benthic}}</label>
+      <div ng-repeat="benthic in benthicOptions | orderBy:'name'" class="atlas-legend-item">
+        <input type="checkbox" ng-model="benthic.selected" ng-change="filterLegend(benthic.name)">
+        <label>{{benthic.name}}</label>
+        <div class="atlas-legend-color-box" ng-style="{'background-color': benthicColors[benthic.name]}"></div>
       </div>
     </details>
   </div>

@@ -14,6 +14,19 @@ angular.module('mermaid.libs').directive('mapboxGl', [
       template:
         '<div id="map" class="row" style="height: 400px;"><legend-slider></legend-slider>',
       link: function(scope) {
+        scope.benthicLayerColors = {
+          Deep: 'rgb(225, 225, 225)',
+          Land: 'rgb(61, 166, 27)',
+          Sand: 'rgb(255, 255, 190)',
+          Seagrass: 'rgb(102, 132, 56)',
+          Rubble: 'rgb(224, 208, 94)',
+          Unknown: 'rgb(178, 178, 178)',
+          'Microalgal Mats': 'rgb(155, 204, 79)',
+          Rock: 'rgb(177, 156, 58)',
+          'Coral/Alage': 'rgb(255, 97, 97)',
+          Default: 'rgb(201, 65, 216)'
+        };
+
         const worldBaseMap = {
           version: 8,
           name: 'World Map',
@@ -34,9 +47,51 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           ]
         };
 
+        const applyOpacityExpression = function(array) {
+          if (array === null) {
+            return false;
+          }
+
+          const arrayExp = array.flatMap(item => {
+            let equalBenthic = [['==', ['get', 'benthic']], 1];
+            equalBenthic[0].push(item);
+
+            return equalBenthic;
+          });
+
+          arrayExp.unshift('case');
+          arrayExp.push(0);
+          return array.length > 0 ? arrayExp : 0;
+        };
+
         scope.mapopts = scope.mapopts || {};
         scope.records = scope.records || [];
         scope.geoattr = scope.geoattr || 'location';
+        scope.fillOpacityExpression = applyOpacityExpression(
+          JSON.parse(localStorage.getItem('benthic_legend'))
+        ) || [
+          'case',
+          ['==', ['get', 'benthic'], 'Deep'],
+          1,
+          ['==', ['get', 'benthic'], 'Land'],
+          1,
+          ['==', ['get', 'benthic'], 'Sand'],
+          1,
+          ['==', ['get', 'benthic'], 'Seagrass'],
+          1,
+          ['==', ['get', 'benthic'], 'Rubble'],
+          1,
+          ['==', ['get', 'benthic'], 'Unknown'],
+          1,
+          ['==', ['get', 'benthic'], 'Microalgal Mats'],
+          1,
+          ['==', ['get', 'benthic'], 'Rock'],
+          1,
+          ['==', ['get', 'benthic'], 'Coral/Alage'],
+          1,
+          0 // Default / other
+        ];
+
         const defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
         const defaultZoom = scope.mapopts.defaultZoom || 1;
         const popup = scope.mapopts.popup || false;
@@ -78,27 +133,6 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             }
           });
 
-          // mapBox.addSource('atlas-geomorphic', {
-          //   type: 'vector',
-          //   tiles: [
-          //     'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_geomorphic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
-          //   ],
-          //   scheme: 'tms',
-          //   minZoom: 0,
-          //   maxZoom: 24
-          // });
-
-          // mapBox.addLayer({
-          //   id: 'geomorphic',
-          //   type: 'fill',
-          //   source: 'atlas-geomorphic',
-          //   'source-layer': 'reef_polygons_geomorphic_expanded',
-          //   paint: {
-          //     'fill-color': '#f70000',
-          //     'fill-opacity': 1
-          //   }
-          // });
-
           mapBox.addSource('atlas-benthic', {
             type: 'vector',
             tiles: [
@@ -126,23 +160,18 @@ angular.module('mermaid.libs').directive('mapboxGl', [
                 ['==', ['get', 'benthic'], 'Seagrass'],
                 'rgb(145, 198, 3)',
                 ['==', ['get', 'benthic'], 'Rubble'],
-                'rgb(253, 167, 130)',
-                'rgb(255, 203, 201)' // Default / other
+                'rgb(224, 208, 94)',
+                ['==', ['get', 'benthic'], 'Unknown'],
+                'rgb(178, 178, 178)',
+                ['==', ['get', 'benthic'], 'Microalgal Mats'],
+                'rgb(155, 204, 79)',
+                ['==', ['get', 'benthic'], 'Rock'],
+                'rgb(177, 156, 58)',
+                ['==', ['get', 'benthic'], 'Coral/Alage'],
+                'rgb(255, 97, 97)',
+                'rgb(201, 65, 216)' // Default / other
               ],
-              'fill-opacity': [
-                'case',
-                ['==', ['get', 'benthic'], 'Deep'],
-                1,
-                ['==', ['get', 'benthic'], 'Land'],
-                1,
-                ['==', ['get', 'benthic'], 'Sand'],
-                1,
-                ['==', ['get', 'benthic'], 'Seagrass'],
-                1,
-                ['==', ['get', 'benthic'], 'Rubble'],
-                1,
-                1 // Default / other
-              ]
+              'fill-opacity': scope.fillOpacityExpression
             }
           });
 
@@ -226,6 +255,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
                 const benthicProperties = results.map(value => {
                   return value.properties.benthic;
                 });
+
                 scope.benthicLegends = [...new Set(benthicProperties)];
               }
             }
@@ -235,6 +265,22 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             }
           },
           true
+        );
+
+        scope.$watch(
+          function() {
+            return localStorage.getItem('benthic_legend');
+          },
+          function(newVal, oldVal) {
+            const storageOption = JSON.parse(newVal);
+            if (newVal !== oldVal) {
+              mapBox.setPaintProperty(
+                'atlas-benthic',
+                'fill-opacity',
+                applyOpacityExpression(storageOption)
+              );
+            }
+          }
         );
       }
     };
