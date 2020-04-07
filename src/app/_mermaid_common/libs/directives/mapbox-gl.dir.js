@@ -145,7 +145,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             source: 'atlas-planet',
             'source-layer': 'planet',
             paint: {
-              'raster-opacity': scope.satelliteOpacity
+              'raster-opacity': 1
             }
           });
 
