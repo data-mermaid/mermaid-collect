@@ -5,7 +5,7 @@
   <div class="atlas-layers">
       <summary>
         <div class="atlas-legend" style="padding-left: 15px;">
-          <input type="checkbox">
+          <input type="checkbox" ng-model="selectedCoralMosaic" ng-change="filterCoralMosaic()">
           <label>
             Satellite Coral Reef Mosaic
           </label>
@@ -43,7 +43,7 @@
         </div>
       </summary>
       <div ng-repeat="benthic in benthicOptions | orderBy:'name'" class="atlas-legend-item">
-        <input type="checkbox" ng-model="benthic.selected" ng-change="filterLegend(benthic.name)">
+        <input type="checkbox" ng-model="benthic.selected" ng-change="filterBenthic(benthic.name)">
         <label>{{benthic.name}}</label>
         <div class="atlas-legend-color-box" ng-style="{'background-color': benthicColors[benthic.name]}"></div>
       </div>

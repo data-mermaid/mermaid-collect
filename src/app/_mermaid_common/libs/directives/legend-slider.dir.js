@@ -7,12 +7,45 @@ angular.module('mermaid.libs').directive('legendSlider', [
       templateUrl: 'app/_mermaid_common/libs/directives/legend-slider.tpl.html',
       link: function(scope) {
         scope.toggleNav = false;
-        scope.benthicOptions = [];
         scope.selectAllBenthic = undefined;
         scope.benthicColors = scope.$parent.benthicLayerColors;
+        scope.benthicArray = Object.keys(scope.benthicColors);
 
-        scope.filterLegend = function(item) {
-          let options = JSON.parse(localStorage.getItem('benthic_legend'));
+        const loadBenthicOptions = function() {
+          const benthicStorage =
+            JSON.parse(localStorage.getItem('benthic_legend')) ||
+            scope.benthicArray;
+
+          return scope.benthicArray.map(value => {
+            let updatedBenthic = { name: value, selected: true };
+
+            if (!benthicStorage.includes(value)) {
+              updatedBenthic.selected = false;
+            }
+
+            return updatedBenthic;
+          });
+        };
+
+        const loadCoralMosaicOption = function() {
+          const coralStorageOption = JSON.parse(
+            localStorage.getItem('coral_mosaic')
+          );
+
+          if (coralStorageOption === null) {
+            return true;
+          }
+
+          return coralStorageOption ? true : false;
+        };
+
+        scope.benthicOptions = loadBenthicOptions();
+        scope.selectedCoralMosaic = loadCoralMosaicOption();
+
+        scope.filterBenthic = function(item) {
+          let options =
+            JSON.parse(localStorage.getItem('benthic_legend')) ||
+            scope.benthicArray;
 
           if (!options.includes(item)) {
             options.push(item);
@@ -25,6 +58,11 @@ angular.module('mermaid.libs').directive('legendSlider', [
           }
 
           localStorage.setItem('benthic_legend', JSON.stringify(options));
+        };
+
+        scope.filterCoralMosaic = function() {
+          const result = scope.selectedCoralMosaic ? 1 : 0;
+          localStorage.setItem('coral_mosaic', result);
         };
 
         scope.filterAll = function() {
@@ -58,38 +96,6 @@ angular.module('mermaid.libs').directive('legendSlider', [
           },
           true
         );
-
-        scope.$watch('$parent.benthicLegends', function(v) {
-          if (v !== undefined) {
-            if (localStorage.getItem('benthic_legend') === null) {
-              const initialOptions = v.map(value => {
-                return {
-                  name: value,
-                  selected: true
-                };
-              });
-
-              scope.benthicOptions = initialOptions;
-              scope.selectAllBenthic = true;
-              localStorage.setItem('benthic_legend', JSON.stringify(v));
-            } else {
-              const benthicStorage = JSON.parse(
-                localStorage.getItem('benthic_legend')
-              );
-
-              const storageOption = v.map(value => {
-                let updatedBenthic = { name: value, selected: true };
-
-                if (!benthicStorage.includes(value)) {
-                  updatedBenthic.selected = false;
-                }
-
-                return updatedBenthic;
-              });
-              scope.benthicOptions = [...storageOption];
-            }
-          }
-        });
       }
     };
   }

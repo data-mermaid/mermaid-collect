@@ -15,16 +15,13 @@ angular.module('mermaid.libs').directive('mapboxGl', [
         '<div id="map" class="row" style="height: 400px;"><legend-slider></legend-slider>',
       link: function(scope) {
         scope.benthicLayerColors = {
-          Deep: 'rgb(225, 225, 225)',
-          Land: 'rgb(61, 166, 27)',
+          'Coral/Algae': 'rgb(255, 97, 97)',
+          'Benthic Microalgae': 'rgb(155, 204, 79)',
+          Rock: 'rgb(177, 156, 58)',
+          Rubble: 'rgb(224, 208, 94)',
           Sand: 'rgb(255, 255, 190)',
           Seagrass: 'rgb(102, 132, 56)',
-          Rubble: 'rgb(224, 208, 94)',
-          Unknown: 'rgb(178, 178, 178)',
-          'Microalgal Mats': 'rgb(155, 204, 79)',
-          Rock: 'rgb(177, 156, 58)',
-          'Coral/Alage': 'rgb(255, 97, 97)',
-          Default: 'rgb(201, 65, 216)'
+          Unknown: 'rgb(178, 178, 178)'
         };
 
         const worldBaseMap = {
@@ -64,22 +61,21 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           return array.length > 0 ? arrayExp : 0;
         };
 
-        const opacityValue = applyOpacityExpression(
+        const fillOpacityValue = applyOpacityExpression(
           JSON.parse(localStorage.getItem('benthic_legend'))
+        );
+        const rasterOpacityValue = JSON.parse(
+          localStorage.getItem('coral_mosaic')
         );
 
         scope.mapopts = scope.mapopts || {};
         scope.records = scope.records || [];
         scope.geoattr = scope.geoattr || 'location';
         scope.fillOpacityExpression =
-          opacityValue === 0 || opacityValue
-            ? opacityValue
+          fillOpacityValue === 0 || fillOpacityValue
+            ? fillOpacityValue
             : [
                 'case',
-                ['==', ['get', 'benthic'], 'Deep'],
-                1,
-                ['==', ['get', 'benthic'], 'Land'],
-                1,
                 ['==', ['get', 'benthic'], 'Sand'],
                 1,
                 ['==', ['get', 'benthic'], 'Seagrass'],
@@ -88,14 +84,18 @@ angular.module('mermaid.libs').directive('mapboxGl', [
                 1,
                 ['==', ['get', 'benthic'], 'Unknown'],
                 1,
-                ['==', ['get', 'benthic'], 'Microalgal Mats'],
+                ['==', ['get', 'benthic'], 'Benthic Microalgae'],
                 1,
                 ['==', ['get', 'benthic'], 'Rock'],
                 1,
-                ['==', ['get', 'benthic'], 'Coral/Alage'],
+                ['==', ['get', 'benthic'], 'Coral/Algae'],
                 1,
                 0 // Default / other
               ];
+        scope.rasterOpacityExpression =
+          rasterOpacityValue === 0 || rasterOpacityValue
+            ? rasterOpacityValue
+            : 1;
 
         const defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
         const defaultZoom = scope.mapopts.defaultZoom || 1;
@@ -145,7 +145,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             source: 'atlas-planet',
             'source-layer': 'planet',
             paint: {
-              'raster-opacity': 1
+              'raster-opacity': scope.rasterOpacityExpression
             }
           });
 
@@ -157,24 +157,20 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             paint: {
               'fill-color': [
                 'case',
-                ['==', ['get', 'benthic'], 'Deep'],
-                'rgb(225, 225, 225)',
-                ['==', ['get', 'benthic'], 'Land'],
-                'rgb(61, 166, 27)',
-                ['==', ['get', 'benthic'], 'Sand'],
-                'rgb(254, 254, 190)',
-                ['==', ['get', 'benthic'], 'Seagrass'],
-                'rgb(145, 198, 3)',
-                ['==', ['get', 'benthic'], 'Rubble'],
-                'rgb(224, 208, 94)',
-                ['==', ['get', 'benthic'], 'Unknown'],
-                'rgb(178, 178, 178)',
-                ['==', ['get', 'benthic'], 'Microalgal Mats'],
+                ['==', ['get', 'benthic'], 'Coral/Algae'],
+                'rgb(255, 97, 97)',
+                ['==', ['get', 'benthic'], 'Benthic Microalgae'],
                 'rgb(155, 204, 79)',
                 ['==', ['get', 'benthic'], 'Rock'],
                 'rgb(177, 156, 58)',
-                ['==', ['get', 'benthic'], 'Coral/Alage'],
-                'rgb(255, 97, 97)',
+                ['==', ['get', 'benthic'], 'Rubble'],
+                'rgb(224, 208, 94)',
+                ['==', ['get', 'benthic'], 'Sand'],
+                'rgb(254, 254, 190)',
+                ['==', ['get', 'benthic'], 'Seagrass'],
+                'rgb(102, 132, 56)',
+                ['==', ['get', 'benthic'], 'Unknown'],
+                'rgb(178, 178, 178)',
                 'rgb(201, 65, 216)' // Default / other
               ],
               'fill-opacity': scope.fillOpacityExpression
@@ -272,17 +268,6 @@ angular.module('mermaid.libs').directive('mapboxGl', [
 
             if (mapBox.getSource('mapMarkers') !== undefined) {
               mapBox.getSource('mapMarkers').setData(data);
-              const results = mapBox.querySourceFeatures('atlas-benthic', {
-                sourceLayer: 'reef_polygons_benthic_expanded'
-              });
-
-              if (results.length > 0) {
-                const benthicProperties = results.map(value => {
-                  return value.properties.benthic;
-                });
-
-                scope.benthicLegends = [...new Set(benthicProperties)];
-              }
             }
 
             if (scope.records.length > 0) {
@@ -303,6 +288,21 @@ angular.module('mermaid.libs').directive('mapboxGl', [
                 'atlas-benthic',
                 'fill-opacity',
                 applyOpacityExpression(storageOption)
+              );
+            }
+          }
+        );
+
+        scope.$watch(
+          function() {
+            return localStorage.getItem('coral_mosaic');
+          },
+          function(newVal, oldVal) {
+            if (newVal !== oldVal) {
+              mapBox.setPaintProperty(
+                'atlas-planet',
+                'raster-opacity',
+                JSON.parse(newVal)
               );
             }
           }
