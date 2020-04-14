@@ -6,11 +6,10 @@
     control="control"></paginatedtable>
   <not-available-offline></not-available-offline>
 
-  <div class="modal-map-body">
-    <leaflet-map
+  <div id="map" class="modal-map-body">
+    <mapbox-gl
       records="selectedRecords"
-      secondary-records="control.records"
       mapopts="mapopts"
-    ></leaflet-map>
+    ></mapbox-gl>
   </div>
 </section>
