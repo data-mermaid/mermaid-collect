@@ -11,6 +11,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
   'FishSize',
   'FishFamily',
   'FishGenus',
+  'FishGrouping',
   'FishSpecies',
   'BenthicAttribute',
   function(
@@ -26,6 +27,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
     FishSize,
     FishFamily,
     FishGenus,
+    FishGrouping,
     FishSpecies,
     BenthicAttribute
   ) {
@@ -36,6 +38,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
     const FISH_SIZES_NAME = 'fishsizes';
     const FISH_FAMILIES_NAME = 'fishfamilies';
     const FISH_GENERA_NAME = 'fishgenera';
+    const FISH_GROUPINGS_NAME = 'fishgroupings';
     const FISH_SPECIES_NAME = 'fishspecies';
     const BENTHIC_ATTRIBUTES_NAME = 'benthicattributes';
 
@@ -119,7 +122,8 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
         .all([
           FishSpeciesTable(skipRefresh),
           FishGeneraTable(skipRefresh),
-          FishFamiliesTable(skipRefresh)
+          FishFamiliesTable(skipRefresh),
+          FishGroupingsTable(skipRefresh)
         ])
         .then(function(responses) {
           return OfflineTableGroup(FISH_ATTRIBUTES_NAME, responses);
@@ -164,6 +168,20 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
             fishfamilies: `family -> ${getFullName('fishfamilies')}.id, name`
           },
           limit: 1000,
+          isPublic: true
+        },
+        OfflineTableUtils.paginatedRefresh,
+        skipRefresh
+      );
+    };
+
+    const FishGroupingsTable = function(skipRefresh) {
+      return OfflineTableUtils.createOfflineTable(
+        getFullName(FISH_GROUPINGS_NAME),
+        APP_CONFIG.apiUrl + 'fishgroupings/',
+        FishGrouping,
+        {
+          limit: 200,
           isPublic: true
         },
         OfflineTableUtils.paginatedRefresh,
@@ -311,6 +329,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
         BenthicAttributesTable(skipRefresh),
         FishFamiliesTable(skipRefresh),
         FishGeneraTable(skipRefresh),
+        FishGroupingsTable(skipRefresh),
         FishSpeciesTable(skipRefresh)
       ];
       return $q.all(promises);
@@ -323,6 +342,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
       FishSizesTable: FishSizesTable,
       FishFamiliesTable: FishFamiliesTable,
       FishGeneraTable: FishGeneraTable,
+      FishGroupingsTable: FishGroupingsTable,
       FishSpeciesTable: FishSpeciesTable,
       BenthicAttributesTable: BenthicAttributesTable,
       deleteCommonTables: deleteCommonTables,
