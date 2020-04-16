@@ -108,7 +108,8 @@
           >
             <appendaddon>
               <a
-                ng-click="navReferenceLink(obs.fish_attribute)"
+                ng-class="{false: '', true: 'disabled'}[disableRef(obs.fish_attribute)]"
+                ng-click="disableRef(obs.fish_attribute) || navReferenceLink(obs.fish_attribute)"
               >
                 <i class="fa fa-book"></i>
               </a>

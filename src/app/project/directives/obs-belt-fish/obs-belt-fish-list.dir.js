@@ -128,6 +128,20 @@ angular.module('app.project').directive('obsBeltFishList', [
           }
         };
 
+        scope.disableRef = function(fishAttributeId) {
+          if (!_.isUndefined(fishAttributeId)) {
+            const rank = _.get(
+              fishAttributesLookup[fishAttributeId],
+              '$$taxonomic_rank'
+            );
+
+            if (rank === FishAttributeService.GROUPING) {
+              return true;
+            }
+          }
+          return false;
+        };
+
         scope.modalConfig = {
           bodyTemplateUrl:
             'app/_mermaid_common/libs/partials/fishattribute-input-new.tpl.html',
