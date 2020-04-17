@@ -77,14 +77,6 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             }
           });
 
-          mapBox.addSource('secondaryMapMarkers', {
-            type: 'geojson',
-            data: {
-              type: 'FeatureCollection',
-              features: []
-            }
-          });
-
           mapBox.addLayer({
             id: 'mapMarkers',
             source: 'mapMarkers',
@@ -127,14 +119,14 @@ angular.module('mermaid.libs').directive('mapboxGl', [
 
         scope.$watch(
           'records',
-          function() {
+          function(records) {
             const bounds = new mapboxgl.LngLatBounds();
             let data = {
               type: 'FeatureCollection',
               features: []
             };
 
-            _.each(scope.records, function(rec) {
+            _.each(records, function(rec) {
               let rec_geo_data = {};
               if (popup) {
                 rec_geo_data = {
@@ -159,9 +151,10 @@ angular.module('mermaid.libs').directive('mapboxGl', [
               mapBox.getSource('mapMarkers').setData(data);
             }
 
-            if (scope.records.length > 0) {
-              mapBox.fitBounds(bounds, { padding: 50, animate: false });
+            if (records.length > 0) {
+              mapBox.fitBounds(bounds, { padding: 25, animate: false });
             }
+            // }
           },
           true
         );
