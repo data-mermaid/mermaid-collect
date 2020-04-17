@@ -154,7 +154,6 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             if (records.length > 0) {
               mapBox.fitBounds(bounds, { padding: 25, animate: false });
             }
-            // }
           },
           true
         );
