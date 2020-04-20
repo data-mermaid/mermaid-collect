@@ -34,6 +34,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     let collectRecordsTable = {};
     let collectRecordsCount = 0;
     const addTransectGroupButton = new Button();
+    const METHOD_FILTER_NAME = 'mermaid_collect_method_filter';
+    const STATUS_FILTER_NAME = 'mermaid_collect_status_filter';
     const project_id = $stateParams.project_id;
     const promises = [
       authService.getCurrentUser(),
@@ -102,7 +104,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
 
     $scope.tableControl.choices = $scope.choices;
     $scope.tableConfig = {
-      id: 'collect_records',
+      id: 'mermaid_collect_records',
       hideRowStripes: true,
       searching: true,
       searchPlaceholder: 'Filter sample units by method, site, or observer',
@@ -115,13 +117,13 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         profile: projectProfile.profile,
         'data.protocol': function(val) {
           const options =
-            JSON.parse(localStorage.getItem('collect_methodfilter')) ||
+            JSON.parse(localStorage.getItem(METHOD_FILTER_NAME)) ||
             protocolMethods;
           return options.indexOf(val) !== -1;
         },
         validations: function(val) {
           const options =
-            JSON.parse(localStorage.getItem('collect_statusfilter')) ||
+            JSON.parse(localStorage.getItem(STATUS_FILTER_NAME)) ||
             statusChoices;
           if (val === undefined) {
             return options.indexOf(null) !== -1;
@@ -267,13 +269,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         allMethods: checkLocalStorage(
           'all',
           protocolMethods,
-          'collect_methodfilter'
+          METHOD_FILTER_NAME
         ),
-        allStatus: checkLocalStorage(
-          'all',
-          statusChoices,
-          'collect_statusfilter'
-        ),
+        allStatus: checkLocalStorage('all', statusChoices, STATUS_FILTER_NAME),
         methodTypes: [
           {
             name: 'Fish Belt',
@@ -281,7 +279,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[0],
               protocolMethods,
-              'collect_methodfilter'
+              METHOD_FILTER_NAME
             )
           },
           {
@@ -290,7 +288,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[1],
               protocolMethods,
-              'collect_methodfilter'
+              METHOD_FILTER_NAME
             )
           },
           {
@@ -299,7 +297,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[2],
               protocolMethods,
-              'collect_methodfilter'
+              METHOD_FILTER_NAME
             )
           },
           {
@@ -308,7 +306,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[4],
               protocolMethods,
-              'collect_methodfilter'
+              METHOD_FILTER_NAME
             )
           },
           {
@@ -317,7 +315,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[3],
               protocolMethods,
-              'collect_methodfilter'
+              METHOD_FILTER_NAME
             )
           }
         ],
@@ -328,7 +326,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               statusChoices[0],
               statusChoices,
-              'collect_statusfilter'
+              STATUS_FILTER_NAME
             )
           },
           {
@@ -337,7 +335,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               statusChoices[1],
               statusChoices,
-              'collect_statusfilter'
+              STATUS_FILTER_NAME
             )
           },
           {
@@ -346,7 +344,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               statusChoices[2],
               statusChoices,
-              'collect_statusfilter'
+              STATUS_FILTER_NAME
             )
           },
           {
@@ -355,7 +353,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             selected: checkLocalStorage(
               statusChoices[3],
               statusChoices,
-              'collect_statusfilter'
+              STATUS_FILTER_NAME
             )
           }
         ],
@@ -378,7 +376,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         },
         filterMethod: function(item) {
           let options = JSON.parse(
-            localStorage.getItem('collect_methodfilter')
+            localStorage.getItem(METHOD_FILTER_NAME)
           ) || [...protocolMethods];
           if (item.selected) {
             options.push(item.choice);
@@ -390,12 +388,12 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           }
 
           this.allMethods = options.length === protocolMethods.length;
-          localStorage.setItem('collect_methodfilter', JSON.stringify(options));
+          localStorage.setItem(METHOD_FILTER_NAME, JSON.stringify(options));
           $scope.tableControl.refresh();
         },
         filterStatus: function(item) {
           let options = JSON.parse(
-            localStorage.getItem('collect_statusfilter')
+            localStorage.getItem(STATUS_FILTER_NAME)
           ) || [...statusChoices];
 
           if (item.selected) {
@@ -408,14 +406,14 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           }
 
           this.allStatus = options.length === statusChoices.length;
-          localStorage.setItem('collect_statusfilter', JSON.stringify(options));
+          localStorage.setItem(STATUS_FILTER_NAME, JSON.stringify(options));
           $scope.tableControl.refresh();
         },
         selectAllMethods: function(allSelected) {
           const filterOptions = {
             filterTypes: this.methodTypes,
             choices: protocolMethods,
-            storageName: 'collect_methodfilter'
+            storageName: METHOD_FILTER_NAME
           };
           this.allMethods = allSelected;
           selectAllOptions(allSelected, filterOptions);
@@ -424,7 +422,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           const filterOptions = {
             filterTypes: this.statusTypes,
             choices: statusChoices,
-            storageName: 'collect_statusfilter'
+            storageName: STATUS_FILTER_NAME
           };
           this.allStatus = allSelected;
           selectAllOptions(allSelected, filterOptions);
@@ -465,12 +463,12 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       const methodStorageSelectAll = checkLocalStorage(
         'all',
         protocolMethods,
-        'collect_methodfilter'
+        METHOD_FILTER_NAME
       );
       const statusStorageSelectAll = checkLocalStorage(
         'all',
         statusChoices,
-        'collect_statusfilter'
+        STATUS_FILTER_NAME
       );
 
       return (

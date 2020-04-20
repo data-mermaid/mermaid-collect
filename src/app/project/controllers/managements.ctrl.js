@@ -41,7 +41,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
     $scope.resource = undefined;
     $scope.tableControl = {};
     $scope.tableConfig = {
-      id: 'management',
+      id: 'mermaid_management',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter management regimes by name',

@@ -55,12 +55,11 @@ angular.module('app.project').controller('SitesCtrl', [
     $scope.resource = undefined;
     $scope.tableControl = {};
     $scope.tableConfig = {
-      id: 'sites',
+      id: 'mermaid_sites',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter sites by name, reef (type, zone, or exposure)',
       searchLocation: 'left',
-      disableTrackingTableState: true,
       rowFormatter: function(record, element) {
         const isInvalid =
           _.get(

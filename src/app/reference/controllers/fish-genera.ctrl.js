@@ -30,7 +30,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     });
 
     $scope.tableConfig = {
-      id: 'fishgenera',
+      id: 'mermaid_fishgenera',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish genera by name or family',

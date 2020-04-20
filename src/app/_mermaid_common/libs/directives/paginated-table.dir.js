@@ -6,7 +6,7 @@
 
   $scope.tableControl = {};
   $scope.tableConfig = {
-    id: 'collect_records',
+    id: 'mermaid_collect_records',
     hideRowStripes: true/false  // Hide row alternating colors
     resource: PaginatedOfflineTableWrapper(offlinetable),
     searching: false,
