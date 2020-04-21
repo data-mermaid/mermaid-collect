@@ -1,11 +1,26 @@
 angular.module('app.project').service('ManagementService', [
   '$q',
   'OfflineTables',
-  'authService',
-  'APP_CONFIG',
-  '$window',
-  function($q, OfflineTables, authService, APP_CONFIG, $window) {
+  'ProjectService',
+  'TransectExportService',
+  function($q, OfflineTables, ProjectService, TransectExportService) {
     'use strict';
+
+    const reportHeader = [
+      'Name',
+      'Secondary Name',
+      'Year Established',
+      'Area',
+      'Parties',
+      'Compliance',
+      'Open Access',
+      'No Take',
+      'Periodic Closures',
+      'Size Limits',
+      'Gear Restrictions',
+      'Species Restrictions',
+      'Notes'
+    ];
 
     var save = function(management, options) {
       var projectId = management.project || options.projectId;
@@ -55,11 +70,34 @@ angular.module('app.project').service('ManagementService', [
       });
     };
 
-    var downloadFieldReport = function(projectId) {
-      var token = authService.getToken();
-      var report_url = 'projects/' + projectId + '/managements/fieldreport/';
-      var url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
-      $window.open(url);
+    const downloadFieldReport = function(projectId) {
+      const managementRecords = OfflineTables.ProjectManagementsTable(
+        projectId
+      ).then(function(table) {
+        return table.filter().then(function(records) {
+          return records;
+        });
+      });
+      const choices = ProjectService.fetchChoices();
+
+      return $q.all([managementRecords, choices]).then(function(response) {
+        const records = response[0];
+        const managementChoices = {
+          parties: response[1].managementparties,
+          compliances: response[1].managementcompliances
+        };
+
+        const content = TransectExportService.managementsReport(
+          records,
+          managementChoices
+        );
+
+        TransectExportService.downloadAsCSV(
+          'managements',
+          reportHeader,
+          content
+        );
+      });
     };
 
     return {
