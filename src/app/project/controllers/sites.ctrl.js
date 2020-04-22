@@ -60,7 +60,6 @@ angular.module('app.project').controller('SitesCtrl', [
       searching: true,
       searchPlaceholder: 'Filter sites by name, reef (type, zone, or exposure)',
       searchLocation: 'left',
-      disableTrackingTableState: true,
       rowFormatter: function(record, element) {
         const isInvalid =
           _.get(
@@ -200,7 +199,7 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {
-      $scope.tableControl.refresh(true);
+      $scope.tableControl.refresh();
     });
 
     conn.on('SitesCtrl', function(event) {
