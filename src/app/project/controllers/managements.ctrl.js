@@ -149,6 +149,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
           };
           modal = ModalService.open(modalOptions);
           modal.result.then(function() {
+            updateManagementCount();
             $scope.tableControl.refresh();
             project.update();
           });
@@ -171,11 +172,6 @@ angular.module('app.project').controller('ManagementsCtrl', [
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name']
       });
-      $scope.projectObjectsTable.$watch(
-        updateManagementCount,
-        null,
-        'managementRecordsCount'
-      );
     });
 
     $scope.tableControl.getFilteredRecordsCount = function() {
@@ -186,13 +182,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       return `${tableRecordsTotal}/${managementRecordsCount}`;
     };
 
-    $scope.tableControl.recordsNotFiltered = function() {
-      if (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length !== managementRecordsCount
-      ) {
-        updateManagementCount();
-      }
+    $scope.tableControl.noAppliedFilters = function() {
       return !$scope.tableControl.textboxFilterUsed();
     };
 

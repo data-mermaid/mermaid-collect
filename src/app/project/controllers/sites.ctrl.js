@@ -133,6 +133,7 @@ angular.module('app.project').controller('SitesCtrl', [
           };
           const modal = ModalService.open(modalOptions);
           modal.result.then(function() {
+            updateSiteCount();
             $scope.tableControl.refresh();
             project.update();
           });
@@ -160,11 +161,6 @@ angular.module('app.project').controller('SitesCtrl', [
           '$$reefexposures.name'
         ]
       });
-      $scope.projectObjectsTable.$watch(
-        updateSiteCount,
-        null,
-        'siteRecordsCount'
-      );
     });
 
     const createPopup = function(feature) {
@@ -194,13 +190,7 @@ angular.module('app.project').controller('SitesCtrl', [
       return `${tableRecordsTotal}/${siteRecordsCount}`;
     };
 
-    $scope.tableControl.recordsNotFiltered = function() {
-      if (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length !== siteRecordsCount
-      ) {
-        updateSiteCount();
-      }
+    $scope.tableControl.noAppliedFilters = function() {
       return !$scope.tableControl.textboxFilterUsed();
     };
 
