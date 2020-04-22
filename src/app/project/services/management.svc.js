@@ -8,17 +8,12 @@ angular.module('app.project').service('ManagementService', [
 
     const reportHeader = [
       'Name',
-      'Secondary Name',
-      'Year Established',
-      'Area',
-      'Parties',
-      'Compliance',
-      'Open Access',
-      'No Take',
-      'Periodic Closures',
-      'Size Limits',
-      'Gear Restrictions',
-      'Species Restrictions',
+      'Secondary name',
+      'Year established',
+      'Size',
+      'Governance',
+      'Estimate compliance',
+      'Rules',
       'Notes'
     ];
 
