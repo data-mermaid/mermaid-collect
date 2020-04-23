@@ -285,10 +285,6 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       return `${tableRecordsTotal}/${submittedRecordsCount}`;
     };
 
-    $scope.tableControl.recordsNotFiltered = function() {
-      return !$scope.tableControl.textboxFilterUsed();
-    };
-
     $scope.tableControl.noAppliedFilters = function() {
       const searchBoxNotUsed = !$scope.tableControl.textboxFilterUsed();
       const methodStorage = checkLocalStorage(
