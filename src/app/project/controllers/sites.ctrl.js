@@ -209,7 +209,7 @@ angular.module('app.project').controller('SitesCtrl', [
     };
 
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {
-      $scope.tableControl.refresh(true);
+      $scope.tableControl.refresh();
     });
 
     conn.on('SitesCtrl', function(event) {
