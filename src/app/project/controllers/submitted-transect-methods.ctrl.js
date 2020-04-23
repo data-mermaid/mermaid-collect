@@ -18,6 +18,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     Button
   ) {
     'use strict';
+
+    const METHOD_FILTER_NAME = 'mermaid_submit_method_filter';
     const project_id = $stateParams.project_id;
     const fieldReportButton = new Button();
     let submittedRecordsCount = 0;
@@ -57,7 +59,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     };
 
     $scope.tableConfig = {
-      id: 'submitted_transects',
+      id: 'mermaid_submitted_transects',
       defaultSortByColumn: 'protocol_name',
       searching: true,
       searchPlaceholder:
@@ -68,7 +70,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       filters: {
         project_pk: project_id,
         protocol: (
-          JSON.parse(localStorage.getItem('submit_methodfilter')) ||
+          JSON.parse(localStorage.getItem(METHOD_FILTER_NAME)) ||
           protocolMethods
         ).join(',')
       },
@@ -159,7 +161,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         filterMethod: function(item) {
           const choice = item.choice;
           let options = JSON.parse(
-            localStorage.getItem('submit_methodfilter')
+            localStorage.getItem(METHOD_FILTER_NAME)
           ) || [...protocolMethods];
           if (item.selected) {
             options.push(choice);
@@ -171,7 +173,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           }
 
           this.allMethods = options.length === protocolMethods.length;
-          localStorage.setItem('submit_methodfilter', JSON.stringify(options));
+          localStorage.setItem(METHOD_FILTER_NAME, JSON.stringify(options));
           $scope.tableControl.setFilterParam(
             'protocol',
             options.join(','),
@@ -183,7 +185,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           this.allMethods = allSelected;
           const methodTypes = this.methodTypes;
           let options = JSON.parse(
-            localStorage.getItem('submit_methodfilter')
+            localStorage.getItem(METHOD_FILTER_NAME)
           ) || [...protocolMethods];
           if (allSelected) {
             methodTypes.forEach(method => {
@@ -197,7 +199,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             options = [];
           }
 
-          localStorage.setItem('submit_methodfilter', JSON.stringify(options));
+          localStorage.setItem(METHOD_FILTER_NAME, JSON.stringify(options));
           $scope.tableControl.setFilterParam(
             'protocol',
             options.join(','),
@@ -211,7 +213,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         allMethods: checkLocalStorage(
           'all',
           protocolMethods,
-          'submit_methodfilter'
+          METHOD_FILTER_NAME
         ),
         methodTypes: [
           {
@@ -220,7 +222,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[0],
               protocolMethods,
-              'submit_methodfilter'
+              METHOD_FILTER_NAME
             )
           },
           {
@@ -229,7 +231,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[1],
               protocolMethods,
-              'submit_methodfilter'
+              METHOD_FILTER_NAME
             )
           },
           {
@@ -238,7 +240,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[2],
               protocolMethods,
-              'submit_methodfilter'
+              METHOD_FILTER_NAME
             )
           },
           {
@@ -247,7 +249,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[4],
               protocolMethods,
-              'submit_methodfilter'
+              METHOD_FILTER_NAME
             )
           },
           {
@@ -256,7 +258,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
             selected: checkLocalStorage(
               protocolMethods[3],
               protocolMethods,
-              'submit_methodfilter'
+              METHOD_FILTER_NAME
             )
           }
         ]
@@ -288,7 +290,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       const methodStorage = checkLocalStorage(
         'all',
         protocolMethods,
-        'submit_methodfilter'
+        METHOD_FILTER_NAME
       );
       return searchBoxNotUsed && methodStorage;
     };

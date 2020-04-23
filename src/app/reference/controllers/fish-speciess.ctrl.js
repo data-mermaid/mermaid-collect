@@ -45,7 +45,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     ];
 
     $scope.tableConfig = {
-      id: 'fishspecies',
+      id: 'mermaid_fishspecies',
       defaultSortByColumn: 'display_name',
       searching: true,
       searchPlaceholder: 'Filter fish species by name or genus',
