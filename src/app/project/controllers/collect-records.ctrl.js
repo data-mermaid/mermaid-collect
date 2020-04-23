@@ -107,7 +107,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       id: 'mermaid_collect_records',
       hideRowStripes: true,
       searching: true,
-      searchPlaceholder: 'Filter sample units by method, site, or observer',
+      searchPlaceholder: 'Filter sample units by method, site, management, or observer',
       searchLocation: 'left',
       defaultSortByColumn: 'data.protocol',
       rowFormatter: function(record, element) {
