@@ -26,7 +26,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
     'use strict';
 
     let managementRecordsCount = 0;
-    var project_id = $stateParams.project_id;
+    const project_id = $stateParams.project_id;
 
     $scope.isDisabled = true;
     ProjectService.getMyProjectProfile(project_id).then(function(
@@ -49,7 +49,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       rowSelect: false,
       hideRowStripes: true,
       rowFormatter: function(record, element) {
-        var isInvalid =
+        const isInvalid =
           _.get(
             record,
             'validations.results._root_.validate_similar.status'
@@ -141,13 +141,12 @@ angular.module('app.project').controller('ManagementsCtrl', [
           ManagementService.downloadFieldReport(project_id);
         },
         copyManagements: function() {
-          var modal;
-          var modalOptions = {
+          const modalOptions = {
             hideHeader: true,
             controller: 'CopyManagementsCtrl',
             bodyTemplateUrl: 'app/project/partials/copy-managements.tpl.html'
           };
-          modal = ModalService.open(modalOptions);
+          const modal = ModalService.open(modalOptions);
           modal.result.then(function() {
             updateManagementCount();
             $scope.tableControl.refresh();
@@ -190,7 +189,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       $scope.tableControl.refresh(true);
     });
 
-    var newManagement = function() {
+    const newManagement = function() {
       $state.go('app.project.managements.management', { id: '' });
     };
   }
