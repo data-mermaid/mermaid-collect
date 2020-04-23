@@ -24,6 +24,49 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           Unknown: 'rgb(178, 178, 178)'
         };
 
+        const settings = (this.settings = {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          textColor: '#ffffff',
+          textMessage: 'Use Ctrl + Scroll to zoom the map.',
+          timeout: 1500
+        });
+
+        const helpElement = document.createElement('div');
+        helpElement.id = 'mbgl-gesture-handling-id';
+        helpElement.style.backgroundColor = settings.backgroundColor;
+        helpElement.style.position = 'absolute';
+        helpElement.style.display = 'none';
+        helpElement.style.justifyContent = 'center';
+        helpElement.style.alignItems = 'center';
+
+        const textBox = document.createElement('div');
+        textBox.style.textAlign = 'center';
+        textBox.style.color = settings.textColor;
+        textBox.style.fontSize = '2rem';
+        textBox.innerText = '';
+
+        helpElement.appendChild(textBox);
+
+        const showHelp = function(map, message) {
+          helpElement.style.top = 0;
+          helpElement.style.left = 0;
+          helpElement.style.width = '100%';
+          helpElement.style.height = '100%';
+          helpElement.style.display = 'flex';
+
+          helpElement.querySelector('div').innerText = message;
+
+          map.getContainer().appendChild(helpElement);
+        };
+
+        const hideHelp = function(map) {
+          try {
+            map.getContainer().removeChild(helpElement);
+          } catch (e) {
+            // nothing to do
+          }
+        };
+
         const worldBaseMap = {
           version: 8,
           name: 'World Map',
@@ -191,7 +234,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           });
         };
 
-        mapBox.once('load', function() {
+        mapBox.on('load', function() {
           initLoadMapLayers();
           mapBox.addControl(navigation, 'top-left');
 
@@ -203,9 +246,16 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           mapBox.on('wheel', event => {
             if (event.originalEvent.ctrlKey) {
               event.originalEvent.preventDefault();
+              hideHelp(mapBox);
               if (!mapBox.scrollZoom._enabled) mapBox.scrollZoom.enable();
             } else {
-              if (mapBox.scrollZoom._enabled) mapBox.scrollZoom.disable();
+              if (mapBox.scrollZoom._enabled) {
+                mapBox.scrollZoom.disable();
+              }
+              showHelp(mapBox, settings.textMessage);
+              setTimeout(() => {
+                hideHelp(mapBox);
+              }, settings.timeout);
             }
           });
 
@@ -238,14 +288,14 @@ angular.module('mermaid.libs').directive('mapboxGl', [
 
         scope.$watch(
           'records',
-          function() {
+          function(records) {
             const bounds = new mapboxgl.LngLatBounds();
             let data = {
               type: 'FeatureCollection',
               features: []
             };
 
-            _.each(scope.records, function(rec) {
+            _.each(records, function(rec) {
               let rec_geo_data = {};
               if (popup) {
                 rec_geo_data = {
@@ -270,8 +320,8 @@ angular.module('mermaid.libs').directive('mapboxGl', [
               mapBox.getSource('mapMarkers').setData(data);
             }
 
-            if (scope.records.length > 0) {
-              mapBox.fitBounds(bounds, { padding: 50, animate: false });
+            if (records.length > 0) {
+              mapBox.fitBounds(bounds, { padding: 25, animate: false });
             }
           },
           true

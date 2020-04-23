@@ -88,6 +88,12 @@ angular.module('app.auth').service('authService', [
       localStorage.removeItem('expires_at');
       localStorage.removeItem('toState');
       localStorage.removeItem('toStateParams');
+      for (var i = 0; i < localStorage.length; i++) {
+        const storageItem = localStorage.key(i);
+        if (storageItem.startsWith('mermaid_')) {
+          localStorage.removeItem(storageItem);
+        }
+      }
       authManager.unauthenticate();
       clearTimeout(tokenRenewalTimeout);
       login();

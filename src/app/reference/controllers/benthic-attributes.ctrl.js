@@ -41,7 +41,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     });
 
     $scope.tableConfig = {
-      id: 'benthicattributes',
+      id: 'mermaid_benthicattributes',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter benthic attributes by name or parent',

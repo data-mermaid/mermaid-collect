@@ -96,7 +96,7 @@ angular.module('app.project').controller('UsersCtrl', [
     });
 
     $scope.tableConfig = {
-      id: 'users',
+      id: 'mermaid_users',
       defaultSortByColumn: 'profile_name',
       searching: false,
       rowSelect: false,

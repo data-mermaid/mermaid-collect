@@ -22,7 +22,7 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
     let fishFamilyRecordsCount = 0;
 
     $scope.tableConfig = {
-      id: 'fishfamiles',
+      id: 'mermaid_fishfamiles',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish families by name',
