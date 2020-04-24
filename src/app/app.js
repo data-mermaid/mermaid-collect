@@ -65,9 +65,12 @@ angular
     });
 
     jwtOptionsProvider.config({
-      tokenGetter: function() {
-        return localStorage.getItem('access_token');
-      },
+      tokenGetter: [
+        'authService',
+        function(authService) {
+          return authService.getToken();
+        }
+      ],
       whiteListedDomains: [
         'localhost',
         'collect.datamermaid.org',
