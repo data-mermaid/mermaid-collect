@@ -73,7 +73,6 @@ angular.module('mermaid.libs').controller('GlobalCtrl', [
           for (let key in window.localStorage) {
             if (key.indexOf('mermaid.') !== -1) {
               window.localStorage.removeItem(key);
-              n++;
             }
           }
           authService.logout();
