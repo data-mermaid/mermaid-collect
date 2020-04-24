@@ -37,7 +37,6 @@
     system,
     offlineservice,
     utils,
-    // $urlRouter,
     ConnectivityFactory
   ) {
     const conn = new ConnectivityFactory($rootScope);
@@ -50,8 +49,8 @@
       console.error(error);
     });
 
-    if (authService.getToken() != null) {
-      handleAuth = authService.renewToken();
+    if (localStorageService.get('isLoggedIn') === 'true') {
+      handleAuth = authService.renewTokens();
     } else {
       // Handle the authentication
       // result in the hash
@@ -59,7 +58,6 @@
     }
 
     handleAuth.then(function() {
-      // $urlRouter.listen();
       if (connectivity.isOnline && authService.isAuthenticated()) {
         system.startAutoDataUpdate();
       }

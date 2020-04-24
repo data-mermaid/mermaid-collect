@@ -70,6 +70,11 @@ angular.module('mermaid.libs').controller('GlobalCtrl', [
     $scope.logout = function() {
       var lo = function() {
         return deleteDatabases().finally(function() {
+          for (let key in window.localStorage) {
+            if (key.indexOf('mermaid.') !== -1) {
+              window.localStorage.removeItem(key);
+            }
+          }
           authService.logout();
         });
       };
