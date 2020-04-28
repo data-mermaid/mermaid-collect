@@ -1485,3 +1485,7 @@ input:checked + .slider-mermaid:before {
   color: #333 !important;
   text-shadow: none !important;
 }
+
+.more-info {
+  padding: 5px;
+}
