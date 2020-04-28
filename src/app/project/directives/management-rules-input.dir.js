@@ -3,20 +3,35 @@ angular.module('app.project').directive('managementRulesInput', [
     'use strict';
     return {
       restrict: 'E',
+      require: '^form',
       scope: {
         management: '=',
         isDisabled: '='
       },
       templateUrl: 'app/project/directives/management-rules-input.tpl.html',
-      link: function(scope) {
-        var partial_restriction_choices = [
+      link: function(scope, element, attrs, formCtrl) {
+        scope.form = formCtrl;
+        const partial_restriction_choices = [
           'periodic_closure',
           'size_limits',
           'gear_restriction',
           'species_restriction'
         ];
         scope.partial_restrictions = false;
-        var resetPartialRestrictions = function() {
+
+        const setRulesValidity = function() {
+          const isValid =
+            scope.management.open_access === true ||
+            scope.management.no_take === true ||
+            (scope.partial_restrictions === true &&
+              (scope.management.periodic_closure === true ||
+                scope.management.size_limits === true ||
+                scope.management.gear_restriction === true ||
+                scope.management.species_restriction === true));
+          formCtrl.$setValidity('management_rules', isValid);
+        };
+
+        const resetPartialRestrictions = function() {
           scope.partial_restrictions = false;
           _.each(partial_restriction_choices, function(key) {
             _.set(scope.management, key, false);
@@ -27,6 +42,7 @@ angular.module('app.project').directive('managementRulesInput', [
           if (n === true) {
             scope.management.no_take = false;
             resetPartialRestrictions();
+            setRulesValidity();
           }
         });
 
@@ -34,6 +50,7 @@ angular.module('app.project').directive('managementRulesInput', [
           if (n === true) {
             scope.management.open_access = false;
             resetPartialRestrictions();
+            setRulesValidity();
           }
         });
 
@@ -41,6 +58,7 @@ angular.module('app.project').directive('managementRulesInput', [
           if (n === true) {
             scope.management.open_access = false;
             scope.management.no_take = false;
+            setRulesValidity();
           }
         });
 
@@ -54,8 +72,11 @@ angular.module('app.project').directive('managementRulesInput', [
             if (newVal.indexOf('true') !== -1) {
               scope.partial_restrictions = true;
             }
+            setRulesValidity();
           }
         );
+
+        setRulesValidity();
       }
     };
   }
