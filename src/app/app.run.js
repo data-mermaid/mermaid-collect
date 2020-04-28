@@ -66,7 +66,7 @@
           system.startAutoDataUpdate();
         }
       })
-      .error(function(err) {
+      .catch(function(err) {
         $urlRouter.listen();
         $urlRouter.sync();
         throw err;
