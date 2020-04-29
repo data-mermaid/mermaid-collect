@@ -3,6 +3,13 @@
     <li ng-if="validationKeys.indexOf('validate_colony_count') !== -1">{{record.validations.results.obs_colonies_bleached.validate_duplicate_genus_growth.message}}</li>
     <li ng-if="validationKeys.indexOf('validate_duplicate_genus_growth') !== -1">{{record.validations.results.obs_colonies_bleached.validate_duplicate_genus_growth.message}}</li>
     <li ng-if="validationKeys.indexOf('validate_all_equal') !== -1">{{record.validations.results.obs_colonies_bleached.validate_all_equal.message}}</li>
+    <li ng-if="validationKeys.indexOf('validate_region') !== -1">
+      {{record.validations.results.obs_colonies_bleached.validate_region.message}}
+      <ul class="validation-message-list">
+        <li ng-repeat="attribute_id in record.validations.results.obs_colonies_bleached.validate_region.data.no_region_matches"
+        >{{attribute_id | matchchoice: benthicAttributes}}</li>
+      </ul>
+    </li>
   </ul>
 </div>
 <div class="alert alert-warning">This issue is related to more than one field and must be addressed in the form.</div>
