@@ -191,7 +191,8 @@ angular
     '$window',
     '$location',
     '$timeout',
-    function($q, $window, $location, $timeout) {
+    'utils',
+    function($q, $window, $location, $timeout, utils) {
       'use strict';
       return {
         restrict: 'EA',
@@ -299,8 +300,7 @@ angular
 
             // Search
             if (search.length > 0) {
-              var terms = search.split('');
-              var search_str = terms.join('.*') + '.*';
+              const search_str = utils.parseSearchString(search);
               qry.search = search_str;
             }
 
