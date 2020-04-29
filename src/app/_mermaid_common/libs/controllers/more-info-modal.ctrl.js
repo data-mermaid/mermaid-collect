@@ -15,7 +15,7 @@ angular.module('mermaid.libs').controller('MoreInfoModalCtrl', [
       $uibModalInstance.dismiss();
     };
 
-    $scope.modalTitle = 'Data Sharing Info';
+    $scope.modalTitle = 'Data Sharing';
     $scope.$modalButtons = [cancelBtn];
   }
 ]);

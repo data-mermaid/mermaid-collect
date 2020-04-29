@@ -1489,3 +1489,43 @@ input:checked + .slider-mermaid:before {
 .more-info {
   padding: 5px;
 }
+
+table.greyGridTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid #000000;
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+table.greyGridTable td, table.greyGridTable th {
+  padding: 5px 4px;
+}
+table.greyGridTable tbody td {
+  font-size: 15px;
+}
+table.greyGridTable thead {
+  background: #2C3742;
+  border-bottom: 4px solid #333333;
+}
+table.greyGridTable thead th {
+  font-size: 18px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+table.greyGridTable tbody td:first-child {
+  text-align: left;
+}
+
+.grey-background {
+  background: #EBEBEB;
+}
+
+.primary-check-icon {
+  color: #3b9ff3;
+}
+
+.warning-times-icon {
+  color: #DB4A67
+}
