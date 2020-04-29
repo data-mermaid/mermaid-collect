@@ -1,3 +1,8 @@
-<div>
- <label type="button" class="btn btn-primary more-info" ng-click="modalTrigger()" ><i class="fa fa-info-circle"></i> Learn more about how your data is shared </label>
+<div ng-switch on="iconButton">
+ <div ng-switch-default>
+  <label type="button" class="btn btn-primary more-info" ng-click="modalTrigger()"><i class="fa fa-info-circle"></i> Learn more about how your data is shared </label>
+ </div>
+ <div ng-switch-when="icon-button">
+   <i class="fa fa-info-circle primary-icon info-style" ng-click="modalTrigger()"></i>
+ </div>
 </div>

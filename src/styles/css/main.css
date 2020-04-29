@@ -1488,6 +1488,7 @@ input:checked + .slider-mermaid:before {
 
 .more-info {
   padding: 5px;
+  font-size: 1em;
 }
 
 table.greyGridTable {
@@ -1522,10 +1523,19 @@ table.greyGridTable tbody td:first-child {
   background: #EBEBEB;
 }
 
-.primary-check-icon {
+.info-style {
+  font-size: 1.5em;
+}
+
+.primary-icon {
   color: #3b9ff3;
 }
 
-.warning-times-icon {
+.warning-icon {
   color: #DB4A67
+}
+
+.datasharing-dropdown {
+  display: flex;
+  align-items: center;
 }
