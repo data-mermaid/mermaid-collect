@@ -3,6 +3,7 @@ angular.module('app.project').service('BleachingWizardConfig', [
   '$q',
   'BaseWizardConfig',
   'ValidateSubmitService',
+  'OfflineCommonTables',
   'OfflineTables',
   'TransectService',
   function(
@@ -10,6 +11,7 @@ angular.module('app.project').service('BleachingWizardConfig', [
     $q,
     BaseWizardConfig,
     ValidateSubmitService,
+    OfflineCommonTables,
     OfflineTables,
     TransectService
   ) {
@@ -37,6 +39,13 @@ angular.module('app.project').service('BleachingWizardConfig', [
             statusFilter
           ).obs_colonies_bleached;
           return $q.resolve(keys);
+        },
+        benthicAttributes: function() {
+          return OfflineCommonTables.BenthicAttributesTable(true).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         }
       }
     };
