@@ -76,7 +76,6 @@ angular
                 (inst.selectedMonth + 1) +
                 '-' +
                 inst.selectedDay;
-              ngModel.$setViewValue(val, true);
               ngModel.$modelValue = val;
             }
           });

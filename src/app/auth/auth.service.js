@@ -7,7 +7,6 @@ angular.module('app.auth').service('authService', [
   '$timeout',
   '$http',
   'APP_CONFIG',
-  'SESSION_ID',
   'connectivity',
   'localStorageService',
   function authService(
@@ -17,7 +16,6 @@ angular.module('app.auth').service('authService', [
     $timeout,
     $http,
     APP_CONFIG,
-    SESSION_ID,
     connectivity,
     localStorageService
   ) {
@@ -133,10 +131,9 @@ angular.module('app.auth').service('authService', [
         return $q.reject('Not authenticated');
       }
 
-      const user = localStorageService.get('user') || {};
-      user.$session_id = user.$session_id || null;
+      const user = localStorageService.get('user');
 
-      if (connectivity.isOnline && user.$session_id !== SESSION_ID) {
+      if (connectivity.isOnline && user == null) {
         if (mePromise != null) {
           return mePromise;
         }
@@ -144,7 +141,6 @@ angular.module('app.auth').service('authService', [
           .get(APP_CONFIG.apiUrl + 'me/')
           .then(function(resp) {
             const currentUser = resp.data;
-            currentUser.$session_id = SESSION_ID;
             localStorageService.set('user', currentUser);
 
             return currentUser;
@@ -153,10 +149,8 @@ angular.module('app.auth').service('authService', [
             mePromise = null;
           });
         return mePromise;
-      } else if (!connectivity.isOnline || user.$session_id === SESSION_ID) {
-        return $q.resolve(user);
       }
-      return $q.resolve(null);
+      return $q.resolve(user);
     }
 
     function getProfileId() {
