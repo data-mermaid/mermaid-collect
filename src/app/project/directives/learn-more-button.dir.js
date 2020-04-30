@@ -12,8 +12,8 @@ angular.module('app.project').directive('learnMoreButton', [
         scope.iconButton = attrs.isIcon && 'icon-button';
         scope.modalConfig = {
           bodyTemplateUrl:
-            'app/_mermaid_common/libs/partials/more-info-table.tpl.html',
-          controller: 'MoreInfoModalCtrl'
+            'app/_mermaid_common/libs/partials/datasharing-info.tpl.html',
+          controller: 'DatasharingInfoModalCtrl'
         };
 
         scope.modalTrigger = function() {

@@ -1,21 +1,22 @@
 angular.module('mermaid.libs').controller('MoreInfoModalCtrl', [
   '$scope',
+  '$ctrl',
   'Button',
-  '$uibModalInstance',
-  function($scope, Button, $uibModalInstance) {
+  function($scope, $ctrl, Button) {
     'use strict';
 
     let isDisabled = false;
-    let cancelBtn = new Button();
+    let $uibModalInstance = $ctrl.$uibModalInstance;
+    $ctrl.cancelBtn = new Button();
 
-    cancelBtn.name = 'Cancel';
-    cancelBtn.classes = 'btn-default';
-    cancelBtn.enabled = !isDisabled;
-    cancelBtn.click = function() {
+    $ctrl.cancelBtn.name = 'Cancel';
+    $ctrl.cancelBtn.classes = 'btn-default';
+    $ctrl.cancelBtn.enabled = !isDisabled;
+    $ctrl.cancelBtn.click = function() {
       $uibModalInstance.dismiss();
     };
 
-    $scope.modalTitle = 'Data Sharing';
-    $scope.$modalButtons = [cancelBtn];
+    $scope.modalTitle = $ctrl.modalTitle;
+    $scope.$modalButtons = [$ctrl.cancelBtn];
   }
 ]);
