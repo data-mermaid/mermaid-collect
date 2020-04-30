@@ -312,6 +312,26 @@ angular.module('mermaid.libs').service('utils', [
         '<=': function(a, b) {
           return a <= b;
         }
+      },
+      parseSearchString: function(s) {
+        const regex = /(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/;
+        const parts = s.split(regex);
+        const searchItems = [];
+        for (let n = 0; n < parts.length; n++) {
+          let item = parts[n];
+          if (item.trim().length === 0) continue;
+
+          if (item.startsWith('"')) {
+            item = item.substr(1, item.length - 2);
+            item = item.replace(/' '/g, ' ');
+          }
+          item = item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          searchItems.push('.*' + item + '.*');
+        }
+        if (searchItems.length === 1) {
+          return searchItems[0];
+        }
+        return `(${searchItems.join('|')})`;
       }
     };
     return utils;
