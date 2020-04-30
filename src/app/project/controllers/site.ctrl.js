@@ -8,6 +8,7 @@ angular.module('app.project').controller('SiteCtrl', [
   'Button',
   'utils',
   'connectivity',
+  'ConnectivityFactory',
   'logger',
   'project',
   function(
@@ -20,6 +21,7 @@ angular.module('app.project').controller('SiteCtrl', [
     Button,
     utils,
     connectivity,
+    ConnectivityFactory,
     logger,
     project
   ) {
@@ -27,9 +29,11 @@ angular.module('app.project').controller('SiteCtrl', [
 
     const siteId = $stateParams.id;
     const projectId = $stateParams.project_id;
+    const conn = new ConnectivityFactory($scope);
     $scope.isDisabled = true;
     $scope.choices = {};
-    $scope.isOnline = connectivity.isOnline;
+    $scope.siteState = connectivity.isOnline ? 'online' : 'offline';
+
     ProjectService.getMyProjectProfile(projectId).then(function(
       projectProfile
     ) {
@@ -84,6 +88,10 @@ angular.module('app.project').controller('SiteCtrl', [
     saveButton.onlineOnly = false;
 
     $rootScope.PageHeaderButtons = [saveButton];
+
+    conn.on('site', function(event) {
+      $scope.siteState = event.event;
+    });
 
     $scope.$watch(
       function() {
