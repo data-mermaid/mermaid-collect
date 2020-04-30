@@ -70,7 +70,7 @@
       > {{obj.message}}</span>
       <div ng-transclude="validations"></div>
     </div>
-    <learn-more-button ng-if="widgetMoreInfo" is-icon="true"></learn-more-button>
+    <div ng-transclude="learnMoreButton"></div>
   </div>
   <div class="btn-group modal-buttons" ng-if="modalController != null && mode == 'single'">
     <button

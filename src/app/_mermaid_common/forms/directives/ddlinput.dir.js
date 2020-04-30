@@ -42,7 +42,8 @@ angular
         replace: true,
         require: 'ngModel',
         transclude: {
-          validations: '?validations'
+          validations: '?validations',
+          learnMoreButton: '?learnMoreButton'
         },
         scope: {
           displayAttribute: '@',
@@ -90,7 +91,6 @@ angular
           scope.widgetFloatValue = utils.truthy(attrs.widgetFloatValue);
           scope.widgetChange = scope.widgetChange || null;
           scope.displayAttribute = scope.displayAttribute || 'name';
-          scope.widgetMoreInfo = utils.truthy(attrs.widgetMoreInfo);
 
           scope.widgetIncludeBlank = !scope.widgetRequired;
           if (attrs.widgetIncludeBlank) {
