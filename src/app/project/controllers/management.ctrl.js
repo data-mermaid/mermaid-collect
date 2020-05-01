@@ -47,7 +47,7 @@ angular.module('app.project').controller('ManagementCtrl', [
       $scope.management = management;
     });
 
-    $scope.save = function() {
+    const save = function() {
       var isNew = $scope.management.id == null;
       ManagementService.save($scope.management, { projectId: projectId })
         .then(function(savedManagement) {
@@ -82,8 +82,9 @@ angular.module('app.project').controller('ManagementCtrl', [
     saveButton.visible = true;
     saveButton.classes = 'btn-success';
     saveButton.icon = 'fa fa-save';
-    saveButton.click = $scope.save;
+    saveButton.click = save;
     saveButton.onlineOnly = false;
+    $scope.save = save;
 
     $rootScope.PageHeaderButtons = [saveButton];
 
