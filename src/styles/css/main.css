@@ -1525,6 +1525,7 @@ table.greyGridTable tbody td:first-child {
 
 .info-style {
   font-size: 1.5em;
+  cursor: pointer;
 }
 
 .primary-icon {
