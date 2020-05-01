@@ -1,5 +1,5 @@
 <div class="smart-form">
-  <table class="table table-bordered obs-table">
+  <table class="table table-bordered obs-table" ng-if="isReady">
     <thead>
       <tr>
         <th class="text-center" style="width: 5%;">Quadrat</th>
@@ -11,7 +11,7 @@
     </thead>
     <tbody ng-if="obsQuadratBenthicPercent.length > 0">
       <tr
-        ng-repeat="obs in obsQuadratBenthicPercent track by $index"
+        ng-repeat="obs in obsQuadratBenthicPercent track by obs.$$uid"
         class="cursor-pointer"
         ng-click="startEditing($event, $index)"
         ng-class="{'editable-row': editableObservationIndex !== $index, 'danger': rowError[$index] === true}"

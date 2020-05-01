@@ -1,11 +1,21 @@
 angular.module('app.project').service('ManagementService', [
   '$q',
-  'offlineservice',
-  'authService',
-  'APP_CONFIG',
-  '$window',
-  function($q, offlineservice, authService, APP_CONFIG, $window) {
+  'OfflineTables',
+  'ProjectService',
+  'TransectExportService',
+  function($q, OfflineTables, ProjectService, TransectExportService) {
     'use strict';
+
+    const reportHeader = [
+      'Name',
+      'Secondary name',
+      'Year established',
+      'Size',
+      'Governance',
+      'Estimate compliance',
+      'Rules',
+      'Notes'
+    ];
 
     var save = function(management, options) {
       var projectId = management.project || options.projectId;
@@ -15,11 +25,11 @@ angular.module('app.project').service('ManagementService', [
 
       if (!management.id) {
         management.project = projectId;
-        return offlineservice
-          .ProjectManagementsTable(projectId)
-          .then(function(table) {
-            return table.create(management);
-          });
+        return OfflineTables.ProjectManagementsTable(projectId).then(function(
+          table
+        ) {
+          return table.create(management);
+        });
       }
       return management.update();
     };
@@ -28,26 +38,61 @@ angular.module('app.project').service('ManagementService', [
       if (managementId == null) {
         return $q.resolve({ project: projectId });
       }
-      return offlineservice
-        .ProjectManagementsTable(projectId)
-        .then(function(table) {
-          return table.get(managementId).then(function(management) {
-            management.no_take = (management.no_take === null) ? false : management.no_take;
-            management.open_access = (management.open_access === null) ? false : management.open_access;
-            management.periodic_closure = (management.periodic_closure === null) ? false : management.periodic_closure;
-            management.size_limits = (management.size_limits === null) ? false : management.size_limits;
-            management.gear_restriction = (management.gear_restriction === null) ? false : management.gear_restriction;
-            management.species_restriction = (management.species_restriction === null) ? false : management.species_restriction;
-            return management || { project: projectId };
-          });
+      return OfflineTables.ProjectManagementsTable(projectId).then(function(
+        table
+      ) {
+        return table.get(managementId).then(function(management) {
+          management.no_take =
+            management.no_take === null ? false : management.no_take;
+          management.open_access =
+            management.open_access === null ? false : management.open_access;
+          management.periodic_closure =
+            management.periodic_closure === null
+              ? false
+              : management.periodic_closure;
+          management.size_limits =
+            management.size_limits === null ? false : management.size_limits;
+          management.gear_restriction =
+            management.gear_restriction === null
+              ? false
+              : management.gear_restriction;
+          management.species_restriction =
+            management.species_restriction === null
+              ? false
+              : management.species_restriction;
+          return management || { project: projectId };
         });
+      });
     };
 
-    var downloadFieldReport = function(projectId) {
-      var token = authService.getToken();
-      var report_url = 'projects/' + projectId + '/managements/fieldreport/';
-      var url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
-      $window.open(url);
+    const downloadFieldReport = function(projectId) {
+      const managementRecords = OfflineTables.ProjectManagementsTable(
+        projectId
+      ).then(function(table) {
+        return table.filter().then(function(records) {
+          return records;
+        });
+      });
+      const choices = ProjectService.fetchChoices();
+
+      return $q.all([managementRecords, choices]).then(function(response) {
+        const records = response[0];
+        const managementChoices = {
+          parties: response[1].managementparties,
+          compliances: response[1].managementcompliances
+        };
+
+        const content = TransectExportService.managementsReport(
+          records,
+          managementChoices
+        );
+
+        TransectExportService.downloadAsCSV(
+          'managements',
+          reportHeader,
+          content
+        );
+      });
     };
 
     return {

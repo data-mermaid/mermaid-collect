@@ -2,14 +2,14 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   '$rootScope',
   '$scope',
   'PaginatedOfflineTableWrapper',
-  'offlineservice',
+  'OfflineCommonTables',
   'TransectExportService',
   'Button',
   function(
     $rootScope,
     $scope,
     PaginatedOfflineTableWrapper,
-    offlineservice,
+    OfflineCommonTables,
     TransectExportService,
     Button
   ) {
@@ -22,7 +22,7 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
     let fishFamilyRecordsCount = 0;
 
     $scope.tableConfig = {
-      id: 'fishfamiles',
+      id: 'mermaid_fishfamiles',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish families by name',
@@ -78,7 +78,7 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       });
     };
 
-    const promise = offlineservice.FishFamiliesTable();
+    const promise = OfflineCommonTables.FishFamiliesTable();
     promise.then(function(table) {
       $scope.projectObjectsTable = table;
       updateFishFamilyCount();

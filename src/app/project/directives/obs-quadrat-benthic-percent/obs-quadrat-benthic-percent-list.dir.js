@@ -14,7 +14,10 @@ angular.module('app.project').directive('obsQuadratBenthicPercentList', [
       templateUrl:
         'app/project/directives/obs-quadrat-benthic-percent/obs-quadrat-benthic-percent-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        let $table = $(element).find('table');
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsQuadratBenthicPercent);
+        scope.isReady = true;
+
         scope.rowError = {};
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
@@ -28,7 +31,7 @@ angular.module('app.project').directive('obsQuadratBenthicPercentList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
@@ -61,6 +64,7 @@ angular.module('app.project').directive('obsQuadratBenthicPercentList', [
             percent_algae: 0
           };
 
+          newRecord.$$uid = utils.generateUuid();
           scope.obsQuadratBenthicPercent.splice(nextIndex, 0, newRecord);
           formCtrl.$setDirty();
           scope.startEditing(null, nextIndex);

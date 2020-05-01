@@ -154,6 +154,16 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
           templateUrl: 'app/reference/partials/fishspeciess.tpl.html',
           controller: 'FishSpeciessCtrl'
         }
+      },
+      resolve: {
+        fishSpeciesTable: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishSpeciesTable();
+        },
+        fishSpeciesCount: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishSpeciesTable().then(function(table) {
+            return table.count();
+          });
+        }
       }
     })
     .state('app.reference.benthicattributes.benthicattribute', {

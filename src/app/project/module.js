@@ -67,29 +67,36 @@ angular
       });
     };
 
-    const _getMyProjectProfile = function($stateParams, ProjectService) {
-      return ProjectService.getMyProjectProfile($stateParams.project_id);
+    const _getMyProjectProfile = function($q, $stateParams, ProjectService) {
+      return ProjectService.getMyProjectProfile($stateParams.project_id).then(
+        function(projectProfile) {
+          if (projectProfile === null) {
+            return $q.reject('Project profile is null');
+          }
+          return projectProfile;
+        }
+      );
     };
 
     const _fetchCurrentUser = function(authService) {
       return authService.getCurrentUser();
     };
 
-    const _fetchCollectRecord = function($stateParams, offlineservice) {
-      return offlineservice
-        .CollectRecordsTable($stateParams.project_id)
-        .then(function(table) {
+    const _fetchCollectRecord = function($stateParams, OfflineTables) {
+      return OfflineTables.CollectRecordsTable($stateParams.project_id).then(
+        function(table) {
           return table.get($stateParams.id);
-        });
+        }
+      );
     };
 
     const _fetchTransectLookups = function($stateParams, TransectService) {
       return TransectService.getLookups($stateParams.project_id);
     };
 
-    const _getProject = function($stateParams, offlineservice, $q) {
+    const _getProject = function($stateParams, OfflineTables, $q) {
       const projectId = $stateParams.project_id;
-      return offlineservice.ProjectsTable().then(function(table) {
+      return OfflineTables.ProjectsTable().then(function(table) {
         if (projectId == null) {
           return $q.resolve({});
         }
@@ -99,8 +106,8 @@ angular
       });
     };
 
-    const _getProjectsTable = function(offlineservice) {
-      return offlineservice.ProjectsTable();
+    const _getProjectsTable = function(OfflineTables) {
+      return OfflineTables.ProjectsTable();
     };
 
     const checkAuthentication = function($transition$) {
@@ -628,17 +635,17 @@ angular
           }
         },
         resolve: {
-          sites: function($stateParams, offlineservice) {
+          sites: function($stateParams, OfflineTables) {
             const project_id = $stateParams.project_id;
-            return offlineservice
-              .ProjectSitesTable(project_id)
-              .then(function(table) {
-                return table.filter().then(function(sites) {
-                  return _.map(sites, function(site) {
-                    return { id: site.id, name: site.name };
-                  });
+            return OfflineTables.ProjectSitesTable(project_id).then(function(
+              table
+            ) {
+              return table.filter().then(function(sites) {
+                return _.map(sites, function(site) {
+                  return { id: site.id, name: site.name };
                 });
               });
+            });
           }
         }
       });

@@ -1,5 +1,5 @@
 angular.module('app.project').directive('obsBenthicLitList', [
-  'offlineservice',
+  'OfflineCommonTables',
   'TransectService',
   'utils',
   '$timeout',
@@ -7,7 +7,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
   'ValidatorService',
   'ModalService',
   function(
-    offlineservice,
+    OfflineCommonTables,
     TransectService,
     utils,
     $timeout,
@@ -27,10 +27,15 @@ angular.module('app.project').directive('obsBenthicLitList', [
       templateUrl:
         'app/project/directives/obs-benthic-lit/obs-benthic-lit-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        const $table = $(element).find('table');
         let modal;
         let watchTimeoutPromise;
 
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsBenthicLits);
+        scope.isReady = true;
+
+        scope.notFoundMessage =
+          "Benthic attribute cannot be found in site's region.";
         scope.observation_calcs = {};
         scope.categoryLookup = {};
         scope.isDisabled = utils.truthy(scope.isDisabled);
@@ -44,7 +49,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
@@ -52,15 +57,12 @@ angular.module('app.project').directive('obsBenthicLitList', [
         };
 
         const loadBenthicAttributesLookup = function() {
-          scope.benthicAttributesLookup = utils.createLookup(
-            scope.benthicAttributeChoices
-          );
+          const benthicAttributes = scope.getBenthicAttributes();
+          scope.benthicAttributesLookup = utils.createLookup(benthicAttributes);
         };
 
-        loadBenthicAttributesLookup();
-
         scope.getBenthicAttributes = function() {
-          return scope.benthicAttributeChoices;
+          return scope.benthicAttributeChoices.filtered;
         };
 
         const benthicAttributeNames = scope
@@ -68,7 +70,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
           .map(attribute => attribute.name);
 
         scope.categoryLookup = BenthicAttributeService.getCategoryLookup(
-          scope.benthicAttributeChoices
+          scope.getBenthicAttributes()
         );
 
         scope.modalConfig = {
@@ -92,7 +94,7 @@ angular.module('app.project').directive('obsBenthicLitList', [
           });
         };
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineCommonTables.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;
@@ -135,6 +137,8 @@ angular.module('app.project').directive('obsBenthicLitList', [
                 '$$uid'
               ]);
             }
+
+            newRecord.$$uid = utils.generateUuid();
             scope.obsBenthicLits.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);
@@ -230,6 +234,8 @@ angular.module('app.project').directive('obsBenthicLitList', [
           },
           true
         );
+
+        loadBenthicAttributesLookup();
       }
     };
   }

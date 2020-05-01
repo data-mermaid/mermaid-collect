@@ -36,10 +36,20 @@ angular.module('app.project').controller('BleachingQuadCollMethodCtrl', [
     );
     $scope.isDisabled = _isRoleDisabled || !connectivity.isOnline;
 
-    $scope.benthicAttributes = benthicAttributes;
     $scope.choices = transectLookups.choices;
     $scope.project_profiles = transectLookups.project_profiles;
     $scope.record = record;
+    Object.defineProperty(benthicAttributes, 'filtered', {
+      get() {
+        const site = _.get($scope.record, 'data.sample_event.site');
+        return ProjectService.filterAttributesBySite(
+          benthicAttributes,
+          site,
+          $scope.choices
+        );
+      }
+    });
+    $scope.benthicAttributes = benthicAttributes;
     $scope.protocolSampleUnitDetailsForm =
       'app/project/partials/forms/bleachingprotocol.quadcoll.form.tpl.html';
     $scope.protocolObservationsForm =

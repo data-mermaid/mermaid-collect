@@ -19,7 +19,7 @@ angular.module('app.project').controller('CollectBaseProtocol', [
   '$state',
   '$stateParams',
   '$q',
-  'offlineservice',
+  'OfflineTables',
   'ProjectService',
   'CollectService',
   'ValidateSubmitService',
@@ -33,7 +33,7 @@ angular.module('app.project').controller('CollectBaseProtocol', [
     $state,
     $stateParams,
     $q,
-    offlineservice,
+    OfflineTables,
     ProjectService,
     CollectService,
     ValidateSubmitService,
@@ -132,14 +132,21 @@ angular.module('app.project').controller('CollectBaseProtocol', [
     $rootScope.PageHeaderButtons = $ctrl.stagedButtonGroup.getButtons();
 
     $ctrl.fetchRecord = function() {
-      offlineservice
-        .CollectRecordsTable($ctrl.projectId)
+      OfflineTables.CollectRecordsTable($ctrl.projectId)
         .then(function(table) {
           return table.get($ctrl.recordId);
         })
         .then(function(record) {
           if ($scope.form) {
             $scope.form.$setPristine();
+          }
+          const obsFieldNames = ProjectService.getObservationAttributeNames(
+            record
+          );
+          if (obsFieldNames && obsFieldNames.length > 0) {
+            for (let n = 0; n < obsFieldNames.length; n++) {
+              utils.assignUniqueId(_.get(record, obsFieldNames[n]));
+            }
           }
           $scope.record = record;
         })

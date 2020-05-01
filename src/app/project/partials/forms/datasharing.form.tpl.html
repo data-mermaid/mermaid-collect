@@ -9,6 +9,8 @@
           your sense of ownership. While not required, we hope you choose to make your data available to fuel new discoveries and
           inform conservation solutions.</div>
           <br>
+          <learn-more-button></learn-more-button>
+          <br>
           <div
             ddlinput
             widget-form="form"
@@ -19,7 +21,10 @@
             widget-disabled="isDisabled"
             widget-choices="dataPolicies"
             widget-int-value="true"
-          ></div>
+            widget-more-info="true"
+          >
+            <learn-more-button is-icon="true"></learn-more-button>
+          </div>
           <div
             ddlinput
             widget-form="form"
@@ -31,7 +36,9 @@
             widget-choices="dataPolicies"
             widget-int-value="true"
             widget-change="setBenthicPolicies(benthicPolicies.data_policy_benthics)"
-          ></div>
+          >
+            <learn-more-button is-icon="true"></learn-more-button>
+          </div>
           <div
             ddlinput
             widget-form="form"
@@ -42,7 +49,9 @@
             widget-disabled="isDisabled"
             widget-choices="dataPolicies"
             widget-int-value="true"
-          ></div>
+          >
+            <learn-more-button is-icon="true"></learn-more-button>
+          </div>
           <div
             checkboxinput
             widget-form="form"

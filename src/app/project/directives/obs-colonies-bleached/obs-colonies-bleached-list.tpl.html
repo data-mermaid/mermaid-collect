@@ -1,5 +1,5 @@
 <div class="smart-form">
-	<table class="table table-bordered obs-table">
+	<table class="table table-bordered obs-table" ng-if="isReady">
 		<thead>
 			<tr>
 				<th colspan="2"></th>
@@ -24,7 +24,7 @@
 		</thead>
 		<tbody>
 			<tr
-				ng-repeat="obs in obsColoniesBleached track by $index" ng-click="startEditing($event, $index)"
+				ng-repeat="obs in obsColoniesBleached track by obs.$$uid" ng-click="startEditing($event, $index)"
 				class="cursor-pointer"
 				ng-class="{'editable-row': editableObservationIndex === $index,  'warning': rowErrors[$index] === true}"
 			>
@@ -35,7 +35,7 @@
 
 				-->
 				<td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
-					<span class="readonly-cell text-left">{{::obs.attribute | matchchoice:benthicAttributeChoices}} </span><obs-validation-tooltip
+					<span class="readonly-cell text-left">{{::obs.attribute | matchchoice:benthicAttributeChoices:"name":notFoundMessage}} </span><obs-validation-tooltip
 							validations="[
 								{
 									'isValid': validator.requiresvalue(obs.attribute) === true,
@@ -95,6 +95,7 @@
 						widget-new-record-label="Propose New Benthic Attribute..."
 						widget-new-record-modal-config="modalConfig"
 						widget-modal-trigger="modalTrigger(obs)"
+						widget-no-match-message="{{notFoundMessage}}"
 					>
 						<appendaddon>
 							<a

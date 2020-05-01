@@ -5,14 +5,14 @@
           Method <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li class="select-all-filter">
+            <li class="select-all-filter" ng-click="$event.stopPropagation()">
                 <div class="checkbox">
                   <label> 
                     <input type="checkbox" ng-model="config.toolbar.allMethods" ng-change="config.toolbar.selectAllMethods(config.toolbar.allMethods)">Select All
                   </label>
                 </div>
               </li>
-          <li ng-repeat="item in config.toolbar.methodTypes track by item.choice">
+          <li ng-repeat="item in config.toolbar.methodTypes track by item.choice" ng-click="$event.stopPropagation()">
             <div class="checkbox">
               <label>
                 <input type="checkbox" ng-model="item.selected" ng-change="config.toolbar.filterMethod(item)">

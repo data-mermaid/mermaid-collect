@@ -2,7 +2,7 @@ angular.module('app.project').controller('SitesCtrl', [
   '$scope',
   '$state',
   '$stateParams',
-  'offlineservice',
+  'OfflineTables',
   'ProjectService',
   'SiteService',
   'PaginatedOfflineTableWrapper',
@@ -16,7 +16,7 @@ angular.module('app.project').controller('SitesCtrl', [
     $scope,
     $state,
     $stateParams,
-    offlineservice,
+    OfflineTables,
     ProjectService,
     SiteService,
     PaginatedOfflineTableWrapper,
@@ -55,12 +55,11 @@ angular.module('app.project').controller('SitesCtrl', [
     $scope.resource = undefined;
     $scope.tableControl = {};
     $scope.tableConfig = {
-      id: 'sites',
+      id: 'mermaid_sites',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter sites by name, reef (type, zone, or exposure)',
       searchLocation: 'left',
-      disableTrackingTableState: true,
       rowFormatter: function(record, element) {
         const isInvalid =
           _.get(
@@ -133,6 +132,7 @@ angular.module('app.project').controller('SitesCtrl', [
           };
           const modal = ModalService.open(modalOptions);
           modal.result.then(function() {
+            updateSiteCount();
             $scope.tableControl.refresh();
             project.update();
           });
@@ -149,7 +149,7 @@ angular.module('app.project').controller('SitesCtrl', [
       });
     };
 
-    offlineservice.ProjectSitesTable(project_id).then(function(table) {
+    OfflineTables.ProjectSitesTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
       updateSiteCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
@@ -160,11 +160,6 @@ angular.module('app.project').controller('SitesCtrl', [
           '$$reefexposures.name'
         ]
       });
-      $scope.projectObjectsTable.$watch(
-        updateSiteCount,
-        null,
-        'siteRecordsCount'
-      );
     });
 
     const createPopup = function(feature) {
@@ -194,24 +189,17 @@ angular.module('app.project').controller('SitesCtrl', [
       return `${tableRecordsTotal}/${siteRecordsCount}`;
     };
 
-    $scope.tableControl.recordsNotFiltered = function() {
-      if (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length !== siteRecordsCount
-      ) {
-        updateSiteCount();
-      }
+    $scope.tableControl.noAppliedFilters = function() {
       return !$scope.tableControl.textboxFilterUsed();
     };
 
     $scope.mapopts = {
-      gestureHandling: true,
       project_id: project_id,
       popup: createPopup
     };
 
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {
-      $scope.tableControl.refresh(true);
+      $scope.tableControl.refresh();
     });
 
     conn.on('SitesCtrl', function(event) {

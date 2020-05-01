@@ -3,20 +3,21 @@ angular.module('app.project').directive('deleteButton', [
   '$state',
   'ProjectService',
   '$stateParams',
-  'offlineservice',
-  function(utils, $state, ProjectService, $stateParams, offlineservice) {
+  'OfflineTables',
+  function(utils, $state, ProjectService, $stateParams, OfflineTables) {
     'use strict';
 
     return {
       restrict: 'EA',
       scope: {
         record: '=',
-        isDisabled: '=',
-        state: '='
+        isDisabled: '='
       },
       templateUrl: 'app/project/directives/delete-button.tpl.html',
       link: function(scope) {
         const projectId = $stateParams.project_id;
+        const redirectState = $state.$current.parent.name;
+
         scope.isAdmin = false;
 
         ProjectService.getMyProjectProfile(projectId).then(function(
@@ -40,8 +41,8 @@ angular.module('app.project').directive('deleteButton', [
                 promise = scope.record.delete();
               }
               return promise.then(function() {
-                $state.go(scope.state);
-                offlineservice.ProjectsTable().then(function(table) {
+                $state.go(redirectState);
+                OfflineTables.ProjectsTable().then(function(table) {
                   return table.get(projectId).then(function(record) {
                     return record.update();
                   });

@@ -3,12 +3,14 @@ angular.module('app.project').service('BenthicPITWizardConfig', [
   '$q',
   '$filter',
   'BenthicBaseWizardConfig',
+  'OfflineCommonTables',
   'ValidateSubmitService',
   function(
     $stateParams,
     $q,
     $filter,
     BenthicBaseWizardConfig,
+    OfflineCommonTables,
     ValidateSubmitService
   ) {
     'use strict';
@@ -29,6 +31,13 @@ angular.module('app.project').service('BenthicPITWizardConfig', [
             statusFilter
           ).obs_benthic_pits;
           return $q.resolve(keys);
+        },
+        benthicAttributes: function() {
+          return OfflineCommonTables.BenthicAttributesTable(true).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         }
       }
     };
@@ -41,6 +50,17 @@ angular.module('app.project').service('BenthicPITWizardConfig', [
           _.get(record.data, 'benthicpit.interval_size')
         );
         return $q.resolve('Leave Interval size as ' + val);
+      }
+    };
+
+    service.interval_start = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/interval_start.tpl.html',
+      ignoreButtonText: function(record) {
+        var val = $filter('null_blank')(
+          _.get(record.data, 'benthicpit.interval_start')
+        );
+        return $q.resolve('Leave Interval start as ' + val);
       }
     };
 

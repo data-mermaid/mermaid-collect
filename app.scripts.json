@@ -29,7 +29,9 @@
       "leaflet-gesture-handling",
       "angular-block-ui",
       "angular-file-saver",
-      "lscache"
+      "lscache",
+      "turf",
+      "mapbox-gl"
     ],
     "vendor.ui": [
       "select2",
@@ -48,6 +50,7 @@
     ]
   },
   "paths": {
+    "turf": "libs/turf.min.js",
     "auth0": "libs/auth0-js/auth0.min.js",
     "lscache": "bower_components/lscache/lscache.min.js",
     "jquery": "bower_components/jquery/dist/jquery.min.js",
@@ -135,6 +138,7 @@
     "leaflet-draw": "bower_components/leaflet-draw/dist/leaflet.draw.js",
     "leaflet-gesture-handling": "node_modules/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.js",
     "angular-block-ui": "bower_components/angular-block-ui/dist/angular-block-ui.min.js",
-    "angular-file-saver": "bower_components/angular-file-saver/dist/angular-file-saver.bundle.js"
+    "angular-file-saver": "bower_components/angular-file-saver/dist/angular-file-saver.bundle.js",
+    "mapbox-gl": "node_modules/mapbox-gl/dist/mapbox-gl.js"
   }
 }

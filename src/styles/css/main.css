@@ -924,7 +924,7 @@ btn > button {
 }
 
 .validation-message-list {
-  padding: 10px 0;
+  padding: 10px 0 10px 10px;
 }
 
 .validation-alert a,
@@ -1382,28 +1382,28 @@ ul li.transect-buttons[disabled] {
 }
 
 /* leaflet popup content style */
-.leaflet-popup-content-wrapper {
+.mapboxgl-popup {
   border-radius: 6px;
 }
 
-.leaflet-popup-content{
-  margin: 14px 6px 6px 6px;
+.mapboxgl-popup-content {
+  padding: 7px;
 }
 
-.leaflet-popup-content a {
+.mapboxgl-popup-content a {
   font-size: 12px;
   font-weight: bold;
 }
 
-.leaflet-popup-content div {
+.mapboxgl-popup-content div {
   border-top: 1px solid;
 }
 
-.leaflet-popup-content div p {
+.mapboxgl-popup-content div p {
   margin: 0;
 }
 
-.leaflet-popup-content div p span {
+.mapboxgl-popup-content div p span {
   margin: 0;
   font-style: italic;
 }
@@ -1474,3 +1474,68 @@ input:checked + .slider-mermaid:before {
   border-radius: 50%;
 }
 
+
+.ui-datepicker-calendar .ui-state-active {
+  background-color:#c0e5f7 !important;
+  font-weight: bold;
+}
+
+.ui-datepicker-calendar  .ui-state-highlight {
+  background-color: #ebebeb !important;
+  color: #333 !important;
+  text-shadow: none !important;
+}
+
+.more-info {
+  padding: 5px;
+  font-size: 1em;
+}
+
+table.greyGridTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid #000000;
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+table.greyGridTable td, table.greyGridTable th {
+  padding: 5px 4px;
+}
+table.greyGridTable tbody td {
+  font-size: 15px;
+}
+table.greyGridTable thead {
+  background: #2C3742;
+  border-bottom: 4px solid #333333;
+}
+table.greyGridTable thead th {
+  font-size: 18px;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+table.greyGridTable tbody td:first-child {
+  text-align: left;
+}
+
+.grey-background {
+  background: #EBEBEB;
+}
+
+.info-style {
+  font-size: 1.5em;
+}
+
+.primary-icon {
+  color: #3b9ff3;
+}
+
+.warning-icon {
+  color: #DB4A67
+}
+
+.datasharing-dropdown {
+  display: flex;
+  align-items: center;
+}

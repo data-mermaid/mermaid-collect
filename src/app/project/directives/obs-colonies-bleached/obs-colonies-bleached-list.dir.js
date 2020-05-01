@@ -1,12 +1,12 @@
 angular.module('app.project').directive('obsColoniesBleachedList', [
-  'offlineservice',
+  'OfflineCommonTables',
   'utils',
   '$timeout',
   'ModalService',
   'BenthicAttributeService',
   'ValidatorService',
   function(
-    offlineservice,
+    OfflineCommonTables,
     utils,
     $timeout,
     ModalService,
@@ -27,8 +27,13 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
         'app/project/directives/obs-colonies-bleached/obs-colonies-bleached-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
         let modal;
-        const $table = $(element).find('table');
 
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsColoniesBleached);
+        scope.isReady = true;
+
+        scope.notFoundMessage =
+          "Benthic attribute cannot be found in site's region.";
         scope.formCtrl = formCtrl;
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
@@ -41,7 +46,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
         };
         scope.rowErrors = [];
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineCommonTables.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;
@@ -55,7 +60,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
@@ -64,13 +69,12 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
 
         const loadBenthicAttributesLookup = function() {
           scope.benthicAttributesLookup = utils.createLookup(
-            scope.benthicAttributeChoices
+            scope.getBenthicAttributes()
           );
         };
-        loadBenthicAttributesLookup();
 
         scope.getBenthicAttributes = function() {
-          return scope.benthicAttributeChoices;
+          return scope.benthicAttributeChoices.filtered;
         };
 
         const benthicAttributeNames = scope
@@ -78,7 +82,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
           .map(attribute => attribute.name);
 
         scope.categoryLookup = BenthicAttributeService.getCategoryLookup(
-          scope.benthicAttributeChoices
+          scope.getBenthicAttributes()
         );
 
         scope.modalTrigger = function(observation) {
@@ -129,6 +133,7 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
             count_dead: 0
           }; // simple add row
 
+          newRecord.$$uid = utils.generateUuid();
           scope.obsColoniesBleached.splice(nextIndex, 0, newRecord);
           formCtrl.$setDirty();
           scope.startEditing(null, scope.obsColoniesBleached.length - 1);
@@ -232,6 +237,8 @@ angular.module('app.project').directive('obsColoniesBleachedList', [
           },
           true
         );
+
+        loadBenthicAttributesLookup();
       }
     };
   }

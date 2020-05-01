@@ -16,7 +16,9 @@
     'APP_CONFIG',
     'layoutUtils',
     'system',
-    // '$urlRouter',
+    'offlineservice',
+    'utils',
+    '$urlRouter',
     'ConnectivityFactory'
   ];
 
@@ -33,26 +35,42 @@
     APP_CONFIG,
     layoutUtils,
     system,
-    // $urlRouter,
+    offlineservice,
+    utils,
+    $urlRouter,
     ConnectivityFactory
   ) {
     const conn = new ConnectivityFactory($rootScope);
     let handleAuth;
 
-    if (authService.getToken() != null) {
-      handleAuth = authService.renewToken();
+    offlineservice.syncAndDeleteV1Tables().catch(function(error) {
+      if (error.key) {
+        utils.errorAlert(error.message);
+      }
+      console.error(error);
+    });
+
+    if (localStorageService.get('isLoggedIn') === 'true') {
+      handleAuth = authService.renewTokens();
     } else {
       // Handle the authentication
       // result in the hash
       handleAuth = authService.handleAuthentication();
     }
 
-    handleAuth.then(function() {
-      // $urlRouter.listen();
-      if (connectivity.isOnline && authService.isAuthenticated()) {
-        system.startAutoDataUpdate();
-      }
-    });
+    handleAuth
+      .then(function() {
+        $urlRouter.listen();
+        $urlRouter.sync();
+        if (connectivity.isOnline && authService.isAuthenticated()) {
+          system.startAutoDataUpdate();
+        }
+      })
+      .catch(function(err) {
+        $urlRouter.listen();
+        $urlRouter.sync();
+        throw err;
+      });
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;

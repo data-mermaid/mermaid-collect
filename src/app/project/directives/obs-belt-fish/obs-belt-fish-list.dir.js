@@ -1,7 +1,8 @@
 angular.module('app.project').directive('obsBeltFishList', [
+  '$q',
   '$window',
   '$state',
-  'offlineservice',
+  'OfflineCommonTables',
   'utils',
   '$timeout',
   'FishAttributeService',
@@ -9,9 +10,10 @@ angular.module('app.project').directive('obsBeltFishList', [
   'TransectService',
   'ModalService',
   function(
+    $q,
     $window,
     $state,
-    offlineservice,
+    OfflineCommonTables,
     utils,
     $timeout,
     FishAttributeService,
@@ -34,10 +36,14 @@ angular.module('app.project').directive('obsBeltFishList', [
       templateUrl:
         'app/project/directives/obs-belt-fish/obs-belt-fish-list.tpl.html',
       link: function(scope, element, attrs, formCtrl) {
-        const $table = $(element).find('table');
         let modal;
         let fishAttributesLookup = {};
 
+        scope.isReady = false;
+        utils.assignUniqueId(scope.obsBeltFishes);
+        scope.isReady = true;
+
+        scope.notFoundMessage = "Fish name cannot be found in site's region.";
         scope.isDisabled = utils.truthy(scope.isDisabled);
         scope.choices = {};
         scope.fishsize_choices = {};
@@ -55,7 +61,7 @@ angular.module('app.project').directive('obsBeltFishList', [
 
         const setInputFocus = function(rowIndex, cellIndex) {
           $timeout(function() {
-            const $elm = $($table.find('tbody tr')[rowIndex]);
+            const $elm = $($(element).find('table tbody tr')[rowIndex]);
             $($elm.find('select, input')[cellIndex])
               .focus()
               .select();
@@ -63,37 +69,77 @@ angular.module('app.project').directive('obsBeltFishList', [
         };
 
         const loadFishAttributesLookup = function() {
-          fishAttributesLookup = utils.createLookup(scope.fishAttributeChoices);
+          fishAttributesLookup = utils.createLookup(scope.getFishAttributes());
         };
-
-        loadFishAttributesLookup();
 
         scope.getFishAttributes = function() {
-          return scope.fishAttributeChoices;
+          return scope.fishAttributeChoices.filtered;
         };
-        // console.log(scope.getFishAttributes());
+
         const fishAttributeNames = scope
           .getFishAttributes()
           .map(attribute => attribute.display_name);
 
         scope.navReferenceLink = function(fishAttributeId) {
           if (!_.isUndefined(fishAttributeId)) {
-            const rank = fishAttributesLookup[fishAttributeId].$$taxonomic_rank;
+            let promise = null;
             let state = null;
+            console.log(fishAttributesLookup[fishAttributeId]);
+            const rank = _.get(
+              fishAttributesLookup[fishAttributeId],
+              '$$taxonomic_rank'
+            );
 
-            if (rank === FishAttributeService.SPECIES_RANK) {
-              state = 'app.reference.fishspeciess.fishspecies';
-            } else if (rank === FishAttributeService.GENUS_RANK) {
-              state = 'app.reference.fishgenera.fishgenus';
+            if (rank == null) {
+              promise = FishAttributeService.fetchFishAttributes({
+                id: fishAttributeId
+              }).then(function(records) {
+                if (records.length === 0) {
+                  return null;
+                }
+                return _.get(records[0], '$$taxonomic_rank');
+              });
             } else {
-              state = 'app.reference.fishfamilies.fishfamily';
+              promise = $q.resolve(rank);
             }
 
-            $window.open(
-              $state.href(state, { id: fishAttributeId }, { absolute: true }),
-              '_blank'
-            );
+            promise.then(function(rank) {
+              if (rank === FishAttributeService.SPECIES_RANK) {
+                state = 'app.reference.fishspeciess.fishspecies';
+              } else if (rank === FishAttributeService.GENUS_RANK) {
+                state = 'app.reference.fishgenera.fishgenus';
+              } else if (rank === FishAttributeService.FAMILY_RANK) {
+                state = 'app.reference.fishfamilies.fishfamily';
+              } else {
+                utils.showAlert(
+                  'Error',
+                  'Attribute cannot be found.',
+                  utils.statuses.error,
+                  5000
+                );
+                return;
+              }
+
+              $window.open(
+                $state.href(state, { id: fishAttributeId }, { absolute: true }),
+                '_blank'
+              );
+            });
           }
+        };
+
+        scope.disableRef = function(fishAttributeId) {
+          if (!_.isUndefined(fishAttributeId)) {
+            const rank = _.get(
+              fishAttributesLookup[fishAttributeId],
+              '$$taxonomic_rank'
+            );
+
+            if (rank === FishAttributeService.GROUPING) {
+              return true;
+            }
+          }
+          return false;
         };
 
         scope.modalConfig = {
@@ -118,7 +164,7 @@ angular.module('app.project').directive('obsBeltFishList', [
           });
         };
 
-        offlineservice.ChoicesTable(true).then(function(table) {
+        OfflineCommonTables.ChoicesTable(true).then(function(table) {
           return table.filter().then(function(choices) {
             _.each(choices, function(c) {
               scope.choices[c.name] = c.data;
@@ -126,7 +172,7 @@ angular.module('app.project').directive('obsBeltFishList', [
           });
         });
 
-        offlineservice.FishSizesTable(true).then(function(table) {
+        OfflineCommonTables.FishSizesTable(true).then(function(table) {
           return table.filter().then(function(fishsizes) {
             _.each(_.sortBy(fishsizes, 'val'), function(fishsize) {
               let key = fishsize.fish_bin_size;
@@ -177,11 +223,10 @@ angular.module('app.project').directive('obsBeltFishList', [
                 '$$uid'
               ]);
             }
-
+            newRecord.$$uid = utils.generateUuid();
             scope.obsBeltFishes.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);
-
             setInputFocus(nextIndex, 0);
           }
         };
@@ -280,6 +325,8 @@ angular.module('app.project').directive('obsBeltFishList', [
           },
           true
         );
+
+        loadFishAttributesLookup();
       }
     };
   }

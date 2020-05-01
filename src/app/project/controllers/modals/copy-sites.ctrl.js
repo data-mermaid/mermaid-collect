@@ -4,7 +4,7 @@ angular.module('app.project').controller('CopySitesCtrl', [
   '$q',
   '$stateParams',
   'Site',
-  'offlineservice',
+  'OfflineTables',
   'utils',
   'Button',
   'PaginatedArrayWrapper',
@@ -15,7 +15,7 @@ angular.module('app.project').controller('CopySitesCtrl', [
     $q,
     $stateParams,
     Site,
-    offlineservice,
+    OfflineTables,
     utils,
     Button,
     PaginatedArrayWrapper,
@@ -59,8 +59,7 @@ angular.module('app.project').controller('CopySitesCtrl', [
       setButtonEnable(false);
       var records = $scope.control.getSelectedRecords();
       var recordCount = records.length;
-      return offlineservice
-        .ProjectSitesTable(projectId)
+      return OfflineTables.ProjectSitesTable(projectId)
         .then(function(sitesTable) {
           var promises = _.map(records, function(site) {
             site.predecessor = site.id;
@@ -109,8 +108,5 @@ angular.module('app.project').controller('CopySitesCtrl', [
     };
 
     $scope.$modalButtons = [copyButton, cancelButton];
-    $scope.mapopts = {
-      gestureHandling: true
-    };
   }
 ]);

@@ -1,9 +1,9 @@
 angular.module('app.project').directive('collectRecordCount', [
   '$q',
   '$stateParams',
-  'offlineservice',
+  'OfflineTables',
   'ProjectService',
-  function($q, $stateParams, offlineservice, ProjectService) {
+  function($q, $stateParams, OfflineTables, ProjectService) {
     'use strict';
     return {
       restrict: 'EA',
@@ -20,7 +20,7 @@ angular.module('app.project').directive('collectRecordCount', [
         };
 
         $q.all([
-          offlineservice.CollectRecordsTable(projectId),
+          OfflineTables.CollectRecordsTable(projectId),
           ProjectService.getMyProjectProfile(projectId)
         ]).then(function(results) {
           collectTable = results[0];

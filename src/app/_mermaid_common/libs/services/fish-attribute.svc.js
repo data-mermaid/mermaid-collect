@@ -1,22 +1,23 @@
 angular.module('mermaid.libs').service('FishAttributeService', [
   '$q',
-  'offlineservice',
-  function($q, offlineservice) {
+  'OfflineCommonTables',
+  function($q, OfflineCommonTables) {
     'use strict';
     let PROPOSED_RECORD = 10;
     let FAMILY_RANK = 'family';
     let GENUS_RANK = 'genus';
     let SPECIES_RANK = 'species';
+    let GROUPING = 'grouping';
 
     let saveFishSpecies = function(fishAttribute) {
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = offlineservice
-          .FishSpeciesTable()
-          .then(function(fishSpeciesTable) {
-            return fishSpeciesTable.create(fishAttribute);
-          });
+        savePromise = OfflineCommonTables.FishSpeciesTable().then(function(
+          fishSpeciesTable
+        ) {
+          return fishSpeciesTable.create(fishAttribute);
+        });
       } else {
         savePromise = fishAttribute.update();
       }
@@ -27,11 +28,11 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = offlineservice
-          .FishGeneraTable()
-          .then(function(fishGenusTable) {
-            return fishGenusTable.create(fishAttribute);
-          });
+        savePromise = OfflineCommonTables.FishGeneraTable().then(function(
+          fishGenusTable
+        ) {
+          return fishGenusTable.create(fishAttribute);
+        });
       } else {
         savePromise = fishAttribute.update();
       }
@@ -42,11 +43,26 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       let savePromise;
       if (!fishAttribute.id) {
         fishAttribute.status = PROPOSED_RECORD;
-        savePromise = offlineservice
-          .FishFamiliesTable()
-          .then(function(fishFamiliesTable) {
-            return fishFamiliesTable.create(fishAttribute);
-          });
+        savePromise = OfflineCommonTables.FishFamiliesTable().then(function(
+          fishFamiliesTable
+        ) {
+          return fishFamiliesTable.create(fishAttribute);
+        });
+      } else {
+        savePromise = fishAttribute.update();
+      }
+      return savePromise;
+    };
+
+    let saveFishGrouping = function(fishAttribute) {
+      let savePromise;
+      if (!fishAttribute.id) {
+        fishAttribute.status = PROPOSED_RECORD;
+        savePromise = OfflineCommonTables.FishGroupingsTable().then(function(
+          fishGroupingsTable
+        ) {
+          return fishGroupingsTable.create(fishAttribute);
+        });
       } else {
         savePromise = fishAttribute.update();
       }
@@ -54,41 +70,65 @@ angular.module('mermaid.libs').service('FishAttributeService', [
     };
 
     let getFishFamily = function(fishAttributeId, skipRefresh) {
-      return offlineservice
-        .FishFamiliesTable(skipRefresh)
-        .then(function(table) {
-          return table.get(fishAttributeId);
-        });
+      return OfflineCommonTables.FishFamiliesTable(skipRefresh).then(function(
+        table
+      ) {
+        return table.get(fishAttributeId);
+      });
     };
 
     let getFishGenus = function(fishAttributeId, skipRefresh) {
-      return offlineservice.FishGeneraTable(skipRefresh).then(function(table) {
+      return OfflineCommonTables.FishGeneraTable(skipRefresh).then(function(
+        table
+      ) {
         return table.get(fishAttributeId);
       });
     };
 
     let getFishSpecies = function(fishAttributeId, skipRefresh) {
-      return offlineservice.FishSpeciesTable(skipRefresh).then(function(table) {
+      return OfflineCommonTables.FishSpeciesTable(skipRefresh).then(function(
+        table
+      ) {
+        return table.get(fishAttributeId);
+      });
+    };
+
+    let getFishGrouping = function(fishAttributeId, skipRefresh) {
+      return OfflineCommonTables.FishGroupingsTable(skipRefresh).then(function(
+        table
+      ) {
         return table.get(fishAttributeId);
       });
     };
 
     let fetchFishGenera = function(qry, skipRefresh) {
-      return offlineservice.FishGeneraTable(skipRefresh).then(function(table) {
+      return OfflineCommonTables.FishGeneraTable(skipRefresh).then(function(
+        table
+      ) {
         return table.filter(qry);
       });
     };
 
     let fetchFishFamilies = function(qry, skipRefresh) {
-      return offlineservice
-        .FishFamiliesTable(skipRefresh)
-        .then(function(table) {
-          return table.filter(qry);
-        });
+      return OfflineCommonTables.FishFamiliesTable(skipRefresh).then(function(
+        table
+      ) {
+        return table.filter(qry);
+      });
     };
 
     let fetchFishSpecies = function(qry, skipRefresh) {
-      return offlineservice.FishSpeciesTable(skipRefresh).then(function(table) {
+      return OfflineCommonTables.FishSpeciesTable(skipRefresh).then(function(
+        table
+      ) {
+        return table.filter(qry);
+      });
+    };
+
+    let fetchFishGroupings = function(qry, skipRefresh) {
+      return OfflineCommonTables.FishGroupingsTable(skipRefresh).then(function(
+        table
+      ) {
         return table.filter(qry);
       });
     };
@@ -100,17 +140,17 @@ angular.module('mermaid.libs').service('FishAttributeService', [
           record.$$taxonomic_rank = SPECIES_RANK;
         } else if (_.has(record, 'family')) {
           record.$$taxonomic_rank = GENUS_RANK;
+        } else if (_.has(record, 'fish_attributes')) {
+          record.$$taxonomic_rank = GROUPING;
         } else {
           record.$$taxonomic_rank = FAMILY_RANK;
         }
-
         return record;
       });
     };
 
     let fetchFishAttributes = function(qry, skipRefresh) {
-      return offlineservice
-        .FishAttributesTable(skipRefresh)
+      return OfflineCommonTables.FishAttributesTable(skipRefresh)
         .then(function(table) {
           return table.filter(qry);
         })
@@ -137,17 +177,21 @@ angular.module('mermaid.libs').service('FishAttributeService', [
       GENUS_RANK: GENUS_RANK,
       PROPOSED_RECORD: PROPOSED_RECORD,
       SPECIES_RANK: SPECIES_RANK,
+      GROUPING: GROUPING,
       fetchFishAttributes: fetchFishAttributes,
       fetchFishFamilies: fetchFishFamilies,
       fetchFishGenera: fetchFishGenera,
       fetchFishSpecies: fetchFishSpecies,
+      fetchFishGroupings: fetchFishGroupings,
       getFishAttributeChoices: getFishAttributeChoices,
-      saveFishFamily: saveFishFamily,
       getFishFamily: getFishFamily,
       getFishGenus: getFishGenus,
       getFishSpecies: getFishSpecies,
+      getFishGrouping: getFishGrouping,
+      saveFishFamily: saveFishFamily,
       saveFishGenus: saveFishGenus,
       saveFishSpecies: saveFishSpecies,
+      saveFishGrouping: saveFishGrouping,
       setMetadata: setMetadata
     };
   }

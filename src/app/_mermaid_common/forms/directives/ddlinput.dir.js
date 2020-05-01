@@ -42,7 +42,8 @@ angular
         replace: true,
         require: 'ngModel',
         transclude: {
-          validations: '?validations'
+          validations: '?validations',
+          learnMoreButton: '?learnMoreButton'
         },
         scope: {
           displayAttribute: '@',

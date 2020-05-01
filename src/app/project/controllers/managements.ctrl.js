@@ -2,7 +2,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
   '$scope',
   '$state',
   '$stateParams',
-  'offlineservice',
+  'OfflineTables',
   'ProjectService',
   'ManagementService',
   'PaginatedOfflineTableWrapper',
@@ -14,7 +14,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
     $scope,
     $state,
     $stateParams,
-    offlineservice,
+    OfflineTables,
     ProjectService,
     ManagementService,
     PaginatedOfflineTableWrapper,
@@ -26,7 +26,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
     'use strict';
 
     let managementRecordsCount = 0;
-    var project_id = $stateParams.project_id;
+    const project_id = $stateParams.project_id;
 
     $scope.isDisabled = true;
     ProjectService.getMyProjectProfile(project_id).then(function(
@@ -41,7 +41,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
     $scope.resource = undefined;
     $scope.tableControl = {};
     $scope.tableConfig = {
-      id: 'management',
+      id: 'mermaid_managements',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter management regimes by name',
@@ -49,7 +49,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       rowSelect: false,
       hideRowStripes: true,
       rowFormatter: function(record, element) {
-        var isInvalid =
+        const isInvalid =
           _.get(
             record,
             'validations.results._root_.validate_similar.status'
@@ -141,14 +141,14 @@ angular.module('app.project').controller('ManagementsCtrl', [
           ManagementService.downloadFieldReport(project_id);
         },
         copyManagements: function() {
-          var modal;
-          var modalOptions = {
+          const modalOptions = {
             hideHeader: true,
             controller: 'CopyManagementsCtrl',
             bodyTemplateUrl: 'app/project/partials/copy-managements.tpl.html'
           };
-          modal = ModalService.open(modalOptions);
+          const modal = ModalService.open(modalOptions);
           modal.result.then(function() {
+            updateManagementCount();
             $scope.tableControl.refresh();
             project.update();
           });
@@ -165,17 +165,12 @@ angular.module('app.project').controller('ManagementsCtrl', [
       });
     };
 
-    offlineservice.ProjectManagementsTable(project_id).then(function(table) {
+    OfflineTables.ProjectManagementsTable(project_id).then(function(table) {
       $scope.projectObjectsTable = table;
       updateManagementCount();
       $scope.resource = new PaginatedOfflineTableWrapper(table, {
         searchFields: ['name']
       });
-      $scope.projectObjectsTable.$watch(
-        updateManagementCount,
-        null,
-        'managementRecordsCount'
-      );
     });
 
     $scope.tableControl.getFilteredRecordsCount = function() {
@@ -186,13 +181,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       return `${tableRecordsTotal}/${managementRecordsCount}`;
     };
 
-    $scope.tableControl.recordsNotFiltered = function() {
-      if (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length !== managementRecordsCount
-      ) {
-        updateManagementCount();
-      }
+    $scope.tableControl.noAppliedFilters = function() {
       return !$scope.tableControl.textboxFilterUsed();
     };
 
@@ -200,7 +189,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
       $scope.tableControl.refresh(true);
     });
 
-    var newManagement = function() {
+    const newManagement = function() {
       $state.go('app.project.managements.management', { id: '' });
     };
   }

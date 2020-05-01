@@ -3,14 +3,16 @@ angular.module('app.project').service('BleachingWizardConfig', [
   '$q',
   'BaseWizardConfig',
   'ValidateSubmitService',
-  'offlineservice',
+  'OfflineCommonTables',
+  'OfflineTables',
   'TransectService',
   function(
     $stateParams,
     $q,
     BaseWizardConfig,
     ValidateSubmitService,
-    offlineservice,
+    OfflineCommonTables,
+    OfflineTables,
     TransectService
   ) {
     'use strict';
@@ -37,6 +39,13 @@ angular.module('app.project').service('BleachingWizardConfig', [
             statusFilter
           ).obs_colonies_bleached;
           return $q.resolve(keys);
+        },
+        benthicAttributes: function() {
+          return OfflineCommonTables.BenthicAttributesTable(true).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         }
       }
     };
@@ -65,11 +74,11 @@ angular.module('app.project').service('BleachingWizardConfig', [
         'app/project/protocol_wizard_configs/partials/quadrat_collection.tpl.html',
       resolve: {
         sites: function() {
-          return offlineservice
-            .ProjectSitesTable(projectId)
-            .then(function(table) {
-              return table.filter();
-            });
+          return OfflineTables.ProjectSitesTable(projectId).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         },
         projectProfiles: function() {
           return TransectService.getProjectProfileChoices(projectId);

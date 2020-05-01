@@ -1,14 +1,23 @@
 angular.module('app.project').service('SiteService', [
   '$q',
-  'offlineservice',
-  'authService',
-  'APP_CONFIG',
-  '$window',
-  function($q, offlineservice, authService, APP_CONFIG, $window) {
+  'OfflineTables',
+  'TransectExportService',
+  function($q, OfflineTables, TransectExportService) {
     'use strict';
 
-    var save = function(site, options) {
-      var projectId = site.project || options.projectId;
+    const reportHeader = [
+      'Country',
+      'Name',
+      'Latitude',
+      'Longitude',
+      'Reef type',
+      'Reef zone',
+      'Reef exposure',
+      'Notes'
+    ];
+
+    const save = function(site, options) {
+      const projectId = site.project || options.projectId;
       if (projectId == null) {
         return $q.reject('Project not defined');
       }
@@ -21,36 +30,46 @@ angular.module('app.project').service('SiteService', [
       }
       if (!site.id) {
         site.project = projectId;
-        return offlineservice
-          .ProjectSitesTable(projectId)
-          .then(function(table) {
-            return table.create(site);
-          });
+        return OfflineTables.ProjectSitesTable(projectId).then(function(table) {
+          return table.create(site);
+        });
       }
       return site.update();
     };
 
-    var fetchData = function(projectId, siteId) {
+    const fetchData = function(projectId, siteId) {
       if (siteId == null) {
         return $q.resolve({ project: projectId });
       }
-      return offlineservice.ProjectSitesTable(projectId).then(function(table) {
+
+      return OfflineTables.ProjectSitesTable(projectId).then(function(table) {
         return table.get(siteId).then(function(site) {
           site = site || { project: projectId };
+
           if (site.location != null) {
             site.latitude = site.location.coordinates[1];
             site.longitude = site.location.coordinates[0];
           }
+
           return site;
         });
       });
     };
 
-    var downloadFieldReport = function(project_id) {
-      var token = authService.getToken();
-      var report_url = 'projects/' + project_id + '/sites/fieldreport/';
-      var url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
-      $window.open(url);
+    const downloadFieldReport = function(projectId) {
+      return OfflineTables.ProjectSitesTable(projectId)
+        .then(function(table) {
+          return table.filter();
+        })
+        .then(function(records) {
+          const content = TransectExportService.sitesReport(records);
+
+          return TransectExportService.downloadAsCSV(
+            'sites',
+            reportHeader,
+            content
+          );
+        });
     };
 
     return {

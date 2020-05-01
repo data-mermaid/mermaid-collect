@@ -375,6 +375,7 @@ appConfig.loggerUrl = MERMAID_CONFIG.LOGGER_URL || null;
 appConfig.systemEmail = MERMAID_CONFIG.SYSTEM_EMAIL || '';
 appConfig.releaseVersion = window.MERMAID_VERSION || '';
 appConfig.localDbName = MERMAID_CONFIG.LOCAL_DB_NAME || 'mermaid';
+appConfig.localDbNameDelimiter = ':::';
 
 appConfig.HOST_URL = MERMAID_CONFIG.HOST_URL;
 appConfig.AUTH0_CLIENT_ID = MERMAID_CONFIG.AUTH0_CLIENT_ID;

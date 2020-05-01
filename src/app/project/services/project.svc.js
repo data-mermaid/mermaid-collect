@@ -4,11 +4,24 @@ angular
   .service('ProjectService', [
     '$http',
     '$q',
+    '$filter',
     'authService',
-    'offlineservice',
+    'OfflineTableUtils',
     'APP_CONFIG',
+    'OfflineTables',
+    'OfflineCommonTables',
     'blockUI',
-    function($http, $q, authService, offlineservice, APP_CONFIG, blockUI) {
+    function(
+      $http,
+      $q,
+      $filter,
+      authService,
+      OfflineTableUtils,
+      APP_CONFIG,
+      OfflineTables,
+      OfflineCommonTables,
+      blockUI
+    ) {
       'use strict';
       var ProjectService = {};
       var mermaidChoices = {};
@@ -61,6 +74,7 @@ angular
             'data.sample_event.sample_time',
             'data.obs_belt_fishes'
           ],
+          obsFields: ['data.obs_belt_fishes'],
           method: 'beltfishtransectmethods',
           protocol: 'fishbelt'
         },
@@ -75,6 +89,7 @@ angular
             'data.sample_event.sample_time',
             'data.obs_benthic_lits'
           ],
+          obsFields: ['data.obs_benthic_lits'],
           method: 'benthiclittransectmethods',
           protocol: 'benthiclit'
         },
@@ -89,6 +104,7 @@ angular
             'data.sample_event.sample_time',
             'data.obs_benthic_pits'
           ],
+          obsFields: ['data.obs_benthic_pits'],
           method: 'benthicpittransectmethods',
           protocol: 'benthicpit'
         },
@@ -103,6 +119,7 @@ angular
             'data.sample_event.sample_time',
             'data.obs_habitat_complexities'
           ],
+          obsFields: ['data.obs_habitat_complexities'],
           method: 'habitatcomplexitytransectmethods',
           protocol: 'habitatcomplexity'
         },
@@ -118,10 +135,29 @@ angular
             'data.obs_colonies_bleached',
             'data.obs_quadrat_benthic_percent'
           ],
+          obsFields: [
+            'data.obs_colonies_bleached',
+            'data.obs_quadrat_benthic_percent'
+          ],
           method: 'bleachingquadratcollectionmethods',
           protocol: ProjectService.BLEACHING_QC_QUADRAT_TYPE
         }
       ];
+
+      ProjectService.getObservationAttributeNames = function(record) {
+        const obsFields = _.flatten(
+          _.map(ProjectService.transect_types, 'obsFields')
+        );
+        const matchedObsFields = [];
+        for (let i = 0; i < obsFields.length; i++) {
+          const obsFieldName = obsFields[i];
+          const hasKey = _.has(record, obsFieldName);
+          if (hasKey === true) {
+            matchedObsFields.push(obsFieldName);
+          }
+        }
+        return matchedObsFields;
+      };
 
       var formatChoices = function(table) {
         // Format choices
@@ -135,7 +171,7 @@ angular
       };
 
       ProjectService.loadLookupTables = function() {
-        return offlineservice.loadLookupTables().then(function(tables) {
+        return OfflineCommonTables.loadLookupTables().then(function(tables) {
           // Format choices
           var choicesTable = _.find(tables, {
             name: APP_CONFIG.localDbName + '-choices'
@@ -144,20 +180,20 @@ angular
         });
       };
 
-      var loadProject = function(projectId) {
+      const loadProject = function(projectId) {
         var promises = [];
         if (projectId != null) {
-          promises.push(offlineservice.loadProjectRelatedTables(projectId));
+          promises.push(OfflineTables.loadProjectRelatedTables(projectId));
         } else {
           promises.push($q.resolve(null));
         }
 
-        promises.push(ProjectService.loadLookupTables());
+        promises.push(OfflineCommonTables.loadLookupTables());
         return $q.all(promises);
       };
 
       ProjectService.getTransectType = function(transect_type_id) {
-        for (var i = 0; i < ProjectService.transect_types.length; i++) {
+        for (let i = 0; i < ProjectService.transect_types.length; i++) {
           if (ProjectService.transect_types[i].id === transect_type_id) {
             return ProjectService.transect_types[i];
           }
@@ -181,9 +217,9 @@ angular
       };
 
       ProjectService.loadProject = function(projectId) {
-        var isProjectOfflinePromise;
+        let isProjectOfflinePromise;
         if (projectId != null) {
-          isProjectOfflinePromise = offlineservice.isProjectOffline(projectId);
+          isProjectOfflinePromise = ProjectService.isProjectOffline(projectId);
         } else {
           isProjectOfflinePromise = $q.resolve(true);
         }
@@ -200,7 +236,7 @@ angular
       };
 
       ProjectService.fetchChoices = function() {
-        return offlineservice.ChoicesTable().then(function(table) {
+        return OfflineCommonTables.ChoicesTable().then(function(table) {
           return table.filter().then(function(choices) {
             return _.reduce(
               choices,
@@ -217,7 +253,7 @@ angular
       ProjectService.getMyProjectProfile = function(project_id) {
         var promises = [
           authService.getCurrentUser(),
-          offlineservice.ProjectProfilesTable(project_id)
+          OfflineTables.ProjectProfilesTable(project_id)
         ];
 
         return $q
@@ -341,6 +377,108 @@ angular
           '/transfer_sample_units/';
         var data = { from_profile: fromProfileId, to_profile: toProfileId };
         return $http.put(transformOwnershipUrl, data);
+      };
+      /** Filter attributes by site by matching regions.
+       * @param  {Array} attributes: Array of attributes to filter
+       * @param  {String} siteId: Filter attributes by this site id
+       * @param  {Object} choices: List of sites choices, `choices.sites`
+       */
+      ProjectService.filterAttributesBySite = function(
+        attributes,
+        siteId,
+        choices
+      ) {
+        if (siteId == null || _.has(choices, 'sites') === false) {
+          return attributes;
+        }
+
+        // There should be none or 1 site region.
+        const siteRegion = $filter('matchchoice')(
+          siteId,
+          choices.sites,
+          '$$regions'
+        );
+
+        if (siteRegion === null || _.keys(siteRegion).length === 0) {
+          return attributes;
+        }
+
+        // If attribute does not have a region it should be included,
+        // else only include attributes where at least one
+        // attribute region matches site region.
+        return _.filter(attributes, function(attribute) {
+          const attributeRegions = attribute.regions || [];
+          if (attributeRegions.length === 0) {
+            return true;
+          }
+          return attributeRegions.indexOf(siteRegion.id) !== -1;
+        });
+      };
+
+      ProjectService.isProjectOffline = function(projectId) {
+        if (projectId == null) {
+          throw 'projectId is required';
+        }
+
+        const databaseNamesPromise = OfflineTableUtils.getDatabaseNames();
+        const projectTableNamePromise = OfflineTables.getProjectsTableName();
+        const projectTableNamesPromise = OfflineTables.getProjectTableNames(
+          projectId,
+          OfflineTables.PROJECT_TABLE_NAMES
+        );
+        const commonTableNamesPromise = OfflineCommonTables.getTableNames();
+        const projectRecordPromise = OfflineTables.ProjectsTable(true).then(
+          function(table) {
+            return table.get(projectId).then(function(record) {
+              return record !== null;
+            });
+          }
+        );
+
+        return $q
+          .all([
+            databaseNamesPromise,
+            projectTableNamePromise,
+            projectTableNamesPromise,
+            commonTableNamesPromise,
+            projectRecordPromise
+          ])
+          .then(function(results) {
+            const databaseNames = new Set(results[0]);
+            const tables = [results[1]].concat(results[2], results[3]);
+            const projectRecord = results[4];
+
+            for (let i = 0; i < tables.length; i++) {
+              if (databaseNames.has(tables[i]) === false) {
+                return false;
+              }
+            }
+            return projectRecord !== null;
+          });
+      };
+
+      ProjectService.getOfflineProjects = function() {
+        return OfflineTables.ProjectsTable(true)
+          .then(function(table) {
+            return table.filter();
+          })
+          .then(function(projects) {
+            return $q.all(
+              _.map(projects, function(project) {
+                const projectId = project.id;
+                return ProjectService.isProjectOffline(projectId).then(function(
+                  isOffline
+                ) {
+                  const o = {};
+                  o[projectId] = isOffline;
+                  return o;
+                });
+              })
+            );
+          })
+          .then(function(results) {
+            return _.merge.apply(_, results);
+          });
       };
 
       return ProjectService;

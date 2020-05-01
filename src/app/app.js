@@ -35,7 +35,8 @@ angular
     'app.fulllayout',
     'app.profile',
     'app.project',
-    'app.reference'
+    'app.reference',
+    'app.sandbox'
   ])
   .constant('APP_CONFIG', window.appConfig)
   .constant('SESSION_ID', new Date().getTime())
@@ -64,9 +65,12 @@ angular
     });
 
     jwtOptionsProvider.config({
-      tokenGetter: function() {
-        return localStorage.getItem('access_token');
-      },
+      tokenGetter: [
+        'authService',
+        function(authService) {
+          return authService.getToken();
+        }
+      ],
       whiteListedDomains: [
         'localhost',
         'collect.datamermaid.org',
@@ -87,7 +91,7 @@ angular
     });
 
     $urlRouterProvider.otherwise('/projects');
-    // $urlRouterProvider.deferIntercept();
+    $urlRouterProvider.deferIntercept();
 
     // Intercept http calls.
     $provide.factory('ErrorHttpInterceptor', function($q, $injector) {

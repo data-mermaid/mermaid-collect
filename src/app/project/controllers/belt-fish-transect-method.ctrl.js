@@ -34,10 +34,20 @@ angular.module('app.project').controller('BeltFishTransectMethodCtrl', [
       ProjectService.ADMIN_ROLE
     );
     $scope.isDisabled = _isRoleDisabled || !connectivity.isOnline;
-    $scope.fishAttributes = fishAttributes;
     $scope.choices = transectLookups.choices;
     $scope.project_profiles = transectLookups.project_profiles;
     $scope.record = record;
+    Object.defineProperty(fishAttributes, 'filtered', {
+      get() {
+        const site = _.get($scope.record, 'data.sample_event.site');
+        return ProjectService.filterAttributesBySite(
+          fishAttributes,
+          site,
+          $scope.choices
+        );
+      }
+    });
+    $scope.fishAttributes = fishAttributes;
 
     $scope.protocolSampleUnitDetailsForm =
       'app/project/partials/forms/fishbeltprotocol.transect.form.tpl.html';
