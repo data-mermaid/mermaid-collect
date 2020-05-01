@@ -192,7 +192,8 @@ angular
     '$location',
     '$timeout',
     'utils',
-    function($q, $window, $location, $timeout, utils) {
+    'localStorageService',
+    function($q, $window, $location, $timeout, utils, localStorageService) {
       'use strict';
       return {
         restrict: 'EA',
@@ -379,7 +380,7 @@ angular
             disableTrackingTableState =
               config.disableTrackingTableState || false;
             tableId = config.id;
-            var localStorageItem = localStorage.getItem(tableId);
+            var localStorageItem = localStorageService.get(tableId);
             recordIdKey = config.recordIdKey || 'id';
             $scope.hideRowStripes = config.hideRowStripes || false;
             updateOnRemoteSync = config.updateOnRemoteSync || true;
@@ -408,7 +409,7 @@ angular
             $scope.filters = config.filters || {};
             $scope.hideLimits = config.hideLimits || false;
             parsedTableConfig = localStorageItem
-              ? JSON.parse(localStorage.getItem(tableId))
+              ? JSON.parse(localStorageService.get(tableId))
               : {};
 
             defaultSortByColumns = (parsedTableConfig &&
@@ -434,7 +435,7 @@ angular
                 );
                 tableSettings.limit = table_query_params.limit;
                 tableSettings.columns = tableQueryParamOrdering;
-                localStorage.setItem(tableId, JSON.stringify(tableSettings));
+                localStorageService.set(tableId, JSON.stringify(tableSettings));
               }
             } else {
               table_query_params = {};
@@ -551,7 +552,7 @@ angular
             tableSettings.limit = pageLimit || $scope.limits[1];
             tableSettings.columns = $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
-              localStorage.setItem(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, JSON.stringify(tableSettings));
             }
 
             $scope.fetchTableRecords(true);
@@ -567,7 +568,7 @@ angular
             $scope.sortArrArgs = filterSortColumns;
             tableSettings.columns = filterSortColumns;
             if (disableTrackingTableState !== true) {
-              localStorage.setItem(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, JSON.stringify(tableSettings));
             }
             $scope.fetchTableRecords(true);
           };
@@ -631,7 +632,7 @@ angular
             tableSettings.limit = limit;
             tableSettings.columns = $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
-              localStorage.setItem(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, JSON.stringify(tableSettings));
             }
             updatePagination({
               limit: limit,
