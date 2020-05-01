@@ -409,7 +409,7 @@ angular
             $scope.filters = config.filters || {};
             $scope.hideLimits = config.hideLimits || false;
             parsedTableConfig = localStorageItem
-              ? JSON.parse(localStorageService.get(tableId))
+              ? localStorageService.get(tableId)
               : {};
 
             defaultSortByColumns = (parsedTableConfig &&
@@ -435,7 +435,7 @@ angular
                 );
                 tableSettings.limit = table_query_params.limit;
                 tableSettings.columns = tableQueryParamOrdering;
-                localStorageService.set(tableId, JSON.stringify(tableSettings));
+                localStorageService.set(tableId, tableSettings);
               }
             } else {
               table_query_params = {};
@@ -495,7 +495,7 @@ angular
               if (disableTrackingTableState !== true) {
                 // Need to remove regex from string
                 if (qry.search) {
-                  qry.search = qry.search.replace(/\.\*/g, '');
+                  qry.search = $scope.search;
                 }
                 setTableQueryParam(qry);
               }
@@ -552,7 +552,7 @@ angular
             tableSettings.limit = pageLimit || $scope.limits[1];
             tableSettings.columns = $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
-              localStorageService.set(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, tableSettings);
             }
 
             $scope.fetchTableRecords(true);
@@ -568,7 +568,7 @@ angular
             $scope.sortArrArgs = filterSortColumns;
             tableSettings.columns = filterSortColumns;
             if (disableTrackingTableState !== true) {
-              localStorageService.set(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, tableSettings);
             }
             $scope.fetchTableRecords(true);
           };
@@ -632,7 +632,7 @@ angular
             tableSettings.limit = limit;
             tableSettings.columns = $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
-              localStorageService.set(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, tableSettings);
             }
             updatePagination({
               limit: limit,
