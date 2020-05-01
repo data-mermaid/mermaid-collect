@@ -1,0 +1,21 @@
+<!-- MAIN CONTENT -->
+<div id="content">
+ <div class="row">
+   <div smart-include="app/layout/partials/sub-header.tpl.html"></div>
+ </div>
+ <!-- widget grid -->
+ <section widget-grid id="widget-grid">
+   <div class="row">
+     <article class="col-sm-12">
+     <p class="reference-home">Other CRCP</p>
+     <ul data-smart-menu class="reference-home-items">
+       <li data-ui-sref-active="active" ng-repeat="fishName in groupingsItem">
+        <a >
+         <i class="fa fa-chevron-right reduce-font-70"></i> <span class="reference-home-item">{{fishName}}</span>
+       </a>
+       </li>
+     </ul>
+   </div>
+   </article>
+ </section>
+</div>
