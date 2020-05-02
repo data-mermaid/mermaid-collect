@@ -137,7 +137,9 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     };
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      const tableRecordsTotal = $scope.resource.lastQueryOutput.results.length;
+      console.log($scope.resource);
+      const tableRecordsTotal = $scope.resource.lastQueryOutput.count;
+
       return `${tableRecordsTotal}/${fishSpeciesCount}`;
     };
 
