@@ -232,6 +232,7 @@ angular
           var defaultSortByColumns;
           var recordIdKey;
           var selectedRecords = {};
+          var searchPromise = null;
 
           $scope.search = null;
           $scope.sortArrArgs = null;
@@ -398,7 +399,9 @@ angular
               config.searchLocation === 'left' ? 'pull-left' : 'pull-right';
 
             $scope.searchPlaceholder = config.searchPlaceholder || 'Search...';
-            $scope.searchHelp = config.searchHelp || '';
+            $scope.searchHelp =
+              config.searchHelp ||
+              'Use double quotes to search exact phrase, ex: "Benthic PIT"';
             $scope.searchIcon = config.searchIcon || 'fa-search';
             $scope.searching = config.searching;
             $scope.rowSelect = config.rowSelect;
@@ -588,7 +591,14 @@ angular
           };
 
           $scope.searchTable = function() {
-            $scope.fetchTableRecords(true);
+            if (searchPromise !== null) {
+              $timeout.cancel(searchPromise);
+              searchPromise = null;
+            }
+            searchPromise = $timeout(function() {
+              $scope.fetchTableRecords(true);
+              searchPromise = null;
+            }, 1000);
           };
 
           $scope.toggleRow = function(record) {
