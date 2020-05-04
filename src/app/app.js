@@ -65,9 +65,12 @@ angular
     });
 
     jwtOptionsProvider.config({
-      tokenGetter: function() {
-        return localStorage.getItem('access_token');
-      },
+      tokenGetter: [
+        'authService',
+        function(authService) {
+          return authService.getToken();
+        }
+      ],
       whiteListedDomains: [
         'localhost',
         'collect.datamermaid.org',
@@ -88,7 +91,7 @@ angular
     });
 
     $urlRouterProvider.otherwise('/projects');
-    // $urlRouterProvider.deferIntercept();
+    $urlRouterProvider.deferIntercept();
 
     // Intercept http calls.
     $provide.factory('ErrorHttpInterceptor', function($q, $injector) {

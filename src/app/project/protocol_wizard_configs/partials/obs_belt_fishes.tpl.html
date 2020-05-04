@@ -7,6 +7,13 @@
     <li ng-if="validationKeys.indexOf('validate_fish_count') !== -1">Generally the number of fish should be greater than 10.</li>
     <li ng-if="validationKeys.indexOf('validate_fish_lengths') !== -1">The maximum length for a species is the size
     of the longest individual recorded; observing longer is possible but unlikely.</li>
+    <li ng-if="validationKeys.indexOf('validate_region') !== -1">
+      {{record.validations.results.obs_belt_fishes.validate_region.message}}
+      <ul class="validation-message-list">
+        <li ng-repeat="attribute_id in record.validations.results.obs_belt_fishes.validate_region.data.no_region_matches"
+        >{{attribute_id | matchchoice : fishAttributes : "display_name"}}</li>
+      </ul>
+    </li>
   </ul>
 </div>
 <div class="alert alert-warning">This issue is related to more than one field and must be addressed in the form.</div>

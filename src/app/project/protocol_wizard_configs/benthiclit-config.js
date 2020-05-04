@@ -2,7 +2,13 @@ angular.module('app.project').service('BenthicLITWizardConfig', [
   '$q',
   'BenthicBaseWizardConfig',
   'ValidateSubmitService',
-  function($q, BenthicBaseWizardConfig, ValidateSubmitService) {
+  'OfflineCommonTables',
+  function(
+    $q,
+    BenthicBaseWizardConfig,
+    ValidateSubmitService,
+    OfflineCommonTables
+  ) {
     'use strict';
     var service = _.extend({}, BenthicBaseWizardConfig);
 
@@ -21,6 +27,13 @@ angular.module('app.project').service('BenthicLITWizardConfig', [
             statusFilter
           ).obs_benthic_lits;
           return $q.resolve(keys);
+        },
+        benthicAttributes: function() {
+          return OfflineCommonTables.BenthicAttributesTable(true).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         }
       }
     };

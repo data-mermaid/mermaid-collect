@@ -3,6 +3,7 @@ angular.module('app.project').service('FishBeltWizardConfig', [
   '$q',
   '$filter',
   'BaseWizardConfig',
+  'OfflineCommonTables',
   'OfflineTables',
   'ValidateSubmitService',
   'TransectService',
@@ -12,6 +13,7 @@ angular.module('app.project').service('FishBeltWizardConfig', [
     $q,
     $filter,
     BaseWizardConfig,
+    OfflineCommonTables,
     OfflineTables,
     ValidateSubmitService,
     TransectService,
@@ -83,6 +85,14 @@ angular.module('app.project').service('FishBeltWizardConfig', [
             }
           });
           return $q.resolve(total);
+        },
+
+        fishAttributes: function() {
+          return OfflineCommonTables.FishAttributesTable(true).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         }
       }
     };

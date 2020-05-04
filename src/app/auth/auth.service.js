@@ -1,34 +1,41 @@
 /* jshint latedef: false */
 
 angular.module('app.auth').service('authService', [
-  'APP_CONFIG',
-  'SESSION_ID',
-  '$state',
-  '$http',
   '$q',
+  '$state',
   'angularAuth0',
-  'authManager',
   '$timeout',
-  'localStorageService',
+  '$http',
+  'APP_CONFIG',
   'connectivity',
+  'localStorageService',
   function authService(
-    APP_CONFIG,
-    SESSION_ID,
-    $state,
-    $http,
     $q,
+    $state,
     angularAuth0,
-    authManager,
     $timeout,
-    localStorageService,
-    connectivity
+    $http,
+    APP_CONFIG,
+    connectivity,
+    localStorageService
   ) {
     'use strict';
 
-    var profileIdPromise = null;
-    var mePromise = null;
-    var tokenRenewalTimeout;
-    var tokenRenewLeeway = 300000; // 5 minutes
+    let accessToken;
+    let idToken;
+    let expiresAt;
+    let mePromise;
+    let profileIdPromise;
+    let tokenRenewalTimeout;
+    let tokenRenewLeeway = 300000; // 5 minutes
+
+    function getIdToken() {
+      return idToken;
+    }
+
+    function getToken() {
+      return accessToken;
+    }
 
     function login() {
       if (connectivity.isOnline !== true) {
@@ -38,30 +45,13 @@ angular.module('app.auth').service('authService', [
       return $timeout(angularAuth0.authorize, 0);
     }
 
-    function getToken() {
-      return localStorage.getItem('access_token');
-    }
-
-    function setSession(authResult) {
-      // Set the time that the access token will expire at
-      let expiresAt = JSON.stringify(
-        authResult.expiresIn * 1000 + new Date().getTime()
-      );
-      localStorage.setItem('access_token', authResult.accessToken);
-      localStorage.setItem('id_token', authResult.idToken);
-      localStorage.setItem('expires_at', expiresAt);
-
-      scheduleRenewal();
-    }
-
     function handleAuthentication() {
-      var defer = $q.defer();
+      const defer = $q.defer();
       angularAuth0.parseHash(function(err, authResult) {
         if (authResult && authResult.accessToken && authResult.idToken) {
-          setSession(authResult);
-          authManager.authenticate();
-          var toStateRedirect = localStorageService.get('toState');
-          var toStateParamsRedirect =
+          localLogin(authResult);
+          const toStateRedirect = localStorageService.get('toState');
+          const toStateParamsRedirect =
             localStorageService.get('toStateParams') || {};
           localStorageService.remove('toState');
           localStorageService.remove('toStateParams');
@@ -79,32 +69,61 @@ angular.module('app.auth').service('authService', [
       return defer.promise;
     }
 
-    function logout() {
-      if (connectivity.isOnline !== true) return;
+    function localLogin(authResult) {
+      // Set isLoggedIn flag in localStorage
+      localStorageService.set('isLoggedIn', 'true');
+      // Set the time that the access token will expire at
+      expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
 
-      // Remove tokens and expiry time from localStorage
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('id_token');
-      localStorage.removeItem('expires_at');
-      localStorage.removeItem('toState');
-      localStorage.removeItem('toStateParams');
-      for (var i = 0; i < localStorage.length; i++) {
-        const storageItem = localStorage.key(i);
-        if (storageItem.startsWith('mermaid_')) {
-          localStorage.removeItem(storageItem);
-        }
+      accessToken = authResult.accessToken;
+      idToken = authResult.idToken;
+    }
+
+    function renewTokens() {
+      const deferred = $q.defer();
+
+      if (connectivity.isOnline === false) {
+        deferred.resolve();
       }
-      authManager.unauthenticate();
-      clearTimeout(tokenRenewalTimeout);
+
+      const callback = function(err, result) {
+        if (err) {
+          console.error(err);
+        } else {
+          localLogin(result);
+        }
+        deferred.resolve();
+      };
+
+      angularAuth0.checkSession({}, callback);
+
+      return deferred.promise;
+    }
+
+    function logout() {
+      // Remove isLoggedIn flag from localStorage
+      localStorageService.remove('isLoggedIn');
+      // Remove tokens and expiry time
+      accessToken = '';
+      idToken = '';
+      expiresAt = 0;
+
+      angularAuth0.logout({
+        returnTo: window.location.origin
+      });
+
       login();
     }
 
     function isAuthenticated() {
       if (connectivity.isOnline === false) return true;
+
       // Check whether the current time is past the
       // access token's expiry time
-      var expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-      return getToken() != null && new Date().getTime() < expiresAt;
+      return (
+        localStorageService.get('isLoggedIn') === 'true' &&
+        new Date().getTime() < expiresAt
+      );
     }
 
     function getCurrentUser() {
@@ -112,18 +131,16 @@ angular.module('app.auth').service('authService', [
         return $q.reject('Not authenticated');
       }
 
-      var user = localStorageService.get('user') || {};
-      user.$session_id = user.$session_id || null;
+      const user = localStorageService.get('user');
 
-      if (connectivity.isOnline && user.$session_id !== SESSION_ID) {
-        if (mePromise !== null) {
+      if (connectivity.isOnline && user == null) {
+        if (mePromise != null) {
           return mePromise;
         }
         mePromise = $http
           .get(APP_CONFIG.apiUrl + 'me/')
           .then(function(resp) {
-            var currentUser = resp.data;
-            currentUser.$session_id = SESSION_ID;
+            const currentUser = resp.data;
             localStorageService.set('user', currentUser);
 
             return currentUser;
@@ -132,10 +149,8 @@ angular.module('app.auth').service('authService', [
             mePromise = null;
           });
         return mePromise;
-      } else if (!connectivity.isOnline || user.$session_id === SESSION_ID) {
-        return $q.resolve(user);
       }
-      return $q.resolve(null);
+      return $q.resolve(user);
     }
 
     function getProfileId() {
@@ -153,55 +168,35 @@ angular.module('app.auth').service('authService', [
       return profileIdPromise;
     }
 
-    function renewToken() {
-      const deferred = $q.defer();
-
-      if (connectivity.isOnline === false) {
-        deferred.resolve();
-      }
-
-      var callback = function(err, result) {
-        if (err) {
-          console.error(err);
-        } else {
-          setSession(result);
-        }
-        deferred.resolve();
-      };
-
-      angularAuth0.checkSession({}, callback);
-
-      return deferred.promise;
-    }
-
     function cancelScheduleRenewal() {
       console.log('cancel scheduled token renewal');
       clearTimeout(tokenRenewalTimeout);
     }
 
     function scheduleRenewal() {
-      var expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-      var delay = expiresAt - Date.now() - tokenRenewLeeway;
+      const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+      const delay = expiresAt - Date.now() - tokenRenewLeeway;
       if (delay > 0) {
         tokenRenewalTimeout = setTimeout(function() {
           console.log('renew');
-          renewToken();
+          renewTokens();
         }, delay);
       }
     }
 
     return {
-      tokenRenewalTimeout: tokenRenewalTimeout,
-      getToken: getToken,
-      login: login,
-      handleAuthentication: handleAuthentication,
-      logout: logout,
-      isAuthenticated: isAuthenticated,
-      getCurrentUser: getCurrentUser,
-      getProfileId: getProfileId,
-      scheduleRenewal: scheduleRenewal,
       cancelScheduleRenewal: cancelScheduleRenewal,
-      renewToken: renewToken
+      getCurrentUser: getCurrentUser,
+      getIdToken: getIdToken,
+      getProfileId: getProfileId,
+      getToken: getToken,
+      handleAuthentication: handleAuthentication,
+      isAuthenticated: isAuthenticated,
+      login: login,
+      logout: logout,
+      renewTokens: renewTokens,
+      scheduleRenewal: scheduleRenewal,
+      tokenRenewalTimeout: tokenRenewalTimeout
     };
   }
 ]);

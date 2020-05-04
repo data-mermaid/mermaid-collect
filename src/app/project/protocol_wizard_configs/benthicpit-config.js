@@ -3,12 +3,14 @@ angular.module('app.project').service('BenthicPITWizardConfig', [
   '$q',
   '$filter',
   'BenthicBaseWizardConfig',
+  'OfflineCommonTables',
   'ValidateSubmitService',
   function(
     $stateParams,
     $q,
     $filter,
     BenthicBaseWizardConfig,
+    OfflineCommonTables,
     ValidateSubmitService
   ) {
     'use strict';
@@ -29,6 +31,13 @@ angular.module('app.project').service('BenthicPITWizardConfig', [
             statusFilter
           ).obs_benthic_pits;
           return $q.resolve(keys);
+        },
+        benthicAttributes: function() {
+          return OfflineCommonTables.BenthicAttributesTable(true).then(function(
+            table
+          ) {
+            return table.filter();
+          });
         }
       }
     };

@@ -1,5 +1,13 @@
 <h4 class="modal-subtitle">Rules</h4>
 
+<div class="clearfix" ng-if="form.$error.management_rules">
+  <div class="col-md-8">
+    <div class="note note-error">
+      <div class="error">At least one rule is required.</div>
+    </div>
+  </div>
+</div>
+<br/>
 <div class="clearfix">
   <div class="col-md-8">
     <ul class="selector-list">
