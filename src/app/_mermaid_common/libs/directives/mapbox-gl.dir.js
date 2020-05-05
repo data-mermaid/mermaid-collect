@@ -420,11 +420,6 @@ angular.module('mermaid.libs').directive('mapboxGl', [
 
             if (map.getSource('mapMarkers') !== undefined) {
               map.getSource('mapMarkers').setData(data);
-
-              // const result = map.querySourceFeatures('atlas-geomorphic', {
-              //   sourceLayer: 'reef_polygons_geomorphic_expanded'
-              // })
-              // console.log(result)
             }
 
             if (records.length > 0) {
