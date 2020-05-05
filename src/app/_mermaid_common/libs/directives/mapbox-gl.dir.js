@@ -72,8 +72,28 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           return array.length > 0 ? arrayExp : 0;
         };
 
+        const applyGeomorphicOpacityExpression = function(array) {
+          if (array === null) {
+            return false;
+          }
+
+          const arrayExp = array.flatMap(item => {
+            let equalBenthic = [['==', ['get', 'geomorphic']], 1];
+            equalBenthic[0].push(item);
+
+            return equalBenthic;
+          });
+
+          arrayExp.unshift('case');
+          arrayExp.push(0);
+          return array.length > 0 ? arrayExp : 0;
+        };
+
         const fillOpacityValue = applyOpacityExpression(
           JSON.parse(localStorage.getItem('benthic_legend'))
+        );
+        const fillGeomorphicOpacityValue = applyGeomorphicOpacityExpression(
+          JSON.parse(localStorage.getItem('geomorphic_legend'))
         );
         const rasterOpacityValue = JSON.parse(
           localStorage.getItem('coral_mosaic')
@@ -123,6 +143,39 @@ angular.module('mermaid.libs').directive('mapboxGl', [
                 1,
                 0 // Default / other
               ];
+        scope.fillGeomorphicOpacityExpression =
+          fillGeomorphicOpacityValue === 0 || fillGeomorphicOpacityValue
+            ? fillGeomorphicOpacityValue
+            : [
+                'case',
+                ['==', ['get', 'geomorphic'], 'Back Reef Slope'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Deep Lagoon'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Inner Reef Flat'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Outer Reef Flat'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Patch Reefs'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Plateau'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Reef Crest'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Reef Slope'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Shadow Lagoon'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Sheltered Reef Slope'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Small Reef'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Terrestrial Reef Flat'],
+                1,
+                ['==', ['get', 'geomorphic'], 'Unknown'],
+                1,
+                0 // Default / other
+              ];
         scope.rasterOpacityExpression =
           rasterOpacityValue === 0 || rasterOpacityValue
             ? rasterOpacityValue
@@ -157,18 +210,30 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           map.addSource('atlas-planet', {
             type: 'raster',
             tiles: [
-              'https://allencoralatlas.org/tiles/planet/visual/2019/{z}/{x}/{y}'
+              'https://integration.allencoralatlas.org/tiles/planet/visual/2019/{z}/{x}/{y}'
             ]
           });
 
           map.addSource('atlas-benthic', {
             type: 'vector',
             tiles: [
-              'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_benthic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
+              // 'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_benthic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
+              'https://integration.allencoralatlas.org/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_benthic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf '
             ],
             scheme: 'tms',
             minZoom: 0,
-            maxZoom: 18
+            maxZoom: 22
+          });
+
+          map.addSource('atlas-geomorphic', {
+            type: 'vector',
+            tiles: [
+              // 'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_geomorphic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
+              'https://integration.allencoralatlas.org/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_geomorphic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf '
+            ],
+            scheme: 'tms',
+            minZoom: 0,
+            maxZoom: 22
           });
 
           map.addLayer({
@@ -206,6 +271,46 @@ angular.module('mermaid.libs').directive('mapboxGl', [
                 'rgb(201, 65, 216)' // Default / other
               ],
               'fill-opacity': scope.fillOpacityExpression
+            }
+          });
+
+          map.addLayer({
+            id: 'atlas-geomorphic',
+            type: 'fill',
+            source: 'atlas-geomorphic',
+            'source-layer': 'reef_polygons_geomorphic_expanded',
+            paint: {
+              'fill-color': [
+                'case',
+                ['==', ['get', 'geomorphic'], 'Back Reef Slope'],
+                'rgb(190, 251, 255)',
+                ['==', ['get', 'geomorphic'], 'Deep Lagoon'],
+                'rgb(44, 162, 249)',
+                ['==', ['get', 'geomorphic'], 'Inner Reef Flat'],
+                'rgb(197, 167, 203)',
+                ['==', ['get', 'geomorphic'], 'Outer Reef Flat'],
+                'rgb(146, 115, 157)',
+                ['==', ['get', 'geomorphic'], 'Patch Reefs'],
+                'rgb(255, 186, 21)',
+                ['==', ['get', 'geomorphic'], 'Plateau'],
+                'rgb(205, 104, 18)',
+                ['==', ['get', 'geomorphic'], 'Reef Crest'],
+                'rgb(97, 66, 114)',
+                ['==', ['get', 'geomorphic'], 'Reef Slope'],
+                'rgb(40, 132, 113)',
+                ['==', ['get', 'geomorphic'], 'Shadow Lagoon'],
+                'rgb(119, 208, 252)',
+                ['==', ['get', 'geomorphic'], 'Sheltered Reef Slope'],
+                'rgb(16, 189, 166)',
+                ['==', ['get', 'geomorphic'], 'Small Reef'],
+                'rgb(230, 145, 19)',
+                ['==', ['get', 'geomorphic'], 'Terrestrial Reef Flat'],
+                'rgb(251, 222, 251)',
+                ['==', ['get', 'geomorphic'], 'Unknown'],
+                'rgb(178, 178, 178)',
+                'rgb(201, 65, 216)' // Default / other
+              ],
+              'fill-opacity': scope.fillGeomorphicOpacityExpression
             }
           });
 
@@ -315,6 +420,11 @@ angular.module('mermaid.libs').directive('mapboxGl', [
 
             if (map.getSource('mapMarkers') !== undefined) {
               map.getSource('mapMarkers').setData(data);
+
+              // const result = map.querySourceFeatures('atlas-geomorphic', {
+              //   sourceLayer: 'reef_polygons_geomorphic_expanded'
+              // })
+              // console.log(result)
             }
 
             if (records.length > 0) {
@@ -334,6 +444,21 @@ angular.module('mermaid.libs').directive('mapboxGl', [
                 'atlas-benthic',
                 'fill-opacity',
                 applyOpacityExpression(JSON.parse(storageVal))
+              );
+            }
+          }
+        );
+
+        scope.$watch(
+          function() {
+            return localStorage.getItem('geomorphic_legend');
+          },
+          function(storageVal, oldStorageValue) {
+            if (storageVal !== oldStorageValue) {
+              map.setPaintProperty(
+                'atlas-geomorphic',
+                'fill-opacity',
+                applyGeomorphicOpacityExpression(JSON.parse(storageVal))
               );
             }
           }

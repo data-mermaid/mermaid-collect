@@ -14,23 +14,16 @@
     <details>
       <summary>
         <div class="atlas-legend">
-          <input type="checkbox">
+          <input type="checkbox" ng-model="selectAllGeomorphic" ng-change="filterAllGeomorphic()">
           <label> 
             Geomorphic Analysis
           </label>
         </div>
       </summary>
-      <div class="atlas-legend-item">
-        <input type="checkbox">
-        <label> 
-          Algae
-        </label>
-      </div>
-      <div class="atlas-legend-item">
-        <input type="checkbox">
-        <label> 
-          Benthic Microalgae
-        </label>
+      <div ng-repeat="geomorphic in geomorphicOptions | orderBy:'name'" class="atlas-legend-item">
+        <input type="checkbox" ng-model="geomorphic.selected" ng-change="filterGeomorphic(geomorphic.name)">
+        <label>{{geomorphic.name}}</label>
+        <div class="atlas-legend-color-box" ng-style="{'background-color': geomorphicColors[geomorphic.name]}"></div>
       </div>
     </details>
     <details>
