@@ -382,6 +382,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           if (!slider) {
             map.setLayoutProperty('atlas-planet', 'visibility', 'none');
             map.setLayoutProperty('atlas-benthic', 'visibility', 'none');
+            map.setLayoutProperty('atlas-geomorphic', 'visibility', 'none');
           }
         });
 
