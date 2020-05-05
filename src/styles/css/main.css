@@ -1490,9 +1490,9 @@ input:checked + .slider-mermaid:before {
 .leaflet-navbar {
   background: rgba(255, 255, 255, 1);
   position: absolute; 
-  width: 250px;
+  width: 270px;
   height: 400px;
-  right: -250px;
+  right: -270px;
   top: 0px;
   z-index: 1;
   transition: .5s right;
@@ -1500,7 +1500,6 @@ input:checked + .slider-mermaid:before {
 
 .leaflet-navbar.open {
   right: 0px;
-  /* overflow-y: auto; */
 }
 
 .leaflet-navbar .leaflet-hamburger {
@@ -1536,7 +1535,7 @@ input:checked + .slider-mermaid:before {
 
 .atlas-legend-item {
   display: block;
-  margin-left: 30px;
+  margin-left: 25px;
 }
 
 .atlas-legend-color-box {

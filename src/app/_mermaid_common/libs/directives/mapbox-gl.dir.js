@@ -11,19 +11,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
         records: '=?',
         geoattr: '=?'
       },
-      template:
-        '<div id="map" class="row" style="height: 400px;"><legend-slider></legend-slider>',
       link: function(scope) {
-        scope.benthicLayerColors = {
-          'Coral/Algae': 'rgb(255, 97, 97)',
-          'Benthic Microalgae': 'rgb(155, 204, 79)',
-          Rock: 'rgb(177, 156, 58)',
-          Rubble: 'rgb(224, 208, 94)',
-          Sand: 'rgb(255, 255, 190)',
-          Seagrass: 'rgb(102, 132, 56)',
-          Unknown: 'rgb(178, 178, 178)'
-        };
-
         const settings = (this.settings = {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           textColor: '#ffffff',
@@ -67,26 +55,6 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           }
         };
 
-        const worldBaseMap = {
-          version: 8,
-          name: 'World Map',
-          sources: {
-            worldmap: {
-              type: 'raster',
-              tiles: [
-                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-              ]
-            }
-          },
-          layers: [
-            {
-              id: 'base-map',
-              type: 'raster',
-              source: 'worldmap'
-            }
-          ]
-        };
-
         const applyOpacityExpression = function(array) {
           if (array === null) {
             return false;
@@ -110,6 +78,26 @@ angular.module('mermaid.libs').directive('mapboxGl', [
         const rasterOpacityValue = JSON.parse(
           localStorage.getItem('coral_mosaic')
         );
+
+        const worldBaseMap = {
+          version: 8,
+          name: 'World Map',
+          sources: {
+            worldmap: {
+              type: 'raster',
+              tiles: [
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+              ]
+            }
+          },
+          layers: [
+            {
+              id: 'base-map',
+              type: 'raster',
+              source: 'worldmap'
+            }
+          ]
+        };
 
         scope.mapopts = scope.mapopts || {};
         scope.records = scope.records || [];
@@ -143,12 +131,13 @@ angular.module('mermaid.libs').directive('mapboxGl', [
         const defaultCenter = scope.mapopts.defaultCenter || [20, 0.0];
         const defaultZoom = scope.mapopts.defaultZoom || 1;
         const popup = scope.mapopts.popup || false;
+        const slider = scope.mapopts.slider || false;
         const navigation = new mapboxgl.NavigationControl({
           showCompass: false,
           showZoom: true
         });
 
-        const mapBox = new mapboxgl.Map({
+        const map = new mapboxgl.Map({
           container: 'map',
           style: worldBaseMap,
           center: defaultCenter, // starting position [lng, lat]
@@ -157,7 +146,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
         });
 
         const initLoadMapLayers = function() {
-          mapBox.addSource('mapMarkers', {
+          map.addSource('mapMarkers', {
             type: 'geojson',
             data: {
               type: 'FeatureCollection',
@@ -165,14 +154,14 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             }
           });
 
-          mapBox.addSource('atlas-planet', {
+          map.addSource('atlas-planet', {
             type: 'raster',
             tiles: [
               'https://allencoralatlas.org/tiles/planet/visual/2019/{z}/{x}/{y}'
             ]
           });
 
-          mapBox.addSource('atlas-benthic', {
+          map.addSource('atlas-benthic', {
             type: 'vector',
             tiles: [
               'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_benthic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
@@ -182,7 +171,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             maxZoom: 18
           });
 
-          mapBox.addLayer({
+          map.addLayer({
             id: 'atlas-planet',
             type: 'raster',
             source: 'atlas-planet',
@@ -192,7 +181,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             }
           });
 
-          mapBox.addLayer({
+          map.addLayer({
             id: 'atlas-benthic',
             type: 'fill',
             source: 'atlas-benthic',
@@ -220,7 +209,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             }
           });
 
-          mapBox.addLayer({
+          map.addLayer({
             id: 'mapMarkers',
             source: 'mapMarkers',
             type: 'circle',
@@ -234,33 +223,32 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           });
         };
 
-        mapBox.on('load', function() {
+        map.on('load', function() {
           initLoadMapLayers();
-          mapBox.addControl(navigation, 'top-left');
+          map.addControl(navigation, 'top-left');
 
-          mapBox.scrollZoom.disable();
-          mapBox.dragRotate.disable();
-          mapBox.touchZoomRotate.disableRotation();
-          mapBox.scrollZoom.setWheelZoomRate(0.02); // Default 1/450
+          map.scrollZoom.disable();
+          map.dragRotate.disable();
+          map.touchZoomRotate.disableRotation();
 
-          mapBox.on('wheel', event => {
+          map.on('wheel', event => {
             if (event.originalEvent.ctrlKey) {
               event.originalEvent.preventDefault();
-              hideHelp(mapBox);
-              if (!mapBox.scrollZoom._enabled) mapBox.scrollZoom.enable();
+              hideHelp(map);
+              if (!map.scrollZoom._enabled) map.scrollZoom.enable();
             } else {
-              if (mapBox.scrollZoom._enabled) {
-                mapBox.scrollZoom.disable();
+              if (map.scrollZoom._enabled) {
+                map.scrollZoom.disable();
               }
-              showHelp(mapBox, settings.textMessage);
+              showHelp(map, settings.textMessage);
               setTimeout(() => {
-                hideHelp(mapBox);
+                hideHelp(map);
               }, settings.timeout);
             }
           });
 
           if (popup) {
-            mapBox.on('click', 'mapMarkers', function(e) {
+            map.on('click', 'mapMarkers', function(e) {
               const coordinates = e.features[0].geometry.coordinates.slice();
               const description = popup(e.features[0].properties);
 
@@ -271,18 +259,24 @@ angular.module('mermaid.libs').directive('mapboxGl', [
               new mapboxgl.Popup()
                 .setLngLat(coordinates)
                 .setHTML(description)
-                .addTo(mapBox);
+                .addTo(map);
             });
 
             // Change the cursor to a pointer when the mouse is over the places layer.
-            mapBox.on('mouseenter', 'mapMarkers', function() {
-              mapBox.getCanvas().style.cursor = 'pointer';
+            map.on('mouseenter', 'mapMarkers', function() {
+              map.getCanvas().style.cursor = 'pointer';
             });
 
             // Change it back to a pointer when it leaves.
-            mapBox.on('mouseleave', 'mapMarkers', function() {
-              mapBox.getCanvas().style.cursor = '';
+            map.on('mouseleave', 'mapMarkers', function() {
+              map.getCanvas().style.cursor = '';
             });
+          }
+
+          // define slider: true, and add legendslider directive to use slider
+          if (!slider) {
+            map.setLayoutProperty('atlas-planet', 'visibility', 'none');
+            map.setLayoutProperty('atlas-benthic', 'visibility', 'none');
           }
         });
 
@@ -297,6 +291,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
 
             _.each(records, function(rec) {
               let rec_geo_data = {};
+
               if (popup) {
                 rec_geo_data = {
                   id: rec.id,
@@ -307,21 +302,23 @@ angular.module('mermaid.libs').directive('mapboxGl', [
                   reefzone: rec.$$reefzones.name
                 };
               }
+
               const recPoint = {
                 type: 'Feature',
                 geometry: rec.location,
                 properties: rec_geo_data
               };
+
               bounds.extend(rec.location.coordinates);
               data.features.push(recPoint);
             });
 
-            if (mapBox.getSource('mapMarkers') !== undefined) {
-              mapBox.getSource('mapMarkers').setData(data);
+            if (map.getSource('mapMarkers') !== undefined) {
+              map.getSource('mapMarkers').setData(data);
             }
 
             if (records.length > 0) {
-              mapBox.fitBounds(bounds, { padding: 25, animate: false });
+              map.fitBounds(bounds, { padding: 25, animate: false });
             }
           },
           true
@@ -331,13 +328,12 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           function() {
             return localStorage.getItem('benthic_legend');
           },
-          function(newVal, oldVal) {
-            const storageOption = JSON.parse(newVal);
-            if (newVal !== oldVal) {
-              mapBox.setPaintProperty(
+          function(storageVal, oldStorageValue) {
+            if (storageVal !== oldStorageValue) {
+              map.setPaintProperty(
                 'atlas-benthic',
                 'fill-opacity',
-                applyOpacityExpression(storageOption)
+                applyOpacityExpression(JSON.parse(storageVal))
               );
             }
           }
@@ -347,12 +343,12 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           function() {
             return localStorage.getItem('coral_mosaic');
           },
-          function(newVal, oldVal) {
-            if (newVal !== oldVal) {
-              mapBox.setPaintProperty(
+          function(storageVal, oldStorageValue) {
+            if (storageVal !== oldStorageValue) {
+              map.setPaintProperty(
                 'atlas-planet',
                 'raster-opacity',
-                JSON.parse(newVal)
+                JSON.parse(storageVal)
               );
             }
           }

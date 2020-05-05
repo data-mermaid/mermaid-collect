@@ -8,7 +8,15 @@ angular.module('mermaid.libs').directive('legendSlider', [
       link: function(scope) {
         scope.toggleNav = false;
         scope.selectAllBenthic = undefined;
-        scope.benthicColors = scope.$parent.benthicLayerColors;
+        scope.benthicColors = {
+          'Coral/Algae': 'rgb(255, 97, 97)',
+          'Benthic Microalgae': 'rgb(155, 204, 79)',
+          Rock: 'rgb(177, 156, 58)',
+          Rubble: 'rgb(224, 208, 94)',
+          Sand: 'rgb(255, 255, 190)',
+          Seagrass: 'rgb(102, 132, 56)',
+          Unknown: 'rgb(178, 178, 178)'
+        };
         scope.benthicArray = Object.keys(scope.benthicColors);
 
         const loadBenthicOptions = function() {
