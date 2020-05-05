@@ -401,7 +401,7 @@ angular
             $scope.searchPlaceholder = config.searchPlaceholder || 'Search...';
             $scope.searchHelp =
               config.searchHelp ||
-              'Use double quotes to search exact phrase, ex: "Benthic PIT"';
+              'Use double quotes to search exact phrase, ex: "ABC water"';
             $scope.searchIcon = config.searchIcon || 'fa-search';
             $scope.searching = config.searching;
             $scope.rowSelect = config.rowSelect;
