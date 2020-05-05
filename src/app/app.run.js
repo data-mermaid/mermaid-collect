@@ -18,7 +18,7 @@
     'system',
     'offlineservice',
     'utils',
-    // '$urlRouter',
+    '$urlRouter',
     'ConnectivityFactory'
   ];
 
@@ -37,7 +37,7 @@
     system,
     offlineservice,
     utils,
-    // $urlRouter,
+    $urlRouter,
     ConnectivityFactory
   ) {
     const conn = new ConnectivityFactory($rootScope);
@@ -50,20 +50,27 @@
       console.error(error);
     });
 
-    if (authService.getToken() != null) {
-      handleAuth = authService.renewToken();
+    if (localStorageService.get('isLoggedIn') === 'true') {
+      handleAuth = authService.renewTokens();
     } else {
       // Handle the authentication
       // result in the hash
       handleAuth = authService.handleAuthentication();
     }
 
-    handleAuth.then(function() {
-      // $urlRouter.listen();
-      if (connectivity.isOnline && authService.isAuthenticated()) {
-        system.startAutoDataUpdate();
-      }
-    });
+    handleAuth
+      .then(function() {
+        $urlRouter.listen();
+        $urlRouter.sync();
+        if (connectivity.isOnline && authService.isAuthenticated()) {
+          system.startAutoDataUpdate();
+        }
+      })
+      .catch(function(err) {
+        $urlRouter.listen();
+        $urlRouter.sync();
+        throw err;
+      });
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;

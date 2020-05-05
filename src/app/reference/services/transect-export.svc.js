@@ -125,12 +125,75 @@ angular.module('app.reference').service('TransectExportService', [
       });
     };
 
+    const sitesReport = function(records) {
+      return _.map(records, function(val) {
+        return [
+          val.$$countries.name,
+          val.name,
+          val.location.coordinates[1],
+          val.location.coordinates[0],
+          val.$$reeftypes.name,
+          val.$$reefzones.name,
+          val.$$reefexposures.name,
+          `"${val.notes}"`
+        ];
+      });
+    };
+
+    const managementsReport = function(records, choices) {
+      return records.map(function(val) {
+        const isPartialRestrict =
+          val.periodic_closure ||
+          val.size_limits ||
+          val.gear_restriction ||
+          val.species_restriction;
+
+        const management_parties =
+          val.parties.length > 0
+            ? `"${_.map(val.parties, function(party) {
+                return $filter('matchchoice')(party, choices.parties);
+              })}"`
+            : '';
+
+        const management_compliance = $filter('matchchoice')(
+          val.compliance,
+          choices.compliances
+        );
+
+        const open_access = val.open_access && 'Open Access';
+        const no_take = val.no_take && 'No Take';
+        const partial_restrictions =
+          isPartialRestrict &&
+          `"${[
+            val.periodic_closure && 'Periodic Closures',
+            val.size_limits && 'Size Limits',
+            val.gear_restriction && 'Gear Restrictions',
+            val.species_restriction && 'Species Restrictions'
+          ].filter(restriction => restriction)}"`;
+
+        const rules = open_access || no_take || partial_restrictions || '';
+
+        return [
+          val.name,
+          val.name_secondary,
+          val.est_year || '',
+          val.size || '',
+          management_parties,
+          management_compliance || '',
+          rules,
+          `"${val.notes}"`
+        ];
+      });
+    };
+
     return {
       downloadAsCSV: downloadAsCSV,
       fishFamiliesReport: fishFamiliesReport,
       fishGeneraReport: fishGeneraReport,
       fishSpeciessReport: fishSpeciessReport,
-      benthicAttributesReport: benthicAttributesReport
+      benthicAttributesReport: benthicAttributesReport,
+      sitesReport: sitesReport,
+      managementsReport: managementsReport
     };
   }
 ]);

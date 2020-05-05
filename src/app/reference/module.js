@@ -86,6 +86,16 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
           templateUrl: 'app/reference/partials/fishfamilies.tpl.html',
           controller: 'FishFamiliesCtrl'
         }
+      },
+      resolve: {
+        fishFamiliesTable: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishFamiliesTable();
+        },
+        fishFamiliesCount: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishFamiliesTable().then(function(table) {
+            return table.count();
+          });
+        }
       }
     })
     .state('app.reference.fishgenera.fishgenus', {
@@ -119,6 +129,16 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         'content@app': {
           templateUrl: 'app/reference/partials/fishgenera.tpl.html',
           controller: 'FishGeneraCtrl'
+        }
+      },
+      resolve: {
+        fishGeneraTable: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishGeneraTable();
+        },
+        fishGeneraCount: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishGeneraTable().then(function(table) {
+            return table.count();
+          });
         }
       }
     })
@@ -196,6 +216,18 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         'content@app': {
           templateUrl: 'app/reference/partials/benthicattributes.tpl.html',
           controller: 'BenthicAttributesCtrl'
+        }
+      },
+      resolve: {
+        benthicAttributesTable: function(OfflineCommonTables) {
+          return OfflineCommonTables.BenthicAttributesTable();
+        },
+        benthicAttributesCount: function(OfflineCommonTables) {
+          return OfflineCommonTables.BenthicAttributesTable().then(function(
+            table
+          ) {
+            return table.count();
+          });
         }
       }
     });

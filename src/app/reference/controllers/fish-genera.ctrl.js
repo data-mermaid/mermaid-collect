@@ -6,6 +6,8 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
   'OfflineCommonTables',
   'TransectExportService',
   'Button',
+  'fishGeneraTable',
+  'fishGeneraCount',
   function(
     $rootScope,
     $scope,
@@ -13,7 +15,9 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     PaginatedOfflineTableWrapper,
     OfflineCommonTables,
     TransectExportService,
-    Button
+    Button,
+    fishGeneraTable,
+    fishGeneraCount
   ) {
     'use strict';
 
@@ -21,7 +25,6 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     $scope.tableControl = {};
     const fieldReportButton = new Button();
     const reportHeader = ['Name', 'Family'];
-    let fishGenusRecordsCount = 0;
 
     OfflineCommonTables.FishFamiliesTable().then(function(table) {
       return table.filter().then(function(records) {
@@ -30,7 +33,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
     });
 
     $scope.tableConfig = {
-      id: 'fishgenera',
+      id: 'mermaid_fishgenera',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish genera by name or family',
@@ -77,14 +80,12 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       }
     };
 
-    const updateFishGenusCount = function() {
-      $scope.projectObjectsTable.count().then(function(count) {
-        fishGenusRecordsCount = count;
-      });
-    };
+    $scope.resource = new PaginatedOfflineTableWrapper(fishGeneraTable, {
+      searchFields: ['$$fishfamilies.name', 'name']
+    });
 
     const downloadFishGeneraReport = function() {
-      $scope.projectObjectsTable.filter().then(function(records) {
+      fishGeneraTable.filter().then(function(records) {
         const content = TransectExportService.fishGeneraReport(records);
 
         TransectExportService.downloadAsCSV(
@@ -95,36 +96,10 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
       });
     };
 
-    const promise = OfflineCommonTables.FishGeneraTable();
-    promise.then(function(table) {
-      $scope.projectObjectsTable = table;
-      updateFishGenusCount();
-      $scope.resource = new PaginatedOfflineTableWrapper(table, {
-        searchFields: ['$$fishfamilies.name', 'name']
-      });
-      $scope.projectObjectsTable.$watch(
-        updateFishGenusCount,
-        null,
-        'fishGenusRecordsCount'
-      );
-    });
-
     $scope.tableControl.getFilteredRecordsCount = function() {
-      const tableRecordsTotal =
-        $scope.tableControl.getPaginationTable() &&
-        $scope.tableControl.getPaginationTable().total;
+      const tableRecordsTotal = $scope.resource.lastQueryOutput.count;
 
-      return `${tableRecordsTotal}/${fishGenusRecordsCount}`;
-    };
-
-    $scope.tableControl.recordsNotFiltered = function() {
-      if (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length !== fishGenusRecordsCount
-      ) {
-        updateFishGenusCount();
-      }
-      return !$scope.tableControl.textboxFilterUsed();
+      return `${tableRecordsTotal}/${fishGeneraCount}`;
     };
 
     fieldReportButton.name = 'Export to CSV';

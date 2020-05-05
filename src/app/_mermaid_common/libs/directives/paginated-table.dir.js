@@ -6,7 +6,7 @@
 
   $scope.tableControl = {};
   $scope.tableConfig = {
-    id: 'collect_records',
+    id: 'mermaid_collect_records',
     hideRowStripes: true/false  // Hide row alternating colors
     resource: PaginatedOfflineTableWrapper(offlinetable),
     searching: false,
@@ -191,7 +191,9 @@ angular
     '$window',
     '$location',
     '$timeout',
-    function($q, $window, $location, $timeout) {
+    'utils',
+    'localStorageService',
+    function($q, $window, $location, $timeout, utils, localStorageService) {
       'use strict';
       return {
         restrict: 'EA',
@@ -230,6 +232,7 @@ angular
           var defaultSortByColumns;
           var recordIdKey;
           var selectedRecords = {};
+          var searchPromise = null;
 
           $scope.search = null;
           $scope.sortArrArgs = null;
@@ -299,8 +302,7 @@ angular
 
             // Search
             if (search.length > 0) {
-              var terms = search.split('');
-              var search_str = terms.join('.*') + '.*';
+              const search_str = utils.parseSearchString(search);
               qry.search = search_str;
             }
 
@@ -379,7 +381,7 @@ angular
             disableTrackingTableState =
               config.disableTrackingTableState || false;
             tableId = config.id;
-            var localStorageItem = localStorage.getItem(tableId);
+            var localStorageItem = localStorageService.get(tableId);
             recordIdKey = config.recordIdKey || 'id';
             $scope.hideRowStripes = config.hideRowStripes || false;
             updateOnRemoteSync = config.updateOnRemoteSync || true;
@@ -397,7 +399,9 @@ angular
               config.searchLocation === 'left' ? 'pull-left' : 'pull-right';
 
             $scope.searchPlaceholder = config.searchPlaceholder || 'Search...';
-            $scope.searchHelp = config.searchHelp || '';
+            $scope.searchHelp =
+              config.searchHelp ||
+              'Use double quotes to search exact phrase, ex: "ABC water"';
             $scope.searchIcon = config.searchIcon || 'fa-search';
             $scope.searching = config.searching;
             $scope.rowSelect = config.rowSelect;
@@ -408,7 +412,7 @@ angular
             $scope.filters = config.filters || {};
             $scope.hideLimits = config.hideLimits || false;
             parsedTableConfig = localStorageItem
-              ? JSON.parse(localStorage.getItem(tableId))
+              ? localStorageService.get(tableId)
               : {};
 
             defaultSortByColumns = (parsedTableConfig &&
@@ -434,7 +438,7 @@ angular
                 );
                 tableSettings.limit = table_query_params.limit;
                 tableSettings.columns = tableQueryParamOrdering;
-                localStorage.setItem(tableId, JSON.stringify(tableSettings));
+                localStorageService.set(tableId, tableSettings);
               }
             } else {
               table_query_params = {};
@@ -494,7 +498,7 @@ angular
               if (disableTrackingTableState !== true) {
                 // Need to remove regex from string
                 if (qry.search) {
-                  qry.search = qry.search.replace(/\.\*/g, '');
+                  qry.search = $scope.search;
                 }
                 setTableQueryParam(qry);
               }
@@ -551,7 +555,7 @@ angular
             tableSettings.limit = pageLimit || $scope.limits[1];
             tableSettings.columns = $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
-              localStorage.setItem(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, tableSettings);
             }
 
             $scope.fetchTableRecords(true);
@@ -567,7 +571,7 @@ angular
             $scope.sortArrArgs = filterSortColumns;
             tableSettings.columns = filterSortColumns;
             if (disableTrackingTableState !== true) {
-              localStorage.setItem(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, tableSettings);
             }
             $scope.fetchTableRecords(true);
           };
@@ -587,7 +591,14 @@ angular
           };
 
           $scope.searchTable = function() {
-            $scope.fetchTableRecords(true);
+            if (searchPromise !== null) {
+              $timeout.cancel(searchPromise);
+              searchPromise = null;
+            }
+            searchPromise = $timeout(function() {
+              $scope.fetchTableRecords(true);
+              searchPromise = null;
+            }, 1000);
           };
 
           $scope.toggleRow = function(record) {
@@ -631,7 +642,7 @@ angular
             tableSettings.limit = limit;
             tableSettings.columns = $scope.sortArrArgs;
             if (disableTrackingTableState !== true) {
-              localStorage.setItem(tableId, JSON.stringify(tableSettings));
+              localStorageService.set(tableId, tableSettings);
             }
             updatePagination({
               limit: limit,

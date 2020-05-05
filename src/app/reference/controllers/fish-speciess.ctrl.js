@@ -45,7 +45,7 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     ];
 
     $scope.tableConfig = {
-      id: 'fishspecies',
+      id: 'mermaid_fishspecies',
       defaultSortByColumn: 'display_name',
       searching: true,
       searchPlaceholder: 'Filter fish species by name or genus',
@@ -137,7 +137,8 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     };
 
     $scope.tableControl.getFilteredRecordsCount = function() {
-      const tableRecordsTotal = $scope.resource.lastQueryOutput.results.length;
+      const tableRecordsTotal = $scope.resource.lastQueryOutput.count;
+
       return `${tableRecordsTotal}/${fishSpeciesCount}`;
     };
 

@@ -3,21 +3,23 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
   '$rootScope',
   'PaginatedOfflineTableWrapper',
   'Button',
-  'OfflineTableUtils',
   'OfflineCommonTables',
   'TransectExportService',
   '$filter',
   '$q',
+  'benthicAttributesTable',
+  'benthicAttributesCount',
   function(
     $scope,
     $rootScope,
     PaginatedOfflineTableWrapper,
     Button,
-    OfflineTableUtils,
     OfflineCommonTables,
     TransectExportService,
     $filter,
-    $q
+    $q,
+    benthicAttributesTable,
+    benthicAttributesCount
   ) {
     'use strict';
 
@@ -26,7 +28,6 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     $scope.choices = { regions: [], benthiclifehistories: [] };
     const fieldReportButton = new Button();
     const reportHeader = ['Name', 'Parent', 'Life History', 'Regions'];
-    let benthicAttributeRecordsCount = 0;
 
     OfflineCommonTables.ChoicesTable().then(function(table) {
       table.filter({ name: 'regions' }).then(function(region_choices) {
@@ -41,7 +42,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     });
 
     $scope.tableConfig = {
-      id: 'benthicattributes',
+      id: 'mermaid_benthicattributes',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter benthic attributes by name or parent',
@@ -97,36 +98,12 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       }
     };
 
-    const updateBenthicAttributeCount = function() {
-      $scope.projectObjectsTable.count().then(function(count) {
-        benthicAttributeRecordsCount = count;
-      });
-    };
-
-    const downloadBenthicAttributesReport = function() {
-      $scope.projectObjectsTable.filter().then(function(records) {
-        const content = TransectExportService.benthicAttributesReport(
-          records,
-          $scope.choices
-        );
-
-        TransectExportService.downloadAsCSV(
-          'benthic-attributes',
-          reportHeader,
-          content
-        );
-      });
-    };
-
-    const promise = OfflineCommonTables.BenthicAttributesTable();
-    promise.then(function(table) {
-      $scope.projectObjectsTable = table;
-      updateBenthicAttributeCount();
+    $q.resolve(benthicAttributesTable).then(function(table) {
       table
         .filter()
         .then(function(records) {
-          var deferred = $q.defer();
-          var joinSchema = {
+          const deferred = $q.defer();
+          const joinSchema = {
             benthicattributes: {
               foreignKey: 'parent',
               relatedRecords: records,
@@ -142,29 +119,27 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
             searchFields: ['name', '$$benthicattributes.name']
           });
         });
-      $scope.projectObjectsTable.$watch(
-        updateBenthicAttributeCount,
-        null,
-        'benthicAttributeRecordsCount'
-      );
     });
 
-    $scope.tableControl.getFilteredRecordsCount = function() {
-      const tableRecordsTotal =
-        $scope.tableControl.getPaginationTable() &&
-        $scope.tableControl.getPaginationTable().total;
+    const downloadBenthicAttributesReport = function() {
+      benthicAttributesTable.filter().then(function(records) {
+        const content = TransectExportService.benthicAttributesReport(
+          records,
+          $scope.choices
+        );
 
-      return `${tableRecordsTotal}/${benthicAttributeRecordsCount}`;
+        TransectExportService.downloadAsCSV(
+          'benthic-attributes',
+          reportHeader,
+          content
+        );
+      });
     };
 
-    $scope.tableControl.recordsNotFiltered = function() {
-      if (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length !== benthicAttributeRecordsCount
-      ) {
-        updateBenthicAttributeCount();
-      }
-      return !$scope.tableControl.textboxFilterUsed();
+    $scope.tableControl.getFilteredRecordsCount = function() {
+      const tableRecordsTotal = $scope.resource.lastQueryOutput.count;
+
+      return `${tableRecordsTotal}/${benthicAttributesCount}`;
     };
 
     fieldReportButton.name = 'Export to CSV';

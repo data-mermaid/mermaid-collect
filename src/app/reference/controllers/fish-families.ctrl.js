@@ -2,16 +2,18 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   '$rootScope',
   '$scope',
   'PaginatedOfflineTableWrapper',
-  'OfflineCommonTables',
   'TransectExportService',
   'Button',
+  'fishFamiliesTable',
+  'fishFamiliesCount',
   function(
     $rootScope,
     $scope,
     PaginatedOfflineTableWrapper,
-    OfflineCommonTables,
     TransectExportService,
-    Button
+    Button,
+    fishFamiliesTable,
+    fishFamiliesCount
   ) {
     'use strict';
 
@@ -19,10 +21,9 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
     $scope.tableControl = {};
     const fieldReportButton = new Button();
     const reportHeader = ['Name'];
-    let fishFamilyRecordsCount = 0;
 
     $scope.tableConfig = {
-      id: 'fishfamiles',
+      id: 'mermaid_fishfamiles',
       defaultSortByColumn: 'name',
       searching: true,
       searchPlaceholder: 'Filter fish families by name',
@@ -60,14 +61,12 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       }
     };
 
-    const updateFishFamilyCount = function() {
-      $scope.projectObjectsTable.count().then(function(count) {
-        fishFamilyRecordsCount = count;
-      });
-    };
+    $scope.resource = new PaginatedOfflineTableWrapper(fishFamiliesTable, {
+      searchFields: ['name']
+    });
 
     const downloadFishFamiliesReport = function() {
-      $scope.projectObjectsTable.filter().then(function(records) {
+      fishFamiliesTable.filter().then(function(records) {
         const content = TransectExportService.fishFamiliesReport(records);
 
         TransectExportService.downloadAsCSV(
@@ -78,36 +77,10 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
       });
     };
 
-    const promise = OfflineCommonTables.FishFamiliesTable();
-    promise.then(function(table) {
-      $scope.projectObjectsTable = table;
-      updateFishFamilyCount();
-      $scope.resource = new PaginatedOfflineTableWrapper(table, {
-        searchFields: ['name']
-      });
-      $scope.projectObjectsTable.$watch(
-        updateFishFamilyCount,
-        null,
-        'fishFamilyRecordsCount'
-      );
-    });
-
     $scope.tableControl.getFilteredRecordsCount = function() {
-      const tableRecordsTotal =
-        $scope.tableControl.getPaginationTable() &&
-        $scope.tableControl.getPaginationTable().total;
+      const tableRecordsTotal = $scope.resource.lastQueryOutput.count;
 
-      return `${tableRecordsTotal}/${fishFamilyRecordsCount}`;
-    };
-
-    $scope.tableControl.recordsNotFiltered = function() {
-      if (
-        $scope.tableControl.records &&
-        $scope.tableControl.records.length !== fishFamilyRecordsCount
-      ) {
-        updateFishFamilyCount();
-      }
-      return !$scope.tableControl.textboxFilterUsed();
+      return `${tableRecordsTotal}/${fishFamiliesCount}`;
     };
 
     fieldReportButton.name = 'Export to CSV';
