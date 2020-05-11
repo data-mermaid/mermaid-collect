@@ -75,6 +75,7 @@ angular.module('app.project').controller('BenthicLitTransectMethodCtrl', [
     saveButton.icon = 'fa fa-save';
     saveButton.onlineOnly = false;
     saveButton.click = save;
+    $scope.save = save;
 
     $rootScope.PageHeaderButtons = [saveButton];
 

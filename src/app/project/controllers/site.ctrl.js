@@ -51,7 +51,7 @@ angular.module('app.project').controller('SiteCtrl', [
       $scope.site = site;
     });
 
-    $scope.save = function() {
+    const save = function() {
       const isNew = $scope.site.id == null;
       SiteService.save($scope.site, { projectId: projectId })
         .then(function(savedSite) {
@@ -84,8 +84,9 @@ angular.module('app.project').controller('SiteCtrl', [
     saveButton.visible = true;
     saveButton.classes = 'btn-success';
     saveButton.icon = 'fa fa-save';
-    saveButton.click = $scope.save;
+    saveButton.click = save;
     saveButton.onlineOnly = false;
+    $scope.save = save;
 
     $rootScope.PageHeaderButtons = [saveButton];
 

@@ -11,7 +11,7 @@
       {{record.validations.results.obs_belt_fishes.validate_region.message}}
       <ul class="validation-message-list">
         <li ng-repeat="attribute_id in record.validations.results.obs_belt_fishes.validate_region.data.no_region_matches"
-        >{{attribute_id | matchchoice: fishAttributes}}</li>
+        >{{attribute_id | matchchoice : fishAttributes : "display_name"}}</li>
       </ul>
     </li>
   </ul>

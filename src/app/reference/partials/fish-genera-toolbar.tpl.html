@@ -1,6 +1,6 @@
 <div>
   <div class="btn-group">
-    <div class="filter-wrapper" ng-hide="control.recordsNotFiltered()">
+    <div class="filter-wrapper" ng-if="control.textboxFilterUsed()">
       <div class="filter-records" > 
         <span ng-if="!control.records">Filtering</span>
         <i class="fa fa-filter" ng-if="control.records"></i>
