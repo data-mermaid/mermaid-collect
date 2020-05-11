@@ -205,24 +205,10 @@ angular
         templateUrl:
           'app/_mermaid_common/libs/directives/paginated-table.tpl.html',
         controller: function($scope) {
-          var VAL_TYPE_STRING = 1;
-          var VAL_TYPE_NUMBER = 2;
-          var VAL_TYPE_BOOLEAN = 3;
-          var VAL_TYPE_UNDEFINED = 4;
-          var VAL_TYPE_NULL = 5;
-          var VAL_TYPES = {
-            string: VAL_TYPE_STRING,
-            number: VAL_TYPE_NUMBER,
-            boolean: VAL_TYPE_BOOLEAN,
-            undefined: VAL_TYPE_UNDEFINED
-          };
-          var QUERY_PARAMETER_DELIMITER = ':::';
           var $ctrl = this;
           var parsedTableConfig;
           var fetch_timeout;
-          var paginationUpdates;
           var disableTrackingTableState;
-          var table_query_params;
           var tableSettings = {};
           var defaultLimits = [10, 50, 100];
           var watchers = [];
@@ -232,43 +218,12 @@ angular
           var defaultSortByColumns;
           var recordIdKey;
           var selectedRecords = {};
+          var searchPromise = null;
 
           $scope.search = null;
           $scope.sortArrArgs = null;
           $scope.selected = {};
           $scope.control.isLoading = false;
-
-          var getTableId = function() {
-            return 'tbl-' + $scope.config.id;
-          };
-
-          var getVarType = function(v) {
-            if (v === null) {
-              return VAL_TYPE_NULL;
-            }
-            return VAL_TYPES[typeof v];
-          };
-
-          var castString = function(v) {
-            if (v == null) {
-              return v;
-            }
-
-            var val_type = parseInt(v.substr(v.length - 2, 1), 10);
-            v = v.substr(0, v.length - 3).trim();
-            switch (val_type) {
-              case VAL_TYPE_NUMBER:
-                return Number(v);
-              case VAL_TYPE_BOOLEAN:
-                return v === 'true';
-              case VAL_TYPE_UNDEFINED:
-                return undefined;
-              case VAL_TYPE_NULL:
-                return null;
-              default:
-                return v;
-            }
-          };
 
           var getDefaultPagination = function() {
             var pagination = {
@@ -284,10 +239,12 @@ angular
                 to: 0
               }
             };
+
             pagination = _.extend(
               pagination,
               _.get($scope.config, 'pagination', {})
             );
+
             return _.merge(pagination, parsedTableConfig || {});
           };
 
@@ -335,38 +292,6 @@ angular
             $scope.pagination = p;
           };
 
-          var getTableQueryParam = function() {
-            var split_qry_params;
-            var table_id = getTableId();
-            var param = $location.search() || {};
-            if (param[table_id]) {
-              split_qry_params = param[table_id].split(
-                QUERY_PARAMETER_DELIMITER
-              );
-              return _.reduce(
-                split_qry_params,
-                function(obj, v) {
-                  var kv = v.split('=');
-                  obj[kv[0].trim()] = castString(kv[1]);
-                  return obj;
-                },
-                {}
-              );
-            }
-            return {};
-          };
-
-          var setTableQueryParam = function(qry) {
-            var serialized_qry = _.map(qry, function(v, k) {
-              return k + '=' + v + '(' + getVarType(v) + ')';
-            }).join(QUERY_PARAMETER_DELIMITER);
-
-            var table_id = getTableId();
-            var p = {};
-            p[table_id] = serialized_qry;
-            $location.search(p);
-          };
-
           var findSortColumnName = function(column_sortby) {
             return _.filter(
               $scope.sortArrArgs,
@@ -398,7 +323,9 @@ angular
               config.searchLocation === 'left' ? 'pull-left' : 'pull-right';
 
             $scope.searchPlaceholder = config.searchPlaceholder || 'Search...';
-            $scope.searchHelp = config.searchHelp || '';
+            $scope.searchHelp =
+              config.searchHelp ||
+              'Use double quotes to search exact phrase, ex: "ABC water"';
             $scope.searchIcon = config.searchIcon || 'fa-search';
             $scope.searching = config.searching;
             $scope.rowSelect = config.rowSelect;
@@ -424,36 +351,17 @@ angular
           $ctrl.init = function(config) {
             applyConfig(config);
             $scope.pagination = getDefaultPagination();
-            if (disableTrackingTableState !== true) {
-              // Update with query parameters if they exist
-              table_query_params = getTableQueryParam();
-              if (
-                !_.isEmpty(table_query_params && table_query_params.ordering)
-              ) {
-                var tableQueryParamOrdering = table_query_params.ordering.split(
-                  ','
-                );
-                tableSettings.limit = table_query_params.limit;
-                tableSettings.columns = tableQueryParamOrdering;
-                localStorageService.set(tableId, tableSettings);
-              }
-            } else {
-              table_query_params = {};
-            }
+            $scope.sortArrArgs = defaultSortByColumns;
 
-            paginationUpdates = {
-              limit: table_query_params.limit || $scope.pagination.limit,
-              page: table_query_params.page || $scope.pagination.page
-            };
+            tableSettings.limit = $scope.pagination.limit;
+            tableSettings.columns = $scope.sortArrArgs;
 
-            if (table_query_params.ordering) {
-              $scope.sortArrArgs = table_query_params.ordering.split(',');
-            } else if (defaultSortByColumns.length >= 0) {
-              $scope.sortArrArgs = defaultSortByColumns;
-            }
+            localStorageService.set(tableId, tableSettings);
 
-            updatePagination(paginationUpdates);
-            $scope.search = table_query_params.search || null;
+            updatePagination({
+              limit: tableSettings.limit,
+              page: $scope.pagination.page
+            });
           };
 
           $scope.fetchTableRecords = function(reset) {
@@ -492,13 +400,6 @@ angular
                 count: data.results.length
               });
               $scope.control.isLoading = false;
-              if (disableTrackingTableState !== true) {
-                // Need to remove regex from string
-                if (qry.search) {
-                  qry.search = $scope.search;
-                }
-                setTableQueryParam(qry);
-              }
 
               if (reset === true) {
                 $window.scrollTo(0, 0);
@@ -588,7 +489,14 @@ angular
           };
 
           $scope.searchTable = function() {
-            $scope.fetchTableRecords(true);
+            if (searchPromise !== null) {
+              $timeout.cancel(searchPromise);
+              searchPromise = null;
+            }
+            searchPromise = $timeout(function() {
+              $scope.fetchTableRecords(true);
+              searchPromise = null;
+            }, 1000);
           };
 
           $scope.toggleRow = function(record) {
