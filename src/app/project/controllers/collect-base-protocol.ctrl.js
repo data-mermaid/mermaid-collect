@@ -178,6 +178,8 @@ angular.module('app.project').controller('CollectBaseProtocol', [
       }
     };
 
+    $scope.save = $ctrl.save;
+
     var createRecord = function() {
       var opts = {
         profileId: $scope.currentUser.id,
