@@ -61,24 +61,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           }
 
           const arrayExp = array.flatMap(item => {
-            let equalBenthic = [['==', ['get', 'benthic']], 1];
-            equalBenthic[0].push(item);
-
-            return equalBenthic;
-          });
-
-          arrayExp.unshift('case');
-          arrayExp.push(0);
-          return array.length > 0 ? arrayExp : 0;
-        };
-
-        const applyGeomorphicOpacityExpression = function(array) {
-          if (array === null) {
-            return false;
-          }
-
-          const arrayExp = array.flatMap(item => {
-            let equalBenthic = [['==', ['get', 'geomorphic']], 1];
+            let equalBenthic = [['==', ['get', 'class_name']], 1];
             equalBenthic[0].push(item);
 
             return equalBenthic;
@@ -92,7 +75,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
         const fillOpacityValue = applyOpacityExpression(
           JSON.parse(localStorage.getItem('benthic_legend'))
         );
-        const fillGeomorphicOpacityValue = applyGeomorphicOpacityExpression(
+        const fillGeomorphicOpacityValue = applyOpacityExpression(
           JSON.parse(localStorage.getItem('geomorphic_legend'))
         );
         const rasterOpacityValue = JSON.parse(
@@ -127,19 +110,19 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             ? fillOpacityValue
             : [
                 'case',
-                ['==', ['get', 'benthic'], 'Sand'],
+                ['==', ['get', 'class_name'], 'Sand'],
                 1,
-                ['==', ['get', 'benthic'], 'Seagrass'],
+                ['==', ['get', 'class_name'], 'Seagrass'],
                 1,
-                ['==', ['get', 'benthic'], 'Rubble'],
+                ['==', ['get', 'class_name'], 'Rubble'],
                 1,
-                ['==', ['get', 'benthic'], 'Unknown'],
+                ['==', ['get', 'class_name'], 'Unknown'],
                 1,
-                ['==', ['get', 'benthic'], 'Benthic Microalgae'],
+                ['==', ['get', 'class_name'], 'Benthic Microalgae'],
                 1,
-                ['==', ['get', 'benthic'], 'Rock'],
+                ['==', ['get', 'class_name'], 'Rock'],
                 1,
-                ['==', ['get', 'benthic'], 'Coral/Algae'],
+                ['==', ['get', 'class_name'], 'Coral/Algae'],
                 1,
                 0 // Default / other
               ];
@@ -148,31 +131,31 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             ? fillGeomorphicOpacityValue
             : [
                 'case',
-                ['==', ['get', 'geomorphic'], 'Back Reef Slope'],
+                ['==', ['get', 'class_name'], 'Back Reef Slope'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Deep Lagoon'],
+                ['==', ['get', 'class_name'], 'Deep Lagoon'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Inner Reef Flat'],
+                ['==', ['get', 'class_name'], 'Inner Reef Flat'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Outer Reef Flat'],
+                ['==', ['get', 'class_name'], 'Outer Reef Flat'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Patch Reefs'],
+                ['==', ['get', 'class_name'], 'Patch Reefs'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Plateau'],
+                ['==', ['get', 'class_name'], 'Plateau'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Reef Crest'],
+                ['==', ['get', 'class_name'], 'Reef Crest'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Reef Slope'],
+                ['==', ['get', 'class_name'], 'Reef Slope'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Shadow Lagoon'],
+                ['==', ['get', 'class_name'], 'Shadow Lagoon'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Sheltered Reef Slope'],
+                ['==', ['get', 'class_name'], 'Sheltered Reef Slope'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Small Reef'],
+                ['==', ['get', 'class_name'], 'Small Reef'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Terrestrial Reef Flat'],
+                ['==', ['get', 'class_name'], 'Terrestrial Reef Flat'],
                 1,
-                ['==', ['get', 'geomorphic'], 'Unknown'],
+                ['==', ['get', 'class_name'], 'Unknown'],
                 1,
                 0 // Default / other
               ];
@@ -217,10 +200,8 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           map.addSource('atlas-benthic', {
             type: 'vector',
             tiles: [
-              // 'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_benthic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
-              'https://integration.allencoralatlas.org/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_benthic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf '
+              'https://integration.allencoralatlas.org/tiles/benthic/{z}/{x}/{y}'
             ],
-            scheme: 'tms',
             minZoom: 0,
             maxZoom: 22
           });
@@ -228,10 +209,8 @@ angular.module('mermaid.libs').directive('mapboxGl', [
           map.addSource('atlas-geomorphic', {
             type: 'vector',
             tiles: [
-              // 'http://34.83.20.4:8080/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_geomorphic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf'
-              'https://integration.allencoralatlas.org/geoserver/gwc/service/tms/1.0.0/coral-atlas:reef_polygons_geomorphic_expanded@EPSG:900913@pbf/{z}/{x}/{y}.pbf '
+              'https://integration.allencoralatlas.org/tiles/geomorphic/{z}/{x}/{y}'
             ],
-            scheme: 'tms',
             minZoom: 0,
             maxZoom: 22
           });
@@ -250,23 +229,23 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             id: 'atlas-benthic',
             type: 'fill',
             source: 'atlas-benthic',
-            'source-layer': 'reef_polygons_benthic_expanded',
+            'source-layer': 'benthic',
             paint: {
               'fill-color': [
                 'case',
-                ['==', ['get', 'benthic'], 'Coral/Algae'],
+                ['==', ['get', 'class_name'], 'Coral/Algae'],
                 'rgb(255, 97, 97)',
-                ['==', ['get', 'benthic'], 'Benthic Microalgae'],
+                ['==', ['get', 'class_name'], 'Benthic Microalgae'],
                 'rgb(155, 204, 79)',
-                ['==', ['get', 'benthic'], 'Rock'],
+                ['==', ['get', 'class_name'], 'Rock'],
                 'rgb(177, 156, 58)',
-                ['==', ['get', 'benthic'], 'Rubble'],
+                ['==', ['get', 'class_name'], 'Rubble'],
                 'rgb(224, 208, 94)',
-                ['==', ['get', 'benthic'], 'Sand'],
+                ['==', ['get', 'class_name'], 'Sand'],
                 'rgb(254, 254, 190)',
-                ['==', ['get', 'benthic'], 'Seagrass'],
+                ['==', ['get', 'class_name'], 'Seagrass'],
                 'rgb(102, 132, 56)',
-                ['==', ['get', 'benthic'], 'Unknown'],
+                ['==', ['get', 'class_name'], 'Unknown'],
                 'rgb(178, 178, 178)',
                 'rgb(201, 65, 216)' // Default / other
               ],
@@ -278,35 +257,35 @@ angular.module('mermaid.libs').directive('mapboxGl', [
             id: 'atlas-geomorphic',
             type: 'fill',
             source: 'atlas-geomorphic',
-            'source-layer': 'reef_polygons_geomorphic_expanded',
+            'source-layer': 'geomorphic',
             paint: {
               'fill-color': [
                 'case',
-                ['==', ['get', 'geomorphic'], 'Back Reef Slope'],
+                ['==', ['get', 'class_name'], 'Back Reef Slope'],
                 'rgb(190, 251, 255)',
-                ['==', ['get', 'geomorphic'], 'Deep Lagoon'],
+                ['==', ['get', 'class_name'], 'Deep Lagoon'],
                 'rgb(44, 162, 249)',
-                ['==', ['get', 'geomorphic'], 'Inner Reef Flat'],
+                ['==', ['get', 'class_name'], 'Inner Reef Flat'],
                 'rgb(197, 167, 203)',
-                ['==', ['get', 'geomorphic'], 'Outer Reef Flat'],
+                ['==', ['get', 'class_name'], 'Outer Reef Flat'],
                 'rgb(146, 115, 157)',
-                ['==', ['get', 'geomorphic'], 'Patch Reefs'],
+                ['==', ['get', 'class_name'], 'Patch Reefs'],
                 'rgb(255, 186, 21)',
-                ['==', ['get', 'geomorphic'], 'Plateau'],
+                ['==', ['get', 'class_name'], 'Plateau'],
                 'rgb(205, 104, 18)',
-                ['==', ['get', 'geomorphic'], 'Reef Crest'],
+                ['==', ['get', 'class_name'], 'Reef Crest'],
                 'rgb(97, 66, 114)',
-                ['==', ['get', 'geomorphic'], 'Reef Slope'],
+                ['==', ['get', 'class_name'], 'Reef Slope'],
                 'rgb(40, 132, 113)',
-                ['==', ['get', 'geomorphic'], 'Shadow Lagoon'],
+                ['==', ['get', 'class_name'], 'Shadow Lagoon'],
                 'rgb(119, 208, 252)',
-                ['==', ['get', 'geomorphic'], 'Sheltered Reef Slope'],
+                ['==', ['get', 'class_name'], 'Sheltered Reef Slope'],
                 'rgb(16, 189, 166)',
-                ['==', ['get', 'geomorphic'], 'Small Reef'],
+                ['==', ['get', 'class_name'], 'Small Reef'],
                 'rgb(230, 145, 19)',
-                ['==', ['get', 'geomorphic'], 'Terrestrial Reef Flat'],
+                ['==', ['get', 'class_name'], 'Terrestrial Reef Flat'],
                 'rgb(251, 222, 251)',
-                ['==', ['get', 'geomorphic'], 'Unknown'],
+                ['==', ['get', 'class_name'], 'Unknown'],
                 'rgb(178, 178, 178)',
                 'rgb(201, 65, 216)' // Default / other
               ],
@@ -454,7 +433,7 @@ angular.module('mermaid.libs').directive('mapboxGl', [
               map.setPaintProperty(
                 'atlas-geomorphic',
                 'fill-opacity',
-                applyGeomorphicOpacityExpression(JSON.parse(storageVal))
+                applyOpacityExpression(JSON.parse(storageVal))
               );
             }
           }
