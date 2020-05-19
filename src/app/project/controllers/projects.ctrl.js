@@ -25,6 +25,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     $scope.tableControl = {};
 
     const conn = new ConnectivityFactory($scope);
+    let refreshOnce = !connectivity.isOnline;
     const dataSharingPolicies = dataPolicies
       ? _.reduce(
           dataPolicies,
@@ -143,9 +144,11 @@ angular.module('app.project').controller('ProjectsCtrl', [
           $scope.tableControl.refresh(true);
           $scope.tableConfig.isFiltering = false;
         });
-      } else {
+        refreshOnce = true;
+      } else if (event.event === 'online' && refreshOnce) {
         delete $scope.tableConfig.filters.id;
         $scope.tableControl.refresh(true);
+        refreshOnce = false;
       }
     });
   }
