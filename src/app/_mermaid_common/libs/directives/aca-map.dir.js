@@ -1,6 +1,6 @@
 /* globals mapboxgl */
 
-angular.module('mermaid.libs').directive('mapboxGl', [
+angular.module('mermaid.libs').directive('acaMap', [
   function() {
     'use strict';
     return {
