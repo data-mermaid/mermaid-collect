@@ -782,6 +782,7 @@ btn > button {
 
 .widget-body.map-body {
   padding: 0 13px !important;
+  overflow: hidden;
 }
 
 .dotted-underline {
@@ -1381,7 +1382,7 @@ ul li.transect-buttons[disabled] {
   visibility: hidden;
 }
 
-/* leaflet popup content style */
+/* mapbox popup content style */
 .mapboxgl-popup {
   border-radius: 6px;
 }
@@ -1484,6 +1485,65 @@ input:checked + .slider-mermaid:before {
   background-color: #ebebeb !important;
   color: #333 !important;
   text-shadow: none !important;
+}
+
+.leaflet-navbar {
+  background: rgba(255, 255, 255, 1);
+  position: absolute; 
+  width: 270px;
+  height: 400px;
+  right: -270px;
+  top: 0px;
+  z-index: 1;
+  transition: .5s right;
+}
+
+.leaflet-navbar.open {
+  right: 0px;
+}
+
+.leaflet-navbar .leaflet-hamburger {
+  position: absolute;
+  background: rgba(255, 255, 255, 1);
+  height: 120px;
+  width: 20px;
+  cursor: pointer;
+  top: 10%;
+  left: -20px;
+  border-right: 1px solid;
+  transition: .5s right;
+}
+
+.leaflet-hamburger span {
+  display: inline-block;
+  position: relative;
+  transform: rotate(-90deg);
+  top: 50px;
+  left: -45px;
+  font-size: 1.5rem;
+}
+
+.atlas-layers {
+  height: 400px;
+  overflow-y: scroll;
+  padding: 10px 10px 0 10px;
+}
+
+.atlas-legend {
+  display: inline-block;
+}
+
+.atlas-legend-item {
+  display: block;
+  margin-left: 25px;
+}
+
+.atlas-legend-color-box {
+  height: 15px;
+  width: 50px;
+  border: 1px solid;
+  float: right;
+  margin-top: 2px;
 }
 
 .more-info {
