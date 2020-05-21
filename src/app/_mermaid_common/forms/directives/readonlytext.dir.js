@@ -1,6 +1,5 @@
 angular.module('mermaid.forms').directive('readonlytext', [
-  'utils',
-  function(utils) {
+  function() {
     'use strict';
     return {
       restrict: 'EA',
@@ -8,12 +7,14 @@ angular.module('mermaid.forms').directive('readonlytext', [
       required: 'ngModel',
       scope: {
         ngModel: '=',
+        attributeChoices: '=?',
+        widgetItemList: '=?',
         widgetName: '@'
       },
       templateUrl: 'app/_mermaid_common/forms/directives/readonlytext.tpl.html',
       link: function(scope, element, attrs) {
         scope.widgetLabel = attrs.widgetLabel;
-        scope.widgetChoices = attrs.widgetChoices;
+        scope.textType = attrs.widgetTextType || '';
       }
     };
   }

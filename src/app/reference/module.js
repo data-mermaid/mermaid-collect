@@ -159,6 +159,9 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         checkId: _checkId(),
         fishGenera: function(FishAttributeService) {
           return FishAttributeService.fetchFishGenera();
+        },
+        fishFamilies: function(FishAttributeService) {
+          return FishAttributeService.fetchFishFamilies();
         }
       }
     })
