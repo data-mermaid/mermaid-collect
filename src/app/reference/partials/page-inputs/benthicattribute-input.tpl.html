@@ -3,65 +3,49 @@
     <div class="widget-body no-padding">
       <div class="smart-form">
         <fieldset>
-          <div class="clearfix">
             <div
-              textinput
+              readonlytext
               class="col-xs-5"
-              widget-form="form"
+              ng-model="record"
               widget-label="Name"
               widget-name="name"
-              ng-model="record"
-              widget-required="true"
-              widget-disabled="isDisabled"
             ></div>
 
             <div class="col-xs-1"></div>
 
             <div
-              autocompleteinput
+              readonlytext
               class="col-xs-5"
-              widget-form="form"
+              ng-model="record"
               widget-label="Parent"
               widget-name="parent"
-              ng-model="record"
-              widget-required="true"
-              widget-choices="parents"
-              widget-disabled="isDisabled"
+              widget-text-type="hasChoices"
+              attribute-choices="parents"
             ></div>
-          </div>
 
-          <div class="clearfix">
             <div
-              ddlinput
+              readonlytext
               class="col-xs-5"
-              widget-form="form"
+              ng-model="record"
               widget-label="Life History"
               widget-name="life_history"
-              ng-model="record"
-              widget-disabled="isDisabled"
-              widget-mode="single"
-              widget-choices="choices.benthiclifehistories"
+              widget-text-type="hasChoices"
+              attribute-choices="choices.benthiclifehistories"
             ></div>
 
             <div class="col-xs-1"></div>
 
-          </div>
         </fieldset>
         <fieldset>
-          <div class="clearfix">
-            <div
-              ddlinput
-              class="col-xs-5"
-              widget-form="form"
-              widget-label="Regions"
-              widget-name="regions"
-              ng-model="record"
-              widget-disabled="isDisabled"
-              widget-include-blank="false"
-              widget-mode="multiple"
-              widget-choices="choices.regions"
-            ></div>
-          </div>
+          <div
+            readonlytext
+            class="col-xs-5"
+            ng-model="record"
+            widget-label="Region"
+            widget-name="regions"
+            attribute-choices="choices.regions"
+            widget-text-type="isRegions"
+          ></div>
         </fieldset>
       </div>
     </div>
