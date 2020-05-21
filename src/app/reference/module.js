@@ -143,7 +143,7 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       }
     })
     .state('app.reference.fishspeciess.fishspecies', {
-      url: '/groupings',
+      url: '/:id',
       data: {
         title: 'Fish Species',
         hideRightMenuItems: true,
@@ -187,10 +187,11 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       }
     })
     .state('app.reference.groupings', {
-      url: '/groupings',
+      url: '/fishattributes/groupings',
       data: {
         title: 'Groupings',
-        hideRightMenuItems: true
+        hideRightMenuItems: true,
+        parentStates: ['app.reference.groupings']
       },
       views: {
         'content@app': {
@@ -199,11 +200,8 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         }
       },
       resolve: {
-        groupings: function(FishAttributeService) {
-          return FishAttributeService.fetchFishGroupings();
-        },
-        fishFamilies: function(FishAttributeService) {
-          return FishAttributeService.fetchFishFamilies();
+        groupingsTable: function(OfflineCommonTables) {
+          return OfflineCommonTables.FishGroupingsTable();
         }
       }
     })

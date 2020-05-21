@@ -1,15 +1,46 @@
 angular.module('app.reference').controller('GroupingsCtrl', [
   '$scope',
-  'groupings',
-  'fishFamilies',
-  '$filter',
-  function($scope, groupings, fishFamilies, $filter) {
+  'PaginatedOfflineTableWrapper',
+  'groupingsTable',
+  function($scope, PaginatedOfflineTableWrapper, groupingsTable) {
     'use strict';
-    console.log(fishFamilies);
-    console.log(groupings[0]);
-    const newGroupings = groupings[0].fish_attributes.map(function(item) {
-      return $filter('matchchoice')(item, fishFamilies);
+
+    $scope.resource = null;
+    $scope.tableControl = {};
+    $scope.tableConfig = {
+      id: 'mermaid_groupings',
+      defaultSortByColumn: 'name',
+      searching: true,
+      searchPlaceholder: 'Filter groupings by name',
+      searchLocation: 'left',
+      disableTrackingTableState: true,
+      cols: [
+        {
+          name: 'name',
+          display: 'Name',
+          sortable: true,
+          sort_by: ['name']
+        },
+        {
+          name: 'biomass_constant_a',
+          display: 'Biomass Constant A',
+          sortable: true
+        },
+        {
+          name: 'biomass_constant_b',
+          display: 'Biomass Constant B',
+          sortable: true
+        },
+        {
+          name: 'biomass_constant_c',
+          display: 'Biomass Constant C',
+          sortable: true
+        }
+      ]
+    };
+
+    $scope.resource = new PaginatedOfflineTableWrapper(groupingsTable, {
+      searchFields: ['name']
     });
-    $scope.groupingsItem = newGroupings;
   }
 ]);
