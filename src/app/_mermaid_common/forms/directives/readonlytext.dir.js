@@ -9,6 +9,7 @@ angular.module('mermaid.forms').directive('readonlytext', [
         ngModel: '=',
         attributeChoices: '=?',
         widgetItemList: '=?',
+        widgetLink: '@',
         widgetName: '@'
       },
       templateUrl: 'app/_mermaid_common/forms/directives/readonlytext.tpl.html',

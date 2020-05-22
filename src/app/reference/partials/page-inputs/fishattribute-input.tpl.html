@@ -9,7 +9,7 @@
             ng-model="record"
             widget-label="Species"
             widget-text-type="isSpecies"
-            attribute-choices="fishGenera"
+            widget-link="app.reference.fishgenera.fishgenus"
           ></div>
 
           <div class="col-xs-1"></div>
@@ -20,7 +20,8 @@
             ng-model="genusRecord"
             widget-label="Family"
             widget-name="family"
-            widget-text-type="hasChoices"
+            widget-text-type="hasLink"
+            widget-link="app.reference.fishfamilies.fishfamily"
             attribute-choices="fishFamilies"
           ></div>
           

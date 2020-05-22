@@ -171,9 +171,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       resolve: {
         checkId: _checkId(),
         choicesTable: _getChoices(),
-        fishGenera: function(FishAttributeService) {
-          return FishAttributeService.fetchFishGenera();
-        },
         fishFamilies: function(FishAttributeService) {
           return FishAttributeService.fetchFishFamilies();
         }

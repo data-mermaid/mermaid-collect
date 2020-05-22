@@ -3,14 +3,12 @@ angular.module('app.reference').controller('FishSpeciesCtrl', [
   '$stateParams',
   'FishAttributeService',
   'choicesTable',
-  'fishGenera',
   'fishFamilies',
   function(
     $scope,
     $stateParams,
     FishAttributeService,
     choicesTable,
-    fishGenera,
     fishFamilies
   ) {
     'use strict';
@@ -19,7 +17,6 @@ angular.module('app.reference').controller('FishSpeciesCtrl', [
     $scope.record = {};
     $scope.genusRecord = {};
     $scope.choices = choicesTable;
-    $scope.fishGenera = fishGenera;
     $scope.fishFamilies = fishFamilies;
 
     FishAttributeService.getFishSpecies(fishSpeciesId, true).then(function(

@@ -14,21 +14,21 @@
    <div ng-switch-when="hasList">
       <div ng-repeat="item in widgetItemList">
         <div ng-repeat="(key, value) in item">
-          {{key}} - {{ngModel[value]}}
+          {{ key }} - {{ ngModel[value] }}
         </div>
       </div>
    </div>
-   <div ng-switch-when="isBenthic">
-    <a ui-sref="app.reference.benthicattributes.benthicattribute({id: ngModel[widgetName]})">{{ngModel[widgetName] | matchchoice:attributeChoices}}</a>
+   <div ng-switch-when="hasLink">
+      <a ui-sref="{{ widgetLink }}({ id: ngModel[widgetName] })">{{ ngModel[widgetName] | matchchoice:attributeChoices }}</a>
    </div>
    <div ng-switch-when="isSpecies">
-    {{ ngModel['genus'] | matchchoice:attributeChoices }} {{ ngModel['name']}}
+      <a ui-sref="{{ widgetLink }}({ id: ngModel['genus'] })">{{ ngModel['display_name'] }}</a>
    </div>
    <div ng-switch-when="isMaxLength">
-    {{ngModel['max_length']}} ({{ ngModel['max_length_type'] | matchchoice:attributeChoices}})
+      {{ ngModel['max_length'] }} ({{ ngModel['max_length_type'] | matchchoice:attributeChoices }})
    </div>
    <div ng-switch-when="isRegions">
-      <div ng-repeat="item in ngModel[widgetName]">- {{item | matchchoice:attributeChoices}}</div>
+      <div ng-repeat="item in ngModel[widgetName]">- {{ item | matchchoice:attributeChoices }}</div>
    </div>
  </div>
 </section>
