@@ -84,12 +84,10 @@ angular.module('app.project').directive('obsBeltFishList', [
           if (!_.isUndefined(fishAttributeId)) {
             let promise = null;
             let state = null;
-            console.log(fishAttributesLookup[fishAttributeId]);
             const rank = _.get(
               fishAttributesLookup[fishAttributeId],
               '$$taxonomic_rank'
             );
-            console.log('rank ', rank);
 
             if (rank == null) {
               promise = FishAttributeService.fetchFishAttributes({
