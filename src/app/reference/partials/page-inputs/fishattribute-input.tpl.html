@@ -3,104 +3,107 @@
     <div class="widget-body no-padding">
       <div class="smart-form">
         <fieldset>
-            <div
-              readonlytext
-              class="col-xs-5"
-              ng-model="record"
-              widget-label="Species"
-              widget-text-type="isSpecies"
-              attribute-choices="fishGenera"
-            ></div>
+          <div
+            readonlytext
+            class="col-xs-5"
+            ng-model="record"
+            widget-label="Species"
+            widget-text-type="isSpecies"
+            attribute-choices="fishGenera"
+          ></div>
 
-            <div class="col-xs-1"></div>
+          <div class="col-xs-1"></div>
 
-            <div
-              readonlytext
-              class="col-xs-5"
-              ng-model="genusRecord"
-              widget-label="Family"
-              widget-name="family"
-              widget-text-type="hasChoices"
-              attribute-choices="fishFamilies"
-            ></div>
-            
-            <div class="clearfix">
-              <div
-                readonlytext
-                class="col-xs-5"
-                ng-model="record"
-                widget-item-list="[{'A': 'biomass_constant_a'},{'B': 'biomass_constant_b'},{'C': 'biomass_constant_c'}]"
-                widget-label="Biomass Constants"
-                widget-text-type="hasList"
-              ></div>
+          <div
+            readonlytext
+            class="col-xs-5"
+            ng-model="genusRecord"
+            widget-label="Family"
+            widget-name="family"
+            widget-text-type="hasChoices"
+            attribute-choices="fishFamilies"
+          ></div>
+          
+          <div class="clearfix"></div>
 
-              <div class="col-xs-1"></div>
+          <div
+            readonlytext
+            class="col-xs-5"
+            ng-model="record"
+            widget-item-list="[{'A': 'biomass_constant_a'},{'B': 'biomass_constant_b'},{'C': 'biomass_constant_c'}]"
+            widget-label="Biomass Constants"
+            widget-text-type="hasList"
+          ></div>
 
-              <div
-                readonlytext
-                class="col-xs-2"
-                ng-model="record"
-                widget-label="Max Length (cm)"
-                widget-text-type="isMaxLength"
-                attribute-choices="choices.lengthtypes"
-              ></div>
+          <div class="col-xs-1"></div>
 
-              <div class="col-xs-1"></div>
+          <div
+            readonlytext
+            class="col-xs-2"
+            ng-model="record"
+            widget-label="Max Length (cm)"
+            widget-text-type="isMaxLength"
+            attribute-choices="choices.lengthtypes"
+          ></div>
 
-              <div
-                readonlytext
-                class="col-xs-2"
-                ng-model="record"
-                widget-label="Group Size"
-                widget-name="group_size"
-                widget-text-type="hasChoices"
-                attribute-choices="choices.fishgroupsizes"
-              ></div>
-            </div>
+          <div class="col-xs-1"></div>
 
-            <div
-              readonlytext
-              class="col-xs-2"
-              ng-model="record"
-              widget-label="Trophic Group"
-              widget-name="trophic_group"
-              widget-text-type="hasChoices"
-              attribute-choices="choices.fishgrouptrophics"
-            ></div>
+          <div
+            readonlytext
+            class="col-xs-2"
+            ng-model="record"
+            widget-label="Group Size"
+            widget-name="group_size"
+            widget-text-type="hasChoices"
+            attribute-choices="choices.fishgroupsizes"
+          ></div>
+          
+          <div class="clearfix"></div>
 
-            <div class="col-xs-1"></div>
+          <div
+            readonlytext
+            class="col-xs-2"
+            ng-model="record"
+            widget-label="Trophic Group"
+            widget-name="trophic_group"
+            widget-text-type="hasChoices"
+            attribute-choices="choices.fishgrouptrophics"
+          ></div>
 
-            <div
-              readonlytext
-              class="col-xs-2"
-              ng-model="record"
-              widget-label="Functional Group"
-              widget-name="functional_group"
-              widget-text-type="hasChoices"
-              attribute-choices="choices.fishgroupfunctions"
-            ></div>
+          <div class="col-xs-1"></div>
 
-            <div class="col-xs-1"></div>
+          <div
+            readonlytext
+            class="col-xs-2"
+            ng-model="record"
+            widget-label="Functional Group"
+            widget-name="functional_group"
+            widget-text-type="hasChoices"
+            attribute-choices="choices.fishgroupfunctions"
+          ></div>
 
-            <div
-              readonlytext
-              class="col-xs-2"
-              ng-model="record"
-              widget-label="Trophic Level"
-              widget-name="trophic_level"
-            ></div>
+          <div class="col-xs-1"></div>
 
-            <div class="col-xs-1"></div>
+          <div
+            readonlytext
+            class="col-xs-2"
+            ng-model="record"
+            widget-label="Trophic Level"
+            widget-name="trophic_level"
+          ></div>
 
-            <div
-              readonlytext
-              class="col-xs-2"
-              ng-model="record"
-              widget-label="Vulnerability"
-              widget-name="vulnerability"
-            ></div>
-        </fieldset>
-        <fieldset>
+          <div class="col-xs-1"></div>
+
+          <div
+            readonlytext
+            class="col-xs-2"
+            ng-model="record"
+            widget-label="Vulnerability"
+            widget-name="vulnerability"
+          ></div>
+
+          <div class="clearfix"></div>
+          
           <div
             readonlytext
             class="col-xs-5"
@@ -115,7 +118,7 @@
 
           <div
             readonlytext
-            class="col-xs-5"
+            class="col-xs-2"
             ng-model="record"
             widget-label="Climate Score"
             widget-name="climate_score"

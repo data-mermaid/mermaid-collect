@@ -33,6 +33,17 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     ];
   };
 
+  const _getChoices = function() {
+    return [
+      'ProjectService',
+      function(ProjectService) {
+        return ProjectService.fetchChoices().then(function(choices) {
+          return choices;
+        });
+      }
+    ];
+  };
+
   $stateProvider
     .state('app.reference', {
       abstract: true,
@@ -71,7 +82,8 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         }
       },
       resolve: {
-        checkId: _checkId()
+        checkId: _checkId(),
+        choicesTable: _getChoices()
       }
     })
     .state('app.reference.fishfamilies', {
@@ -113,6 +125,7 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         checkId: _checkId(),
+        choicesTable: _getChoices(),
         fishFamilies: function(FishAttributeService) {
           return FishAttributeService.fetchFishFamilies();
         }
@@ -133,7 +146,7 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         fishGeneraTable: function(OfflineCommonTables) {
-          return OfflineCommonTables.FishGeneraTable();
+          return OfflineCommonTables.FishGeneraTable(true);
         },
         fishGeneraCount: function(OfflineCommonTables) {
           return OfflineCommonTables.FishGeneraTable().then(function(table) {
@@ -157,6 +170,7 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         checkId: _checkId(),
+        choicesTable: _getChoices(),
         fishGenera: function(FishAttributeService) {
           return FishAttributeService.fetchFishGenera();
         },
@@ -243,6 +257,7 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         checkId: _checkId(),
+        choicesTable: _getChoices(),
         parents: function(BenthicAttributeService) {
           return BenthicAttributeService.fetchBenthicAttributes();
         }
@@ -261,6 +276,7 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         }
       },
       resolve: {
+        choicesTable: _getChoices(),
         benthicAttributesTable: function(OfflineCommonTables) {
           return OfflineCommonTables.BenthicAttributesTable();
         },

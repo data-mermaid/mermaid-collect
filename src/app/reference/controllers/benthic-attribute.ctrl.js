@@ -1,21 +1,21 @@
 angular.module('app.reference').controller('BenthicAttributeCtrl', [
   '$scope',
   '$stateParams',
-  'ProjectService',
+  'choicesTable',
   'BenthicAttributeService',
   'parents',
   function(
     $scope,
     $stateParams,
-    ProjectService,
+    choicesTable,
     BenthicAttributeService,
     parents
   ) {
     'use strict';
 
-    var benthicattributeId = $stateParams.id;
+    const benthicattributeId = $stateParams.id;
     $scope.record = {};
-    $scope.isDisabled = true;
+    $scope.choices = choicesTable;
     $scope.parents = parents;
 
     BenthicAttributeService.getBenthicAttribute(benthicattributeId).then(
@@ -23,9 +23,5 @@ angular.module('app.reference').controller('BenthicAttributeCtrl', [
         $scope.record = record;
       }
     );
-
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
   }
 ]);

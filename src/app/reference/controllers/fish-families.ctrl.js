@@ -17,7 +17,6 @@ angular.module('app.reference').controller('FishFamiliesCtrl', [
   ) {
     'use strict';
 
-    $scope.resource = null;
     $scope.tableControl = {};
     const fieldReportButton = new Button();
     const reportHeader = ['Name'];

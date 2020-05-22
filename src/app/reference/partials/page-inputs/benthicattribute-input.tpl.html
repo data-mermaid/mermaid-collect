@@ -3,40 +3,42 @@
     <div class="widget-body no-padding">
       <div class="smart-form">
         <fieldset>
-            <div
-              readonlytext
-              class="col-xs-5"
-              ng-model="record"
-              widget-label="Name"
-              widget-name="name"
-            ></div>
+          <div
+            readonlytext
+            class="col-xs-5"
+            ng-model="record"
+            widget-label="Name"
+            widget-name="name"
+          ></div>
 
-            <div class="col-xs-1"></div>
+          <div class="col-xs-1"></div>
 
-            <div
-              readonlytext
-              class="col-xs-5"
-              ng-model="record"
-              widget-label="Parent"
-              widget-name="parent"
-              widget-text-type="hasChoices"
-              attribute-choices="parents"
-            ></div>
+          <div
+            readonlytext
+            class="col-xs-5"
+            ng-model="record"
+            widget-label="Parent"
+            widget-name="parent"
+            widget-text-type="isBenthic"
+            attribute-choices="parents"
+          ></div>
 
-            <div
-              readonlytext
-              class="col-xs-5"
-              ng-model="record"
-              widget-label="Life History"
-              widget-name="life_history"
-              widget-text-type="hasChoices"
-              attribute-choices="choices.benthiclifehistories"
-            ></div>
+          <div class="clearfix"></div>
+          
+          <div
+            readonlytext
+            class="col-xs-5"
+            ng-model="record"
+            widget-label="Life History"
+            widget-name="life_history"
+            widget-text-type="hasChoices"
+            attribute-choices="choices.benthiclifehistories"
+          ></div>
 
-            <div class="col-xs-1"></div>
+          <div class="col-xs-1"></div>
 
-        </fieldset>
-        <fieldset>
+          <div class="clearfix"></div>
+          
           <div
             readonlytext
             class="col-xs-5"
