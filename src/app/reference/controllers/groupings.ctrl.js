@@ -10,10 +10,6 @@ angular.module('app.reference').controller('GroupingsCtrl', [
     $scope.tableConfig = {
       id: 'mermaid_groupings',
       defaultSortByColumn: 'name',
-      searching: true,
-      searchPlaceholder: 'Filter groupings by name',
-      searchLocation: 'left',
-      disableTrackingTableState: true,
       cols: [
         {
           name: 'name',
@@ -41,8 +37,6 @@ angular.module('app.reference').controller('GroupingsCtrl', [
       ]
     };
 
-    $scope.resource = new PaginatedOfflineTableWrapper(groupingsTable, {
-      searchFields: ['name']
-    });
+    $scope.resource = new PaginatedOfflineTableWrapper(groupingsTable);
   }
 ]);
