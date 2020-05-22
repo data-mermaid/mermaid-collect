@@ -12,11 +12,14 @@
     {{ ngModel[widgetName] | matchchoice:attributeChoices }}
    </div>
    <div ng-switch-when="hasList">
-       <div ng-repeat="item in widgetItemList">
-         <div ng-repeat="(key, value) in item">
-           {{key}} - {{ngModel[value]}}
-         </div>
+      <div ng-repeat="item in widgetItemList">
+        <div ng-repeat="(key, value) in item">
+          {{key}} - {{ngModel[value]}}
         </div>
+      </div>
+   </div>
+   <div ng-switch-when="isBenthic">
+    <a ui-sref="app.reference.benthicattributes.benthicattribute({id: ngModel[widgetName]})">{{ngModel[widgetName] | matchchoice:attributeChoices}}</a>
    </div>
    <div ng-switch-when="isSpecies">
     {{ ngModel['genus'] | matchchoice:attributeChoices }} {{ ngModel['name']}}

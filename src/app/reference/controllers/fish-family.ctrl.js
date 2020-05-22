@@ -1,18 +1,14 @@
 angular.module('app.reference').controller('FishFamilyCtrl', [
   '$scope',
   '$stateParams',
-  'ProjectService',
+  'choicesTable',
   'FishAttributeService',
-  function($scope, $stateParams, ProjectService, FishAttributeService) {
+  function($scope, $stateParams, choicesTable, FishAttributeService) {
     'use strict';
 
-    var fishFamilyId = $stateParams.id;
+    const fishFamilyId = $stateParams.id;
     $scope.record = {};
-    $scope.isDisabled = true;
-
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
+    $scope.choices = choicesTable;
 
     FishAttributeService.getFishFamily(fishFamilyId, true).then(function(
       record

@@ -1,27 +1,22 @@
 angular.module('app.reference').controller('FishGenusCtrl', [
   '$scope',
   '$stateParams',
-  'ProjectService',
+  'choicesTable',
   'FishAttributeService',
   'fishFamilies',
   function(
     $scope,
     $stateParams,
-    ProjectService,
+    choicesTable,
     FishAttributeService,
     fishFamilies
   ) {
     'use strict';
 
-    var fishGenusId = $stateParams.id;
+    const fishGenusId = $stateParams.id;
     $scope.record = {};
-    $scope.fishFamilies = [];
-    $scope.isDisabled = true;
+    $scope.choices = choicesTable;
     $scope.fishFamilies = fishFamilies;
-
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
 
     FishAttributeService.getFishGenus(fishGenusId, true).then(function(record) {
       $scope.record = record || {
