@@ -189,6 +189,23 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         }
       }
     })
+    .state('app.reference.groupings.grouping', {
+      url: '/:id',
+      data: {
+        title: 'Grouping',
+        hideRightMenuItems: true,
+        parentStates: ['app.reference.groupings']
+      },
+      views: {
+        'content@app': {
+          templateUrl: 'app/reference/partials/grouping.tpl.html',
+          controller: 'GroupingCtrl'
+        }
+      },
+      resolve: {
+        checkId: _checkId()
+      }
+    })
     .state('app.reference.groupings', {
       url: '/fishattributes/groupings',
       data: {

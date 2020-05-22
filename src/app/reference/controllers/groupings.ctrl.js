@@ -19,7 +19,9 @@ angular.module('app.reference').controller('GroupingsCtrl', [
           name: 'name',
           display: 'Name',
           sortable: true,
-          sort_by: ['name']
+          sort_by: ['name'],
+          tdTemplate:
+            '<a ui-sref="app.reference.groupings.grouping({id: record.id})">{{record.name}}</a>'
         },
         {
           name: 'biomass_constant_a',
