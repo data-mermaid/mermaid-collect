@@ -16,8 +16,43 @@
              <div class="widget-body no-padding">
                <div class="smart-form">
                  <fieldset>
-                  {{'GROUPING YEAH'}}
+                  <div
+                    readonlytext
+                    class="col-xs-5"
+                    ng-model="record"
+                    widget-label="Name"
+                    widget-name="name"
+                  ></div>
+                  <div class="col-xs-1"></div>
+                  <div
+                    readonlytext
+                    class="col-xs-5"
+                    ng-model="record"
+                    widget-item-list="[{'A': 'biomass_constant_a'},{'B': 'biomass_constant_b'},{'C': 'biomass_constant_c'}]"
+                    widget-label="Biomass Constants"
+                    widget-text-type="hasList"
+                  ></div>
+                  <div
+                    readonlytext
+                    class="col-xs-5"
+                    ng-model="record"
+                    widget-label="Fish Taxa"
+                    widget-name="fish_attributes"
+                    attribute-choices="fishFamilies"
+                    widget-text-type="isRegions"
+                  ></div>
                  </fieldset>
+                 <fieldset>
+                  <div
+                    readonlytext
+                    class="col-xs-5"
+                    ng-model="record"
+                    widget-label="Regions"
+                    widget-name="regions"
+                    attribute-choices="choices.regions"
+                    widget-text-type="isRegions"
+                  ></div>
+                </fieldset>
                </div>
              </div>
            </div>

@@ -203,7 +203,10 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         }
       },
       resolve: {
-        checkId: _checkId()
+        checkId: _checkId(),
+        fishFamilies: function(FishAttributeService) {
+          return FishAttributeService.fetchFishFamilies();
+        }
       }
     })
     .state('app.reference.groupings', {
