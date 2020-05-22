@@ -25,7 +25,7 @@
     {{ngModel['max_length']}} ({{ ngModel['max_length_type'] | matchchoice:attributeChoices}})
    </div>
    <div ng-switch-when="isRegions">
-      <div ng-repeat="item in ngModel[widgetName]">{{item | matchchoice:attributeChoices}}</div>
+      <div ng-repeat="item in ngModel[widgetName]">- {{item | matchchoice:attributeChoices}}</div>
    </div>
  </div>
 </section>
