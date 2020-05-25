@@ -363,7 +363,7 @@ appConfig.httpErrorWhitelist = [
   { status: 403, detail: 'Forbidden.' },
   { status: 404, detail: 'Not found.' }
 ];
-appConfig.defaultCacheExpire = 1; // in minutes
+appConfig.defaultCacheExpire = 60000; // in minutes
 appConfig.validatorPrefix = 'validator_';
 appConfig.secure_state = 'fullapp.projects';
 appConfig.errorPage = 'fullapp.error';
