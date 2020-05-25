@@ -234,7 +234,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         {
           name: 'data.observers',
           display: 'Observers',
-          sortable: false,
+          sortable: true,
+          sort_by: ['data.observers[0].profile_name'],
           formatter: function(v) {
             let observers = [];
             angular.forEach(v, function(observer) {
@@ -244,9 +245,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           }
         },
         {
-          name: 'data.submission_results.status',
+          name: 'validations',
           display: 'Status',
-          sortable: false,
+          sortable: true,
           formatter: function(v, record) {
             // TODO: Status options should be added choices api
             // so they can be translated.
@@ -256,7 +257,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         {
           name: '$$synced',
           display: 'Synced',
-          sortable: false,
+          sortable: true,
           tdTemplate:
             '<span>' +
             '<i class="fa fa-refresh status-icon" ' +
