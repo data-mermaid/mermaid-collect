@@ -13,6 +13,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'ProjectService',
   'ValidateSubmitService',
   'projectProfile',
+  'beltTransectWidthChoices',
   function(
     $state,
     $stateParams,
@@ -27,7 +28,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     PaginatedOfflineTableWrapper,
     ProjectService,
     ValidateSubmitService,
-    projectProfile
+    projectProfile,
+    beltTransectWidthChoices
   ) {
     'use strict';
 
@@ -80,11 +82,11 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         const width = _.get(value, 'fishbelt_transect.width');
         const widthFilter = $filter('matchchoice')(
           width,
-          $scope.choices.belttransectwidths
+          beltTransectWidthChoices
         );
         const length = _.get(value, 'fishbelt_transect.len_surveyed');
 
-        if (length && width) {
+        if (length && width && widthFilter) {
           result = length + 'm x ' + widthFilter.slice(0, -1) + 'm';
         } else if (length || width) {
           result = length ? length : widthFilter.slice(0, -1);
@@ -97,10 +99,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       result = _.get(value, 'benthic_transect.len_surveyed') || result;
       return result + 'm';
     };
-
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices.belttransectwidths = choices.belttransectwidths;
-    });
 
     $scope.tableControl.choices = $scope.choices;
     $scope.tableConfig = {
