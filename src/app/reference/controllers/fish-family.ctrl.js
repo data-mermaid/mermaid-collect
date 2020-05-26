@@ -1,19 +1,11 @@
 angular.module('app.reference').controller('FishFamilyCtrl', [
   '$scope',
-  '$stateParams',
   'choicesTable',
-  'FishAttributeService',
-  function($scope, $stateParams, choicesTable, FishAttributeService) {
+  'fishFamilyRecord',
+  function($scope, choicesTable, fishFamilyRecord) {
     'use strict';
 
-    const fishFamilyId = $stateParams.id;
-    $scope.record = {};
     $scope.choices = choicesTable;
-
-    FishAttributeService.getFishFamily(fishFamilyId, true).then(function(
-      record
-    ) {
-      $scope.record = record;
-    });
+    $scope.record = fishFamilyRecord;
   }
 ]);

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
-  var _checkUuid = function($q, utils, id) {
-    var deferred = $q.defer();
+  const _checkUuid = function($q, utils, id) {
+    const deferred = $q.defer();
     if (id === '' || utils.isUuid(id)) {
       deferred.resolve(true);
     } else {
@@ -14,13 +14,13 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     return deferred.promise;
   };
 
-  var _checkId = function() {
+  const _checkId = function() {
     return [
       '$stateParams',
       '$q',
       'utils',
       function($stateParams, $q, utils) {
-        var id = $stateParams.id;
+        const id = $stateParams.id;
         return _checkUuid($q, utils, id).then(
           function(response) {
             return $q.resolve(response);
@@ -33,13 +33,91 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     ];
   };
 
-  const _getChoices = function() {
+  const _getTableCount = function(table) {
+    table.then(function(record) {
+      return record.count();
+    });
+  };
+
+  const _getChoices = function(ProjectService) {
+    return ProjectService.fetchChoices().then(function(choices) {
+      return choices;
+    });
+  };
+
+  const _getRecord = function(attribute_type) {
     return [
-      'ProjectService',
-      function(ProjectService) {
-        return ProjectService.fetchChoices().then(function(choices) {
-          return choices;
-        });
+      'FishAttributeService',
+      'BenthicAttributeService',
+      '$stateParams',
+      function(FishAttributeService, BenthicAttributeService, $stateParams) {
+        const record_id = $stateParams.id;
+        switch (attribute_type) {
+          case 'family':
+            return FishAttributeService.getFishFamily(record_id, true).then(
+              function(record) {
+                return record;
+              }
+            );
+          case 'genus':
+            return FishAttributeService.getFishGenus(record_id, true).then(
+              function(record) {
+                return (
+                  record || {
+                    status: FishAttributeService.PROPOSED_RECORD
+                  }
+                );
+              }
+            );
+          case 'species':
+            return FishAttributeService.getFishSpecies(record_id, true).then(
+              function(record) {
+                return record;
+              }
+            );
+          case 'genusSpecies':
+            return FishAttributeService.getFishSpecies(record_id, true).then(
+              function(record) {
+                return FishAttributeService.getFishGenus(
+                  record.genus,
+                  true
+                ).then(function(genusRecord) {
+                  return genusRecord;
+                });
+              }
+            );
+          case 'grouping':
+            return FishAttributeService.getFishGrouping(record_id, true).then(
+              function(record) {
+                return record;
+              }
+            );
+          case 'benthic':
+            return BenthicAttributeService.getBenthicAttribute(record_id).then(
+              function(record) {
+                return record;
+              }
+            );
+          default:
+            console.error('no attribute_type assigned');
+        }
+      }
+    ];
+  };
+
+  const _fetchChoice = function(attribute_type) {
+    return [
+      'FishAttributeService',
+      'BenthicAttributeService',
+      function(FishAttributeService, BenthicAttributeService) {
+        switch (attribute_type) {
+          case 'family':
+            return FishAttributeService.fetchFishFamilies();
+          case 'benthic':
+            return BenthicAttributeService.fetchBenthicAttributes();
+          default:
+            console.error('no attribute_type assigned');
+        }
       }
     ];
   };
@@ -83,7 +161,8 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         checkId: _checkId(),
-        choicesTable: _getChoices()
+        choicesTable: _getChoices,
+        fishFamilyRecord: _getRecord('family')
       }
     })
     .state('app.reference.fishfamilies', {
@@ -125,10 +204,9 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         checkId: _checkId(),
-        choicesTable: _getChoices(),
-        fishFamilies: function(FishAttributeService) {
-          return FishAttributeService.fetchFishFamilies();
-        }
+        choicesTable: _getChoices,
+        fishFamilies: _fetchChoice('family'),
+        fishGenusRecord: _getRecord('genus')
       }
     })
     .state('app.reference.fishgenera', {
@@ -170,10 +248,10 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         checkId: _checkId(),
-        choicesTable: _getChoices(),
-        fishFamilies: function(FishAttributeService) {
-          return FishAttributeService.fetchFishFamilies();
-        }
+        choicesTable: _getChoices,
+        fishFamilies: _fetchChoice('family'),
+        fishSpeciesRecord: _getRecord('species'),
+        fishGenusRecord: _getRecord('genusSpecies')
       }
     })
     .state('app.reference.fishspeciess', {
@@ -215,9 +293,9 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         checkId: _checkId(),
-        fishFamilies: function(FishAttributeService) {
-          return FishAttributeService.fetchFishFamilies();
-        }
+        choicesTable: _getChoices,
+        fishFamilies: _fetchChoice('family'),
+        fishGroupingRecord: _getRecord('grouping')
       }
     })
     .state('app.reference.groupings', {
@@ -254,10 +332,9 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
       },
       resolve: {
         checkId: _checkId(),
-        choicesTable: _getChoices(),
-        parents: function(BenthicAttributeService) {
-          return BenthicAttributeService.fetchBenthicAttributes();
-        }
+        choicesTable: _getChoices,
+        benthicAttributes: _fetchChoice('benthic'),
+        benthicAttributeRecord: _getRecord('benthic')
       }
     })
     .state('app.reference.benthicattributes', {
@@ -273,7 +350,7 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
         }
       },
       resolve: {
-        choicesTable: _getChoices(),
+        choicesTable: _getChoices,
         benthicAttributesTable: function(OfflineCommonTables) {
           return OfflineCommonTables.BenthicAttributesTable();
         },

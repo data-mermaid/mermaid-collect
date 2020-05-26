@@ -1,29 +1,13 @@
 angular.module('app.reference').controller('GroupingCtrl', [
   '$scope',
-  '$stateParams',
-  'ProjectService',
-  'FishAttributeService',
+  'choicesTable',
   'fishFamilies',
-  function(
-    $scope,
-    $stateParams,
-    ProjectService,
-    FishAttributeService,
-    fishFamilies
-  ) {
+  'fishGroupingRecord',
+  function($scope, choicesTable, fishFamilies, fishGroupingRecord) {
     'use strict';
 
-    const groupingId = $stateParams.id;
-    $scope.record = {};
+    $scope.choices = choicesTable;
     $scope.fishFamilies = fishFamilies;
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
-
-    FishAttributeService.getFishGrouping(groupingId, true).then(function(
-      record
-    ) {
-      $scope.record = record;
-    });
+    $scope.record = fishGroupingRecord;
   }
 ]);
