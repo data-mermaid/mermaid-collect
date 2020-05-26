@@ -33,12 +33,6 @@ angular.module('app.reference', ['ui.router']).config(function($stateProvider) {
     ];
   };
 
-  const _getTableCount = function(table) {
-    table.then(function(record) {
-      return record.count();
-    });
-  };
-
   const _getChoices = function(ProjectService) {
     return ProjectService.fetchChoices().then(function(choices) {
       return choices;
