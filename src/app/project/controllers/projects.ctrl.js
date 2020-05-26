@@ -73,7 +73,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
           name: 'countries',
           display: 'Countries',
           sortable: true,
-          formatter: function(val, record) {
+          formatter: function(val) {
             if (_.isArray(val)) {
               return val.join(', ');
             }
