@@ -72,15 +72,15 @@ angular.module('app.project').controller('ProjectsCtrl', [
         {
           name: 'countries',
           display: 'Countries',
-          sortable: false,
-          formatter: function(val) {
+          sortable: true,
+          formatter: function(val, record) {
             if (_.isArray(val)) {
               return val.join(', ');
             }
             return '-';
           }
         },
-        { name: 'num_sites', display: 'Number of Sites', sortable: false },
+        { name: 'num_sites', display: 'Number of Sites', sortable: true },
         {
           display: 'Offline Ready',
           sortable: false,
