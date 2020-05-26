@@ -62,6 +62,7 @@
             widget-modal-trigger="modalTrigger(obs)"
             drop-up-enabled="true"
             widget-no-match-message="{{notFoundMessage}}"
+            ng-keydown="navInputs($event, obs, false, $index)"
           >
             <appendaddon>
               <a 
