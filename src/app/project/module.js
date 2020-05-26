@@ -606,7 +606,12 @@ angular
           }
         },
         resolve: {
-          projectProfile: _getMyProjectProfile
+          projectProfile: _getMyProjectProfile,
+          beltTransectWidthChoices: function(ProjectService) {
+            return ProjectService.fetchChoices().then(function(choices) {
+              return choices.belttransectwidths;
+            });
+          }
         }
       })
       .state('app.project.users', {
