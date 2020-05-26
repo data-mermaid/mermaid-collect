@@ -105,7 +105,6 @@ angular.module('app.project').directive('obsBenthicPitList', [
         });
 
         scope.navInputs = function($event, obs, isRowEnd, $index) {
-          isRowEnd = isRowEnd || false;
           if (!$event) {
             return;
           }
