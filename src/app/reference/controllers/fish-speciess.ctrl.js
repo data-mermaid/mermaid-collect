@@ -62,17 +62,17 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
         {
           name: 'biomass_constant_a',
           display: 'Biomass Constant A',
-          sortable: false
+          sortable: true
         },
         {
           name: 'biomass_constant_b',
           display: 'Biomass Constant B',
-          sortable: false
+          sortable: true
         },
         {
           name: 'biomass_constant_c',
           display: 'Biomass Constant C',
-          sortable: false
+          sortable: true
         }
       ],
       toolbar: {
