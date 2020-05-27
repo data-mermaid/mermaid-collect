@@ -3,7 +3,7 @@ angular.module('mermaid.libs').service('utils', [
   '$q',
   function($interpolate, $q) {
     'use strict';
-
+    const alerts = {};
     var utils = {
       messages: {
         deleteRecordWarning:
@@ -35,27 +35,65 @@ angular.module('mermaid.libs').service('utils', [
           name: 'species_restriction'
         }
       },
-      showAlert: function(title, message, status, timeout) {
+      showAlert: function(title, message, status, timeout, options) {
+        options = options || {};
         status = status || utils.statuses.info;
-        var deferred = $q.defer();
-        var opts = {
+
+        const isFooterAlert = options.isFooterAlert || false;
+        const canClose = options.canClose == null || options.canClose === true;
+        const alertId = options.id;
+        const deferred = $q.defer();
+        const popupOpts = {
           title: title,
+          html: true,
           content: message,
           color: status.color,
           icon: 'fa ' + status.icon + ' swing animated'
         };
+        let call;
+        let boxSelector;
+        let alertCounter;
 
         if (timeout == null) {
-          opts.timeout = 3000;
+          popupOpts.timeout = 3000;
         } else if (timeout !== 0) {
-          opts.timeout = timeout;
+          popupOpts.timeout = timeout;
         }
 
         function close() {
+          if (alerts[alertId]) {
+            delete alerts[alertId];
+          }
           deferred.resolve();
         }
 
-        $.smallBox(opts, close);
+        if (alerts[alertId]) {
+          // Already showing don't display again
+          return deferred.promise;
+        }
+
+        if (isFooterAlert) {
+          call = $.bigBox;
+          alertCounter = window.BigBoxes;
+          boxSelector = `#bigBox${alertCounter}`;
+        } else {
+          call = $.smallBox;
+          alertCounter = window.SmallBoxes;
+          boxSelector = `#smallBox${alertCounter}`;
+        }
+        call(popupOpts, close);
+
+        const $box = $(boxSelector);
+
+        if (alertId != null) {
+          alerts[alertId] = boxSelector;
+        }
+
+        // Applying post display options
+        if (canClose === false) {
+          $box.find('.botClose').remove();
+        }
+
         return deferred.promise;
       },
       errorAlert: function(error) {

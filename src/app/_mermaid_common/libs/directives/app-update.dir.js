@@ -1,7 +1,8 @@
 angular.module('mermaid.libs').directive('appUpdate', [
   'connectivity',
   'ConnectivityFactory',
-  function(connectivity, ConnectivityFactory) {
+  'utils',
+  function(connectivity, ConnectivityFactory, utils) {
     'use strict';
     return {
       restrict: 'E',
@@ -29,6 +30,19 @@ angular.module('mermaid.libs').directive('appUpdate', [
           },
           function(n) {
             scope.hasUpdates = n === true;
+            if (scope.hasUpdates === true) {
+              utils.showAlert(
+                'Update',
+                'New MERMAID version available, please reload page. <button type="button" class="btn btn-sm btn-default" onclick="window.location.reload()">Reload</button>',
+                utils.statuses.primary,
+                0,
+                {
+                  id: 'app-update',
+                  canClose: false,
+                  isFooterAlert: true
+                }
+              );
+            }
           }
         );
       }
