@@ -143,7 +143,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         {
           name: 'observers',
           display: 'Observers',
-          sortable: false,
+          sortable: true,
+          sort_by: ['observers_display'],
           formatter: function(v) {
             if (v == null) {
               return '-';
