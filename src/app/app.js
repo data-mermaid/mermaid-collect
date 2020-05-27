@@ -50,8 +50,10 @@ angular
     angularAuth0Provider,
     jwtOptionsProvider,
     blockUIConfig,
-    loggerProvider
+    loggerProvider,
+    APP_CONFIG
   ) {
+    const apiUrl = APP_CONFIG.apiUrl;
     blockUIConfig.templateUrl =
       'app/_mermaid_common/layout/partials/spinner.tpl.html';
     blockUIConfig.autoBlock = false;
@@ -119,9 +121,33 @@ angular
         }
       };
     });
+    $provide.factory('ResponseInterceptor', function() {
+      return {
+        response: function(response) {
+          const url = response.config.url;
+          if (!url.startsWith(apiUrl)) {
+            return response;
+          }
+
+          const apiVersion = response.headers().http_api_version;
+          const mermaidApiVersion = _.get(window, 'mermaid.apiVersion');
+          const hasUpdates = _.get(window, 'mermaid.hasUpdates');
+          const isDiffVersion =
+            mermaidApiVersion != null && mermaidApiVersion !== apiVersion;
+          if (mermaidApiVersion == null || isDiffVersion) {
+            _.set(window, 'mermaid.apiVersion', apiVersion);
+            if (!hasUpdates) {
+              window.mermaid.hasUpdates = isDiffVersion;
+            }
+          }
+          return response;
+        }
+      };
+    });
 
     // Add the interceptor to the $httpProvider.
     $httpProvider.interceptors.push('ErrorHttpInterceptor');
+    $httpProvider.interceptors.push('ResponseInterceptor');
   })
   .factory('$exceptionHandler', function($injector) {
     return function LoggerExceptionHandler(exception, cause) {
