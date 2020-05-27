@@ -245,7 +245,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         {
           name: 'validations',
           display: 'Status',
-          sortable: true,
+          sortable: false,
           formatter: function(v, record) {
             // TODO: Status options should be added choices api
             // so they can be translated.
@@ -255,7 +255,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         {
           name: '$$synced',
           display: 'Synced',
-          sortable: true,
+          sortable: false,
           tdTemplate:
             '<span>' +
             '<i class="fa fa-refresh status-icon" ' +
