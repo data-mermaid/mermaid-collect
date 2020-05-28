@@ -32,8 +32,10 @@ angular.module('mermaid.libs').directive('appUpdate', [
             scope.hasUpdates = n === true;
             if (scope.hasUpdates === true) {
               utils.showAlert(
-                'Update',
-                'New MERMAID version available, please reload page. <button type="button" class="btn btn-sm btn-default" onclick="window.location.reload()">Reload</button>',
+                'A new version of MERMAID is available',
+                'Refresh to get the latest version ' +
+                '<button type="button" class="btn btn-sm btn-default big-box-refresh" ' +
+                'onclick="window.location.reload()">Refresh</button>',
                 utils.statuses.primary,
                 0,
                 {
