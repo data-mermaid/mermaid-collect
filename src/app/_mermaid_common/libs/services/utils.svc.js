@@ -40,7 +40,7 @@ angular.module('mermaid.libs').service('utils', [
         status = status || utils.statuses.info;
 
         const isFooterAlert = options.isFooterAlert || false;
-        const canClose = options.canClose == null || options.canClose === true;
+        const canClose = options.canClose === true || false;
         const alertId = options.id;
         const deferred = $q.defer();
         const popupOpts = {
@@ -74,11 +74,11 @@ angular.module('mermaid.libs').service('utils', [
 
         if (isFooterAlert) {
           call = $.bigBox;
-          alertCounter = window.BigBoxes;
+          alertCounter = window.BigBoxes + 1;
           boxSelector = `#bigBox${alertCounter}`;
         } else {
           call = $.smallBox;
-          alertCounter = window.SmallBoxes;
+          alertCounter = window.SmallBoxes + 1;
           boxSelector = `#smallBox${alertCounter}`;
         }
         call(popupOpts, close);
