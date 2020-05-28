@@ -1,9 +1,7 @@
 angular.module('app.reference').controller('FishGeneraCtrl', [
   '$rootScope',
   '$scope',
-  '$filter',
   'PaginatedOfflineTableWrapper',
-  'OfflineCommonTables',
   'TransectExportService',
   'Button',
   'fishGeneraTable',
@@ -11,9 +9,7 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
   function(
     $rootScope,
     $scope,
-    $filter,
     PaginatedOfflineTableWrapper,
-    OfflineCommonTables,
     TransectExportService,
     Button,
     fishGeneraTable,
@@ -21,16 +17,9 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
   ) {
     'use strict';
 
-    $scope.resource = null;
     $scope.tableControl = {};
     const fieldReportButton = new Button();
     const reportHeader = ['Name', 'Family'];
-
-    OfflineCommonTables.FishFamiliesTable().then(function(table) {
-      return table.filter().then(function(records) {
-        $scope.fishfamilies = records;
-      });
-    });
 
     $scope.tableConfig = {
       id: 'mermaid_fishgenera',
@@ -48,13 +37,10 @@ angular.module('app.reference').controller('FishGeneraCtrl', [
             '<a ui-sref="app.reference.fishgenera.fishgenus({id: record.id})">{{record.name}}</a>'
         },
         {
-          name: 'family',
+          name: '$$fishfamilies.name',
           display: 'Family',
           sortable: true,
-          sort_by: ['$$fishfamilies.name'],
-          formatter: function(v) {
-            return $filter('matchchoice')(v, $scope.fishfamilies);
-          }
+          sort_by: ['$$fishfamilies.name']
         },
         {
           name: 'biomass_constant_a',

@@ -76,6 +76,7 @@ angular
                 (inst.selectedMonth + 1) +
                 '-' +
                 inst.selectedDay;
+              ngModel.$setViewValue(val, true);
               ngModel.$modelValue = val;
             }
           });
@@ -97,7 +98,7 @@ angular
               if (o && o.length === 0) {
                 o = null;
               }
-
+              console.log('ngModel.$modelValue', ngModel.$modelValue);
               if (n !== o && ngModel.$modelValue !== val) {
                 $dateInput.datepicker('setDate', ngModel.$modelValue);
               }

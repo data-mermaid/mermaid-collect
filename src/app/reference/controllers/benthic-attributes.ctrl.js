@@ -3,10 +3,10 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
   '$rootScope',
   'PaginatedOfflineTableWrapper',
   'Button',
-  'OfflineCommonTables',
   'TransectExportService',
   '$filter',
   '$q',
+  'choicesTable',
   'benthicAttributesTable',
   'benthicAttributesCount',
   function(
@@ -14,32 +14,18 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
     $rootScope,
     PaginatedOfflineTableWrapper,
     Button,
-    OfflineCommonTables,
     TransectExportService,
     $filter,
     $q,
+    choicesTable,
     benthicAttributesTable,
     benthicAttributesCount
   ) {
     'use strict';
 
-    $scope.resource = undefined;
     $scope.tableControl = {};
-    $scope.choices = { regions: [], benthiclifehistories: [] };
     const fieldReportButton = new Button();
     const reportHeader = ['Name', 'Parent', 'Life History', 'Regions'];
-
-    OfflineCommonTables.ChoicesTable().then(function(table) {
-      table.filter({ name: 'regions' }).then(function(region_choices) {
-        $scope.choices.regions = region_choices[0].data;
-      });
-      table
-        .filter({ name: 'benthiclifehistories' })
-        .then(function(benthiclifehistory_choices) {
-          $scope.choices.benthiclifehistories =
-            benthiclifehistory_choices[0].data;
-        });
-    });
 
     $scope.tableConfig = {
       id: 'mermaid_benthicattributes',
@@ -70,7 +56,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
           sortable: true,
           formatter: function(v) {
             return (
-              $filter('matchchoice')(v, $scope.choices.benthiclifehistories) ||
+              $filter('matchchoice')(v, choicesTable.benthiclifehistories) ||
               '-'
             );
           }
@@ -80,13 +66,11 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
           display: 'Region List',
           sortable: true,
           formatter: function(v) {
-            const regions = [];
-            _.each(v, function(region) {
-              regions.push(
-                $filter('matchchoice')(region, $scope.choices.regions)
-              );
-            });
-            return regions.join(', ') || '-';
+            return (
+              _.map(v, function(item) {
+                return $filter('matchchoice')(item, choicesTable.regions);
+              }).join(', ') || '-'
+            );
           }
         }
       ],
