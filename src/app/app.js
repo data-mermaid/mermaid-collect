@@ -50,10 +50,8 @@ angular
     angularAuth0Provider,
     jwtOptionsProvider,
     blockUIConfig,
-    loggerProvider,
-    APP_CONFIG
+    loggerProvider
   ) {
-    const apiUrl = APP_CONFIG.apiUrl;
     blockUIConfig.templateUrl =
       'app/_mermaid_common/layout/partials/spinner.tpl.html';
     blockUIConfig.autoBlock = false;
