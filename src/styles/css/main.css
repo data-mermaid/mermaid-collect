@@ -896,6 +896,12 @@ btn > button {
   border-color: #000000;
 }
 
+button.btn.btn-sm.btn-default.big-box-refresh {
+  position: absolute;
+  top: 120px;
+  left: 334px;
+}
+
 .modal-subtitle {
   margin-bottom: 20px;
 }
