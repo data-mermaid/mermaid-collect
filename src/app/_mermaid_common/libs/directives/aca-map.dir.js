@@ -116,8 +116,6 @@ angular.module('mermaid.libs').directive('acaMap', [
                 1,
                 ['==', ['get', 'class_name'], 'Rubble'],
                 1,
-                ['==', ['get', 'class_name'], 'Unknown'],
-                1,
                 ['==', ['get', 'class_name'], 'Benthic Microalgae'],
                 1,
                 ['==', ['get', 'class_name'], 'Rock'],
@@ -154,8 +152,6 @@ angular.module('mermaid.libs').directive('acaMap', [
                 ['==', ['get', 'class_name'], 'Small Reef'],
                 1,
                 ['==', ['get', 'class_name'], 'Terrestrial Reef Flat'],
-                1,
-                ['==', ['get', 'class_name'], 'Unknown'],
                 1,
                 0 // Default / other
               ];

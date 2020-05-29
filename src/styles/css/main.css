@@ -1600,3 +1600,13 @@ table.greyGridTable tbody td:first-child {
   display: flex;
   align-items: center;
 }
+
+.padding-top-15 {
+  padding-top: 15px;
+}
+.padding-left-25 {
+  padding-left: 25px;
+}
+.padding-left-15 {
+  padding-left: 15px;
+}
