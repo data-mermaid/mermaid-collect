@@ -9,6 +9,8 @@ angular.module('app.project').controller('ManagementCtrl', [
   'logger',
   'utils',
   'project',
+  'choices',
+  'management',
   function(
     $rootScope,
     $scope,
@@ -19,14 +21,16 @@ angular.module('app.project').controller('ManagementCtrl', [
     Button,
     logger,
     utils,
-    project
+    project,
+    choices,
+    management
   ) {
     'use strict';
 
-    var managementId = $stateParams.id;
     var projectId = $stateParams.project_id;
-    $scope.choices = {};
     $scope.isDisabled = true;
+    $scope.management = management;
+    $scope.choices = choices;
 
     ProjectService.getMyProjectProfile(projectId).then(function(
       projectProfile
@@ -35,16 +39,6 @@ angular.module('app.project').controller('ManagementCtrl', [
         projectProfile,
         ProjectService.COLLECTOR_ROLE
       );
-    });
-
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
-
-    ManagementService.fetchData(projectId, managementId).then(function(
-      management
-    ) {
-      $scope.management = management;
     });
 
     const save = function() {

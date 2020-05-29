@@ -42,6 +42,7 @@ angular.module('app.project').service('ManagementService', [
         table
       ) {
         return table.get(managementId).then(function(management) {
+          management = management || { project: projectId };
           management.no_take =
             management.no_take === null ? false : management.no_take;
           management.open_access =
@@ -60,7 +61,7 @@ angular.module('app.project').service('ManagementService', [
             management.species_restriction === null
               ? false
               : management.species_restriction;
-          return management || { project: projectId };
+          return management;
         });
       });
     };
