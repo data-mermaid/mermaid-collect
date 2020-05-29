@@ -1,12 +1,13 @@
 angular.module('mermaid.libs').directive('legendSlider', [
-  function() {
+  'localStorageService',
+  function(localStorageService) {
     'use strict';
     return {
       restrict: 'EA',
       scope: {},
       templateUrl: 'app/_mermaid_common/libs/directives/legend-slider.tpl.html',
       link: function(scope) {
-        scope.toggleNav = false;
+        scope.toggleNav = true;
         scope.selectAllBenthic = undefined;
         scope.selectAllGeomorphic = undefined;
         scope.benthicColors = {
@@ -15,8 +16,7 @@ angular.module('mermaid.libs').directive('legendSlider', [
           Rock: 'rgb(177, 156, 58)',
           Rubble: 'rgb(224, 208, 94)',
           Sand: 'rgb(255, 255, 190)',
-          Seagrass: 'rgb(102, 132, 56)',
-          Unknown: 'rgb(178, 178, 178)'
+          Seagrass: 'rgb(102, 132, 56)'
         };
         scope.geomorphicColors = {
           'Back Reef Slope': 'rgb(190, 251, 255)',
@@ -30,16 +30,14 @@ angular.module('mermaid.libs').directive('legendSlider', [
           'Shadow Lagoon': 'rgb(119, 208, 252)',
           'Sheltered Reef Slope': 'rgb(16, 189, 166)',
           'Small Reef': 'rgb(230, 145, 19)',
-          'Terrestrial Reef Flat': 'rgb(251, 222, 251)',
-          Unknown: 'rgb(178, 178, 178)'
+          'Terrestrial Reef Flat': 'rgb(251, 222, 251)'
         };
         scope.benthicArray = Object.keys(scope.benthicColors);
         scope.geomorphicArray = Object.keys(scope.geomorphicColors);
 
         const loadBenthicOptions = function() {
           const benthicStorage =
-            JSON.parse(localStorage.getItem('benthic_legend')) ||
-            scope.benthicArray;
+            localStorageService.get('benthic_legend') || scope.benthicArray;
 
           return scope.benthicArray.map(value => {
             let updatedBenthic = { name: value, selected: true };
@@ -54,7 +52,7 @@ angular.module('mermaid.libs').directive('legendSlider', [
 
         const loadGeomorphicOptions = function() {
           const geomorphicStorage =
-            JSON.parse(localStorage.getItem('geomorphic_legend')) ||
+            localStorageService.get('geomorphic_legend') ||
             scope.geomorphicArray;
 
           return scope.geomorphicArray.map(value => {
@@ -69,9 +67,7 @@ angular.module('mermaid.libs').directive('legendSlider', [
         };
 
         const loadCoralMosaicOption = function() {
-          const coralStorageOption = JSON.parse(
-            localStorage.getItem('coral_mosaic')
-          );
+          const coralStorageOption = localStorageService.get('coral_mosaic');
 
           if (coralStorageOption === null) {
             return true;
@@ -86,8 +82,7 @@ angular.module('mermaid.libs').directive('legendSlider', [
 
         scope.filterBenthic = function(item) {
           let options =
-            JSON.parse(localStorage.getItem('benthic_legend')) ||
-            scope.benthicArray;
+            localStorageService.get('benthic_legend') || scope.benthicArray;
 
           if (!options.includes(item)) {
             options.push(item);
@@ -99,12 +94,12 @@ angular.module('mermaid.libs').directive('legendSlider', [
             }
           }
 
-          localStorage.setItem('benthic_legend', JSON.stringify(options));
+          localStorageService.set('benthic_legend', options);
         };
 
         scope.filterGeomorphic = function(item) {
           let options =
-            JSON.parse(localStorage.getItem('geomorphic_legend')) ||
+            localStorageService.get('geomorphic_legend') ||
             scope.geomorphicArray;
 
           if (!options.includes(item)) {
@@ -117,12 +112,12 @@ angular.module('mermaid.libs').directive('legendSlider', [
             }
           }
 
-          localStorage.setItem('geomorphic_legend', JSON.stringify(options));
+          localStorageService.set('geomorphic_legend', options);
         };
 
         scope.filterCoralMosaic = function() {
           const result = scope.selectedCoralMosaic ? 1 : 0;
-          localStorage.setItem('coral_mosaic', result);
+          localStorageService.set('coral_mosaic', result);
         };
 
         scope.filterAll = function() {
@@ -132,13 +127,10 @@ angular.module('mermaid.libs').directive('legendSlider', [
             );
             scope.benthicOptions.forEach(item => (item.selected = true));
 
-            localStorage.setItem(
-              'benthic_legend',
-              JSON.stringify(allBenthicStorage)
-            );
+            localStorageService.set('benthic_legend', allBenthicStorage);
           } else {
             scope.benthicOptions.forEach(item => (item.selected = false));
-            localStorage.setItem('benthic_legend', JSON.stringify([]));
+            localStorageService.set('benthic_legend', []);
           }
         };
 
@@ -149,13 +141,10 @@ angular.module('mermaid.libs').directive('legendSlider', [
             );
             scope.geomorphicOptions.forEach(item => (item.selected = true));
 
-            localStorage.setItem(
-              'geomorphic_legend',
-              JSON.stringify(allGeomorphicStorage)
-            );
+            localStorageService.set('geomorphic_legend', allGeomorphicStorage);
           } else {
             scope.geomorphicOptions.forEach(item => (item.selected = false));
-            localStorage.setItem('geomorphic_legend', JSON.stringify([]));
+            localStorageService.set('geomorphic_legend', []);
           }
         };
 

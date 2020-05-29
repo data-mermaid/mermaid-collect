@@ -116,8 +116,6 @@ angular.module('mermaid.libs').directive('acaMap', [
                 1,
                 ['==', ['get', 'class_name'], 'Rubble'],
                 1,
-                ['==', ['get', 'class_name'], 'Unknown'],
-                1,
                 ['==', ['get', 'class_name'], 'Benthic Microalgae'],
                 1,
                 ['==', ['get', 'class_name'], 'Rock'],
@@ -154,8 +152,6 @@ angular.module('mermaid.libs').directive('acaMap', [
                 ['==', ['get', 'class_name'], 'Small Reef'],
                 1,
                 ['==', ['get', 'class_name'], 'Terrestrial Reef Flat'],
-                1,
-                ['==', ['get', 'class_name'], 'Unknown'],
                 1,
                 0 // Default / other
               ];
@@ -307,6 +303,46 @@ angular.module('mermaid.libs').directive('acaMap', [
           });
         };
 
+        const watchRecords = function(records) {
+          const bounds = new mapboxgl.LngLatBounds();
+          let data = {
+            type: 'FeatureCollection',
+            features: []
+          };
+
+          _.each(records, function(rec) {
+            let rec_geo_data = {};
+
+            if (popup) {
+              rec_geo_data = {
+                id: rec.id,
+                name: rec.name,
+                project_id: scope.mapopts.project_id,
+                reefexposure: rec.$$reefexposures.name,
+                reeftype: rec.$$reeftypes.name,
+                reefzone: rec.$$reefzones.name
+              };
+            }
+
+            const recPoint = {
+              type: 'Feature',
+              geometry: rec.location,
+              properties: rec_geo_data
+            };
+
+            bounds.extend(rec.location.coordinates);
+            data.features.push(recPoint);
+          });
+
+          if (map.getSource('mapMarkers') !== undefined) {
+            map.getSource('mapMarkers').setData(data);
+          }
+
+          if (records.length > 0) {
+            map.fitBounds(bounds, { padding: 25, animate: false });
+          }
+        };
+
         map.on('load', function() {
           initLoadMapLayers();
           map.addControl(navigation, 'top-left');
@@ -363,51 +399,8 @@ angular.module('mermaid.libs').directive('acaMap', [
             map.setLayoutProperty('atlas-benthic', 'visibility', 'none');
             map.setLayoutProperty('atlas-geomorphic', 'visibility', 'none');
           }
+          scope.$watch('records', watchRecords, true);
         });
-
-        scope.$watch(
-          'records',
-          function(records) {
-            const bounds = new mapboxgl.LngLatBounds();
-            let data = {
-              type: 'FeatureCollection',
-              features: []
-            };
-
-            _.each(records, function(rec) {
-              let rec_geo_data = {};
-
-              if (popup) {
-                rec_geo_data = {
-                  id: rec.id,
-                  name: rec.name,
-                  project_id: scope.mapopts.project_id,
-                  reefexposure: rec.$$reefexposures.name,
-                  reeftype: rec.$$reeftypes.name,
-                  reefzone: rec.$$reefzones.name
-                };
-              }
-
-              const recPoint = {
-                type: 'Feature',
-                geometry: rec.location,
-                properties: rec_geo_data
-              };
-
-              bounds.extend(rec.location.coordinates);
-              data.features.push(recPoint);
-            });
-
-            if (map.getSource('mapMarkers') !== undefined) {
-              map.getSource('mapMarkers').setData(data);
-            }
-
-            if (records.length > 0) {
-              map.fitBounds(bounds, { padding: 25, animate: false });
-            }
-          },
-          true
-        );
 
         scope.$watch(
           function() {
