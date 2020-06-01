@@ -119,7 +119,6 @@ angular
         }
       };
     });
-
     // Add the interceptor to the $httpProvider.
     $httpProvider.interceptors.push('ErrorHttpInterceptor');
   })

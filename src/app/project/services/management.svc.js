@@ -36,12 +36,13 @@ angular.module('app.project').service('ManagementService', [
 
     var fetchData = function(projectId, managementId) {
       if (managementId == null) {
-        return $q.resolve({ project: projectId });
+        return $q.resolve({ project: projectId, open_access: true });
       }
       return OfflineTables.ProjectManagementsTable(projectId).then(function(
         table
       ) {
         return table.get(managementId).then(function(management) {
+          management = management || { project: projectId, open_access: true };
           management.no_take =
             management.no_take === null ? false : management.no_take;
           management.open_access =
@@ -60,7 +61,7 @@ angular.module('app.project').service('ManagementService', [
             management.species_restriction === null
               ? false
               : management.species_restriction;
-          return management || { project: projectId };
+          return management;
         });
       });
     };

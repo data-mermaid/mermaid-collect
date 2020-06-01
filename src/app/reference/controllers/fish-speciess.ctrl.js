@@ -22,7 +22,6 @@ angular.module('app.reference').controller('FishSpeciessCtrl', [
     Button
   ) {
     'use strict';
-    $scope.resource = null;
     $scope.tableControl = {};
 
     const fieldReportButton = new Button();
