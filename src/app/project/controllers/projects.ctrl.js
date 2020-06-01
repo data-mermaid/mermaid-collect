@@ -54,7 +54,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     $scope.tableConfig = {
       id: 'projects',
       defaultSortByColumn: 'name',
-      disableTrackingTableState: true,
+      disableTrackingTableState: false,
       searching: true,
       searchPlaceholder: 'Filter projects by name or country',
       searchLocation: 'right',
