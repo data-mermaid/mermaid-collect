@@ -84,7 +84,6 @@ angular.module('app.project').directive('obsBeltFishList', [
           if (!_.isUndefined(fishAttributeId)) {
             let promise = null;
             let state = null;
-            console.log(fishAttributesLookup[fishAttributeId]);
             const rank = _.get(
               fishAttributesLookup[fishAttributeId],
               '$$taxonomic_rank'
@@ -110,6 +109,8 @@ angular.module('app.project').directive('obsBeltFishList', [
                 state = 'app.reference.fishgenera.fishgenus';
               } else if (rank === FishAttributeService.FAMILY_RANK) {
                 state = 'app.reference.fishfamilies.fishfamily';
+              } else if (rank === FishAttributeService.GROUPING) {
+                state = 'app.reference.groupings.grouping';
               } else {
                 utils.showAlert(
                   'Error',
@@ -126,20 +127,6 @@ angular.module('app.project').directive('obsBeltFishList', [
               );
             });
           }
-        };
-
-        scope.disableRef = function(fishAttributeId) {
-          if (!_.isUndefined(fishAttributeId)) {
-            const rank = _.get(
-              fishAttributesLookup[fishAttributeId],
-              '$$taxonomic_rank'
-            );
-
-            if (rank === FishAttributeService.GROUPING) {
-              return true;
-            }
-          }
-          return false;
         };
 
         scope.modalConfig = {
