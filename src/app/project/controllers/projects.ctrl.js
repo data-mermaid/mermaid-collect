@@ -54,7 +54,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     $scope.tableConfig = {
       id: 'projects',
       defaultSortByColumn: 'name',
-      disableTrackingTableState: true,
+      disableTrackingTableState: false,
       searching: true,
       searchPlaceholder: 'Filter projects by name or country',
       searchLocation: 'right',
@@ -72,7 +72,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
         {
           name: 'countries',
           display: 'Countries',
-          sortable: false,
+          sortable: true,
           formatter: function(val) {
             if (_.isArray(val)) {
               return val.join(', ');
@@ -80,7 +80,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
             return '-';
           }
         },
-        { name: 'num_sites', display: 'Number of Sites', sortable: false },
+        { name: 'num_sites', display: 'Number of Sites', sortable: true },
         {
           display: 'Offline Ready',
           sortable: false,

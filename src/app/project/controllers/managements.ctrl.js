@@ -75,7 +75,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
         {
           name: 'open_access',
           display: 'Open Access',
-          sortable: false,
+          sortable: true,
           tdTemplate:
             '<span>' +
             '<i class="fa fa-check" ' +
@@ -85,6 +85,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
         {
           name: 'periodic_closure',
           display: 'Periodic Closure',
+          sortable: true,
           tdTemplate:
             '<span>' +
             '<i class="fa fa-check" ' +
@@ -94,6 +95,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
         {
           name: 'size_limits',
           display: 'Size Limits',
+          sortable: true,
           tdTemplate:
             '<span>' +
             '<i class="fa fa-check" ' +
@@ -103,6 +105,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
         {
           name: 'gear_restriction',
           display: 'Gear Restrictions',
+          sortable: true,
           tdTemplate:
             '<span>' +
             '<i class="fa fa-check" ' +
@@ -112,6 +115,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
         {
           name: 'species_restriction',
           display: 'Species Restrictions',
+          sortable: true,
           tdTemplate:
             '<span>' +
             '<i class="fa fa-check" ' +
@@ -121,6 +125,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
         {
           name: 'no_take',
           display: 'No Take',
+          sortable: true,
           tdTemplate:
             '<span>' +
             '<i class="fa fa-check" ' +
