@@ -1,7 +1,8 @@
 /* globals mapboxgl */
 
 angular.module('mermaid.libs').directive('acaMap', [
-  function() {
+  'localStorageService',
+  function(localStorageService) {
     'use strict';
     return {
       restrict: 'EA',
@@ -73,14 +74,12 @@ angular.module('mermaid.libs').directive('acaMap', [
         };
 
         const fillOpacityValue = applyOpacityExpression(
-          JSON.parse(localStorage.getItem('benthic_legend'))
+          localStorageService.get('benthic_legend')
         );
         const fillGeomorphicOpacityValue = applyOpacityExpression(
-          JSON.parse(localStorage.getItem('geomorphic_legend'))
+          localStorageService.get('geomorphic_legend')
         );
-        const rasterOpacityValue = JSON.parse(
-          localStorage.getItem('coral_mosaic')
-        );
+        const rasterOpacityValue = localStorageService.get('coral_mosaic');
 
         const worldBaseMap = {
           version: 8,
@@ -400,47 +399,50 @@ angular.module('mermaid.libs').directive('acaMap', [
 
         scope.$watch(
           function() {
-            return localStorage.getItem('benthic_legend');
+            return localStorageService.get('benthic_legend');
           },
           function(storageVal, oldStorageValue) {
             if (storageVal !== oldStorageValue) {
               map.setPaintProperty(
                 'atlas-benthic',
                 'fill-opacity',
-                applyOpacityExpression(JSON.parse(storageVal))
+                applyOpacityExpression(storageVal)
               );
             }
-          }
+          },
+          true
         );
 
         scope.$watch(
           function() {
-            return localStorage.getItem('geomorphic_legend');
+            return localStorageService.get('geomorphic_legend');
           },
           function(storageVal, oldStorageValue) {
             if (storageVal !== oldStorageValue) {
               map.setPaintProperty(
                 'atlas-geomorphic',
                 'fill-opacity',
-                applyOpacityExpression(JSON.parse(storageVal))
+                applyOpacityExpression(storageVal)
               );
             }
-          }
+          },
+          true
         );
 
         scope.$watch(
           function() {
-            return localStorage.getItem('coral_mosaic');
+            return localStorageService.get('coral_mosaic');
           },
           function(storageVal, oldStorageValue) {
             if (storageVal !== oldStorageValue) {
               map.setPaintProperty(
                 'atlas-planet',
                 'raster-opacity',
-                JSON.parse(storageVal)
+                storageVal
               );
             }
-          }
+          },
+          true
         );
       }
     };
