@@ -241,8 +241,6 @@ angular.module('mermaid.libs').directive('acaMap', [
                 'rgb(254, 254, 190)',
                 ['==', ['get', 'class_name'], 'Seagrass'],
                 'rgb(102, 132, 56)',
-                ['==', ['get', 'class_name'], 'Unknown'],
-                'rgb(178, 178, 178)',
                 'rgb(201, 65, 216)' // Default / other
               ],
               'fill-opacity': scope.fillOpacityExpression
@@ -281,8 +279,6 @@ angular.module('mermaid.libs').directive('acaMap', [
                 'rgb(230, 145, 19)',
                 ['==', ['get', 'class_name'], 'Terrestrial Reef Flat'],
                 'rgb(251, 222, 251)',
-                ['==', ['get', 'class_name'], 'Unknown'],
-                'rgb(178, 178, 178)',
                 'rgb(201, 65, 216)' // Default / other
               ],
               'fill-opacity': scope.fillGeomorphicOpacityExpression
