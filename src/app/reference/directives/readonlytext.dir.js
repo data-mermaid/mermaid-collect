@@ -1,4 +1,4 @@
-angular.module('mermaid.forms').directive('readonlytext', [
+angular.module('app.reference').directive('readonlytext', [
   function() {
     'use strict';
     return {
@@ -12,7 +12,7 @@ angular.module('mermaid.forms').directive('readonlytext', [
         widgetLink: '@',
         widgetName: '@'
       },
-      templateUrl: 'app/_mermaid_common/forms/directives/readonlytext.tpl.html',
+      templateUrl: 'app/reference/directives/readonlytext.tpl.html',
       link: function(scope, element, attrs) {
         scope.widgetLabel = attrs.widgetLabel;
         scope.textType = attrs.widgetTextType || '';

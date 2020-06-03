@@ -15,7 +15,8 @@ angular.module('app.reference').controller('FishSpeciesCtrl', [
 
     $scope.choices = choicesTable;
     $scope.fishFamilies = fishFamilies;
-    $scope.record = fishSpeciesRecord;
     $scope.genusRecord = fishGenusRecord;
+    $scope.record = fishSpeciesRecord;
+    $scope.record.$$genusName = fishGenusRecord.name;
   }
 ]);

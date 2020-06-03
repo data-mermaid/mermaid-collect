@@ -22,7 +22,7 @@
       <a ui-sref="{{ widgetLink }}({ id: ngModel[widgetName] })">{{ ngModel[widgetName] | matchchoice:attributeChoices }}</a>
    </div>
    <div ng-switch-when="isSpecies">
-      <a ui-sref="{{ widgetLink }}({ id: ngModel['genus'] })">{{ ngModel['display_name'] }}</a>
+      <a ui-sref="{{ widgetLink }}({ id: ngModel['genus'] })">{{ ngModel['$$genusName'] }}</a> {{ ngModel['name'] }}
    </div>
    <div ng-switch-when="isMaxLength">
       {{ ngModel['max_length'] }} ({{ ngModel['max_length_type'] | matchchoice:attributeChoices }})
