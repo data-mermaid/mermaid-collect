@@ -12,7 +12,7 @@ angular.module('mermaid.libs').directive('acaMap', [
         records: '=?',
         geoattr: '=?'
       },
-      link: function(scope) {
+      link: function(scope, element) {
         const settings = (this.settings = {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           textColor: '#ffffff',
@@ -169,11 +169,14 @@ angular.module('mermaid.libs').directive('acaMap', [
         });
 
         const map = new mapboxgl.Map({
-          container: 'map',
+          container: element[0],
           style: worldBaseMap,
           center: defaultCenter, // starting position [lng, lat]
           zoom: defaultZoom, // starting zoom
-          maxZoom: 16
+          maxZoom: 16,
+          attributionControl: true,
+          customAttribution:
+            'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community &copy; <a href="http://www.allencoralatlas.org/">2019 Allen Coral Atlas Partnership and Vulcan, Inc.</a>'
         });
 
         const initLoadMapLayers = function() {

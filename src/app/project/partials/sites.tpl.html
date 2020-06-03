@@ -31,14 +31,17 @@
             <h2></h2>
           </header>
           <div class="widget-body map-body">
-            <div id="map" class="row" style="height: 400px;">
-              <aca-map
-                records="tableControl.records"
-                mapopts="mapopts"
-                >
-              </aca-map>
-              <legend-slider></legend-slider>
+            
+            <div
+              aca-map
+              records="tableControl.records"
+              mapopts="mapopts"
+              class="row aca-map"
+              style="height: 400px;"
+            >
             </div>
+            <legend-slider></legend-slider>
+            
           </div>
         </div>
       </article>
