@@ -36,14 +36,11 @@ angular.module('app.project').directive('projectOfflineToggle', [
           }
           return promise
             .then(function() {
-              scope.isAvailableOffline = !scope.isAvailableOffline;
-              $timeout(function() {
-                ProjectService.isProjectOffline(scope.projectId).then(function(
-                  isOffline
-                ) {
+              return ProjectService.isProjectOffline(scope.projectId).then(
+                function(isOffline) {
                   scope.isAvailableOffline = isOffline;
-                });
-              }, 1000);
+                }
+              );
             })
             .finally(function() {
               scope.isDisabled = false;

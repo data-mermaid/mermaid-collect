@@ -98,7 +98,6 @@ angular
               if (o && o.length === 0) {
                 o = null;
               }
-
               if (n !== o && ngModel.$modelValue !== val) {
                 $dateInput.datepicker('setDate', ngModel.$modelValue);
               }

@@ -16,8 +16,38 @@
               <div class="widget-body no-padding">
                 <div class="smart-form">
                   <fieldset>
-                    <div textinput widget-form="form" widget-label="Name" widget-name="name" ng-model="record"
-                      widget-required="true" widget-disabled="isDisabled"></div>
+                    <div
+                      readonlytext
+                      class="col-xs-5"
+                      ng-model="record"
+                      widget-label="Name"
+                      widget-name="name"
+                    ></div>
+
+                    <div class="col-xs-1"></div>
+
+                    <div class="clearfix"></div>
+
+                    <div
+                      readonlytext
+                      class="col-xs-5"
+                      ng-model="record"
+                      widget-item-list="[{'A': 'biomass_constant_a'},{'B': 'biomass_constant_b'},{'C': 'biomass_constant_c'}]"
+                      widget-label="Biomass Constants"
+                      widget-text-type="hasList"
+                    ></div>
+
+                    <div class="clearfix"></div>
+                    
+                    <div
+                      readonlytext
+                      class="col-xs-5"
+                      ng-model="record"
+                      widget-label="Regions"
+                      widget-name="regions"
+                      attribute-choices="choices.regions"
+                      widget-text-type="isRegions"
+                    ></div>
                   </fieldset>
                 </div>
               </div>

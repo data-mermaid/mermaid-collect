@@ -1,0 +1,34 @@
+<section>
+ <div style="border-bottom: 1px solid;">
+   <label style="font-weight: bold; font-size: 1.25em">
+     {{ widgetLabel }}
+   </label>
+ </div>
+ <div ng-switch on="textType">
+   <div ng-switch-default>
+     {{ ngModel[widgetName] }}
+   </div>
+   <div ng-switch-when="hasChoices">
+    {{ ngModel[widgetName] | matchchoice:attributeChoices }}
+   </div>
+   <div ng-switch-when="hasList">
+      <div ng-repeat="item in widgetItemList">
+        <div ng-repeat="(key, value) in item">
+          {{ key }} - {{ ngModel[value] }}
+        </div>
+      </div>
+   </div>
+   <div ng-switch-when="hasLink">
+      <a ui-sref="{{ widgetLink }}({ id: ngModel[widgetName] })">{{ ngModel[widgetName] | matchchoice:attributeChoices }}</a>
+   </div>
+   <div ng-switch-when="isSpecies">
+      <a ui-sref="{{ widgetLink }}({ id: ngModel['genus'] })">{{ ngModel['$$genusName'] }}</a> {{ ngModel['name'] }}
+   </div>
+   <div ng-switch-when="isMaxLength">
+      {{ ngModel['max_length'] }} ({{ ngModel['max_length_type'] | matchchoice:attributeChoices }})
+   </div>
+   <div ng-switch-when="isRegions">
+      <div ng-repeat="item in ngModel[widgetName]">- {{ item | matchchoice:attributeChoices }}</div>
+   </div>
+ </div>
+</section>

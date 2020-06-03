@@ -295,7 +295,15 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          project: _getProject
+          project: _getProject,
+          management: function($stateParams, ManagementService) {
+            const projectId = $stateParams.project_id;
+            const managementId = $stateParams.id;
+            return ManagementService.fetchData(projectId, managementId);
+          },
+          choices: function(ProjectService) {
+            return ProjectService.fetchChoices();
+          }
         }
       })
       .state('app.project.submittedtransects.fishbelttransectmethod', {
@@ -606,7 +614,12 @@ angular
           }
         },
         resolve: {
-          projectProfile: _getMyProjectProfile
+          projectProfile: _getMyProjectProfile,
+          beltTransectWidthChoices: function(ProjectService) {
+            return ProjectService.fetchChoices().then(function(choices) {
+              return choices.belttransectwidths;
+            });
+          }
         }
       })
       .state('app.project.users', {

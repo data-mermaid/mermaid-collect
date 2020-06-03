@@ -9,6 +9,8 @@ angular.module('app.project').controller('ManagementCtrl', [
   'logger',
   'utils',
   'project',
+  'choices',
+  'management',
   function(
     $rootScope,
     $scope,
@@ -19,14 +21,16 @@ angular.module('app.project').controller('ManagementCtrl', [
     Button,
     logger,
     utils,
-    project
+    project,
+    choices,
+    management
   ) {
     'use strict';
 
-    var managementId = $stateParams.id;
     var projectId = $stateParams.project_id;
-    $scope.choices = {};
     $scope.isDisabled = true;
+    $scope.management = management;
+    $scope.choices = choices;
 
     ProjectService.getMyProjectProfile(projectId).then(function(
       projectProfile
@@ -37,17 +41,7 @@ angular.module('app.project').controller('ManagementCtrl', [
       );
     });
 
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
-
-    ManagementService.fetchData(projectId, managementId).then(function(
-      management
-    ) {
-      $scope.management = management;
-    });
-
-    $scope.save = function() {
+    const save = function() {
       var isNew = $scope.management.id == null;
       ManagementService.save($scope.management, { projectId: projectId })
         .then(function(savedManagement) {
@@ -82,8 +76,9 @@ angular.module('app.project').controller('ManagementCtrl', [
     saveButton.visible = true;
     saveButton.classes = 'btn-success';
     saveButton.icon = 'fa fa-save';
-    saveButton.click = $scope.save;
+    saveButton.click = save;
     saveButton.onlineOnly = false;
+    $scope.save = save;
 
     $rootScope.PageHeaderButtons = [saveButton];
 

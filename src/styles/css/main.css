@@ -782,6 +782,7 @@ btn > button {
 
 .widget-body.map-body {
   padding: 0 13px !important;
+  overflow: hidden;
 }
 
 .dotted-underline {
@@ -893,6 +894,12 @@ btn > button {
   color: #ffffff !important;
   background-color: #333333;
   border-color: #000000;
+}
+
+button.btn.btn-sm.btn-default.big-box-refresh {
+  position: absolute;
+  top: 120px;
+  left: 334px;
 }
 
 .modal-subtitle {
@@ -1381,7 +1388,7 @@ ul li.transect-buttons[disabled] {
   visibility: hidden;
 }
 
-/* leaflet popup content style */
+/* mapbox popup content style */
 .mapboxgl-popup {
   border-radius: 6px;
 }
@@ -1486,6 +1493,65 @@ input:checked + .slider-mermaid:before {
   text-shadow: none !important;
 }
 
+.leaflet-navbar {
+  background: rgba(255, 255, 255, 1);
+  position: absolute; 
+  width: 270px;
+  height: 400px;
+  right: -270px;
+  top: 0px;
+  z-index: 1;
+  transition: .5s right;
+}
+
+.leaflet-navbar.open {
+  right: 0px;
+}
+
+.leaflet-navbar .leaflet-hamburger {
+  position: absolute;
+  background: rgba(255, 255, 255, 1);
+  height: 120px;
+  width: 20px;
+  cursor: pointer;
+  top: 10%;
+  left: -20px;
+  border-right: 1px solid;
+  transition: .5s right;
+}
+
+.leaflet-hamburger span {
+  display: inline-block;
+  position: relative;
+  transform: rotate(-90deg);
+  top: 50px;
+  left: -45px;
+  font-size: 1.5rem;
+}
+
+.atlas-layers {
+  height: 350px;
+  overflow-y: auto;
+  padding: 10px 10px 0 10px;
+}
+
+.atlas-legend {
+  display: inline-block;
+}
+
+.atlas-legend-item {
+  display: block;
+  margin-left: 25px;
+}
+
+.atlas-legend-color-box {
+  height: 15px;
+  width: 50px;
+  border: 1px solid;
+  float: right;
+  margin-top: 2px;
+}
+
 .more-info {
   padding: 5px;
   font-size: 1em;
@@ -1539,4 +1605,18 @@ table.greyGridTable tbody td:first-child {
 .datasharing-dropdown {
   display: flex;
   align-items: center;
+}
+
+.aca-map .mapboxgl-ctrl-bottom-right{
+  z-index: 0;
+}
+
+.padding-top-15 {
+  padding-top: 15px;
+}
+.padding-left-25 {
+  padding-left: 25px;
+}
+.padding-left-18 {
+  padding-left: 18px;
 }

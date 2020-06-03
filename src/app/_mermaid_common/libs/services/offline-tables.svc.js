@@ -12,6 +12,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
   'ProjectProfile',
   'CollectRecord',
   'SpatialUtils',
+  'cache',
   'logger',
   function(
     $q,
@@ -27,10 +28,12 @@ angular.module('mermaid.libs').service('OfflineTables', [
     ProjectProfile,
     CollectRecord,
     SpatialUtils,
+    cache,
     logger
   ) {
     'use strict';
 
+    let tablePromises = {};
     const deleteProjectPromises = {};
     const PROJECT_NAME = 'projects_v2';
     const PROJECT_SITES_NAME = 'projectsites';
@@ -190,8 +193,18 @@ angular.module('mermaid.libs').service('OfflineTables', [
           {}
         );
       };
+      const cacheKey = `ProjectSitesTable-${projectId}`;
+      const table = cache.get(cacheKey);
 
-      return OfflineCommonTables.ChoicesTable()
+      if (table) {
+        return $q.resolve(table);
+      }
+
+      if (tablePromises[cacheKey]) {
+        return tablePromises[cacheKey];
+      }
+
+      tablePromises[cacheKey] = OfflineCommonTables.ChoicesTable()
         .then(function(table) {
           return table.filter();
         })
@@ -259,27 +272,39 @@ angular.module('mermaid.libs').service('OfflineTables', [
               }
             },
             skipRefresh
-          ).then(function(table) {
-            table.$watch(
-              function(event) {
-                if (
-                  event.event === 'ot-deleterecord-error' &&
-                  event.data[1].status === 403
-                ) {
-                  var msg = event.data[1].data || event.data[1].statusText;
-                  if (msg.length > 500) {
-                    msg = msg.substr(0, 497) + '...';
+          )
+            .then(function(table) {
+              table.$watch(
+                function(event) {
+                  if (
+                    event.event === 'ot-deleterecord-error' &&
+                    event.data[1].status === 403
+                  ) {
+                    var msg = event.data[1].data || event.data[1].statusText;
+                    if (msg.length > 500) {
+                      msg = msg.substr(0, 497) + '...';
+                    }
+                    utils.showAlert(
+                      'Warning',
+                      msg,
+                      utils.statuses.warning,
+                      5000
+                    );
                   }
-                  utils.showAlert('Warning', msg, utils.statuses.warning, 5000);
-                }
-              },
-              null,
-              'site-del-error'
-            );
+                },
+                null,
+                'site-del-error'
+              );
 
-            return table;
-          });
+              return table;
+            })
+            .then(function(table) {
+              cache.set(cacheKey, table, 30000);
+              tablePromises[cacheKey] = null;
+              return table;
+            });
         });
+      return tablePromises[cacheKey];
     };
 
     const ProjectManagementsTable = function(projectId, skipRefresh) {
@@ -410,12 +435,12 @@ angular.module('mermaid.libs').service('OfflineTables', [
         projectDeletePromise = $q.resolve();
       } else {
         projectDeletePromise = ProjectsTable().then(function(table) {
-          table.deleteRecords([projectId], true);
+          return table.deleteRecords([projectId], true);
         });
       }
 
       deleteProjectPromises[projectId] = $q
-        .all(projectDeletePromise, tableRemovalPromise)
+        .all([projectDeletePromise, tableRemovalPromise])
         .finally(function() {
           delete deleteProjectPromises[projectId];
         });
@@ -449,6 +474,12 @@ angular.module('mermaid.libs').service('OfflineTables', [
 
     const fetchProjectTablesForRemoval = function(projectId) {
       return loadProjectRelatedTables(projectId, true).then(function(tables) {
+        _.each(tables, function(table) {
+          if (table.db.isOpen() === false) {
+            table.db.open();
+          }
+        });
+
         return OfflineTableUtils.isSynced(tables).then(function(
           isTablesSynced
         ) {

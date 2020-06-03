@@ -27,7 +27,7 @@ angular.module('app.project').service('CopyManagementsService', [
           {
             name: 'open_access',
             display: 'Open Access',
-            sortable: false,
+            sortable: true,
             tdTemplate:
               '<span>' +
               '<i class="fa fa-check" ' +
@@ -37,6 +37,7 @@ angular.module('app.project').service('CopyManagementsService', [
           {
             name: 'periodic_closure',
             display: 'Periodic Closure',
+            sortable: true,
             tdTemplate:
               '<span>' +
               '<i class="fa fa-check" ' +
@@ -46,6 +47,7 @@ angular.module('app.project').service('CopyManagementsService', [
           {
             name: 'size_limits',
             display: 'Size Limits',
+            sortable: true,
             tdTemplate:
               '<span>' +
               '<i class="fa fa-check" ' +
@@ -55,6 +57,7 @@ angular.module('app.project').service('CopyManagementsService', [
           {
             name: 'gear_restriction',
             display: 'Gear Restrictions',
+            sortable: true,
             tdTemplate:
               '<span>' +
               '<i class="fa fa-check" ' +
@@ -64,6 +67,7 @@ angular.module('app.project').service('CopyManagementsService', [
           {
             name: 'species_restriction',
             display: 'Species Restrictions',
+            sortable: true,
             tdTemplate:
               '<span>' +
               '<i class="fa fa-check" ' +
@@ -73,6 +77,7 @@ angular.module('app.project').service('CopyManagementsService', [
           {
             name: 'no_take',
             display: 'No Take',
+            sortable: true,
             tdTemplate:
               '<span>' +
               '<i class="fa fa-check" ' +

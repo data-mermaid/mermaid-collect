@@ -31,6 +31,7 @@ angular.module('app.project').controller('SitesCtrl', [
 
     const conn = new ConnectivityFactory($scope);
     $scope.isOnline = connectivity.isOnline;
+
     this.db = {
       items: null
     };
@@ -195,7 +196,8 @@ angular.module('app.project').controller('SitesCtrl', [
 
     $scope.mapopts = {
       project_id: project_id,
-      popup: createPopup
+      popup: createPopup,
+      slider: true
     };
 
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {

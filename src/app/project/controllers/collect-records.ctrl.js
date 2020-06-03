@@ -13,6 +13,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'ProjectService',
   'ValidateSubmitService',
   'projectProfile',
+  'beltTransectWidthChoices',
   function(
     $state,
     $stateParams,
@@ -27,7 +28,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     PaginatedOfflineTableWrapper,
     ProjectService,
     ValidateSubmitService,
-    projectProfile
+    projectProfile,
+    beltTransectWidthChoices
   ) {
     'use strict';
 
@@ -80,11 +82,11 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         const width = _.get(value, 'fishbelt_transect.width');
         const widthFilter = $filter('matchchoice')(
           width,
-          $scope.choices.belttransectwidths
+          beltTransectWidthChoices
         );
         const length = _.get(value, 'fishbelt_transect.len_surveyed');
 
-        if (length && width) {
+        if (length && width && widthFilter) {
           result = length + 'm x ' + widthFilter.slice(0, -1) + 'm';
         } else if (length || width) {
           result = length ? length : widthFilter.slice(0, -1);
@@ -98,16 +100,13 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       return result + 'm';
     };
 
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices.belttransectwidths = choices.belttransectwidths;
-    });
-
     $scope.tableControl.choices = $scope.choices;
     $scope.tableConfig = {
       id: 'mermaid_collect_records',
       hideRowStripes: true,
       searching: true,
-      searchPlaceholder: 'Filter sample units by method, site, management, or observer',
+      searchPlaceholder:
+        'Filter sample units by method, site, management, or observer',
       searchLocation: 'left',
       defaultSortByColumn: 'data.protocol',
       rowFormatter: function(record, element) {
@@ -233,7 +232,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         {
           name: 'data.observers',
           display: 'Observers',
-          sortable: false,
+          sortable: true,
+          sort_by: ['data.observers[0].profile_name'],
           formatter: function(v) {
             let observers = [];
             angular.forEach(v, function(observer) {
@@ -243,7 +243,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           }
         },
         {
-          name: 'data.submission_results.status',
+          name: 'validations',
           display: 'Status',
           sortable: false,
           formatter: function(v, record) {
