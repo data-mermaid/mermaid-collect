@@ -435,12 +435,12 @@ angular.module('mermaid.libs').service('OfflineTables', [
         projectDeletePromise = $q.resolve();
       } else {
         projectDeletePromise = ProjectsTable().then(function(table) {
-          table.deleteRecords([projectId], true);
+          return table.deleteRecords([projectId], true);
         });
       }
 
       deleteProjectPromises[projectId] = $q
-        .all(projectDeletePromise, tableRemovalPromise)
+        .all([projectDeletePromise, tableRemovalPromise])
         .finally(function() {
           delete deleteProjectPromises[projectId];
         });
@@ -474,6 +474,12 @@ angular.module('mermaid.libs').service('OfflineTables', [
 
     const fetchProjectTablesForRemoval = function(projectId) {
       return loadProjectRelatedTables(projectId, true).then(function(tables) {
+        _.each(tables, function(table) {
+          if (table.db.isOpen() === false) {
+            table.db.open();
+          }
+        });
+
         return OfflineTableUtils.isSynced(tables).then(function(
           isTablesSynced
         ) {
