@@ -229,7 +229,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
           joinDefn: {
             fishgenera: `genus -> ${getFullName('fishgenera')}.id, name`
           },
-          limit: 3000,
+          limit: 3500,
           isPublic: true
         },
         refreshFishSpecies,
@@ -265,7 +265,7 @@ angular.module('mermaid.libs').service('OfflineCommonTables', [
         APP_CONFIG.apiUrl + 'benthicattributes/',
         BenthicAttribute,
         {
-          limit: 300,
+          limit: 400,
           isPublic: true
         },
         refreshBenthicAttributes,
