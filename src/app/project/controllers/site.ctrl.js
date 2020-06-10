@@ -42,7 +42,7 @@ angular.module('app.project').controller('SiteCtrl', [
     );
     $scope.site = site;
     $scope.choices = choices;
-    $scope.siteState = connectivity.siteState ? 'online' : 'offline';
+    $scope.siteState = connectivity.isOnline ? 'online' : 'offline';
 
     const save = function() {
       const isNew = $scope.site.id == null;
@@ -62,7 +62,6 @@ angular.module('app.project').controller('SiteCtrl', [
             });
           }
           $scope.form.$setPristine(true);
-          project.update();
         })
         .catch(function(error) {
           logger.error('save_site', error);

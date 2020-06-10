@@ -57,7 +57,6 @@ angular.module('app.project').controller('ManagementCtrl', [
             });
           }
           $scope.form.$setPristine(true);
-          project.update();
         })
         .catch(function(error) {
           logger.error('save_management', error);
