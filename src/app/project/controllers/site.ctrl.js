@@ -11,6 +11,9 @@ angular.module('app.project').controller('SiteCtrl', [
   'ConnectivityFactory',
   'logger',
   'project',
+  'choices',
+  'site',
+  'projectProfile',
   function(
     $rootScope,
     $scope,
@@ -23,33 +26,23 @@ angular.module('app.project').controller('SiteCtrl', [
     connectivity,
     ConnectivityFactory,
     logger,
-    project
+    project,
+    choices,
+    site,
+    projectProfile
   ) {
     'use strict';
 
-    const siteId = $stateParams.id;
-    const projectId = $stateParams.project_id;
     const conn = new ConnectivityFactory($scope);
-    $scope.isDisabled = true;
-    $scope.choices = {};
-    $scope.siteState = connectivity.isOnline ? 'online' : 'offline';
+    const projectId = $stateParams.project_id;
 
-    ProjectService.getMyProjectProfile(projectId).then(function(
-      projectProfile
-    ) {
-      $scope.isDisabled = ProjectService.isFormDisabled(
-        projectProfile,
-        ProjectService.COLLECTOR_ROLE
-      );
-    });
-
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
-
-    SiteService.fetchData(projectId, siteId).then(function(site) {
-      $scope.site = site;
-    });
+    $scope.isDisabled = ProjectService.isFormDisabled(
+      projectProfile,
+      ProjectService.COLLECTOR_ROLE
+    );
+    $scope.site = site;
+    $scope.choices = choices;
+    $scope.siteState = connectivity.siteState ? 'online' : 'offline';
 
     const save = function() {
       const isNew = $scope.site.id == null;

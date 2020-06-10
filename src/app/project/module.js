@@ -78,6 +78,21 @@ angular
       );
     };
 
+    const _getNonAdminCollectorProfile = function(
+      $stateParams,
+      ProjectService
+    ) {
+      return ProjectService.getMyProjectProfile($stateParams.project_id).then(
+        function(projectProfile) {
+          return (
+            !projectProfile ||
+            (projectProfile.is_admin !== true &&
+              projectProfile.is_collector !== true)
+          );
+        }
+      );
+    };
+
     const _fetchCurrentUser = function(authService) {
       return authService.getCurrentUser();
     };
@@ -115,6 +130,12 @@ angular
       if (!authService.isAuthenticated()) {
         return authService.login();
       }
+    };
+
+    const _getChoices = function(ProjectService) {
+      return ProjectService.fetchChoices().then(function(choices) {
+        return choices;
+      });
     };
 
     $stateProvider
@@ -242,7 +263,8 @@ angular
           }
         },
         resolve: {
-          project: _getProject
+          project: _getProject,
+          notAdminCollectorProfile: _getNonAdminCollectorProfile
         }
       })
       .state('app.project.sites.site', {
@@ -260,10 +282,16 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          project: _getProject
+          project: _getProject,
+          projectProfile: _getMyProjectProfile,
+          site: function($stateParams, SiteService) {
+            const projectId = $stateParams.project_id;
+            const siteId = $stateParams.id;
+            return SiteService.fetchData(projectId, siteId);
+          },
+          choices: _getChoices
         }
       })
-
       .state('app.project.managements', {
         url: '/managements',
         onEnter: checkAuthentication,
@@ -277,7 +305,8 @@ angular
           }
         },
         resolve: {
-          project: _getProject
+          project: _getProject,
+          notAdminCollectorProfile: _getNonAdminCollectorProfile
         }
       })
       .state('app.project.managements.management', {
@@ -296,14 +325,13 @@ angular
         resolve: {
           checkId: _checkId(),
           project: _getProject,
+          projectProfile: _getMyProjectProfile,
           management: function($stateParams, ManagementService) {
             const projectId = $stateParams.project_id;
             const managementId = $stateParams.id;
             return ManagementService.fetchData(projectId, managementId);
           },
-          choices: function(ProjectService) {
-            return ProjectService.fetchChoices();
-          }
+          choices: _getChoices
         }
       })
       .state('app.project.submittedtransects.fishbelttransectmethod', {
