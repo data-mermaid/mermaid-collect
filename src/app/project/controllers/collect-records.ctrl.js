@@ -508,14 +508,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       });
     });
 
-    OfflineTables.ProjectSitesTable(project_id).then(function(table) {
-      table.filter().then(function(sites) {
-        $scope.choices.sites = _.map(sites, function(site) {
-          return { id: site.id, name: site.name };
-        });
-      });
-    });
-
     function addTransect(transect_type) {
       $state.go(transect_type.state, { id: '' });
     }

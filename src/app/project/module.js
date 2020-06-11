@@ -661,18 +661,6 @@ angular
           }
         },
         resolve: {
-          sites: function($stateParams, OfflineTables) {
-            const project_id = $stateParams.project_id;
-            return OfflineTables.ProjectSitesTable(project_id).then(function(
-              table
-            ) {
-              return table.filter().then(function(sites) {
-                return _.map(sites, function(site) {
-                  return { id: site.id, name: site.name };
-                });
-              });
-            });
-          },
           projectProfile: _getMyProjectProfile
         }
       });
