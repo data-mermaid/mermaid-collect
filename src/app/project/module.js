@@ -78,21 +78,6 @@ angular
       );
     };
 
-    const _getNonAdminCollectorProfile = function(
-      $stateParams,
-      ProjectService
-    ) {
-      return ProjectService.getMyProjectProfile($stateParams.project_id).then(
-        function(projectProfile) {
-          return (
-            !projectProfile ||
-            (projectProfile.is_admin !== true &&
-              projectProfile.is_collector !== true)
-          );
-        }
-      );
-    };
-
     const _fetchCurrentUser = function(authService) {
       return authService.getCurrentUser();
     };
@@ -264,7 +249,7 @@ angular
         },
         resolve: {
           project: _getProject,
-          notAdminCollectorProfile: _getNonAdminCollectorProfile
+          projectProfile: _getMyProjectProfile
         }
       })
       .state('app.project.sites.site', {
@@ -306,7 +291,7 @@ angular
         },
         resolve: {
           project: _getProject,
-          notAdminCollectorProfile: _getNonAdminCollectorProfile
+          projectProfile: _getMyProjectProfile
         }
       })
       .state('app.project.managements.management', {

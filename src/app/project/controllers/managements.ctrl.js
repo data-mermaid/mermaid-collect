@@ -9,7 +9,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
   'ValidateSubmitService',
   'ValidateDuplicationService',
   'project',
-  'notAdminCollectorProfile',
+  'projectProfile',
   function(
     $scope,
     $state,
@@ -21,14 +21,17 @@ angular.module('app.project').controller('ManagementsCtrl', [
     ValidateSubmitService,
     ValidateDuplicationService,
     project,
-    notAdminCollectorProfile
+    projectProfile
   ) {
     'use strict';
 
     let managementRecordsCount = 0;
     const project_id = $stateParams.project_id;
 
-    $scope.isDisabled = notAdminCollectorProfile;
+    $scope.isDisabled =
+      !projectProfile ||
+      (projectProfile.is_admin !== true &&
+        projectProfile.is_collector !== true);
 
     $scope.resource = undefined;
     $scope.tableControl = {};

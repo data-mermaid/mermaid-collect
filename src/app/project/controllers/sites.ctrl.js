@@ -11,7 +11,7 @@ angular.module('app.project').controller('SitesCtrl', [
   'connectivity',
   'ConnectivityFactory',
   'project',
-  'notAdminCollectorProfile',
+  'projectProfile',
   function(
     $scope,
     $state,
@@ -25,7 +25,7 @@ angular.module('app.project').controller('SitesCtrl', [
     connectivity,
     ConnectivityFactory,
     project,
-    notAdminCollectorProfile
+    projectProfile
   ) {
     'use strict';
     const conn = new ConnectivityFactory($scope);
@@ -33,7 +33,10 @@ angular.module('app.project').controller('SitesCtrl', [
     const project_id = $stateParams.project_id;
 
     $scope.isOnline = connectivity.isOnline;
-    $scope.isDisabled = notAdminCollectorProfile;
+    $scope.isDisabled =
+      !projectProfile ||
+      (projectProfile.is_admin !== true &&
+        projectProfile.is_collector !== true);
 
     this.db = {
       items: null
