@@ -687,7 +687,8 @@ angular
                 });
               });
             });
-          }
+          },
+          projectProfile: _getMyProjectProfile
         }
       });
   });
