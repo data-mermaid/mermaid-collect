@@ -61,12 +61,6 @@ angular
       return $q.resolve(true);
     };
 
-    const _fetchDataPolicyChoices = function($q, ProjectService) {
-      return ProjectService.fetchChoices().then(function(choices) {
-        return choices.datapolicies;
-      });
-    };
-
     const _getMyProjectProfile = function($q, $stateParams, ProjectService) {
       return ProjectService.getMyProjectProfile($stateParams.project_id).then(
         function(projectProfile) {
@@ -92,6 +86,14 @@ angular
 
     const _fetchTransectLookups = function($stateParams, TransectService) {
       return TransectService.getLookups($stateParams.project_id);
+    };
+
+    const _fetchBenthicAttribute = function(BenthicAttributeService) {
+      return BenthicAttributeService.fetchBenthicAttributes();
+    };
+
+    const _fetchFishAttributes = function(FishAttributeService) {
+      return FishAttributeService.fetchFishAttributes();
     };
 
     const _getProject = function($stateParams, OfflineTables, $q) {
@@ -156,7 +158,7 @@ angular
         },
         resolve: {
           backgroundLoadChoices: _backgroundLoadChoices,
-          dataPolicies: _fetchDataPolicyChoices
+          choices: _getChoices
         }
       })
       .state('fullapp.project', {
@@ -210,7 +212,7 @@ angular
           projectsTable: _getProjectsTable,
           project: _getProject,
           projectProfile: _getMyProjectProfile,
-          dataPolicies: _fetchDataPolicyChoices
+          choices: _getChoices
         }
       })
       .state('app.project.datasharing', {
@@ -232,7 +234,7 @@ angular
           projectsTable: _getProjectsTable,
           project: _getProject,
           projectProfile: _getMyProjectProfile,
-          dataPolicies: _fetchDataPolicyChoices
+          choices: _getChoices
         }
       })
       .state('app.project.sites', {
@@ -267,7 +269,6 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          project: _getProject,
           projectProfile: _getMyProjectProfile,
           site: function($stateParams, SiteService) {
             const projectId = $stateParams.project_id;
@@ -309,7 +310,6 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          project: _getProject,
           projectProfile: _getMyProjectProfile,
           management: function($stateParams, ManagementService) {
             const projectId = $stateParams.project_id;
@@ -334,9 +334,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          fishAttributes: function(FishAttributeService) {
-            return FishAttributeService.fetchFishAttributes();
-          },
+          fishAttributes: _fetchFishAttributes,
           record: function($stateParams, BeltFishTransectMethod) {
             return BeltFishTransectMethod.get({
               project_pk: $stateParams.project_id,
@@ -365,9 +363,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          fishAttributes: function(FishAttributeService) {
-            return FishAttributeService.fetchFishAttributes();
-          },
+          fishAttributes: _fetchFishAttributes,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -389,9 +385,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttribute,
           record: function($stateParams, utils, BenthicLitTransectMethod) {
             return BenthicLitTransectMethod.get({
               project_pk: $stateParams.project_id,
@@ -423,9 +417,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttribute,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -447,9 +439,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttribute,
           record: function($stateParams, utils, BenthicPitTransectMethod) {
             return BenthicPitTransectMethod.get({
               project_pk: $stateParams.project_id,
@@ -481,9 +471,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttribute,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -563,9 +551,7 @@ angular
           },
           resolve: {
             checkId: _checkId(),
-            benthicAttributes: function(BenthicAttributeService) {
-              return BenthicAttributeService.fetchBenthicAttributes();
-            },
+            benthicAttributes: _fetchBenthicAttribute,
             record: function(
               $stateParams,
               utils,
@@ -605,9 +591,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttribute,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -628,11 +612,7 @@ angular
         },
         resolve: {
           projectProfile: _getMyProjectProfile,
-          beltTransectWidthChoices: function(ProjectService) {
-            return ProjectService.fetchChoices().then(function(choices) {
-              return choices.belttransectwidths;
-            });
-          }
+          choices: _getChoices
         }
       })
       .state('app.project.users', {

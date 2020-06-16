@@ -8,7 +8,6 @@ angular.module('app.project').controller('ManagementCtrl', [
   'Button',
   'logger',
   'utils',
-  'project',
   'choices',
   'management',
   'projectProfile',
@@ -22,7 +21,6 @@ angular.module('app.project').controller('ManagementCtrl', [
     Button,
     logger,
     utils,
-    project,
     choices,
     management,
     projectProfile

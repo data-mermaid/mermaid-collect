@@ -13,7 +13,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'ProjectService',
   'ValidateSubmitService',
   'projectProfile',
-  'beltTransectWidthChoices',
+  'choices',
   function(
     $state,
     $stateParams,
@@ -29,7 +29,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     ProjectService,
     ValidateSubmitService,
     projectProfile,
-    beltTransectWidthChoices
+    choices
   ) {
     'use strict';
 
@@ -43,6 +43,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       authService.getCurrentUser(),
       OfflineTables.CollectRecordsTable(project_id)
     ];
+    const beltTransectWidthChoices = choices.belttransectwidths;
 
     $scope.choices = {};
     $scope.tableControl = {};

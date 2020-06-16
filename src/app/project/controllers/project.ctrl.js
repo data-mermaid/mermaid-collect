@@ -12,7 +12,7 @@ angular.module('app.project').controller('ProjectCtrl', [
   'projectsTable',
   'project',
   'projectProfile',
-  'dataPolicies',
+  'choices',
   'OfflineTableBackup',
   function(
     $rootScope,
@@ -28,15 +28,16 @@ angular.module('app.project').controller('ProjectCtrl', [
     projectsTable,
     project,
     projectProfile,
-    dataPolicies,
+    choices,
     OfflineTableBackup
   ) {
     'use strict';
 
-    var project_id = $stateParams.project_id;
-    var _isUserProjectAdmin = false;
-    var conn = new ConnectivityFactory($scope);
-    var stateName = $state.current.name;
+    const project_id = $stateParams.project_id;
+    let _isUserProjectAdmin = false;
+    const conn = new ConnectivityFactory($scope);
+    const stateName = $state.current.name;
+    const dataPolicies = choices.datapolicies;
 
     $scope.project = project;
     $scope.benthicPolicies = {};
@@ -74,10 +75,10 @@ angular.module('app.project').controller('ProjectCtrl', [
           : utils.project_statuses.open;
     };
 
-    var save = function() {
+    const save = function() {
       if (!$scope.project.id) {
         return projectsTable.create($scope.project).then(function(project) {
-          var params = {
+          const params = {
             project_id: project.id
           };
           $scope.form.$setPristine(true);
@@ -89,7 +90,7 @@ angular.module('app.project').controller('ProjectCtrl', [
       });
     };
 
-    var backupProject = function() {
+    const backupProject = function() {
       OfflineTableBackup.backupProject(project_id).then(function() {
         utils.showAlert(
           'Backup',
@@ -98,7 +99,7 @@ angular.module('app.project').controller('ProjectCtrl', [
         );
       });
     };
-    var saveButton = new Button();
+    const saveButton = new Button();
     saveButton.name = 'Save';
     saveButton.enabled = false;
     saveButton.visible = connectivity.isOnline;
@@ -108,7 +109,7 @@ angular.module('app.project').controller('ProjectCtrl', [
     saveButton.click = save;
     $scope.save = save;
 
-    var backupProjectButton = new Button();
+    const backupProjectButton = new Button();
     backupProjectButton.name = 'Back up';
     backupProjectButton.enabled = true;
     backupProjectButton.visible =

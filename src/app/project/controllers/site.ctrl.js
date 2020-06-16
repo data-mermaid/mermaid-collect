@@ -10,7 +10,6 @@ angular.module('app.project').controller('SiteCtrl', [
   'connectivity',
   'ConnectivityFactory',
   'logger',
-  'project',
   'choices',
   'site',
   'projectProfile',
@@ -26,7 +25,6 @@ angular.module('app.project').controller('SiteCtrl', [
     connectivity,
     ConnectivityFactory,
     logger,
-    project,
     choices,
     site,
     projectProfile
