@@ -66,14 +66,14 @@
                 config="copySiteConfig"
                 control="copySiteControl"
               ></paginatedtable>
-              <div class="map-body">
-                <div id="map" class="row" style="height: 400px;">
-                    <aca-map
-                      ng-if="isActive"  
-                      map="map"
-                      records="selectedSiteRecords"
-                      mapopts="mapopts"
-                    ></aca-map>
+                <div class="map-body">
+                  <div
+                    aca-map
+                    ng-if="isActive" 
+                    records="selectedSiteRecords"
+                    mapopts="mapopts"
+                    style="height: 400px;"
+                  >
                   </div>
                 </div>
               </div>
