@@ -86,28 +86,3 @@
     </validations>
   </div>
 </div>
-
-<div class="clearfix">
-  <div
-    class="col-xs-5"
-    numberinput
-    widget-disabled="isDisabled"
-    widget-form="form"
-    widget-name="depth"
-    ng-model="record.data.sample_event"
-    widget-label="Depth"
-    widget-required="true"
-    widget-append="m"
-    widget-validators="decimal='3:1',minvalue='0',maxvalue='30:true'"
-  >
-
-    <validations>
-      <input-validation-alert
-        identifier="depth"
-        identifier-validations="record.validations.results.depth"
-      ></input-validation-alert>
-    </validations>
-
-  </div>
-  <div class="col-xs-1"></div>
-</div>
