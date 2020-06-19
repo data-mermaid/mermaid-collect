@@ -15,6 +15,7 @@ angular.module('mermaid.libs').service('offlineservice', [
   'ProjectManagement',
   'ProjectProfile',
   'CollectRecord',
+  'SampleEvent',
   'BenthicAttribute',
   'FishSize',
   'FishFamily',
@@ -39,6 +40,7 @@ angular.module('mermaid.libs').service('offlineservice', [
     ProjectManagement,
     ProjectProfile,
     CollectRecord,
+    SampleEvent,
     BenthicAttribute,
     FishSize,
     FishFamily,
@@ -58,7 +60,8 @@ angular.module('mermaid.libs').service('offlineservice', [
       'projectsites',
       'projectmanagements',
       'project_profiles',
-      'collectrecords'
+      'collectrecords',
+      'sampleevents'
     ];
     var nonProjectRelatedTableNames = [
       'choices',
@@ -83,7 +86,8 @@ angular.module('mermaid.libs').service('offlineservice', [
         projectmanagements: ProjectManagementsTable,
         collectrecords: CollectRecordsTable,
         project_profiles: ProjectProfilesTable,
-        projectsites: ProjectSitesTable
+        projectsites: ProjectSitesTable,
+        sampleevents: SampleEventsTable
       };
 
       if (tableParts.baseName === 'offlinetables') {
@@ -713,6 +717,17 @@ angular.module('mermaid.libs').service('offlineservice', [
       );
     };
 
+    var SampleEventsTable = function(project_id, skipRefresh) {
+      return buildProjectRelatedTable(
+        SampleEvent,
+        'sampleevent',
+        project_id,
+        null,
+        {},
+        skipRefresh
+      );
+    };
+
     var ChoicesTable = function(skipRefresh) {
       var updatesUrl = APP_CONFIG.apiUrl + 'choices/updates/';
       if (tables['mermaid-choices']) {
@@ -906,7 +921,8 @@ angular.module('mermaid.libs').service('offlineservice', [
         ProjectSitesTable(projectId, skipRefresh),
         ProjectManagementsTable(projectId, skipRefresh),
         ProjectProfilesTable(projectId, skipRefresh),
-        CollectRecordsTable(projectId, skipRefresh)
+        CollectRecordsTable(projectId, skipRefresh),
+        SampleEventsTable(projectId, skipRefresh)
       ];
       return $q.all(promises);
     };
@@ -1038,6 +1054,7 @@ angular.module('mermaid.libs').service('offlineservice', [
       ProjectManagementsTable: ProjectManagementsTable,
       ProjectProfilesTable: ProjectProfilesTable,
       CollectRecordsTable: CollectRecordsTable,
+      SampleEventsTable: SampleEventsTable,
       ChoicesTable: ChoicesTable,
       FishAttributesTable: FishAttributesTable,
       FishSizesTable: FishSizesTable,

@@ -11,6 +11,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
   'ProjectManagement',
   'ProjectProfile',
   'CollectRecord',
+  'SampleEvent',
   'SpatialUtils',
   'cache',
   'logger',
@@ -27,6 +28,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
     ProjectManagement,
     ProjectProfile,
     CollectRecord,
+    SampleEvent,
     SpatialUtils,
     cache,
     logger
@@ -40,12 +42,14 @@ angular.module('mermaid.libs').service('OfflineTables', [
     const PROJECT_MANAGEMENTS_NAME = 'projectmanagements';
     const PROJECT_PROFILES_NAME = 'project_profiles';
     const COLLECT_RECORDS_NAME = 'collectrecords';
+    const SAMPLE_EVENTS_NAME = 'sampleevents';
 
     const PROJECT_TABLE_NAMES = [
       PROJECT_SITES_NAME,
       PROJECT_MANAGEMENTS_NAME,
       PROJECT_PROFILES_NAME,
-      COLLECT_RECORDS_NAME
+      COLLECT_RECORDS_NAME,
+      SAMPLE_EVENTS_NAME
     ];
 
     const getProjectsTableName = function() {
@@ -384,6 +388,34 @@ angular.module('mermaid.libs').service('OfflineTables', [
         });
     };
 
+    const SampleEventsTable = function(projectId, skipRefresh) {
+      console.log('Sample Event Table built');
+      const projectSitesTablePromise = ProjectSitesTable(projectId, true);
+      const projectManagementsTablePromise = ProjectManagementsTable(
+        projectId,
+        true
+      );
+      return $q
+        .all([projectSitesTablePromise, projectManagementsTablePromise])
+        .then(function(results) {
+          const sitesTableName = results[0].name;
+          const managementTableName = results[1].name;
+          return buildProjectRelatedTable(
+            SampleEvent,
+            'sampleevents',
+            projectId,
+            SAMPLE_EVENTS_NAME,
+            {
+              joinDefn: {
+                sites: `site -> ${sitesTableName}.id,name`,
+                managements: `management -> ${managementTableName}.id,name`
+              }
+            },
+            skipRefresh
+          );
+        });
+    };
+
     const clearDatabases = function(projectId) {
       return fetchProjectTablesForRemoval(projectId).then(function(tables) {
         return $q.all(
@@ -496,7 +528,8 @@ angular.module('mermaid.libs').service('OfflineTables', [
         ProjectSitesTable(projectId, skipRefresh),
         ProjectManagementsTable(projectId, skipRefresh),
         ProjectProfilesTable(projectId, skipRefresh),
-        CollectRecordsTable(projectId, skipRefresh)
+        CollectRecordsTable(projectId, skipRefresh),
+        SampleEventsTable(projectId, skipRefresh)
       ];
       return $q.all(promises);
     };
@@ -504,6 +537,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
     return {
       PROJECT_TABLE_NAMES: PROJECT_TABLE_NAMES,
       CollectRecordsTable: CollectRecordsTable,
+      SampleEventsTable: SampleEventsTable,
       ProjectsTable: ProjectsTable,
       ProjectManagementsTable: ProjectManagementsTable,
       ProjectProfilesTable: ProjectProfilesTable,
