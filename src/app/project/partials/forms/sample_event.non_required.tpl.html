@@ -5,8 +5,49 @@
     ddlinput
     widget-disabled="isDisabled"
     widget-form="form"
+    widget-label="Reef Slope"
+    widget-name="reef_slope"
+    ng-model="record.data"
+    widget-choices="choices.reefslopes"
+  >
+    <validations>
+      <input-validation-alert
+        identifier="reef_slope"
+        identifier-validations="record.validations.results.reef_slope"
+      ></input-validation-alert>
+    </validations>
+  </div>
+
+  <div class="col-xs-1"></div>
+
+  <div
+    class="col-xs-5"
+    timeinput
+    widget-disabled="isDisabled"
+    widget-form="form"
+    widget-required="false"
+    widget-name="sample_time"
+    ng-model="record.data"
+    widget-label="Sample time"
+    widget-required="true"
+  >
+    <validations>
+      <input-validation-alert
+        identifier="sample_time"
+        identifier-validations="record.validations.results.sample_time"
+      ></input-validation-alert>
+    </validations>
+  </div>
+</div>
+
+<div class="clearfix">
+  <div
+    class="col-xs-5"
+    ddlinput
+    widget-disabled="isDisabled"
+    widget-form="form"
     widget-name="visibility"
-    ng-model="record.data.sample_event"
+    ng-model="record.data"
     widget-label="Visibility"
     widget-required="false"
     widget-choices="choices.visibilities"
@@ -25,7 +66,7 @@
     widget-disabled="isDisabled"
     widget-form="form"
     widget-name="current"
-    ng-model="record.data.sample_event"
+    ng-model="record.data"
     widget-label="Current"
     widget-required="false"
     widget-choices="choices.currents"
@@ -45,7 +86,7 @@
     widget-disabled="isDisabled"
     widget-form="form"
     widget-name="relative_depth"
-    ng-model="record.data.sample_event"
+    ng-model="record.data"
     widget-label="Relative depth"
     widget-required="false"
     widget-choices="choices.relativedepths"
@@ -64,7 +105,7 @@
     widget-disabled="isDisabled"
     widget-form="form"
     widget-name="tide"
-    ng-model="record.data.sample_event"
+    ng-model="record.data"
     widget-label="Tide"
     widget-required="false"
     widget-choices="choices.tides"
@@ -76,20 +117,4 @@
       ></input-validation-alert>
     </validations>
   </div>
-</div>
-<div
-  textareainput
-  widget-disabled="isDisabled"
-  widget-form="form"
-  widget-name="notes"
-  ng-model="record.data.sample_event"
-  widget-label="Notes"
-  widget-required="false"
->
-  <validations>
-    <input-validation-alert
-      identifier="notes"
-      identifier-validations="record.validations.results.notes"
-    ></input-validation-alert>
-  </validations>
 </div>

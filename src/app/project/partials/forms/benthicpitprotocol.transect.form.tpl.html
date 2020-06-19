@@ -66,7 +66,7 @@
         widget-disabled="isDisabled"
         widget-form="form"
         widget-name="interval_size"
-        ng-model="record.data"
+        ng-model="record.data.benthic_transect"
         widget-label="Interval size"
         widget-required="true"
         widget-append="m"
@@ -89,7 +89,7 @@
         widget-disabled="isDisabled"
         widget-form="form"
         widget-name="interval_start"
-        ng-model="record.data"
+        ng-model="record.data.benthic_transect"
         widget-label="Interval start"
         widget-required="true"
         widget-append="m"
@@ -104,27 +104,7 @@
       </div>
 
       <div class="col-xs-1"></div>
-
-      <div
-        class="col-xs-5"
-        ddlinput
-        widget-disabled="isDisabled"
-        widget-form="form"
-        widget-label="Reef Slope"
-        widget-name="reef_slope"
-        ng-model="record.data.benthic_transect"
-        widget-choices="choices.reefslopes"
-      >
-        <validations>
-          <input-validation-alert
-            identifier="reef_slope"
-            identifier-validations="record.validations.results.reef_slope"
-          ></input-validation-alert>
-        </validations>
-      </div>
-    </div>
-
-    <div class="clearfix">
+      
       <div
         class="col-xs-5"
         numberinput
@@ -137,17 +117,15 @@
         widget-append="m"
         widget-validators="decimal='3:1',minvalue='0',maxvalue='30:true'"
       >
-    
         <validations>
           <input-validation-alert
             identifier="depth"
             identifier-validations="record.validations.results.depth"
           ></input-validation-alert>
         </validations>
-    
       </div>
-      <div class="col-xs-1"></div>
     </div>
+
   </fieldset>
 
   <fieldset>

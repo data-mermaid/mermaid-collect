@@ -66,7 +66,7 @@
         widget-disabled="isDisabled"
         widget-form="form"
         widget-name="interval_size"
-        ng-model="record.data"
+        ng-model="record.data.benthic_transect"
         widget-label="Interval size"
         widget-required="true"
         widget-append="m"
@@ -99,27 +99,6 @@
           <input-validation-alert
             identifier="depth"
             identifier-validations="record.validations.results.depth"
-          ></input-validation-alert>
-        </validations>
-    
-      </div>
-
-      <div class="col-xs-1"></div>
-      
-      <div
-        class="col-xs-5"
-        ddlinput
-        widget-disabled="isDisabled"
-        widget-form="form"
-        widget-label="Reef Slope"
-        widget-name="reef_slope"
-        ng-model="record.data.benthic_transect"
-        widget-choices="choices.reefslopes"
-      >
-        <validations>
-          <input-validation-alert
-            identifier="reef_slope"
-            identifier-validations="record.validations.results.reef_slope"
           ></input-validation-alert>
         </validations>
       </div>
