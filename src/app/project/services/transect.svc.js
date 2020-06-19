@@ -146,6 +146,15 @@ angular.module('app.project').service('TransectService', [
       );
     };
 
+    const createSampleEventsLookup = function(records) {
+      for (const record of records) {
+        record.name = `${record.$$sites.name} ${record.$$managements.name} ${
+          record.sample_date
+        }`;
+      }
+      return records;
+    };
+
     const setObservationIntervals = function(
       obs,
       interval_size,
@@ -310,7 +319,7 @@ angular.module('app.project').service('TransectService', [
       });
     };
 
-    var getProjectSiteChoices = function(project_id) {
+    const getProjectSiteChoices = function(project_id) {
       return OfflineTables.ProjectSitesTable(project_id).then(function(table) {
         return table.filter().then(function(sites) {
           return createLookup(sites);
@@ -350,6 +359,14 @@ angular.module('app.project').service('TransectService', [
       });
     };
 
+    const getSampleEventChoices = function(project_id) {
+      return OfflineTables.SampleEventsTable(project_id).then(function(table) {
+        return table.filter().then(function(sample_events) {
+          return createSampleEventsLookup(sample_events);
+        });
+      });
+    };
+
     const getLookups = function(projectId) {
       var promises = [];
 
@@ -357,6 +374,7 @@ angular.module('app.project').service('TransectService', [
       promises.push(getProjectSiteChoices(projectId));
       promises.push(getProjectManagementChoices(projectId));
       promises.push(getProjectProfileChoices(projectId));
+      promises.push(getSampleEventChoices(projectId));
 
       return $q.all(promises).then(function(results) {
         var lookups = {};
@@ -364,6 +382,7 @@ angular.module('app.project').service('TransectService', [
         lookups.choices.sites = results[1];
         lookups.choices.managements = results[2];
         lookups.project_profiles = results[3];
+        lookups.choices.sample_events = results[4];
 
         return lookups;
       });
@@ -443,6 +462,7 @@ angular.module('app.project').service('TransectService', [
       getProjectManagementChoices: getProjectManagementChoices,
       getProjectProfileChoices: getProjectProfileChoices,
       getProjectSiteChoices: getProjectSiteChoices,
+      getSampleEventChoices: getSampleEventChoices,
       setObservationIntervals: setObservationIntervals,
       getWidthValueLookup: getWidthValueLookup
     };
