@@ -6,7 +6,8 @@ angular
     pageContent,
     TransectService,
     $stateParams,
-    SampleEventService
+    SampleEventService,
+    $filter
   ) {
     'use strict';
 
@@ -16,6 +17,20 @@ angular
     $scope.isDisabled = true;
 
     _.merge($scope, pageContent);
+
+    const lookupSampleEventName = function(sample_event) {
+      const sampleEventSiteName = $filter('matchchoice')(
+        sample_event.site,
+        $scope.choices.sites
+      );
+      const sampleEventManagementName = $filter('matchchoice')(
+        sample_event.management,
+        $scope.choices.managements
+      );
+      return `${sampleEventSiteName} ${sampleEventManagementName} ${
+        sample_event.sample_date
+      }`;
+    };
 
     const loadData = function(project_id, sample_event_id) {
       TransectService.getLookups(project_id).then(function(transect) {
@@ -31,12 +46,14 @@ angular
 
     $scope.saveModal = function() {
       console.log('Save');
-      console.log('$scope.sample_event ', $scope.sample_event);
       SampleEventService.save($scope.sample_event, projectId).then(function(
         savedSampleEvent
       ) {
         $uibModalInstance.close(savedSampleEvent);
-        saveCallback();
+        console.log('Sample Event saved ', savedSampleEvent);
+
+        savedSampleEvent.name = lookupSampleEventName(savedSampleEvent);
+        saveCallback(savedSampleEvent.id, savedSampleEvent.name);
       });
     };
     $scope.cancelModal = function() {
