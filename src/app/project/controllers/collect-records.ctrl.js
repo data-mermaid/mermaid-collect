@@ -109,7 +109,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
 
     const getSampleUnit = function(record) {
       let result = '-';
-      const { protocol } = record;
+      const protocol = record.protocol;
 
       if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
         const fishBeltTransectNumber =
