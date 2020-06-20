@@ -2,6 +2,8 @@ angular.module('app.project').service('SampleEventService', [
   '$q',
   'OfflineTables',
   function($q, OfflineTables) {
+    'use strict';
+
     const save = function(sample_event, project_id) {
       if (!sample_event.id) {
         return OfflineTables.SampleEventsTable(project_id).then(function(
