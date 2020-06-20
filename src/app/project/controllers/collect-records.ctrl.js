@@ -14,6 +14,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'ValidateSubmitService',
   'projectProfile',
   'beltTransectWidthChoices',
+  'transectLookups',
   function(
     $state,
     $stateParams,
@@ -29,7 +30,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     ProjectService,
     ValidateSubmitService,
     projectProfile,
-    beltTransectWidthChoices
+    beltTransectWidthChoices,
+    transectLookups
   ) {
     'use strict';
 
@@ -50,6 +52,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     $scope.config = null;
     $scope.userRecords = true;
     $scope.choices.transect_types = ProjectService.transect_types;
+    $scope.transectChoices = transectLookups.choices;
     $scope.isDisabled =
       !projectProfile ||
       (projectProfile.is_admin !== true &&
@@ -75,9 +78,70 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       return false;
     };
 
-    const sizeFormat = function(value) {
+    const sampleEventProperty = function(id, key, options = '') {
+      let result = '-';
+      const choices = $scope.transectChoices;
+
+      for (let sample of choices.sample_events) {
+        if (sample.id === id)
+          return (result =
+            options !== ''
+              ? $filter('matchchoice')(sample[key], choices[options])
+              : sample[key]);
+      }
+      return result;
+    };
+
+    const getDepth = function(record) {
+      let result = '-';
+      const protocol = record.protocol;
+
+      if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
+        result = _.get(record, 'fishbelt_transect.depth') || result;
+      } else if (protocol === ProjectService.BLEACHING_QC_QUADRAT_TYPE) {
+        result = _.get(record, 'quadrat_collection.depth') || result;
+      } else {
+        result = _.get(record, 'benthic_transect.depth') || result;
+      }
+
+      return result;
+    };
+
+    const getSampleUnit = function(record) {
+      let result = '-';
+      const { protocol } = record;
+
+      if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
+        const fishBeltTransectNumber =
+          _.get(record, 'fishbelt_transect.number') || '';
+        const fishbeltTransectLabel =
+          _.get(record, 'fishbelt_transect.label') || '';
+
+        result =
+          fishBeltTransectNumber !== '' && fishbeltTransectLabel !== ''
+            ? `${fishBeltTransectNumber} ${fishbeltTransectLabel}`
+            : result;
+      } else if (protocol === ProjectService.BLEACHING_QC_QUADRAT_TYPE) {
+        result = _.get(record, 'quadrat_collection.label') || result;
+      } else {
+        const benthicTransectNumber =
+          _.get(record, 'benthic_transect.number') || '';
+        const benthicTransectLabel =
+          _.get(record, 'benthic_transect.label') || '';
+
+        result =
+          benthicTransectNumber !== '' && benthicTransectLabel !== ''
+            ? `${benthicTransectNumber} ${benthicTransectLabel}`
+            : result;
+      }
+
+      return result;
+    };
+
+    const getSize = function(value) {
       let result = '-';
       const protocol = value.protocol;
+
       if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
         const width = _.get(value, 'fishbelt_transect.width');
         const widthFilter = $filter('matchchoice')(
@@ -95,8 +159,10 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       } else if (protocol === ProjectService.BLEACHING_QC_QUADRAT_TYPE) {
         result = _.get(value, 'quadrat_collection.quadrat_size') || '-';
         return result + 'm<sup>2</sup>';
+      } else {
+        result = _.get(value, 'benthic_transect.len_surveyed') || result;
       }
-      result = _.get(value, 'benthic_transect.len_surveyed') || result;
+
       return result + 'm';
     };
 
@@ -148,49 +214,30 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             'matchchoice: control.choices.transect_types }}</a>'
         },
         {
-          name: 'data.sample_event.site',
+          name: 'data.sample_event',
           display: 'Site',
-          sortable: true,
-          sort_by: ['$$sites.name'],
-          formatter: function(v, record) {
-            return record.$$sites.name;
+          // sortable: true,
+          // sort_by: ['$$sites.name'],
+          formatter: function(v) {
+            return sampleEventProperty(v, 'site', 'sites');
           }
         },
         {
-          name: 'data.sample_event.management',
+          name: 'data.sample_event',
           display: 'Management',
-          sortable: true,
-          sort_by: ['$$managements.name'],
-          formatter: function(v, record) {
-            return record.$$managements.name;
+          // sortable: true,
+          // sort_by: ['$$managements.name'],
+          formatter: function(v) {
+            return sampleEventProperty(v, 'management', 'managements');
           }
         },
         {
           name: 'data',
           display: 'Sample Unit #',
-          sortable: true,
-          sort_by: ['transect_number'],
+          // sortable: true,
+          // sort_by: ['transect_number'],
           formatter: function(v) {
-            let val,
-              label_val = '';
-            let protocol = v.protocol;
-            if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
-              val = _.get(v, 'fishbelt_transect.number', '') || '';
-              label_val = _.get(v, 'fishbelt_transect.label', '') || '';
-            } else if (
-              protocol === ProjectService.BENTHIC_LIT_TRANSECT_TYPE ||
-              protocol === ProjectService.BENTHIC_PIT_TRANSECT_TYPE ||
-              protocol === ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE
-            ) {
-              val = _.get(v, 'benthic_transect.number', '') || '';
-              label_val = _.get(v, 'benthic_transect.label', '') || '';
-            }
-            if (val === '') {
-              val = label_val;
-            } else if (label_val !== '') {
-              val += ' ' + label_val;
-            }
-            return val;
+            return getSampleUnit(v);
           }
         },
         {
@@ -199,22 +246,26 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           sortable: true,
           sort_by: ['transect_length'],
           formatter: function(v) {
-            return sizeFormat(v);
+            return getSize(v);
           }
         },
         {
-          name: 'data.sample_event.depth',
+          name: 'data',
           display: 'Depth (m)',
-          sortable: true
+          sortable: true,
+          formatter: function(v) {
+            return getDepth(v);
+          }
         },
         {
-          name: 'data.sample_event.sample_date',
+          name: 'data.sample_event',
           display: 'Sample Date',
           sortable: true,
           formatter: function(v) {
-            let dateResult = '';
-            if (v) {
-              const dateVal = v.split('-').map(function(val) {
+            let dateResult = '-';
+            const sampleDate = sampleEventProperty(v, 'sample_date');
+            if (sampleDate) {
+              const dateVal = sampleDate.split('-').map(function(val) {
                 return Number(val);
               });
               if (dateVal.length >= 3) {
@@ -235,11 +286,16 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           sortable: true,
           sort_by: ['data.observers[0].profile_name'],
           formatter: function(v) {
-            let observers = [];
-            angular.forEach(v, function(observer) {
-              observers.push(observer.profile_name);
-            });
-            return observers.join(', ') || '-';
+            return (
+              _.reduce(
+                v,
+                function(observers, o) {
+                  observers.push(o.profile_name);
+                  return observers;
+                },
+                []
+              ).join(', ') || '-'
+            );
           }
         },
         {
@@ -502,7 +558,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             return null;
           },
           transect_length: function(record) {
-            return sizeFormat(record.data).toString();
+            return getSize(record.data).toString();
           }
         }
       });

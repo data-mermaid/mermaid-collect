@@ -615,6 +615,7 @@ angular
         },
         resolve: {
           projectProfile: _getMyProjectProfile,
+          transectLookups: _fetchTransectLookups,
           beltTransectWidthChoices: function(ProjectService) {
             return ProjectService.fetchChoices().then(function(choices) {
               return choices.belttransectwidths;
