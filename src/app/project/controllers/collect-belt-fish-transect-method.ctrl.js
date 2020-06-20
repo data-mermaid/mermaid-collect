@@ -29,7 +29,7 @@ angular.module('app.project').controller('CollectBeltFishTransectMethodCtrl', [
     $ctrl.projectProfile = projectProfile;
     $ctrl.transectLookups = transectLookups;
     $ctrl.defaultSchema = {
-      data: { sample_event: {}, fishbelt_transect: {} }
+      data: { sample_event: '', fishbelt_transect: {} }
     };
     //**************************************
 

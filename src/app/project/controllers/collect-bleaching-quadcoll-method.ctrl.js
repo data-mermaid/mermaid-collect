@@ -32,7 +32,7 @@ angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
     $ctrl.defaultSchema = {
       data: {
         quadrat_collection: {},
-        sample_event: {}
+        sample_event: ''
       }
     };
     //**************************************
