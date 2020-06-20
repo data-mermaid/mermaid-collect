@@ -45,17 +45,16 @@ angular
     };
 
     $scope.saveModal = function() {
-      console.log('Save');
       SampleEventService.save($scope.sample_event, projectId).then(function(
         savedSampleEvent
       ) {
         $uibModalInstance.close(savedSampleEvent);
-        console.log('Sample Event saved ', savedSampleEvent);
 
         savedSampleEvent.name = lookupSampleEventName(savedSampleEvent);
         saveCallback(savedSampleEvent.id, savedSampleEvent.name);
       });
     };
+
     $scope.cancelModal = function() {
       $uibModalInstance.dismiss('cancel');
     };
