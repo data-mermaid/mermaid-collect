@@ -30,8 +30,8 @@ angular.module('app.project').service('SampleEventService', [
     };
 
     return {
-      save,
-      fetchData
+      save: save,
+      fetchData: fetch
     };
   }
 ]);
