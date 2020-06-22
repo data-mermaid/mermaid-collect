@@ -31,7 +31,7 @@ angular.module('app.project').service('SampleEventService', [
 
     return {
       save: save,
-      fetchData: fetch
+      fetchData: fetchData
     };
   }
 ]);
