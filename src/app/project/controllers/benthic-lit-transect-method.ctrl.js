@@ -37,6 +37,8 @@ angular.module('app.project').controller('BenthicLitTransectMethodCtrl', [
     $scope.choices = transectLookups.choices;
     $scope.project_profiles = transectLookups.project_profiles;
     $scope.record = record;
+    $scope.sampleUnit = record.data.benthic_transect;
+
     Object.defineProperty(benthicAttributes, 'filtered', {
       get() {
         const site = _.get($scope.record, 'data.sample_event.site');

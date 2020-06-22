@@ -42,6 +42,8 @@ angular
       $scope.choices = transectLookups.choices;
       $scope.project_profiles = transectLookups.project_profiles;
       $scope.record = record;
+      $scope.sampleUnit = record.data.benthic_transect;
+
       $scope.protocolSampleUnitDetailsForm =
         'app/project/partials/forms/habitatcomplexityprotocol.transect.form.tpl.html';
       $scope.protocolObservationsForm =
