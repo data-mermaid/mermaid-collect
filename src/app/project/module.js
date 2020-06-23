@@ -88,7 +88,7 @@ angular
       return TransectService.getLookups($stateParams.project_id);
     };
 
-    const _fetchBenthicAttribute = function(BenthicAttributeService) {
+    const _fetchBenthicAttributes = function(BenthicAttributeService) {
       return BenthicAttributeService.fetchBenthicAttributes();
     };
 
@@ -385,7 +385,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: _fetchBenthicAttribute,
+          benthicAttributes: _fetchBenthicAttributes,
           record: function($stateParams, utils, BenthicLitTransectMethod) {
             return BenthicLitTransectMethod.get({
               project_pk: $stateParams.project_id,
@@ -417,7 +417,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: _fetchBenthicAttribute,
+          benthicAttributes: _fetchBenthicAttributes,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -439,7 +439,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: _fetchBenthicAttribute,
+          benthicAttributes: _fetchBenthicAttributes,
           record: function($stateParams, utils, BenthicPitTransectMethod) {
             return BenthicPitTransectMethod.get({
               project_pk: $stateParams.project_id,
@@ -471,7 +471,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: _fetchBenthicAttribute,
+          benthicAttributes: _fetchBenthicAttributes,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -551,7 +551,7 @@ angular
           },
           resolve: {
             checkId: _checkId(),
-            benthicAttributes: _fetchBenthicAttribute,
+            benthicAttributes: _fetchBenthicAttributes,
             record: function(
               $stateParams,
               utils,
@@ -591,7 +591,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: _fetchBenthicAttribute,
+          benthicAttributes: _fetchBenthicAttributes,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
