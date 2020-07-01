@@ -23,6 +23,18 @@ angular.module('app.project').service('FishBeltWizardConfig', [
     var service = _.extend({}, BaseWizardConfig);
     var projectId = $stateParams.project_id;
 
+    service.depth = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/fishbelt-depth.tpl.html',
+      ignoreButtonText: function(record) {
+        console.log(record);
+        var val = $filter('null_blank')(
+          _.get(record.data, 'fishbelt_transect.depth')
+        );
+        return $q.resolve('Leave Depth as ' + val);
+      }
+    };
+
     service.len_surveyed = {
       templateUrl:
         'app/project/protocol_wizard_configs/partials/fishbelt-len_surveyed.tpl.html',
@@ -43,11 +55,6 @@ angular.module('app.project').service('FishBeltWizardConfig', [
             table
           ) {
             return table.filter();
-          });
-        },
-        relativedepths: function() {
-          return ProjectService.fetchChoices().then(function(choices) {
-            return choices.relativedepths;
           });
         },
         belttransectwidths: function() {
