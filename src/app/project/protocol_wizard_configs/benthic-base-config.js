@@ -1,39 +1,25 @@
 angular.module('app.project').service('BenthicBaseWizardConfig', [
-  '$stateParams',
   '$q',
   '$filter',
   'BaseWizardConfig',
-  'OfflineTables',
-  'ProjectService',
-  function(
-    $stateParams,
-    $q,
-    $filter,
-    BaseWizardConfig,
-    OfflineTables,
-    ProjectService
-  ) {
+  function($q, $filter, BaseWizardConfig) {
     'use strict';
     var service = _.extend({}, BaseWizardConfig);
-    var projectId = $stateParams.project_id;
+
+    service.depth = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/benthic-depth.tpl.html',
+      ignoreButtonText: function(record) {
+        var val = $filter('null_blank')(
+          _.get(record.data, 'benthic_transect.depth')
+        );
+        return $q.resolve('Leave Depth as ' + val);
+      }
+    };
 
     service.benthic_transect = {
       templateUrl:
-        'app/project/protocol_wizard_configs/partials/benthic_transect.tpl.html',
-      resolve: {
-        sites: function() {
-          return OfflineTables.ProjectSitesTable(projectId).then(function(
-            table
-          ) {
-            return table.filter();
-          });
-        },
-        relativedepths: function() {
-          return ProjectService.fetchChoices().then(function(choices) {
-            return choices.relativedepths;
-          });
-        }
-      }
+        'app/project/protocol_wizard_configs/partials/benthic_transect.tpl.html'
     };
 
     service.len_surveyed = {
