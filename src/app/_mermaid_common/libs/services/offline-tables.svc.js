@@ -389,7 +389,6 @@ angular.module('mermaid.libs').service('OfflineTables', [
     };
 
     const SampleEventsTable = function(projectId, skipRefresh) {
-      console.log('Sample Event Table built');
       const projectSitesTablePromise = ProjectSitesTable(projectId, true);
       const projectManagementsTablePromise = ProjectManagementsTable(
         projectId,
