@@ -101,18 +101,6 @@ angular.module('app.project').service('BaseWizardConfig', [
       }
     };
 
-    // service.depth = {
-    //   templateUrl:
-    //     'app/project/protocol_wizard_configs/partials/depth.tpl.html',
-    //   ignoreButtonText: function(record) {
-    //     console.log(record);
-    //     var val = $filter('null_blank')(
-    //       _.get(record.data, 'sample_event.depth')
-    //     );
-    //     return $q.resolve('Leave Depth as ' + val);
-    //   }
-    // };
-
     service.observers = {
       templateUrl:
         'app/project/protocol_wizard_configs/partials/observers.tpl.html',
