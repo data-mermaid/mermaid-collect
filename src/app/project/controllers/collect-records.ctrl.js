@@ -118,7 +118,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           _.get(record, 'fishbelt_transect.label') || '';
 
         result =
-          fishBeltTransectNumber !== '' && fishbeltTransectLabel !== ''
+          fishBeltTransectNumber !== '' || fishbeltTransectLabel !== ''
             ? `${fishBeltTransectNumber} ${fishbeltTransectLabel}`
             : result;
       } else if (protocol === ProjectService.BLEACHING_QC_QUADRAT_TYPE) {
@@ -130,7 +130,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           _.get(record, 'benthic_transect.label') || '';
 
         result =
-          benthicTransectNumber !== '' && benthicTransectLabel !== ''
+          benthicTransectNumber !== '' || benthicTransectLabel !== ''
             ? `${benthicTransectNumber} ${benthicTransectLabel}`
             : result;
       }
