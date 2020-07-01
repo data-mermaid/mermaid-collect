@@ -1,6 +1,7 @@
 angular.module('app.project').service('BleachingWizardConfig', [
   '$stateParams',
   '$q',
+  '$filter',
   'BaseWizardConfig',
   'ValidateSubmitService',
   'OfflineCommonTables',
@@ -9,6 +10,7 @@ angular.module('app.project').service('BleachingWizardConfig', [
   function(
     $stateParams,
     $q,
+    $filter,
     BaseWizardConfig,
     ValidateSubmitService,
     OfflineCommonTables,
@@ -18,6 +20,17 @@ angular.module('app.project').service('BleachingWizardConfig', [
     'use strict';
     var service = _.extend({}, BaseWizardConfig);
     var projectId = $stateParams.project_id;
+
+    service.depth = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/quadratcollection-depth.tpl.html',
+      ignoreButtonText: function(record) {
+        var val = $filter('null_blank')(
+          _.get(record.data, 'quadrat_collection.depth')
+        );
+        return $q.resolve('Leave Depth as ' + val);
+      }
+    };
 
     service.quadrat_size = {
       templateUrl:
