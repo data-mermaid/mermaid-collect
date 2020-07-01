@@ -27,7 +27,6 @@ angular.module('app.project').service('FishBeltWizardConfig', [
       templateUrl:
         'app/project/protocol_wizard_configs/partials/fishbelt-depth.tpl.html',
       ignoreButtonText: function(record) {
-        console.log(record);
         var val = $filter('null_blank')(
           _.get(record.data, 'fishbelt_transect.depth')
         );
