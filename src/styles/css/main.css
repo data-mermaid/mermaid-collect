@@ -1590,7 +1590,8 @@ table.greyGridTable tbody td:first-child {
 }
 
 .info-style {
-  font-size: 1.5em;
+  font-size: 20px !important;
+  margin-left: 10px;
   cursor: pointer;
 }
 
