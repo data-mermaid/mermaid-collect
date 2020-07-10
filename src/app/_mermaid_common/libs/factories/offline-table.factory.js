@@ -337,17 +337,12 @@ angular.module('mermaid.libs').factory('OfflineTable', [
               // If record doesn't exist remotely delete it
               return _delete(pk);
             }
-            return error;
+            // ErrorService.errorHandler(error);
+            throw error;
           };
           // Strip 'system' properties
           var r_data = angular.fromJson(angular.toJson(record));
-          return $http
-            .put(url, r_data)
-            .then(onSuccess, onError)
-            .catch(function(error) {
-              ErrorService.errorHandler(error);
-              throw error;
-            });
+          return $http.put(url, r_data).then(onSuccess, onError);
         }
 
         function _remoteDelete(record) {
