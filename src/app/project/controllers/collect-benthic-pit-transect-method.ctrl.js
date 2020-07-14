@@ -24,14 +24,13 @@ angular
       'use strict';
 
       var $ctrl = this;
-
       // Need to be set before inheriting
       $ctrl.collectRecord = collectRecord;
       $ctrl.currentUser = currentUser;
       $ctrl.projectProfile = projectProfile;
       $ctrl.transectLookups = transectLookups;
       $ctrl.defaultSchema = {
-        data: { benthic_transect: {}, sample_event: {}, interval_size: null }
+        data: { benthic_transect: {}, sample_event: '', interval_size: null }
       };
       //**************************************
 
