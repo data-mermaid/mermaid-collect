@@ -16,6 +16,12 @@
         widget-choices="choices.sites"
       >
       </div>
+      <validations>
+        <input-validation-alert
+          identifier="site"
+          identifier-validations="record.validations.results.site"
+        ></input-validation-alert>
+      </validations>
      </div>
 
      <div class="clearfix">
@@ -31,6 +37,12 @@
         widget-choices="choices.managements"
       >
        </div>
+       <validations>
+        <input-validation-alert
+          identifier="management"
+          identifier-validations="record.validations.results.management"
+        ></input-validation-alert>
+      </validations>
      </div>
 
      <div class="clearfix">
@@ -46,9 +58,14 @@
         widget-help=""
         widget-format="yy-mm-dd"
         widget-mask="9999-99-99"
-        widget-validators="futuredate"
       >
       </div>
+      <validations>
+        <input-validation-alert
+          identifier="sample_date"
+          identifier-validations="record.validations.results.sample_date"
+        ></input-validation-alert>
+      </validations>
      </div>
 
      <div class="clearfix">
@@ -64,7 +81,6 @@
       >
       </div>
      </div>
-     
     </fieldset>
    </div>
   </div>
