@@ -197,7 +197,7 @@ angular.module('app.project').controller('CollectBaseProtocol', [
       $scope.record.data = $scope.record.data || {};
       $scope.record.data.protocol = $ctrl.protocol;
       $scope.record.project = $ctrl.projectId;
-      $scope.sampleUnit = $scope.record.data[$ctrl.sampleUnit] || {};
+
       return CollectService.save($scope.record, opts).then(function(result) {
         $scope.record = result.record;
         var params = {
@@ -454,6 +454,13 @@ angular.module('app.project').controller('CollectBaseProtocol', [
       },
       true
     );
+
+    $scope.$watch('record.data.sample_event', function(newVal, oldVal) {
+      // when new sample is created, set form dirty
+      if (newVal !== oldVal) {
+        $scope.form.$setDirty();
+      }
+    });
 
     var checkIfOutdatedValidation = function(updated_on, last_validated) {
       var updated_on_ts;
