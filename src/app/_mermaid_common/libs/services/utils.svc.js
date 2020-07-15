@@ -33,6 +33,10 @@ angular.module('mermaid.libs').service('utils', [
         species_restriction: {
           label: 'Species Restriction',
           name: 'species_restriction'
+        },
+        access_restriction: {
+          label: 'Access Restriction',
+          name: 'access_restriction'
         }
       },
       showAlert: function(title, message, status, timeout, options) {
