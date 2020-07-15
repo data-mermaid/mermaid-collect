@@ -243,8 +243,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         {
           name: 'data',
           display: 'Size',
-          sortable: true,
-          sort_by: ['transect_length'],
+          // sortable: true,
+          // sort_by: ['transect_length'],
           formatter: function(v) {
             return getSize(v);
           }
@@ -252,7 +252,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         {
           name: 'data',
           display: 'Depth (m)',
-          sortable: true,
+          // sortable: true,
+          // sort_by: ['depth'],
           formatter: function(v) {
             return getDepth(v);
           }
@@ -260,7 +261,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
         {
           name: 'data.sample_event',
           display: 'Sample Date',
-          sortable: true,
+          // sortable: true,
           formatter: function(v) {
             let dateResult = '-';
             const sampleDate = sampleEventProperty(v, 'sample_date');
