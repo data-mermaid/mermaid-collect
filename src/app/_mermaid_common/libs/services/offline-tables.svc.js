@@ -362,14 +362,30 @@ angular.module('mermaid.libs').service('OfflineTables', [
     };
 
     const CollectRecordsTable = function(projectId, skipRefresh) {
-      return buildProjectRelatedTable(
-        CollectRecord,
-        'collectrecords',
+      const projectSitesTablePromise = ProjectSitesTable(projectId, true);
+      const projectManagementsTablePromise = ProjectManagementsTable(
         projectId,
-        COLLECT_RECORDS_NAME,
-        {},
-        skipRefresh
+        true
       );
+      return $q
+        .all([projectSitesTablePromise, projectManagementsTablePromise])
+        .then(function(results) {
+          const sitesTableName = results[0].name;
+          const managementTableName = results[1].name;
+          return buildProjectRelatedTable(
+            CollectRecord,
+            'collectrecords',
+            projectId,
+            COLLECT_RECORDS_NAME,
+            {
+              joinDefn: {
+                sites: `data.sample_event.site -> ${sitesTableName}.id, name`,
+                managements: `data.sample_event.management -> ${managementTableName}.id, name`
+              }
+            },
+            skipRefresh
+          );
+        });
     };
 
     const SampleEventsTable = function(projectId, skipRefresh) {
