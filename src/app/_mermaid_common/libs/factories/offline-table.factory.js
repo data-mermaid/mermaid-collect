@@ -395,6 +395,18 @@ angular.module('mermaid.libs').factory('OfflineTable', [
               }
             })
             .catch(function(error) {
+              const id_errors = _.get(error, 'data.id') || [];
+
+              // This is a bit of a hack. :(
+              if (
+                error.status === 400 &&
+                id_errors.length > 0 &&
+                id_errors[0].indexOf('unique') != -1
+              ) {
+                record.$$created = false;
+                return _remotePut(record);
+              }
+
               ErrorService.errorHandler(error);
               throw error;
             });
