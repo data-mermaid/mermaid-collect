@@ -43,7 +43,6 @@ angular.module('app.project').controller('ProjectCtrl', [
     let _isUserProjectAdmin = false;
     const conn = new ConnectivityFactory($scope);
     const stateName = $state.current.name;
-    const dataPolicies = choices.datapolicies;
 
     $scope.project = project;
     $scope.benthicPolicies = {};
