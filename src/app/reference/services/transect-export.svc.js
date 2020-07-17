@@ -146,7 +146,8 @@ angular.module('app.reference').service('TransectExportService', [
           val.periodic_closure ||
           val.size_limits ||
           val.gear_restriction ||
-          val.species_restriction;
+          val.species_restriction ||
+          val.access_restriction;
 
         const management_parties =
           val.parties.length > 0
@@ -168,7 +169,8 @@ angular.module('app.reference').service('TransectExportService', [
             val.periodic_closure && 'Periodic Closures',
             val.size_limits && 'Size Limits',
             val.gear_restriction && 'Gear Restrictions',
-            val.species_restriction && 'Species Restrictions'
+            val.species_restriction && 'Species Restrictions',
+            val.access_restriction && 'Access Restrictions'
           ].filter(restriction => restriction)}"`;
 
         const rules = open_access || no_take || partial_restrictions || '';

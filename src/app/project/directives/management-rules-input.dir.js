@@ -15,7 +15,8 @@ angular.module('app.project').directive('managementRulesInput', [
           'periodic_closure',
           'size_limits',
           'gear_restriction',
-          'species_restriction'
+          'species_restriction',
+          'access_restriction'
         ];
         scope.partial_restrictions = false;
 
@@ -27,6 +28,7 @@ angular.module('app.project').directive('managementRulesInput', [
               (scope.management.periodic_closure === true ||
                 scope.management.size_limits === true ||
                 scope.management.gear_restriction === true ||
+                scope.management.access_restriction === true ||
                 scope.management.species_restriction === true));
           formCtrl.$setValidity('management_rules', isValid);
         };

@@ -61,6 +61,10 @@ angular.module('app.project').service('ManagementService', [
             management.species_restriction === null
               ? false
               : management.species_restriction;
+          management.access_restriction =
+            management.access_restriction === null
+              ? false
+              : management.access_restriction;
           return management;
         });
       });
