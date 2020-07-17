@@ -13,7 +13,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'ProjectService',
   'ValidateSubmitService',
   'projectProfile',
-  'beltTransectWidthChoices',
+  'choices',
   function(
     $state,
     $stateParams,
@@ -29,7 +29,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     ProjectService,
     ValidateSubmitService,
     projectProfile,
-    beltTransectWidthChoices
+    choices
   ) {
     'use strict';
 
@@ -43,6 +43,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       authService.getCurrentUser(),
       OfflineTables.CollectRecordsTable(project_id)
     ];
+    const beltTransectWidthChoices = choices.belttransectwidths;
 
     $scope.choices = {};
     $scope.tableControl = {};
@@ -505,14 +506,6 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             return sizeFormat(record.data).toString();
           }
         }
-      });
-    });
-
-    OfflineTables.ProjectSitesTable(project_id).then(function(table) {
-      table.filter().then(function(sites) {
-        $scope.choices.sites = _.map(sites, function(site) {
-          return { id: site.id, name: site.name };
-        });
       });
     });
 
