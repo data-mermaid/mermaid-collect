@@ -37,19 +37,13 @@
         <span ng-transclude="appendaddon" ng-class="{true: 'input-group-addon', false: ''}[transcludePresent('appendaddon')]"></span>
       </div>
     </label>
-    <div ng-if="noResults && moreThanThree" uib-dropdown uib-dropdown-toggle is-open="true" auto-close="disabled">
-      <ul class="dropdown-menu" >
-        <li class="no-result-search">
-          <div>No results</div>
-        </li>
-        <li ng-show="widgetNewRecordLabel">
-          <hr />
-          <a ng-href type="button" class="btn btn-sm btn-default modal-trigger" ng-click="widgetModalTrigger()"
-          tabindex="-1">{{widgetNewRecordLabel}}</a>
-        </li>
-      </ul>
+    
+    <div ng-if="noResults && moreThanThree">
+      <div ng-class="{true: '', false: 'no-result-search'}[widgetHelp !== '']">
+        <i class="fa fa-times"></i> No Results!
+        <a ng-href type="button" ng-click="widgetModalTrigger()" ng-style="{'text-decoration': 'underline'}">  {{widgetNewRecordLabel}}</a>
+      </div>
     </div>
-
     <div class="note">{{ widgetHelp }}</div>
 
     <div class="note note-error">

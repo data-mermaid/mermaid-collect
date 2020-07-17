@@ -13,6 +13,9 @@ angular.module('app.project').controller('ProjectCtrl', [
   'project',
   'projectProfile',
   'choices',
+  'dataPolicies',
+  'Project',
+  'ErrorService',
   'OfflineTableBackup',
   function(
     $rootScope,
@@ -29,6 +32,9 @@ angular.module('app.project').controller('ProjectCtrl', [
     project,
     projectProfile,
     choices,
+    dataPolicies,
+    Project,
+    ErrorService,
     OfflineTableBackup
   ) {
     'use strict';
@@ -74,21 +80,52 @@ angular.module('app.project').controller('ProjectCtrl', [
           ? utils.project_statuses.test
           : utils.project_statuses.open;
     };
+      
+    const rollbackNameChange = function(err) {
+      if (_.has(err, 'data.name') == false) {
+        return;
+      }
 
-    const save = function() {
-      if (!$scope.project.id) {
-        return projectsTable.create($scope.project).then(function(project) {
-          const params = {
+      // Rollback name
+      if ($scope.project.id == null) {
+        $scope.project.name = '';
+        $scope.project.update(true);
+      } else {
+        Project.get({ id: $scope.project.id }).$promise.then(function(p) {
+          if (p == null) {
+            return;
+          }
+          $scope.project.name = p.name;
+          $scope.project.update(true);
+        });
+      }
+    };
+  var save = function() {
+    let savePromise;
+    if (!$scope.project.id) {
+      savePromise = projectsTable
+        .create($scope.project)
+        .then(function(project) {
+          var params = {
             project_id: project.id
           };
           $scope.form.$setPristine(true);
           $state.go('app.project.records', params);
         });
-      }
-      return $scope.project.update().then(function() {
+    } else {
+      savePromise = $scope.project.update().then(function() {
         $scope.form.$setPristine(true);
       });
-    };
+    }
+    return savePromise.catch(function(err) {
+      if (err.status == 400) {
+        rollbackNameChange(err);
+        ErrorService.errorHandler(err);
+        return;
+      }
+      $scope.form.$setValidity('project', false);
+    });
+  };
 
     const backupProject = function() {
       OfflineTableBackup.backupProject(project_id).then(function() {

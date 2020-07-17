@@ -1219,7 +1219,8 @@ button.btn.btn-sm.btn-default.big-box-refresh {
 }
 
 .no-result-search {
-  padding: 5px 5px 5px 21px;
+  float: left;
+  font-size: 13px;
 }
 
 /* End of Tag Styling */

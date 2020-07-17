@@ -108,6 +108,16 @@ angular.module('app.project').controller('ManagementsCtrl', [
             '</span>'
         },
         {
+          name: 'access_restriction',
+          display: 'Access Restrictions',
+          sortable: true,
+          tdTemplate:
+            '<span>' +
+            '<i class="fa fa-check" ' +
+            'ng-show="record.access_restriction"/>' +
+            '</span>'
+        },
+        {
           name: 'species_restriction',
           display: 'Species Restrictions',
           sortable: true,
