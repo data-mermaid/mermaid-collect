@@ -79,6 +79,7 @@ angular.module('app.project').controller('CollectBaseProtocol', [
 
     $scope.choices = {};
     $scope.record = {};
+    $scope.sampleUnit = {};
     $scope.isDisabled = true;
     $scope.hasValidated = false;
     $scope.isValid = false;
@@ -111,6 +112,11 @@ angular.module('app.project').controller('CollectBaseProtocol', [
     } else {
       $scope.record = $ctrl.collectRecord;
     }
+
+    $scope.sampleUnit =
+      $scope.record.data.benthic_transect ||
+      $scope.record.data.quadrat_collection ||
+      $scope.record.data.fishbelt_transect;
 
     if ($scope.record && detectIgnoredValidation($scope.record)) {
       $scope.ignoreWarningsPresent = true;

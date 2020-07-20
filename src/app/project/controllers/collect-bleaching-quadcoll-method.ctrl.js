@@ -68,5 +68,7 @@ angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
       'app/project/partials/forms/bleachingprotocol.quadcoll.form.tpl.html';
     $scope.protocolObservationsForm =
       'app/project/partials/forms/bleachingprotocol.observations.form.tpl.html';
+
+    $ctrl.init();
   }
 ]);
