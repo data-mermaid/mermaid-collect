@@ -3,7 +3,6 @@ angular.module('app.project').controller('SitesCtrl', [
   '$state',
   '$stateParams',
   'OfflineTables',
-  'ProjectService',
   'SiteService',
   'PaginatedOfflineTableWrapper',
   'ModalService',
@@ -12,12 +11,12 @@ angular.module('app.project').controller('SitesCtrl', [
   'connectivity',
   'ConnectivityFactory',
   'project',
+  'projectProfile',
   function(
     $scope,
     $state,
     $stateParams,
     OfflineTables,
-    ProjectService,
     SiteService,
     PaginatedOfflineTableWrapper,
     ModalService,
@@ -25,12 +24,19 @@ angular.module('app.project').controller('SitesCtrl', [
     ValidateDuplicationService,
     connectivity,
     ConnectivityFactory,
-    project
+    project,
+    projectProfile
   ) {
     'use strict';
-
     const conn = new ConnectivityFactory($scope);
+    let siteRecordsCount = 0;
+    const project_id = $stateParams.project_id;
+
     $scope.isOnline = connectivity.isOnline;
+    $scope.isDisabled =
+      !projectProfile ||
+      (projectProfile.is_admin !== true &&
+        projectProfile.is_collector !== true);
 
     this.db = {
       items: null
@@ -39,19 +45,6 @@ angular.module('app.project').controller('SitesCtrl', [
       stretchH: 'all',
       contextMenu: ['row_below', 'remove_row']
     };
-
-    let siteRecordsCount = 0;
-    const project_id = $stateParams.project_id;
-
-    $scope.isDisabled = true;
-    ProjectService.getMyProjectProfile(project_id).then(function(
-      projectProfile
-    ) {
-      $scope.isDisabled =
-        !projectProfile ||
-        (projectProfile.is_admin !== true &&
-          projectProfile.is_collector !== true);
-    });
 
     $scope.resource = undefined;
     $scope.tableControl = {};

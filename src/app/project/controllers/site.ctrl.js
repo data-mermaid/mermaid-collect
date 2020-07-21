@@ -10,7 +10,9 @@ angular.module('app.project').controller('SiteCtrl', [
   'connectivity',
   'ConnectivityFactory',
   'logger',
-  'project',
+  'choices',
+  'site',
+  'projectProfile',
   function(
     $rootScope,
     $scope,
@@ -23,33 +25,22 @@ angular.module('app.project').controller('SiteCtrl', [
     connectivity,
     ConnectivityFactory,
     logger,
-    project
+    choices,
+    site,
+    projectProfile
   ) {
     'use strict';
 
-    const siteId = $stateParams.id;
-    const projectId = $stateParams.project_id;
     const conn = new ConnectivityFactory($scope);
-    $scope.isDisabled = true;
-    $scope.choices = {};
+    const projectId = $stateParams.project_id;
+
+    $scope.isDisabled = ProjectService.isFormDisabled(
+      projectProfile,
+      ProjectService.COLLECTOR_ROLE
+    );
+    $scope.site = site;
+    $scope.choices = choices;
     $scope.siteState = connectivity.isOnline ? 'online' : 'offline';
-
-    ProjectService.getMyProjectProfile(projectId).then(function(
-      projectProfile
-    ) {
-      $scope.isDisabled = ProjectService.isFormDisabled(
-        projectProfile,
-        ProjectService.COLLECTOR_ROLE
-      );
-    });
-
-    ProjectService.fetchChoices().then(function(choices) {
-      $scope.choices = choices;
-    });
-
-    SiteService.fetchData(projectId, siteId).then(function(site) {
-      $scope.site = site;
-    });
 
     const save = function() {
       const isNew = $scope.site.id == null;
@@ -69,7 +60,6 @@ angular.module('app.project').controller('SiteCtrl', [
             });
           }
           $scope.form.$setPristine(true);
-          project.update();
         })
         .catch(function(error) {
           logger.error('save_site', error);

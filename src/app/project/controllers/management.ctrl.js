@@ -8,9 +8,9 @@ angular.module('app.project').controller('ManagementCtrl', [
   'Button',
   'logger',
   'utils',
-  'project',
   'choices',
   'management',
+  'projectProfile',
   function(
     $rootScope,
     $scope,
@@ -21,32 +21,27 @@ angular.module('app.project').controller('ManagementCtrl', [
     Button,
     logger,
     utils,
-    project,
     choices,
-    management
+    management,
+    projectProfile
   ) {
     'use strict';
 
-    var projectId = $stateParams.project_id;
-    $scope.isDisabled = true;
+    const projectId = $stateParams.project_id;
+
+    $scope.isDisabled = ProjectService.isFormDisabled(
+      projectProfile,
+      ProjectService.COLLECTOR_ROLE
+    );
     $scope.management = management;
     $scope.choices = choices;
 
-    ProjectService.getMyProjectProfile(projectId).then(function(
-      projectProfile
-    ) {
-      $scope.isDisabled = ProjectService.isFormDisabled(
-        projectProfile,
-        ProjectService.COLLECTOR_ROLE
-      );
-    });
-
     const save = function() {
-      var isNew = $scope.management.id == null;
+      const isNew = $scope.management.id == null;
       ManagementService.save($scope.management, { projectId: projectId })
         .then(function(savedManagement) {
           if (isNew) {
-            var params = {
+            const params = {
               project_pk: projectId,
               id: savedManagement.id
             };
@@ -60,7 +55,6 @@ angular.module('app.project').controller('ManagementCtrl', [
             });
           }
           $scope.form.$setPristine(true);
-          project.update();
         })
         .catch(function(error) {
           logger.error('save_management', error);
@@ -70,7 +64,7 @@ angular.module('app.project').controller('ManagementCtrl', [
     };
 
     // GLOBAL BUTTONS
-    var saveButton = new Button();
+    const saveButton = new Button();
     saveButton.name = 'Save';
     saveButton.enabled = true;
     saveButton.visible = true;

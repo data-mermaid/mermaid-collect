@@ -12,6 +12,7 @@ angular.module('app.project').controller('ProjectCtrl', [
   'projectsTable',
   'project',
   'projectProfile',
+  'choices',
   'dataPolicies',
   'Project',
   'ErrorService',
@@ -30,6 +31,7 @@ angular.module('app.project').controller('ProjectCtrl', [
     projectsTable,
     project,
     projectProfile,
+    choices,
     dataPolicies,
     Project,
     ErrorService,
@@ -37,10 +39,10 @@ angular.module('app.project').controller('ProjectCtrl', [
   ) {
     'use strict';
 
-    var project_id = $stateParams.project_id;
-    var _isUserProjectAdmin = false;
-    var conn = new ConnectivityFactory($scope);
-    var stateName = $state.current.name;
+    const project_id = $stateParams.project_id;
+    let _isUserProjectAdmin = false;
+    const conn = new ConnectivityFactory($scope);
+    const stateName = $state.current.name;
 
     $scope.project = project;
     $scope.benthicPolicies = {};
@@ -77,7 +79,7 @@ angular.module('app.project').controller('ProjectCtrl', [
           ? utils.project_statuses.test
           : utils.project_statuses.open;
     };
-
+      
     const rollbackNameChange = function(err) {
       if (_.has(err, 'data.name') == false) {
         return;
@@ -97,35 +99,34 @@ angular.module('app.project').controller('ProjectCtrl', [
         });
       }
     };
-
-    var save = function() {
-      let savePromise;
-      if (!$scope.project.id) {
-        savePromise = projectsTable
-          .create($scope.project)
-          .then(function(project) {
-            var params = {
-              project_id: project.id
-            };
-            $scope.form.$setPristine(true);
-            $state.go('app.project.records', params);
-          });
-      } else {
-        savePromise = $scope.project.update().then(function() {
+  var save = function() {
+    let savePromise;
+    if (!$scope.project.id) {
+      savePromise = projectsTable
+        .create($scope.project)
+        .then(function(project) {
+          var params = {
+            project_id: project.id
+          };
           $scope.form.$setPristine(true);
+          $state.go('app.project.records', params);
         });
-      }
-      return savePromise.catch(function(err) {
-        if (err.status == 400) {
-          rollbackNameChange(err);
-          ErrorService.errorHandler(err);
-          return;
-        }
-        $scope.form.$setValidity('project', false);
+    } else {
+      savePromise = $scope.project.update().then(function() {
+        $scope.form.$setPristine(true);
       });
-    };
+    }
+    return savePromise.catch(function(err) {
+      if (err.status == 400) {
+        rollbackNameChange(err);
+        ErrorService.errorHandler(err);
+        return;
+      }
+      $scope.form.$setValidity('project', false);
+    });
+  };
 
-    var backupProject = function() {
+    const backupProject = function() {
       OfflineTableBackup.backupProject(project_id).then(function() {
         utils.showAlert(
           'Backup',
@@ -134,7 +135,7 @@ angular.module('app.project').controller('ProjectCtrl', [
         );
       });
     };
-    var saveButton = new Button();
+    const saveButton = new Button();
     saveButton.name = 'Save';
     saveButton.enabled = false;
     saveButton.visible = connectivity.isOnline;
@@ -144,7 +145,7 @@ angular.module('app.project').controller('ProjectCtrl', [
     saveButton.click = save;
     $scope.save = save;
 
-    var backupProjectButton = new Button();
+    const backupProjectButton = new Button();
     backupProjectButton.name = 'Back up';
     backupProjectButton.enabled = true;
     backupProjectButton.visible =
