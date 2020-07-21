@@ -34,11 +34,7 @@ angular.module('mermaid.libs').service('connectivity', [
     };
 
     const toggleDisabled = function() {
-      if (pingState === false) {
-        return true;
-      }
-
-      return pingState !== true && !navigator.onLine;
+      return pingState === false || (pingState === null && !navigator.onLine);
     };
 
     const stopPing = function() {
