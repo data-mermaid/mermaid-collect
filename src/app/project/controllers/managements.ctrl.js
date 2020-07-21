@@ -78,6 +78,16 @@ angular.module('app.project').controller('ManagementsCtrl', [
             '</span>'
         },
         {
+          name: 'access_restriction',
+          display: 'Access Restrictions',
+          sortable: true,
+          tdTemplate:
+            '<span>' +
+            '<i class="fa fa-check" ' +
+            'ng-show="record.access_restriction"/>' +
+            '</span>'
+        },
+        {
           name: 'periodic_closure',
           display: 'Periodic Closure',
           sortable: true,
@@ -105,16 +115,6 @@ angular.module('app.project').controller('ManagementsCtrl', [
             '<span>' +
             '<i class="fa fa-check" ' +
             'ng-show="record.gear_restriction"/>' +
-            '</span>'
-        },
-        {
-          name: 'access_restriction',
-          display: 'Access Restrictions',
-          sortable: true,
-          tdTemplate:
-            '<span>' +
-            '<i class="fa fa-check" ' +
-            'ng-show="record.access_restriction"/>' +
             '</span>'
         },
         {
