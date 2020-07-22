@@ -7,6 +7,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
   'TransectService',
   'SampleUnitMethod',
   'Button',
+  'projectProfile',
   function(
     $rootScope,
     $scope,
@@ -15,7 +16,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     ProjectService,
     TransectService,
     SampleUnitMethod,
-    Button
+    Button,
+    projectProfile
   ) {
     'use strict';
 
@@ -24,10 +26,11 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     const fieldReportButton = new Button();
     let submittedRecordsCount = 0;
 
-    $scope.tableControl = { isDisabled: true };
-    $scope.isDisabled = true;
+    $scope.tableControl = {};
     $scope.choices = {};
     $scope.choices.transect_types = ProjectService.transect_types;
+    $scope.tableControl.isDisabled =
+      !projectProfile || projectProfile.is_admin !== true;
 
     const protocolMethods = [
       ProjectService.FISH_BELT_TRANSECT_TYPE,
@@ -36,13 +39,6 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
       ProjectService.BLEACHING_QC_QUADRAT_TYPE
     ];
-
-    ProjectService.getMyProjectProfile(project_id).then(function(
-      projectProfile
-    ) {
-      $scope.tableControl.isDisabled =
-        !projectProfile || projectProfile.is_admin !== true;
-    });
 
     const downloadFieldReport = function(method) {
       TransectService.downloadFieldReport(project_id, method);

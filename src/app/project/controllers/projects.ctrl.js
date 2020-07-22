@@ -5,7 +5,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
   'OfflineTables',
   'PaginatedOfflineTableWrapper',
   'Button',
-  'dataPolicies',
+  'choices',
   'ConnectivityFactory',
   'connectivity',
   'ProjectService',
@@ -16,7 +16,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
     OfflineTables,
     PaginatedOfflineTableWrapper,
     Button,
-    dataPolicies,
+    choices,
     ConnectivityFactory,
     connectivity,
     ProjectService
@@ -26,6 +26,7 @@ angular.module('app.project').controller('ProjectsCtrl', [
 
     const conn = new ConnectivityFactory($scope);
     let refreshOnce = !connectivity.isOnline;
+    const dataPolicies = choices.datapolicies;
     const dataSharingPolicies = dataPolicies
       ? _.reduce(
           dataPolicies,

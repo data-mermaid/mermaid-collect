@@ -75,6 +75,8 @@ angular.module('app.project').controller('ResolveDuplicateMRsCtrl', [
           if (record.size_limits === true) rules.push('size limits');
           if (record.species_restriction === true)
             rules.push('species restrictions');
+          if (record.access_restriction === true)
+            rules.push('access restrictions');
           return rules.join(', ') || '';
         },
         display: 'Rules'

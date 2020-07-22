@@ -58,6 +58,16 @@
         <li>
           <label class="checkbox" ng-class="{true: 'disabled', false: ''}[isDisabled]">
             <input
+              type="checkbox"
+              name="management['access_restriction']"
+              class="checkbox"
+              ng-model="management.access_restriction"
+              ng-disabled="isDisabled"
+            >
+            <i></i>Access Restrictions
+          </label>
+          <label class="checkbox" ng-class="{true: 'disabled', false: ''}[isDisabled]">
+            <input
               ng-mouseenter=""
               ng-mouseleave=""
               type="checkbox"
@@ -88,6 +98,7 @@
             >
             <i></i>Gear Restrictions
           </label>
+          
           <label class="checkbox" ng-class="{true: 'disabled', false: ''}[isDisabled]">
             <input
               type="checkbox"
