@@ -69,7 +69,8 @@ angular
 
         link: function(scope, element, attrs) {
           scope.hasLearnMore =
-            element.find('.learn-more-button').children.length > 0;
+            element.find('.learn-more-button').children().length > 0;
+
           scope.mode = attrs.widgetMode || 'single';
 
           if (attrs.widgetDbChoices) {
