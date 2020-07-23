@@ -1,8 +1,7 @@
 angular.module('mermaid.libs').directive('biomassTotal', [
   '$timeout',
-  'OfflineTableUtils',
   'TransectService',
-  function($timeout, OfflineTableUtils, TransectService) {
+  function($timeout, TransectService) {
     'use strict';
     return {
       restrict: 'EA',
@@ -14,8 +13,8 @@ angular.module('mermaid.libs').directive('biomassTotal', [
       template: '{{ totalBiomass | number : 1 | null_value }}',
 
       link: function(scope) {
-        var timerPromise;
-        var calcTotalBiomass = function() {
+        let timerPromise;
+        const calcTotalBiomass = function() {
           if (timerPromise != null) {
             $timeout.cancel(timerPromise);
           }
