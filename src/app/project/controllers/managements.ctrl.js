@@ -3,40 +3,35 @@ angular.module('app.project').controller('ManagementsCtrl', [
   '$state',
   '$stateParams',
   'OfflineTables',
-  'ProjectService',
   'ManagementService',
   'PaginatedOfflineTableWrapper',
   'ModalService',
   'ValidateSubmitService',
   'ValidateDuplicationService',
   'project',
+  'projectProfile',
   function(
     $scope,
     $state,
     $stateParams,
     OfflineTables,
-    ProjectService,
     ManagementService,
     PaginatedOfflineTableWrapper,
     ModalService,
     ValidateSubmitService,
     ValidateDuplicationService,
-    project
+    project,
+    projectProfile
   ) {
     'use strict';
 
     let managementRecordsCount = 0;
     const project_id = $stateParams.project_id;
 
-    $scope.isDisabled = true;
-    ProjectService.getMyProjectProfile(project_id).then(function(
-      projectProfile
-    ) {
-      $scope.isDisabled =
-        !projectProfile ||
-        (projectProfile.is_admin !== true &&
-          projectProfile.is_collector !== true);
-    });
+    $scope.isDisabled =
+      !projectProfile ||
+      (projectProfile.is_admin !== true &&
+        projectProfile.is_collector !== true);
 
     $scope.resource = undefined;
     $scope.tableControl = {};
@@ -80,6 +75,16 @@ angular.module('app.project').controller('ManagementsCtrl', [
             '<span>' +
             '<i class="fa fa-check" ' +
             'ng-show="record.open_access"/>' +
+            '</span>'
+        },
+        {
+          name: 'access_restriction',
+          display: 'Access Restrictions',
+          sortable: true,
+          tdTemplate:
+            '<span>' +
+            '<i class="fa fa-check" ' +
+            'ng-show="record.access_restriction"/>' +
             '</span>'
         },
         {

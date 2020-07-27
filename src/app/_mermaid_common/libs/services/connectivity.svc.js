@@ -7,22 +7,23 @@ angular.module('mermaid.libs').service('connectivity', [
   function($window, $rootScope, localStorageService) {
     'use strict';
 
-    var pingInterval = 30 * 1000; // 30 secs
-    var pingId = null;
-    var oldPingState = null;
-    var pingState = true;
-    var isToggleOffline = localStorageService.get('offline-toggle') === true;
+    const pingInterval = 30 * 1000; // 30 secs
+    let pingId = null;
+    let oldPingState = null;
+    let pingState = true;
+    let isToggleOffline = localStorageService.get('offline-toggle') === true;
 
-    var isOnline = function() {
+    const isOnline = function() {
       return pingState === true && navigator.onLine && isToggleOffline !== true;
     };
 
-    var checkOnline = function() {
+    const checkOnline = function() {
       $rootScope.$broadcast('online', isOnline() === true);
     };
 
-    var setToggle = function(val) {
+    const setToggle = function(val) {
       isToggleOffline = val;
+
       if (isToggleOffline) {
         localStorageService.set('offline-toggle', true);
         stopPing();
@@ -32,11 +33,11 @@ angular.module('mermaid.libs').service('connectivity', [
       }
     };
 
-    var toggleDisabled = function() {
-      return pingState !== true && !navigator.onLine;
+    const toggleDisabled = function() {
+      return pingState === false || (pingState === null && !navigator.onLine);
     };
 
-    var stopPing = function() {
+    const stopPing = function() {
       if (pingId != null) {
         pingId = window.clearTimeout(pingId);
       }
@@ -45,7 +46,7 @@ angular.module('mermaid.libs').service('connectivity', [
       checkOnline();
     };
 
-    var ping = function() {
+    const ping = function() {
       if (!navigator.onLine) {
         stopPing();
         return;
@@ -76,7 +77,7 @@ angular.module('mermaid.libs').service('connectivity', [
         });
     };
 
-    var service = {
+    const service = {
       ping: ping,
       stopPing: stopPing,
       setToggle: setToggle,

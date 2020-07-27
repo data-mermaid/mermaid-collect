@@ -68,6 +68,9 @@ angular
         templateUrl: 'app/_mermaid_common/forms/directives/ddlinput.tpl.html',
 
         link: function(scope, element, attrs) {
+          scope.hasLearnMore =
+            element.find('.learn-more-button').children().length > 0;
+
           scope.mode = attrs.widgetMode || 'single';
 
           if (attrs.widgetDbChoices) {

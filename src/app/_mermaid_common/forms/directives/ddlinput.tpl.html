@@ -3,7 +3,7 @@
     <span find-tooltip="ngModel[widgetName]"></span>
     <span ng-if="widgetRequired === true && widgetRequiredHide !== true" class="required" title="Required"> *</span>
   </label>
-  <div ng-class="{true: 'modal-trigger-on', false: ''}[modalController != null && mode == 'single']" class="datasharing-dropdown">
+  <div ng-class="{true: 'modal-trigger-on', false: ''}[(hasLearnMore || modalController != null) && mode == 'single']">
     <label class="select{{ checkSymbol }}" ng-switch="choiceValue()" ng-class="{false: 'state-error', true: ''}[widgetForm[widgetName].$pristine || widgetForm[widgetName].$valid]" style="flex-grow:2;">
       <span class="input-group-addon" ng-if="widgetPrepend!==null">{{ widgetPrepend }}</span>
 
@@ -70,8 +70,8 @@
       > {{obj.message}}</span>
       <div ng-transclude="validations"></div>
     </div>
-    <div ng-transclude="learnMoreButton"></div>
   </div>
+  <div class="modal-buttons learn-more-button" ng-transclude="learnMoreButton"></div>
   <div class="btn-group modal-buttons" ng-if="modalController != null && mode == 'single'">
     <button
       type="button"

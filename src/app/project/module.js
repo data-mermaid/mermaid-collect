@@ -61,12 +61,6 @@ angular
       return $q.resolve(true);
     };
 
-    const _fetchDataPolicyChoices = function($q, ProjectService) {
-      return ProjectService.fetchChoices().then(function(choices) {
-        return choices.datapolicies;
-      });
-    };
-
     const _getMyProjectProfile = function($q, $stateParams, ProjectService) {
       return ProjectService.getMyProjectProfile($stateParams.project_id).then(
         function(projectProfile) {
@@ -94,6 +88,14 @@ angular
       return TransectService.getLookups($stateParams.project_id);
     };
 
+    const _fetchBenthicAttributes = function(BenthicAttributeService) {
+      return BenthicAttributeService.fetchBenthicAttributes();
+    };
+
+    const _fetchFishAttributes = function(FishAttributeService) {
+      return FishAttributeService.fetchFishAttributes();
+    };
+
     const _getProject = function($stateParams, OfflineTables, $q) {
       const projectId = $stateParams.project_id;
       return OfflineTables.ProjectsTable().then(function(table) {
@@ -115,6 +117,12 @@ angular
       if (!authService.isAuthenticated()) {
         return authService.login();
       }
+    };
+
+    const _getChoices = function(ProjectService) {
+      return ProjectService.fetchChoices().then(function(choices) {
+        return choices;
+      });
     };
 
     $stateProvider
@@ -150,7 +158,7 @@ angular
         },
         resolve: {
           backgroundLoadChoices: _backgroundLoadChoices,
-          dataPolicies: _fetchDataPolicyChoices
+          choices: _getChoices
         }
       })
       .state('fullapp.project', {
@@ -204,7 +212,7 @@ angular
           projectsTable: _getProjectsTable,
           project: _getProject,
           projectProfile: _getMyProjectProfile,
-          dataPolicies: _fetchDataPolicyChoices
+          choices: _getChoices
         }
       })
       .state('app.project.datasharing', {
@@ -226,7 +234,7 @@ angular
           projectsTable: _getProjectsTable,
           project: _getProject,
           projectProfile: _getMyProjectProfile,
-          dataPolicies: _fetchDataPolicyChoices
+          choices: _getChoices
         }
       })
       .state('app.project.sites', {
@@ -242,7 +250,8 @@ angular
           }
         },
         resolve: {
-          project: _getProject
+          project: _getProject,
+          projectProfile: _getMyProjectProfile
         }
       })
       .state('app.project.sites.site', {
@@ -260,10 +269,15 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          project: _getProject
+          projectProfile: _getMyProjectProfile,
+          site: function($stateParams, SiteService) {
+            const projectId = $stateParams.project_id;
+            const siteId = $stateParams.id;
+            return SiteService.fetchData(projectId, siteId);
+          },
+          choices: _getChoices
         }
       })
-
       .state('app.project.managements', {
         url: '/managements',
         onEnter: checkAuthentication,
@@ -277,7 +291,8 @@ angular
           }
         },
         resolve: {
-          project: _getProject
+          project: _getProject,
+          projectProfile: _getMyProjectProfile
         }
       })
       .state('app.project.managements.management', {
@@ -295,15 +310,13 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          project: _getProject,
+          projectProfile: _getMyProjectProfile,
           management: function($stateParams, ManagementService) {
             const projectId = $stateParams.project_id;
             const managementId = $stateParams.id;
             return ManagementService.fetchData(projectId, managementId);
           },
-          choices: function(ProjectService) {
-            return ProjectService.fetchChoices();
-          }
+          choices: _getChoices
         }
       })
       .state('app.project.submittedtransects.fishbelttransectmethod', {
@@ -321,9 +334,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          fishAttributes: function(FishAttributeService) {
-            return FishAttributeService.fetchFishAttributes();
-          },
+          fishAttributes: _fetchFishAttributes,
           record: function($stateParams, BeltFishTransectMethod) {
             return BeltFishTransectMethod.get({
               project_pk: $stateParams.project_id,
@@ -352,9 +363,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          fishAttributes: function(FishAttributeService) {
-            return FishAttributeService.fetchFishAttributes();
-          },
+          fishAttributes: _fetchFishAttributes,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -376,9 +385,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttributes,
           record: function($stateParams, utils, BenthicLitTransectMethod) {
             return BenthicLitTransectMethod.get({
               project_pk: $stateParams.project_id,
@@ -410,9 +417,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttributes,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -434,9 +439,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttributes,
           record: function($stateParams, utils, BenthicPitTransectMethod) {
             return BenthicPitTransectMethod.get({
               project_pk: $stateParams.project_id,
@@ -468,9 +471,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttributes,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -550,9 +551,7 @@ angular
           },
           resolve: {
             checkId: _checkId(),
-            benthicAttributes: function(BenthicAttributeService) {
-              return BenthicAttributeService.fetchBenthicAttributes();
-            },
+            benthicAttributes: _fetchBenthicAttributes,
             record: function(
               $stateParams,
               utils,
@@ -592,9 +591,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
-          benthicAttributes: function(BenthicAttributeService) {
-            return BenthicAttributeService.fetchBenthicAttributes();
-          },
+          benthicAttributes: _fetchBenthicAttributes,
           collectRecord: _fetchCollectRecord,
           transectLookups: _fetchTransectLookups,
           currentUser: _fetchCurrentUser,
@@ -615,11 +612,7 @@ angular
         },
         resolve: {
           projectProfile: _getMyProjectProfile,
-          beltTransectWidthChoices: function(ProjectService) {
-            return ProjectService.fetchChoices().then(function(choices) {
-              return choices.belttransectwidths;
-            });
-          }
+          choices: _getChoices
         }
       })
       .state('app.project.users', {
@@ -648,18 +641,7 @@ angular
           }
         },
         resolve: {
-          sites: function($stateParams, OfflineTables) {
-            const project_id = $stateParams.project_id;
-            return OfflineTables.ProjectSitesTable(project_id).then(function(
-              table
-            ) {
-              return table.filter().then(function(sites) {
-                return _.map(sites, function(site) {
-                  return { id: site.id, name: site.name };
-                });
-              });
-            });
-          }
+          projectProfile: _getMyProjectProfile
         }
       });
   });
