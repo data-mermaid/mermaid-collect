@@ -58,6 +58,38 @@ angular.module('app.project').service('FishBeltWizardConfig', [
       }
     };
 
+    service.sample_time = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/sample_time.tpl.html',
+      ignoreButtonText: function(record) {
+        return $q.resolve(
+          'Leave Sample Time as ' +
+            _.get(record.data, 'fishbelt_transect.sample_time', '')
+        );
+      },
+      resolve: {
+        sampleUnit: function() {
+          return $q.resolve('fishbelt_transect');
+        }
+      }
+    };
+
+    service.depth = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/depth.tpl.html',
+      ignoreButtonText: function(record) {
+        var val = $filter('null_blank')(
+          _.get(record.data, 'fishbelt_transect.depth')
+        );
+        return $q.resolve('Leave Depth as ' + val);
+      },
+      resolve: {
+        sampleUnit: function() {
+          return $q.resolve('fishbelt_transect');
+        }
+      }
+    };
+
     service.obs_belt_fishes = {
       templateUrl:
         'app/project/protocol_wizard_configs/partials/obs_belt_fishes.tpl.html',
