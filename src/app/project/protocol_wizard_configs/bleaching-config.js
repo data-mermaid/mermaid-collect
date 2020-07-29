@@ -1,6 +1,7 @@
 angular.module('app.project').service('BleachingWizardConfig', [
   '$stateParams',
   '$q',
+  '$filter',
   'BaseWizardConfig',
   'ValidateSubmitService',
   'OfflineCommonTables',
@@ -9,6 +10,7 @@ angular.module('app.project').service('BleachingWizardConfig', [
   function(
     $stateParams,
     $q,
+    $filter,
     BaseWizardConfig,
     ValidateSubmitService,
     OfflineCommonTables,
