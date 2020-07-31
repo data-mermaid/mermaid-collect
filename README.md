@@ -10,17 +10,19 @@ Dev Branch [![Mermaid-Collect](https://circleci.com/gh/WildlifeConservationSocie
 Auth0 Settings
 --------------
 
-1. Copy a file called `src/auth0-variables-template.js` to `src/auth0-variables.js`
-2. Populate your Auth0 client id, domain and audience.
+1. Copy or move a file called `src/mermaid-config-template.js` to `src/mermaid-config.js`
+2. Populate all constants therein.
 
 Development
 -----------
 To run the code in your development environment:
 
 1. Clone this repo
-2. Ensure you are running [Node Version LTS Carbon](https://nodejs.org/en/download/releases/)
+2. Ensure you are running the most recent LTS version of [node](https://nodejs.org/en/download/releases/). 
+The [nvm](https://github.com/nvm-sh/nvm) version manager is recommended.
 3. Run `npm install`
-4. Run `bower install`
+4. Run `npm install -g bower`
+5. Run `bower install`
 
 Now with all dependencies installed
 
