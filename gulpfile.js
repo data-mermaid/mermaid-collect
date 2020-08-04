@@ -52,7 +52,7 @@ var destinations = {
   js: 'src/build'
 };
 
-gulp.task('build_info', function() {
+gulp.task('build_info', async function() {
   var version = execSync('git rev-parse --verify HEAD --short')
     .toString()
     .trim();
@@ -62,7 +62,7 @@ gulp.task('build_info', function() {
   ).pipe(gulp.dest(destinations.js));
 });
 
-gulp.task('build', function() {
+gulp.task('build', async function() {
   return (
     es
       .merge(gulp.src(source.js.src), getTemplateStream())
@@ -73,7 +73,7 @@ gulp.task('build', function() {
   );
 });
 
-gulp.task('js', function() {
+gulp.task('js', async function() {
   return es
     .merge(gulp.src(source.js.src), getTemplateStream())
     .pipe(concat('app.js'))
@@ -83,9 +83,9 @@ gulp.task('js', function() {
 
 gulp.task('watch', function() {
   livereload.listen();
-  gulp.watch(source.js.src, ['js']);
-  gulp.watch(source.js.tpl, ['js']);
-  gulp.watch(source.js.css, ['js']);
+  gulp.watch(source.js.src, gulp.parallel('js'));
+  gulp.watch(source.js.tpl, gulp.parallel('js'));
+  gulp.watch(source.js.css, gulp.parallel('js'));
 });
 
 gulp.task('connect', function() {
@@ -97,7 +97,7 @@ gulp.task('connect', function() {
   });
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', async function() {
   return gulp
     .src('./src/build/app.js')
     .pipe(jshint())
@@ -105,7 +105,7 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('dev-lint', function() {
+gulp.task('dev-lint', async function() {
   return gulp
     .src([
       '!./src/app/_common/**/*.js',
@@ -139,7 +139,7 @@ gulp.task('build-files-exist', function() {
   filePathExists('app');
 });
 
-gulp.task('vendor', function() {
+gulp.task('vendor', async function() {
   _.forIn(scripts.chunks, function(chunkScripts, chunkName) {
     var paths = [];
     chunkScripts.forEach(function(script) {
@@ -162,7 +162,7 @@ gulp.task('vendor', function() {
 });
 
 // -- SERVICE WORKER --
-gulp.task('generate-sw', function(callback) {
+gulp.task('generate-sw', async function(callback) {
   var swPrecache = require('sw-precache');
 
   swPrecache.write(
@@ -182,19 +182,18 @@ gulp.task('generate-sw', function(callback) {
   );
 });
 
-gulp.task('prod', ['vendor', 'build', 'lint']);
-gulp.task('dev', ['vendor', 'build', 'lint']);
-gulp.task('dev-run', ['vendor', 'js', 'connect']);
-gulp.task('local', [
+gulp.task('prod', gulp.series('vendor', 'build', 'lint'));
+gulp.task('dev', gulp.series('vendor', 'build', 'lint'));
+gulp.task('dev-run', gulp.series('vendor', 'js', 'connect'));
+gulp.task('local', gulp.series(
   'build_info',
   'vendor',
   'js',
   'generate-sw',
   'dev-lint',
-  'watch',
-  'connect'
-]);
-gulp.task('default', ['local']);
+  gulp.parallel('watch', 'connect')
+));
+gulp.task('default', gulp.series('local'));
 
 var swallowError = function(error) {
   console.log(error.toString());
