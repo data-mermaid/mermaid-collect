@@ -32,7 +32,7 @@
     <span ng-repeat="(key, value) in widgetForm[widgetName].$error | validators track by $index" class="error ng-cloak"
           ng-show="value" ng-bind-html="widgetForm[widgetName].validator_messages[key]"></span>
   </div>
-  <div class="note ng-cloak">
+  <div class="note note-error ng-cloak">
     <span
       class="error ng-cloak"
       ng-repeat="(error, obj) in widgetForm[widgetName].$validations.errors"
