@@ -20,17 +20,17 @@ angular.module('app.project').service('TransectService', [
     'use strict';
 
     const getFishAttributeLookup = function(observations) {
-      var obj = {};
+      let obj = {};
       observations = observations || [];
-      for (var n = 0; n < observations.length; n++) {
-        var fish_attribute = observations[n].fish_attribute;
+      for (let n = 0; n < observations.length; n++) {
+        const fish_attribute = observations[n].fish_attribute;
         if (fish_attribute == null) {
           continue;
         }
         obj[fish_attribute] = null;
       }
-      var fish_attributes = _.keys(obj);
-      var filterFunc = function(val) {
+      const fish_attributes = _.keys(obj);
+      const filterFunc = function(val) {
         return fish_attributes.indexOf(val) !== -1;
       };
       return OfflineCommonTables.FishAttributesTable()
@@ -62,7 +62,7 @@ angular.module('app.project').service('TransectService', [
       length,
       width
     ) {
-      var ret = null;
+      let ret = null;
 
       if (
         Number.isFinite(size) &&
@@ -73,10 +73,10 @@ angular.module('app.project').service('TransectService', [
         Number.isFinite(length) &&
         Number.isFinite(width)
       ) {
-        var biomass =
+        const biomass =
           (count * (constant_a * Math.pow(size * constant_c, constant_b))) /
           1000;
-        var area = (length * width) / 10000; // m2 to hectares
+        const area = (length * width) / 10000; // m2 to hectares
         ret = biomass / area; // result is in kg/ha
       }
 
@@ -93,22 +93,21 @@ angular.module('app.project').service('TransectService', [
           return lookups;
         })
         .then(function(fishAttributeLookups) {
-          var biomassTotal;
-          biomassTotal = _.reduce(
+          const biomassTotal = _.reduce(
             observations,
             function(total, obs) {
-              var size = Number.isFinite(obs.size) ? obs.size : null;
-              var count = Number.isFinite(obs.count) ? obs.count : null;
-              var fishAttribute =
+              const size = Number.isFinite(obs.size) ? obs.size : null;
+              const count = Number.isFinite(obs.count) ? obs.count : null;
+              const fishAttribute =
                 fishAttributeLookups[obs.fish_attribute] || {};
-              var constant_a = fishAttribute.biomass_constant_a;
-              var constant_b = fishAttribute.biomass_constant_b;
-              var constant_c = fishAttribute.biomass_constant_c;
+              const constant_a = fishAttribute.biomass_constant_a;
+              const constant_b = fishAttribute.biomass_constant_b;
+              const constant_c = fishAttribute.biomass_constant_c;
               let width = null;
               if (transectWidth != null) {
                 width = getBeltFishWidthVal(size, transectWidth.conditions);
               }
-              var biomass =
+              const biomass =
                 calcObsBiomass(
                   size,
                   count,
@@ -125,6 +124,19 @@ angular.module('app.project').service('TransectService', [
 
           return biomassTotal;
         });
+    };
+
+    const calcTotalAbundance = function(observations) {
+      const abundanceTotal = _.reduce(
+        observations,
+        function(total, obs) {
+          const count = Number.isFinite(obs.count) ? obs.count : null;
+          return total + count;
+        },
+        0
+      );
+
+      return abundanceTotal;
     };
 
     const createLookup = function(records) {
@@ -152,7 +164,7 @@ angular.module('app.project').service('TransectService', [
       attr,
       interval_start
     ) {
-      var obs_count = (obs || []).length;
+      const obs_count = (obs || []).length;
       attr = attr || 'interval';
 
       if (interval_start == null) {
@@ -168,7 +180,7 @@ angular.module('app.project').service('TransectService', [
       }
 
       let interval = interval_start;
-      for (var i = 1; i <= obs_count; i++) {
+      for (let i = 1; i <= obs_count; i++) {
         if (Number.isInteger(interval) === false) {
           _.set(obs[i - 1], attr, interval.toFixed(2));
         } else {
@@ -187,14 +199,14 @@ angular.module('app.project').service('TransectService', [
         return;
       }
 
-      var category_names;
-      var groups;
-      var category_percentages;
-      var recordset = [];
-      var category_total = {};
-      var total;
+      let category_names;
+      let groups;
+      let category_percentages;
+      let recordset = [];
+      let category_total = {};
+      let total;
 
-      var getCategory = function(benthicAttribute, benthicAttributesLookup) {
+      const getCategory = function(benthicAttribute, benthicAttributesLookup) {
         if (benthicAttribute == null || benthicAttribute.parent == null) {
           return benthicAttribute;
         }
@@ -204,9 +216,9 @@ angular.module('app.project').service('TransectService', [
         );
       };
 
-      for (var i = 0; i < obsBenthics.length; i++) {
-        var benthicAttribute;
-        var obs_benthic = obsBenthics[i];
+      for (let i = 0; i < obsBenthics.length; i++) {
+        let benthicAttribute;
+        const obs_benthic = obsBenthics[i];
 
         if (obs_benthic.attribute == null) {
           continue;
@@ -265,16 +277,16 @@ angular.module('app.project').service('TransectService', [
     };
 
     const deleteSelectedTransects = function(scope, TransectMethod) {
-      var records = scope.tableControl.getSelectedRecords();
+      const records = scope.tableControl.getSelectedRecords();
       if (_.isArray(records) === false || records.length === 0) {
         return;
       }
 
-      var record_count = records.length;
-      var args = {
+      const record_count = records.length;
+      const args = {
         count: record_count
       };
-      var message = 'Deleting {{count}} record{{plural}}. Are you sure?';
+      const message = 'Deleting {{count}} record{{plural}}. Are you sure?';
       if (record_count !== 1) {
         args.plural = 's';
       }
@@ -282,7 +294,7 @@ angular.module('app.project').service('TransectService', [
         function() {
           scope.tableControl.deleteRecords(records);
           angular.forEach(records, function(rec) {
-            var r = new TransectMethod(rec);
+            const r = new TransectMethod(rec);
             r.project_pk = $stateParams.project_id;
             r.$delete();
           });
@@ -293,10 +305,10 @@ angular.module('app.project').service('TransectService', [
     };
 
     const downloadFieldReport = function(project_id, field_report_type) {
-      var token = authService.getToken();
-      var report_url =
+      const token = authService.getToken();
+      const report_url =
         'projects/' + project_id + '/' + field_report_type + '/fieldreport/';
-      var url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
+      const url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
       $window.open(url);
     };
 
@@ -310,7 +322,7 @@ angular.module('app.project').service('TransectService', [
       });
     };
 
-    var getProjectSiteChoices = function(project_id) {
+    const getProjectSiteChoices = function(project_id) {
       return OfflineTables.ProjectSitesTable(project_id).then(function(table) {
         return table.filter().then(function(sites) {
           return createLookup(sites);
@@ -341,7 +353,7 @@ angular.module('app.project').service('TransectService', [
     const getChoices = function() {
       return OfflineCommonTables.ChoicesTable(true).then(function(table) {
         return table.filter().then(function(choices) {
-          var output = {};
+          const output = {};
           _.each(choices, function(c) {
             output[c.name] = c.data;
           });
@@ -351,7 +363,7 @@ angular.module('app.project').service('TransectService', [
     };
 
     const getLookups = function(projectId) {
-      var promises = [];
+      const promises = [];
 
       promises.push(getChoices());
       promises.push(getProjectSiteChoices(projectId));
@@ -359,7 +371,7 @@ angular.module('app.project').service('TransectService', [
       promises.push(getProjectProfileChoices(projectId));
 
       return $q.all(promises).then(function(results) {
-        var lookups = {};
+        const lookups = {};
         lookups.choices = results[0];
         lookups.choices.sites = results[1];
         lookups.choices.managements = results[2];
@@ -434,6 +446,7 @@ angular.module('app.project').service('TransectService', [
       calcBenthicPercentages: calcBenthicPercentages,
       calcObsBiomass: calcObsBiomass,
       calcTotalObsBiomass: calcTotalObsBiomass,
+      calcTotalAbundance: calcTotalAbundance,
       deleteSelectedTransects: deleteSelectedTransects,
       downloadFieldReport: downloadFieldReport,
       getBeltFishWidthVal: getBeltFishWidthVal,
