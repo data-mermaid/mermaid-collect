@@ -118,7 +118,7 @@ gulp.task('dev-lint', async function() {
     .pipe(jshint.reporter(stylish));
 });
 
-gulp.task('build-files-exist', function() {
+gulp.task('build-files-exist', async function() {
   'use strict';
 
   var filePathExists = function(fileName) {
@@ -185,14 +185,17 @@ gulp.task('generate-sw', async function(callback) {
 gulp.task('prod', gulp.series('vendor', 'build', 'lint'));
 gulp.task('dev', gulp.series('vendor', 'build', 'lint'));
 gulp.task('dev-run', gulp.series('vendor', 'js', 'connect'));
-gulp.task('local', gulp.series(
-  'build_info',
-  'vendor',
-  'js',
-  'generate-sw',
-  'dev-lint',
-  gulp.parallel('watch', 'connect')
-));
+gulp.task(
+  'local',
+  gulp.series(
+    'build_info',
+    'vendor',
+    'js',
+    'generate-sw',
+    'dev-lint',
+    gulp.parallel('watch', 'connect')
+  )
+);
 gulp.task('default', gulp.series('local'));
 
 var swallowError = function(error) {
