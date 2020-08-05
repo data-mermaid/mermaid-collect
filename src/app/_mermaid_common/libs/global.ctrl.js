@@ -54,6 +54,23 @@ angular.module('mermaid.libs').controller('GlobalCtrl', [
         });
     };
 
+    const resetLocal = function (lo) {
+      return deleteDatabases().finally(function () {
+        for (let key in window.localStorage) {
+          if (
+            key.indexOf('mermaid.') !== -1 &&
+            key.indexOf('mermaid.isLoggedIn') === -1 &&
+            key.indexOf('mermaid.user') === -1
+          ) {
+            window.localStorage.removeItem(key);
+          }
+        }
+        if (angular.isDefined(lo) && lo === true) {
+          authService.logout();
+        }
+      });
+    };
+
     /* Handle changes when online and offline*/
     $scope.online = connectivity.isOnline;
 
@@ -62,21 +79,17 @@ angular.module('mermaid.libs').controller('GlobalCtrl', [
 
     $scope.copyright = new Date();
 
-    // Unregister workers
-    $scope.reloadPage = system.reloadPage;
+    $scope.reloadPage = function() {
+      resetLocal().then(function() {
+        system.reloadPage();
+      });
+    };
 
     $scope.login = authService.login;
 
     $scope.logout = function() {
       var lo = function() {
-        return deleteDatabases().finally(function() {
-          for (let key in window.localStorage) {
-            if (key.indexOf('mermaid.') !== -1) {
-              window.localStorage.removeItem(key);
-            }
-          }
-          authService.logout();
-        });
+        resetLocal(true);
       };
       OfflineTableUtils.isSynced().then(function(is_synced) {
         if (is_synced === false) {
