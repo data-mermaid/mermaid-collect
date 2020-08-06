@@ -2,13 +2,15 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: circleci/python:3.7.3-stretch-node-browsers
+    - image: circleci/python:3.8.5-node-browsers
 
 install_dependencies: &install_dependencies
   run:
     name: Install Dependencies
     command: |
-      sudo apt install awscli python-requests
+      curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      unzip awscliv2.zip
+      sudo ./aws/install
       sudo npm install -g bower gulp karma-cli
       bower install
       npm install
