@@ -311,10 +311,13 @@ angular
         return $http.put(replaceUrl, data);
       };
 
-      ProjectService.setupFormDataPolicies = function(scope, choices) {
-        scope.dataPolicies = choices;
+      ProjectService.setupFormDataPolicies = function(
+        scope,
+        dataPolicyChoices
+      ) {
+        scope.dataPolicies = dataPolicyChoices;
         var policyLookup = _.reduce(
-          choices,
+          dataPolicyChoices,
           function(o, v) {
             o[v.id] = v.description;
             return o;
@@ -323,7 +326,7 @@ angular
         );
 
         var policyNameLookup = _.reduce(
-          choices,
+          dataPolicyChoices,
           function(o, v) {
             o[v.id] = v.name;
             return o;
