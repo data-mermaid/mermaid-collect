@@ -103,6 +103,7 @@ angular.module('app.auth').service('authService', [
     function logout() {
       // Remove isLoggedIn flag from localStorage
       localStorageService.remove('isLoggedIn');
+      localStorageService.remove('user');
       // Remove tokens and expiry time
       accessToken = '';
       idToken = '';
