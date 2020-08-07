@@ -71,8 +71,8 @@
       <div ng-transclude="validations"></div>
     </div>
   </div>
-  <div class="modal-buttons learn-more-button" ng-transclude="learnMoreButton"></div>
-  <div class="btn-group modal-buttons" ng-if="modalController != null && mode == 'single'">
+  <div class="modal-button learn-more-button" ng-transclude="learnMoreButton"></div>
+  <div class="btn-group" ng-if="modalController != null && mode == 'single'">
     <button
       type="button"
       class="btn btn-sm btn-default modal-trigger"
