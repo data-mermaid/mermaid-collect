@@ -28,7 +28,6 @@ angular.module('app.project').directive('submittedMethodLink', [
           const sampleUnitType = _.find(ProjectService.transect_types, {
             id: record.protocol
           });
-          console.log(record);
           const state = sampleUnitType.submittedState;
           scope.protocolName = sampleUnitType.name;
           scope.url = $state.href(state, {
