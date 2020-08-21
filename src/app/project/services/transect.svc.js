@@ -6,7 +6,7 @@ angular.module('app.project').service('TransectService', [
   'utils',
   'OfflineCommonTables',
   'OfflineTables',
-  // 'authService',
+  'authService',
   function(
     $q,
     $stateParams,
@@ -14,8 +14,8 @@ angular.module('app.project').service('TransectService', [
     APP_CONFIG,
     utils,
     OfflineCommonTables,
-    OfflineTables
-    // authService
+    OfflineTables,
+    authService
   ) {
     'use strict';
 
@@ -293,18 +293,12 @@ angular.module('app.project').service('TransectService', [
     };
 
     const downloadFieldReport = function(project_id, protocol, method) {
-      // const token = authService.getToken();
+      const token = authService.getToken();
 
-      // var report_url =
-      //   'projects/' + project_id + '/' + field_report_type + '/fieldreport/';
       const report_url = `${
         APP_CONFIG.apiUrl
-      }projects/${project_id}/${protocol}/${method}/csv/?field_report=true`;
+      }projects/${project_id}/${protocol}/${method}/csv/?field_report=true&access_token=${token}`;
 
-      // var url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
-      // const url = APP_CONFIG.apiUrl + report_url;
-
-      console.log(report_url);
       $window.open(report_url);
     };
 
