@@ -6,7 +6,7 @@ angular.module('app.project').service('TransectService', [
   'utils',
   'OfflineCommonTables',
   'OfflineTables',
-  'authService',
+  // 'authService',
   function(
     $q,
     $stateParams,
@@ -14,8 +14,8 @@ angular.module('app.project').service('TransectService', [
     APP_CONFIG,
     utils,
     OfflineCommonTables,
-    OfflineTables,
-    authService
+    OfflineTables
+    // authService
   ) {
     'use strict';
 
