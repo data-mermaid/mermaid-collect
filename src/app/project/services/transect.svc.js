@@ -293,7 +293,7 @@ angular.module('app.project').service('TransectService', [
     };
 
     const downloadFieldReport = function(project_id, protocol, method) {
-      const token = authService.getToken();
+      // const token = authService.getToken();
 
       // var report_url =
       //   'projects/' + project_id + '/' + field_report_type + '/fieldreport/';
