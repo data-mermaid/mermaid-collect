@@ -312,13 +312,16 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       }
     });
 
-    _.each(transectReports, function({ name, method, reportProtocol }) {
+    _.each(transectReports, function(transectReport) {
       const btn = new Button();
-      btn.name = name;
+      btn.name = transectReport.name;
       btn.onlineOnly = true;
       btn.enabled = true;
       btn.click = function() {
-        downloadFieldReport(reportProtocol, method);
+        downloadFieldReport(
+          transectReport.reportProtocol,
+          transectReport.method
+        );
       };
       buttons.push(btn);
     });
