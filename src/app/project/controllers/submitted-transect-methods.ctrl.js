@@ -40,8 +40,8 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       ProjectService.BLEACHING_QC_QUADRAT_TYPE
     ];
 
-    const downloadFieldReport = function(method) {
-      TransectService.downloadFieldReport(project_id, method);
+    const downloadFieldReport = function(reportProtocol, method) {
+      TransectService.downloadFieldReport(project_id, reportProtocol, method);
     };
 
     const checkLocalStorage = function(item, choices, storageName) {
@@ -152,9 +152,6 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       toolbar: {
         template:
           'app/project/partials/custom-toolbars/submitted-records-toolbar.tpl.html',
-        exportTransect: function(transectmethod) {
-          downloadFieldReport(transectmethod);
-        },
         filterMethod: function(item) {
           const choice = item.choice;
           let options = JSON.parse(
@@ -268,7 +265,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
         limit: 0,
         protocol: $scope.choices.transect_types
           .map(function(tt) {
-            return tt.protocol;
+            return tt.id;
           })
           .join(',')
       })
@@ -293,18 +290,37 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     };
 
     const buttons = [];
-    _.each($scope.choices.transect_types, function(transect_type) {
-      if (transect_type.method) {
-        const btn = new Button();
-        btn.name = transect_type.name;
-        btn.protocol = transect_type.protocol;
-        btn.onlineOnly = true;
-        btn.enabled = true;
-        btn.click = function() {
-          downloadFieldReport(transect_type.method);
-        };
-        buttons.push(btn);
+    const transectReports = [];
+
+    _.each($scope.choices.transect_types, function(transect) {
+      if (transect.name === 'Bleaching') {
+        for (let i = 0; i < transect.reportNames.length; i++) {
+          const bleaching = {};
+          bleaching.name = transect.reportNames[i];
+          bleaching.method = transect.methods[i];
+          bleaching.reportProtocol = transect.reportProtocol;
+
+          transectReports.push(bleaching);
+        }
+      } else {
+        const otherTransects = {};
+        otherTransects.name = transect.name;
+        otherTransects.method = transect.method;
+        otherTransects.reportProtocol = transect.reportProtocol;
+
+        transectReports.push(otherTransects);
       }
+    });
+
+    _.each(transectReports, function({ name, method, reportProtocol }) {
+      const btn = new Button();
+      btn.name = name;
+      btn.onlineOnly = true;
+      btn.enabled = true;
+      btn.click = function() {
+        downloadFieldReport(reportProtocol, method);
+      };
+      buttons.push(btn);
     });
 
     fieldReportButton.name = 'Export to CSV';

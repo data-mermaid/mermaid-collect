@@ -75,8 +75,8 @@ angular
             'data.obs_belt_fishes'
           ],
           obsFields: ['data.obs_belt_fishes'],
-          method: 'beltfishtransectmethods',
-          protocol: 'fishbelt'
+          method: 'obstransectbeltfishes',
+          reportProtocol: 'beltfishes'
         },
         {
           id: ProjectService.BENTHIC_LIT_TRANSECT_TYPE,
@@ -90,8 +90,8 @@ angular
             'data.obs_benthic_lits'
           ],
           obsFields: ['data.obs_benthic_lits'],
-          method: 'benthiclittransectmethods',
-          protocol: 'benthiclit'
+          method: 'obstransectbenthiclits',
+          reportProtocol: 'benthiclits'
         },
         {
           id: ProjectService.BENTHIC_PIT_TRANSECT_TYPE,
@@ -105,8 +105,8 @@ angular
             'data.obs_benthic_pits'
           ],
           obsFields: ['data.obs_benthic_pits'],
-          method: 'benthicpittransectmethods',
-          protocol: 'benthicpit'
+          method: 'obstransectbenthicpits',
+          reportProtocol: 'benthicpits'
         },
         {
           id: ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
@@ -120,12 +120,13 @@ angular
             'data.obs_habitat_complexities'
           ],
           obsFields: ['data.obs_habitat_complexities'],
-          method: 'habitatcomplexitytransectmethods',
-          protocol: 'habitatcomplexity'
+          method: 'obshabitatcomplexities',
+          reportProtocol: 'habitatcomplexities'
         },
         {
           id: ProjectService.BLEACHING_QC_QUADRAT_TYPE,
           name: 'Bleaching',
+          reportNames: ['Colonies Bleached', 'Quadrat Percentage'],
           state: 'app.project.records.collectbleaching',
           submittedState:
             'app.project.submittedtransects.bleachingquadratcollectionmethod',
@@ -139,8 +140,8 @@ angular
             'data.obs_colonies_bleached',
             'data.obs_quadrat_benthic_percent'
           ],
-          method: 'bleachingquadratcollectionmethods',
-          protocol: ProjectService.BLEACHING_QC_QUADRAT_TYPE
+          methods: ['obscoloniesbleacheds', 'obsquadratbenthicpercents'],
+          reportProtocol: 'bleachingqcs'
         }
       ];
 

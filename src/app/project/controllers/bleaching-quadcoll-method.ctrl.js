@@ -35,7 +35,7 @@ angular.module('app.project').controller('BleachingQuadCollMethodCtrl', [
       ProjectService.ADMIN_ROLE
     );
     $scope.isDisabled = _isRoleDisabled || !connectivity.isOnline;
-
+    $scope.sampleUnit = 'quadrat_collection';
     $scope.choices = transectLookups.choices;
     $scope.project_profiles = transectLookups.project_profiles;
     $scope.record = record;
