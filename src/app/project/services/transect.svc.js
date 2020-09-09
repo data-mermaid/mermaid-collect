@@ -292,12 +292,14 @@ angular.module('app.project').service('TransectService', [
       );
     };
 
-    const downloadFieldReport = function(project_id, field_report_type) {
-      var token = authService.getToken();
-      var report_url =
-        'projects/' + project_id + '/' + field_report_type + '/fieldreport/';
-      var url = APP_CONFIG.apiUrl + report_url + '?access_token=' + token;
-      $window.open(url);
+    const downloadFieldReport = function(project_id, protocol, method) {
+      const token = authService.getToken();
+
+      const report_url = `${
+        APP_CONFIG.apiUrl
+      }projects/${project_id}/${protocol}/${method}/csv/?field_report=true&access_token=${token}`;
+
+      $window.open(report_url);
     };
 
     const getBenthicAttributeChoices = function() {
