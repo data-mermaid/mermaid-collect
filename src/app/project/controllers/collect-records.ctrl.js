@@ -1,4 +1,9 @@
 angular.module('app.project').controller('CollectRecordsCtrl', [
+  'FISH_BELT_TRANSECT_TYPE',
+  'BENTHIC_LIT_TRANSECT_TYPE',
+  'BENTHIC_PIT_TRANSECT_TYPE',
+  'HABITAT_COMPLEXITY_TRANSECT_TYPE',
+  'BLEACHING_QC_QUADRAT_TYPE',
   '$state',
   '$stateParams',
   '$q',
@@ -15,6 +20,11 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'projectProfile',
   'choices',
   function(
+    FISH_BELT_TRANSECT_TYPE,
+    BENTHIC_LIT_TRANSECT_TYPE,
+    BENTHIC_PIT_TRANSECT_TYPE,
+    HABITAT_COMPLEXITY_TRANSECT_TYPE,
+    BLEACHING_QC_QUADRAT_TYPE,
     $state,
     $stateParams,
     $q,
