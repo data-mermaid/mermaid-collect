@@ -1,4 +1,9 @@
 angular.module('mermaid.libs').service('OfflineTables', [
+  'FISH_BELT_TRANSECT_TYPE',
+  'BENTHIC_LIT_TRANSECT_TYPE',
+  'BENTHIC_PIT_TRANSECT_TYPE',
+  'HABITAT_COMPLEXITY_TRANSECT_TYPE',
+  'BLEACHING_QC_QUADRAT_TYPE',
   '$q',
   'OfflineTableUtils',
   'OfflineCommonTables',
@@ -15,6 +20,11 @@ angular.module('mermaid.libs').service('OfflineTables', [
   'cache',
   'logger',
   function(
+    FISH_BELT_TRANSECT_TYPE,
+    BENTHIC_LIT_TRANSECT_TYPE,
+    BENTHIC_PIT_TRANSECT_TYPE,
+    HABITAT_COMPLEXITY_TRANSECT_TYPE,
+    BLEACHING_QC_QUADRAT_TYPE,
     $q,
     OfflineTableUtils,
     OfflineCommonTables,
@@ -377,6 +387,25 @@ angular.module('mermaid.libs').service('OfflineTables', [
               joinDefn: {
                 sites: `data.sample_event.site -> ${sitesTableName}.id, name`,
                 managements: `data.sample_event.management -> ${managementTableName}.id, name`
+              },
+              recordFormatter: function(record) {
+                let protocol = record.data.protocol;
+                let sample_unit;
+                if (protocol === FISH_BELT_TRANSECT_TYPE) {
+                  sample_unit = 'fishbelt_transect';
+                } else if (
+                  protocol === BENTHIC_LIT_TRANSECT_TYPE ||
+                  protocol === BENTHIC_PIT_TRANSECT_TYPE ||
+                  protocol === HABITAT_COMPLEXITY_TRANSECT_TYPE
+                ) {
+                  sample_unit = 'benthic_transect';
+                } else if (protocol === BLEACHING_QC_QUADRAT_TYPE) {
+                  sample_unit = 'quadrat_collection';
+                } else {
+                  return record;
+                }
+                record.$$sample_unit = _.get(record.data, sample_unit);
+                return record;
               }
             },
             skipRefresh

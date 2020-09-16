@@ -1,6 +1,7 @@
 angular
   .module('app.project')
   .controller('CollectBenthicPitTransectMethodCtrl', [
+    'BENTHIC_PIT_TRANSECT_TYPE',
     '$controller',
     '$scope',
     'ProjectService',
@@ -11,6 +12,7 @@ angular
     'projectProfile',
     'transectLookups',
     function(
+      BENTHIC_PIT_TRANSECT_TYPE,
       $controller,
       $scope,
       ProjectService,
@@ -41,7 +43,7 @@ angular
       });
 
       $ctrl.state = 'app.project.records.collectbenthicpit';
-      $ctrl.protocol = ProjectService.BENTHIC_PIT_TRANSECT_TYPE;
+      $ctrl.protocol = BENTHIC_PIT_TRANSECT_TYPE;
       $scope.wizardConfig = BenthicPITWizardConfig;
 
       Object.defineProperty(benthicAttributes, 'filtered', {

@@ -2,6 +2,11 @@ angular
   .module('app.project')
 
   .service('ProjectService', [
+    'FISH_BELT_TRANSECT_TYPE',
+    'BENTHIC_LIT_TRANSECT_TYPE',
+    'BENTHIC_PIT_TRANSECT_TYPE',
+    'HABITAT_COMPLEXITY_TRANSECT_TYPE',
+    'BLEACHING_QC_QUADRAT_TYPE',
     '$http',
     '$q',
     '$filter',
@@ -12,6 +17,11 @@ angular
     'OfflineCommonTables',
     'blockUI',
     function(
+      FISH_BELT_TRANSECT_TYPE,
+      BENTHIC_LIT_TRANSECT_TYPE,
+      BENTHIC_PIT_TRANSECT_TYPE,
+      HABITAT_COMPLEXITY_TRANSECT_TYPE,
+      BLEACHING_QC_QUADRAT_TYPE,
       $http,
       $q,
       $filter,
@@ -28,11 +38,6 @@ angular
       ProjectService.ADMIN_ROLE = 'admin';
       ProjectService.COLLECTOR_ROLE = 'collector';
       ProjectService.READONLY_ROLE = 'readonly';
-      ProjectService.FISH_BELT_TRANSECT_TYPE = 'fishbelt';
-      ProjectService.BENTHIC_LIT_TRANSECT_TYPE = 'benthiclit';
-      ProjectService.BENTHIC_PIT_TRANSECT_TYPE = 'benthicpit';
-      ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE = 'habitatcomplexity';
-      ProjectService.BLEACHING_QC_QUADRAT_TYPE = 'bleachingqc';
       ProjectService.benthicAttributes = [];
       ProjectService.fishAttributes = [];
       ProjectService.fishGenera = [];
@@ -64,7 +69,7 @@ angular
 
       ProjectService.transect_types = [
         {
-          id: ProjectService.FISH_BELT_TRANSECT_TYPE,
+          id: FISH_BELT_TRANSECT_TYPE,
           name: 'Fish Belt',
           state: 'app.project.records.collectfishbelt',
           submittedState:
@@ -79,7 +84,7 @@ angular
           reportProtocol: 'beltfishes'
         },
         {
-          id: ProjectService.BENTHIC_LIT_TRANSECT_TYPE,
+          id: BENTHIC_LIT_TRANSECT_TYPE,
           name: 'Benthic LIT',
           state: 'app.project.records.collectbenthiclit',
           submittedState:
@@ -94,7 +99,7 @@ angular
           reportProtocol: 'benthiclits'
         },
         {
-          id: ProjectService.BENTHIC_PIT_TRANSECT_TYPE,
+          id: BENTHIC_PIT_TRANSECT_TYPE,
           name: 'Benthic PIT',
           state: 'app.project.records.collectbenthicpit',
           submittedState:
@@ -109,7 +114,7 @@ angular
           reportProtocol: 'benthicpits'
         },
         {
-          id: ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
+          id: HABITAT_COMPLEXITY_TRANSECT_TYPE,
           name: 'Habitat Complexity',
           state: 'app.project.records.collecthabitatcomplexity',
           submittedState:
@@ -124,7 +129,7 @@ angular
           reportProtocol: 'habitatcomplexities'
         },
         {
-          id: ProjectService.BLEACHING_QC_QUADRAT_TYPE,
+          id: BLEACHING_QC_QUADRAT_TYPE,
           name: 'Bleaching',
           reportNames: ['Colonies Bleached', 'Quadrat Percentage'],
           state: 'app.project.records.collectbleaching',

@@ -1,4 +1,9 @@
 angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
+  'FISH_BELT_TRANSECT_TYPE',
+  'BENTHIC_LIT_TRANSECT_TYPE',
+  'BENTHIC_PIT_TRANSECT_TYPE',
+  'HABITAT_COMPLEXITY_TRANSECT_TYPE',
+  'BLEACHING_QC_QUADRAT_TYPE',
   '$rootScope',
   '$scope',
   '$stateParams',
@@ -9,6 +14,11 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
   'Button',
   'projectProfile',
   function(
+    FISH_BELT_TRANSECT_TYPE,
+    BENTHIC_LIT_TRANSECT_TYPE,
+    BENTHIC_PIT_TRANSECT_TYPE,
+    HABITAT_COMPLEXITY_TRANSECT_TYPE,
+    BLEACHING_QC_QUADRAT_TYPE,
     $rootScope,
     $scope,
     $stateParams,
@@ -33,11 +43,11 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       !projectProfile || projectProfile.is_admin !== true;
 
     const protocolMethods = [
-      ProjectService.FISH_BELT_TRANSECT_TYPE,
-      ProjectService.BENTHIC_LIT_TRANSECT_TYPE,
-      ProjectService.BENTHIC_PIT_TRANSECT_TYPE,
-      ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
-      ProjectService.BLEACHING_QC_QUADRAT_TYPE
+      FISH_BELT_TRANSECT_TYPE,
+      BENTHIC_LIT_TRANSECT_TYPE,
+      BENTHIC_PIT_TRANSECT_TYPE,
+      HABITAT_COMPLEXITY_TRANSECT_TYPE,
+      BLEACHING_QC_QUADRAT_TYPE
     ];
 
     const downloadFieldReport = function(reportProtocol, method) {

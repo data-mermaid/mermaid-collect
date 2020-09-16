@@ -1,4 +1,5 @@
 angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
+  'BLEACHING_QC_QUADRAT_TYPE',
   '$controller',
   '$scope',
   'ProjectService',
@@ -10,6 +11,7 @@ angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
   'transectLookups',
   'benthicAttributes',
   function(
+    BLEACHING_QC_QUADRAT_TYPE,
     $controller,
     $scope,
     ProjectService,
@@ -41,7 +43,7 @@ angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
     const baseSave = $ctrl.save;
 
     $ctrl.state = 'app.project.records.collectbleaching';
-    $ctrl.protocol = ProjectService.BLEACHING_QC_QUADRAT_TYPE;
+    $ctrl.protocol = BLEACHING_QC_QUADRAT_TYPE;
 
     $ctrl.save = function() {
       TransectService.setObservationIntervals(
