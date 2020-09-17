@@ -1,0 +1,28 @@
+<div>
+  <checkboxinput
+    widget-form="form"
+    widget-name="showFishFamilies"
+    ng-model="data"
+    widget-disabled="isDisabled"
+    widget-label="Use subset of fish families for fish belt sample units in this project"
+    widget-change=""
+  />
+
+	<autocompleteinput
+    widget-label=""
+    widget-placeholder="Search for a fish family"
+    widget-disabled="isDisabled"
+    widget-form="form"
+    widget-name="selectedFishFamily"
+    ng-model="data"
+    widget-required="false"
+    widget-choices="fishFamilyChoices"
+    widget-callback="addFishFamily()"
+  />
+  <div class="dd">
+    <ul ng-if="record.fishFamilies" class="dd-list">
+      <li class="dd-item" ng-repeat="fishFamily in record.fishFamilies track by $index"
+        ><span class="cursor-pointer" ng-click="removeFishFamily($index)"><i class="fa fa-times"/></span> {{ fishFamilyLookup[fishFamily].name }} </li>
+    </ul>
+  </div>
+</div>
