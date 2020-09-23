@@ -17,22 +17,25 @@ angular.module('app.project').directive('fishsubsetInput', [
         const initFishSubsetProperty = function(project) {
           project.data = project.data || {};
           project.data.settings = project.data.settings || {};
-          project.data.settings.fishFamilies =
-            project.data.settings.fishFamilies || [];
+          project.data.settings.fishFamilySubset =
+            project.data.settings.fishFamilySubset || [];
         };
 
         scope.addFishFamily = function() {
           initFishSubsetProperty(scope.project);
 
           if (
-            scope.project.data.settings.fishFamilies.indexOf(
+            scope.project.data.settings.fishFamilySubset.indexOf(
               scope.data.selectedFishFamily
             ) === -1
           ) {
-            scope.project.data.settings.fishFamilies.push(
+            scope.project.data.settings.fishFamilySubset.push(
               scope.data.selectedFishFamily
             );
-            scope.project.data.settings.fishFamilies.sort(function(id1, id2) {
+            scope.project.data.settings.fishFamilySubset.sort(function(
+              id1,
+              id2
+            ) {
               if (
                 scope.fishFamilyLookup[id1].name >
                 scope.fishFamilyLookup[id2].name
@@ -53,7 +56,7 @@ angular.module('app.project').directive('fishsubsetInput', [
 
         scope.removeFishFamily = function(index) {
           initFishSubsetProperty(scope.project);
-          scope.project.data.settings.fishFamilies.splice(index, 1);
+          scope.project.data.settings.fishFamilySubset.splice(index, 1);
           formCtrl.$setDirty();
         };
 

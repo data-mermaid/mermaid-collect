@@ -14,6 +14,14 @@
         >{{attribute_id | matchchoice : fishAttributes : "display_name"}}</li>
       </ul>
     </li>
+    <li ng-if="validationKeys.indexOf('validate_fish_family_subset') !== -1">
+      {{record.validations.results.obs_belt_fishes.validate_fish_family_subset.message}}
+      <ul class="validation-message-list">
+        <li ng-repeat="fish_family_name in record.validations.results.obs_belt_fishes.validate_fish_family_subset.data | limitTo: 5"
+        >{{fish_family_name}}</li>
+        <li ng-if="record.validations.results.obs_belt_fishes.validate_fish_family_subset.data.length > 5">...to many to list...</li>
+      </ul>
+    </li>
   </ul>
 </div>
 <div class="alert alert-warning">This issue is related to more than one field and must be addressed in the form.</div>

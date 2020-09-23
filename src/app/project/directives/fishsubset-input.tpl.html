@@ -20,7 +20,7 @@
     />
     <div class="dd">
       <ul class="dd-list">
-        <li class="dd-item" ng-show="fishFamilyLookup[fishFamily].name" ng-repeat="fishFamily in project.data.settings.fishFamilies track by $index"
+        <li class="dd-item" ng-show="fishFamilyLookup[fishFamily].name" ng-repeat="fishFamily in project.data.settings.fishFamilySubset track by $index"
           ><span class="cursor-pointer" ng-click="removeFishFamily($index)"><i class="fa fa-times"/></span> {{ fishFamilyLookup[fishFamily].name }} </li>
       </ul>
     </div>
