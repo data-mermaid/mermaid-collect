@@ -275,6 +275,11 @@ angular.module('app.project').directive('obsBeltFishList', [
           scope.stopEditing();
         });
 
+        scope.switchBackToSelect = function(obs) {
+          obs.switchBack = false;
+          obs.size = undefined;
+        };
+
         scope.$watch(
           'fishsizebin',
           function() {
@@ -308,6 +313,18 @@ angular.module('app.project').directive('obsBeltFishList', [
                 }
               }
               obs.size_bin = bin_val;
+            });
+          },
+          true
+        );
+
+        scope.$watch(
+          'obsBeltFishes',
+          function(val) {
+            _.each(val, function(obs) {
+              if (obs.size >= 50) {
+                obs.switchBack = true;
+              }
             });
           },
           true

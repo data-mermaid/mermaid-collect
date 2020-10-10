@@ -142,9 +142,10 @@
             class="obs-edit-validation-tooltip"
           ></obs-model-validation-tooltip>
         </td>
-        <td ng-if="fishsize_choices[fishsizebin].length > 0">
+        <td ng-if="fishsize_choices[fishsizebin].length > 0" class="fish-size-table-cell">
           <div
-            ng-if="!obs.size || obs.size < 50"
+            ng-if="(!obs.size || obs.size < 50) && !obs.switchBack"
+            ng-style="{'min-width':'200px'}"
             ddlinput
             widget-disabled="isDisabled"
             widget-form="form"
@@ -159,7 +160,7 @@
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <div
-            ng-if="obs.size >= 50"
+            ng-if="obs.size >= 50 || obs.switchBack"
             numberinput
             widget-disabled="isDisabled"
             widget-form="form"
@@ -173,7 +174,9 @@
             widget-validators="decimal='5:1',minvalue='0'"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
-
+          <div class="switch-icon-style" title="Switch back to selection" ng-if="obs.switchBack" ng-click="switchBackToSelect(obs)">
+            <i class="fa fa-exchange " ></i>
+          </div>
           <obs-model-validation-tooltip
             requiresval
             minvalue='0:t'
