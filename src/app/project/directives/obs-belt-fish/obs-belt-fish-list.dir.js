@@ -51,6 +51,7 @@ angular.module('app.project').directive('obsBeltFishList', [
         scope.editableObservationIndex = null;
         scope.validator = ValidatorService;
         scope.widthValueLookup = {};
+        scope.otherFishChoiceOption = { size: '50+' };
         TransectService.getWidthValueLookup().then(function(lookup) {
           scope.widthValueLookup = lookup;
         });

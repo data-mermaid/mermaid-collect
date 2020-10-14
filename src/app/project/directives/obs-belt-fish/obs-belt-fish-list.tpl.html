@@ -142,7 +142,7 @@
             class="obs-edit-validation-tooltip"
           ></obs-model-validation-tooltip>
         </td>
-        <td ng-if="fishsize_choices[fishsizebin].length > 0" class="fish-size-table-cell">
+        <td ng-if="fishsize_choices[fishsizebin].length > 0">
           <div
             ng-if="(!obs.size || obs.size < 50) && !obs.switchBack"
             ng-style="{'min-width':'200px'}"
@@ -160,6 +160,15 @@
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <div
+            ng-if="obs.switchBack"
+            textinput
+            widget-form="form"
+            widget-name="size"
+            ng-model="otherFishChoiceOption"
+            widget-disabled="true"
+          >
+          </div>
+          <div
             ng-if="obs.size >= 50 || obs.switchBack"
             numberinput
             widget-disabled="isDisabled"
@@ -174,8 +183,8 @@
             widget-validators="decimal='5:1',minvalue='0'"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
-          <div class="switch-icon-style" title="Switch back to selection" ng-if="obs.switchBack" ng-click="switchBackToSelect(obs)">
-            <i class="fa fa-exchange " ></i>
+          <div class="reset-selection" title="Switch back to selection" ng-if="obs.switchBack" ng-click="switchBackToSelect(obs)">
+            <i class="fa fa-undo" ></i><span ng-style="{'margin-left':'5px'}">Reset size selection</span>
           </div>
           <obs-model-validation-tooltip
             requiresval

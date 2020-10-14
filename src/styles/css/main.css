@@ -1619,11 +1619,6 @@ table.greyGridTable tbody td:first-child {
   padding-left: 18px;
 }
 
-.fish-size-table-cell {
-  display: flex;
-  justify-content: center;
-}
-
-.switch-icon-style {
-  margin: 13px 0 0 15px;
+.reset-selection {
+  float: left;
 }
