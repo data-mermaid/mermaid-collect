@@ -279,6 +279,18 @@ angular.module('app.project').directive('obsBeltFishList', [
           scope.stopEditing();
         });
 
+        scope.handleFishGroupChange = function(obs) {
+          if (obs.changeInput) {
+            obs.size = obs.alt_size;
+            obs.changeInput = false;
+          } else if (obs.size >= 50) {
+            obs.alt_size = obs.size;
+            obs.changeInput = true;
+          } else {
+            obs.alt_size = obs.size;
+          }
+        };
+
         scope.$watch(
           'fishsizebin',
           function() {
@@ -319,13 +331,12 @@ angular.module('app.project').directive('obsBeltFishList', [
 
         scope.$watch('obsBeltFishes', function(val) {
           val.map(fish => {
-            if (fish.size >= 50) {
-              fish.selectedGroup = 2;
-            } else {
-              fish.selectedGroup = 1;
+            if (!fish.size) {
+              fish.changeInput = false;
             }
           });
         });
+
         loadFishAttributesLookup();
       }
     };
