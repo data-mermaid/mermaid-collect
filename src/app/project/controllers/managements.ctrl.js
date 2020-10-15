@@ -33,8 +33,6 @@ angular.module('app.project').controller('ManagementsCtrl', [
     const project_id = $stateParams.project_id;
     const complianceChoices = choices.managementcompliances;
 
-    const getCompliance = function(item) {};
-
     $scope.isDisabled =
       !projectProfile ||
       (projectProfile.is_admin !== true &&
