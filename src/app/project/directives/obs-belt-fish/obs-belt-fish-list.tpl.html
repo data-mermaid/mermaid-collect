@@ -144,7 +144,20 @@
         </td>
         <td ng-if="fishsize_choices[fishsizebin].length > 0">
           <div
-            ng-if="!obs.size || obs.size < 50"
+            ddlinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="selectedChoice"
+            id="size_{{getHashkey(obs)}}"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-choices="dup_fishchoices"
+            widget-float-value="true"
+            ng-keydown="navInputs($event, obs, false, $index)"
+          ></div>
+          <div
+            ng-if="obs.selectedChoice === 1"
             ddlinput
             widget-disabled="isDisabled"
             widget-form="form"
@@ -156,10 +169,11 @@
             widget-required-hide="true"
             widget-choices="fishsize_choices[fishsizebin]"
             widget-float-value="true"
+            widget-reduce="true"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <div
-            ng-if="obs.size >= 50"
+            ng-if="obs.selectedChoice === 2"
             numberinput
             widget-disabled="isDisabled"
             widget-form="form"

@@ -51,6 +51,11 @@ angular.module('app.project').directive('obsBeltFishList', [
         scope.editableObservationIndex = null;
         scope.validator = ValidatorService;
         scope.widthValueLookup = {};
+        scope.dub_obs = { size: 1 };
+        scope.dup_fishchoices = [
+          { id: 1, name: '< 50' },
+          { id: 2, name: '50 +' }
+        ];
         TransectService.getWidthValueLookup().then(function(lookup) {
           scope.widthValueLookup = lookup;
         });
@@ -313,6 +318,15 @@ angular.module('app.project').directive('obsBeltFishList', [
           true
         );
 
+        scope.$watch('obsBeltFishes', function(val) {
+          val.map(fish => {
+            if (fish.size >= 50) {
+              fish.selectedChoice = 2;
+            } else {
+              fish.selectedChoice = 1;
+            }
+          });
+        });
         loadFishAttributesLookup();
       }
     };
