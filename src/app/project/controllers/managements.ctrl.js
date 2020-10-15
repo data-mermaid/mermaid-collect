@@ -2,6 +2,7 @@ angular.module('app.project').controller('ManagementsCtrl', [
   '$scope',
   '$state',
   '$stateParams',
+  '$filter',
   'OfflineTables',
   'ManagementService',
   'PaginatedOfflineTableWrapper',
@@ -10,10 +11,12 @@ angular.module('app.project').controller('ManagementsCtrl', [
   'ValidateDuplicationService',
   'project',
   'projectProfile',
+  'choices',
   function(
     $scope,
     $state,
     $stateParams,
+    $filter,
     OfflineTables,
     ManagementService,
     PaginatedOfflineTableWrapper,
@@ -21,12 +24,16 @@ angular.module('app.project').controller('ManagementsCtrl', [
     ValidateSubmitService,
     ValidateDuplicationService,
     project,
-    projectProfile
+    projectProfile,
+    choices
   ) {
     'use strict';
 
     let managementRecordsCount = 0;
     const project_id = $stateParams.project_id;
+    const complianceChoices = choices.managementcompliances;
+
+    const getCompliance = function(item) {};
 
     $scope.isDisabled =
       !projectProfile ||
@@ -67,6 +74,14 @@ angular.module('app.project').controller('ManagementsCtrl', [
             '\', id: record.id})">{{record.name}}</a>'
         },
         { name: 'est_year', display: 'Year Est.', sortable: true },
+        {
+          name: 'compliance',
+          display: 'Compliance',
+          sortable: true,
+          formatter: function(v) {
+            return $filter('matchchoice')(v, complianceChoices);
+          }
+        },
         {
           name: 'open_access',
           display: 'Open Access',
