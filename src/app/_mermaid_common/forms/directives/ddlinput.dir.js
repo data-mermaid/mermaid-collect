@@ -64,7 +64,7 @@ angular
           widgetChange: '&',
           widgetType: '@',
           widgetName: '@',
-          widgetReduce: '=?'
+          widgetReduceLast: '=?'
         },
         templateUrl: 'app/_mermaid_common/forms/directives/ddlinput.tpl.html',
 
@@ -120,7 +120,7 @@ angular
             return null;
           };
 
-          if (scope.widgetReduce) {
+          if (scope.widgetReduceLast) {
             const newChoices = scope.widgetChoices.slice(0, -1);
             scope.widgetChoices = newChoices;
           }

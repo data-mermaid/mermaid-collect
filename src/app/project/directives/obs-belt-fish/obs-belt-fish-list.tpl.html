@@ -147,17 +147,17 @@
             ddlinput
             widget-disabled="isDisabled"
             widget-form="form"
-            widget-name="selectedChoice"
+            widget-name="selectedGroup"
             id="size_{{getHashkey(obs)}}"
             ng-model="obs"
             widget-required="true"
             widget-required-hide="true"
-            widget-choices="dup_fishchoices"
+            widget-choices="fish_group_sizes"
             widget-float-value="true"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <div
-            ng-if="obs.selectedChoice === 1"
+            ng-if="obs.selectedGroup === 1"
             ddlinput
             widget-disabled="isDisabled"
             widget-form="form"
@@ -169,11 +169,11 @@
             widget-required-hide="true"
             widget-choices="fishsize_choices[fishsizebin]"
             widget-float-value="true"
-            widget-reduce="true"
+            widget-reduce-last="true"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <div
-            ng-if="obs.selectedChoice === 2"
+            ng-if="obs.selectedGroup === 2"
             numberinput
             widget-disabled="isDisabled"
             widget-form="form"
@@ -187,7 +187,6 @@
             widget-validators="decimal='5:1',minvalue='0'"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
-
           <obs-model-validation-tooltip
             requiresval
             minvalue='0:t'

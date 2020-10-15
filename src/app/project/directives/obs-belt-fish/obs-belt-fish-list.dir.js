@@ -51,8 +51,7 @@ angular.module('app.project').directive('obsBeltFishList', [
         scope.editableObservationIndex = null;
         scope.validator = ValidatorService;
         scope.widthValueLookup = {};
-        scope.dub_obs = { size: 1 };
-        scope.dup_fishchoices = [
+        scope.fish_group_sizes = [
           { id: 1, name: '< 50' },
           { id: 2, name: '50 +' }
         ];
@@ -321,9 +320,9 @@ angular.module('app.project').directive('obsBeltFishList', [
         scope.$watch('obsBeltFishes', function(val) {
           val.map(fish => {
             if (fish.size >= 50) {
-              fish.selectedChoice = 2;
+              fish.selectedGroup = 2;
             } else {
-              fish.selectedChoice = 1;
+              fish.selectedGroup = 1;
             }
           });
         });
