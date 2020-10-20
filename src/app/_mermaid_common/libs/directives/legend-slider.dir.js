@@ -4,7 +4,6 @@ angular.module('mermaid.libs').directive('legendSlider', [
     'use strict';
     return {
       restrict: 'EA',
-      scope: {},
       templateUrl: 'app/_mermaid_common/libs/directives/legend-slider.tpl.html',
       link: function(scope) {
         scope.toggleNav = true;

@@ -55,14 +55,20 @@
 
                 <div class="col-sm-1"></div>
 
-                <div class="col-xs-12 col-sm-7">
-                  <div
-                    geopoint
-                    widget-disabled="isDisabled"
-                    widget-form="form"
-                    widget-lat="site.latitude"
-                    widget-lng="site.longitude"
-                  ></div>
+                <div class="col-xs-12 col-sm-7" style="border: 1px solid grey">
+                  <div class="widget-body map-body">
+                    <div
+                      geopoint-aca-map
+                      class="row aca-map"
+                      style="height: 400px;"
+                      map-style="mapStyle"
+                      widget-disabled="isDisabled"
+                      widget-form="form"
+                      widget-lat="site.latitude"
+                      widget-lng="site.longitude"
+                    >
+                  </div>
+                  <legend-slider></legend-slider>
                 </div>
               </div>
 
@@ -103,22 +109,6 @@
 
             <div class="clearfix"></div>
 
-            <div class="col-xs-12 col-sm-7">
-              <div class="widget-body map-body">
-                <div
-                  geopoint-aca-map
-                  class="row aca-map"
-                  style="height: 400px;"
-                  widget-disabled="isDisabled"
-                  widget-form="form"
-                  widget-lat="site.latitude"
-                  widget-lng="site.longitude"
-                ></div>
-              </div>
-            </div>
-            
-            <div class="clearfix"></div>
-            
             <div
               ddlinput
               widget-disabled="isDisabled"
@@ -145,7 +135,7 @@
               widget-form="form"
               widget-label="Reef Zone"
               widget-name="reef_zone"
-              ng-model="site"
+              ng-model="site"  
               widget-required="true"
               widget-choices="choices.reefzones"
             ></div>
