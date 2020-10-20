@@ -7,13 +7,11 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
     return {
       restrict: 'EA',
       scope: {
-        mapStyle: '=',
         widgetForm: '=',
         widgetLat: '=',
         widgetLng: '='
       },
       link: function(scope, element) {
-        console.log('geopoint scope ', scope);
         scope.markerLat = null;
         scope.markerLng = null;
         const recordMarker = new mapboxgl.Marker();
@@ -109,7 +107,7 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
                 1,
                 ['==', ['get', 'class_name'], 'Reef Slope'],
                 1,
-                ['==', ['get', 'class_name'], 'Shadow Lagoon'],
+                ['==', ['get', 'class_name'], 'Shallow Lagoon'],
                 1,
                 ['==', ['get', 'class_name'], 'Sheltered Reef Slope'],
                 1,
@@ -222,7 +220,7 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
                 'rgb(97, 66, 114)',
                 ['==', ['get', 'class_name'], 'Reef Slope'],
                 'rgb(40, 132, 113)',
-                ['==', ['get', 'class_name'], 'Shadow Lagoon'],
+                ['==', ['get', 'class_name'], 'Shallow Lagoon'],
                 'rgb(119, 208, 252)',
                 ['==', ['get', 'class_name'], 'Sheltered Reef Slope'],
                 'rgb(16, 189, 166)',

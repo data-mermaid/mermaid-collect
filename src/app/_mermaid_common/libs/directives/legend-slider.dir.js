@@ -26,7 +26,7 @@ angular.module('mermaid.libs').directive('legendSlider', [
           Plateau: 'rgb(205, 104, 18)',
           'Reef Crest': 'rgb(97, 66, 114)',
           'Reef Slope': 'rgb(40, 132, 113)',
-          'Shadow Lagoon': 'rgb(119, 208, 252)',
+          'Shallow Lagoon': 'rgb(119, 208, 252)',
           'Sheltered Reef Slope': 'rgb(16, 189, 166)',
           'Small Reef': 'rgb(230, 145, 19)',
           'Terrestrial Reef Flat': 'rgb(251, 222, 251)'
