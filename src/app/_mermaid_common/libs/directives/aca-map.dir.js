@@ -121,6 +121,7 @@ angular.module('mermaid.libs').directive('acaMap', [
           AcaMapService.setBasicMapControl(map);
           AcaMapService.loadACALayers(map);
           AcaMapService.loadMapMarkers(map);
+          AcaMapService.setAllLayersPaintProperty(map);
 
           map.on('wheel', event => {
             if (event.originalEvent.ctrlKey) {

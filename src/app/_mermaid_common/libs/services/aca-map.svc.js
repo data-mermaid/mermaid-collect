@@ -247,12 +247,33 @@ angular.module('mermaid.libs').service('AcaMapService', [
       });
     };
 
+    const setAllLayersPaintProperty = function(map) {
+      map.setPaintProperty(
+        'atlas-planet',
+        'raster-opacity',
+        localStorageService.get('coral_mosaic')
+      );
+
+      map.setPaintProperty(
+        'atlas-geomorphic',
+        'fill-opacity',
+        applyOpacityExpression(localStorageService.get('geomorphic_legend'))
+      );
+
+      map.setPaintProperty(
+        'atlas-benthic',
+        'fill-opacity',
+        applyOpacityExpression(localStorageService.get('benthic_legend'))
+      );
+    };
+
     return {
       satelliteBaseMap: satelliteBaseMap,
       applyOpacityExpression: applyOpacityExpression,
       setBasicMapControl: setBasicMapControl,
       loadMapMarkers: loadMapMarkers,
-      loadACALayers: loadACALayers
+      loadACALayers: loadACALayers,
+      setAllLayersPaintProperty: setAllLayersPaintProperty
     };
   }
 ]);

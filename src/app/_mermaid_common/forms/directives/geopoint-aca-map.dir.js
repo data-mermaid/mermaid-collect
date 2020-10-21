@@ -34,6 +34,7 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
         map.on('load', function() {
           AcaMapService.setBasicMapControl(map);
           AcaMapService.loadACALayers(map);
+          AcaMapService.setAllLayersPaintProperty(map);
 
           scope.$watchGroup(
             ['widgetLat', 'widgetLng', 'map'],
