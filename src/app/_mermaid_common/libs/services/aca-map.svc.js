@@ -1,3 +1,5 @@
+/* globals mapboxgl */
+
 angular.module('mermaid.libs').service('AcaMapService', [
   'localStorageService',
   function(localStorageService) {
