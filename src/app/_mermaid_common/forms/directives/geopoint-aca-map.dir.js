@@ -257,14 +257,13 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
                 (scope.markerLat && scope.markerLat !== n[0]) ||
                 (scope.markerLng && scope.markerLng !== n[1])
               ) {
-                console.log('if found different => remove');
                 recordMarker.remove();
               }
 
               recordMarker.setLngLat([n[1], n[0]]).addTo(map);
               map.jumpTo({
                 center: [n[1], n[0]],
-                zoom: 12
+                zoom: defaultZoom
               });
               scope.markerLat = n[0];
               scope.markerLng = n[1];
