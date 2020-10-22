@@ -15,7 +15,7 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
       link: function(scope, element) {
         scope.markerLat = null;
         scope.markerLng = null;
-        const recordMarker = new mapboxgl.Marker();
+        const recordMarker = new mapboxgl.Marker({ draggable: true });
 
         const defaultCenter = [0, 0];
         const defaultZoom = 11;
@@ -55,6 +55,12 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
               }
 
               recordMarker.setLngLat([n[1], n[0]]).addTo(map);
+              recordMarker.on('dragend', function() {
+                const lngLat = recordMarker.getLngLat();
+                scope.widgetLat = lngLat.lat;
+                scope.widgetLng = lngLat.lng;
+              });
+
               map.jumpTo({
                 center: [n[1], n[0]],
                 zoom: defaultZoom
