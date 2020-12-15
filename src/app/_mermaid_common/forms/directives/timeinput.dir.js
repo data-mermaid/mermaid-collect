@@ -90,6 +90,10 @@ angular
           scope.widgetRequired = utils.truthy(scope.widgetRequired);
           scope.widgetDisabled = utils.truthy(scope.widgetDisabled);
 
+          if (scope.ngModel.sample_time === null) {
+            scope.ngModel.sample_time = 'none';
+          }
+
           if (attrs.widgetIf == null) {
             scope.widgetIf = true;
           }
