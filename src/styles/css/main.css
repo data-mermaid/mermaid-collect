@@ -881,7 +881,7 @@ btn > button {
 .modal-trigger-on__wide {
   width: calc(100% - 10px);
 }
-.modal-buttons {
+.modal-button {
   margin-left: 5px;
   margin-top: 5px;
   float: left;

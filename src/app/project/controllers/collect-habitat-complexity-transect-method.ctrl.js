@@ -1,6 +1,7 @@
 angular
   .module('app.project')
   .controller('CollectHabitatComplexityTransectMethodCtrl', [
+    'HABITAT_COMPLEXITY_TRANSECT_TYPE',
     '$controller',
     '$scope',
     'ProjectService',
@@ -10,6 +11,7 @@ angular
     'projectProfile',
     'transectLookups',
     function(
+      HABITAT_COMPLEXITY_TRANSECT_TYPE,
       $controller,
       $scope,
       ProjectService,
@@ -39,7 +41,7 @@ angular
       });
 
       $ctrl.state = 'app.project.records.collecthabitatcomplexity';
-      $ctrl.protocol = ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE;
+      $ctrl.protocol = HABITAT_COMPLEXITY_TRANSECT_TYPE;
       $scope.wizardConfig = HabitatComplexityWizardConfig;
       $scope.protocolSampleUnitDetailsForm =
         'app/project/partials/forms/habitatcomplexityprotocol.transect.form.tpl.html';

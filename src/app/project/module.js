@@ -3,6 +3,12 @@
 angular
   .module('app.project', ['ui.router'])
 
+  .constant('FISH_BELT_TRANSECT_TYPE', 'fishbelt')
+  .constant('BENTHIC_LIT_TRANSECT_TYPE', 'benthiclit')
+  .constant('BENTHIC_PIT_TRANSECT_TYPE', 'benthicpit')
+  .constant('HABITAT_COMPLEXITY_TRANSECT_TYPE', 'habitatcomplexity')
+  .constant('BLEACHING_QC_QUADRAT_TYPE', 'bleachingqc')
+
   .config(function($stateProvider) {
     const _checkUuid = function($q, utils, id) {
       var deferred = $q.defer();
