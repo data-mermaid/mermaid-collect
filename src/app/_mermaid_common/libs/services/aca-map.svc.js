@@ -119,7 +119,7 @@ angular.module('mermaid.libs').service('AcaMapService', [
 
     const applyOpacityExpression = function(array) {
       if (array === null) {
-        return false;
+        return;
       }
 
       const arrayExp = array.flatMap(item => {
