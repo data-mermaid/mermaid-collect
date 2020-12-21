@@ -191,24 +191,20 @@ angular.module('mermaid.libs').directive('acaMap', [
           map.addSource('atlas-planet', {
             type: 'raster',
             tiles: [
-              'https://integration.allencoralatlas.org/tiles/planet/visual/2019/{z}/{x}/{y}'
+              'https://allencoralatlas.org/tiles/planet/visual/2019/{z}/{x}/{y}'
             ]
           });
 
           map.addSource('atlas-benthic', {
             type: 'vector',
-            tiles: [
-              'https://integration.allencoralatlas.org/tiles/benthic/{z}/{x}/{y}'
-            ],
+            tiles: ['https://allencoralatlas.org/tiles/benthic/{z}/{x}/{y}'],
             minZoom: 0,
             maxZoom: 22
           });
 
           map.addSource('atlas-geomorphic', {
             type: 'vector',
-            tiles: [
-              'https://integration.allencoralatlas.org/tiles/geomorphic/{z}/{x}/{y}'
-            ],
+            tiles: ['https://allencoralatlas.org/tiles/geomorphic/{z}/{x}/{y}'],
             minZoom: 0,
             maxZoom: 22
           });
