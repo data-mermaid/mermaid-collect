@@ -356,14 +356,13 @@ angular.module('mermaid.libs').service('utils', [
         }
       },
       parseSearchString: function(s) {
-        const regex = /"(.*?)"|(\w+)/;
+        const regex = /"(.*?)"|([a-zA-Z0-9_,;\-\+]+)|(\|)/;
         const parts = s.split(regex);
         const searchItems = [];
         for (let n = 0; n < parts.length; n++) {
           let item = parts[n];
 
           if (item == null || item.trim().length === 0) continue;
-
           if (item.startsWith('"')) {
             item = item.substr(1, item.length - 2);
           }
