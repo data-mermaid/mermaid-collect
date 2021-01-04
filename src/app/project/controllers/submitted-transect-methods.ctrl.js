@@ -122,7 +122,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           name: 'depth',
           display: 'Depth (m)',
           sortable: true,
-          sort_by: ['depth']
+          sort_by: ['sample_unit_method_depth']
         },
         {
           name: 'sample_date',
