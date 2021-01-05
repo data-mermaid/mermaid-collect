@@ -1,4 +1,5 @@
 angular.module('app.project').controller('CollectBeltFishTransectMethodCtrl', [
+  'FISH_BELT_TRANSECT_TYPE',
   '$controller',
   '$scope',
   'ProjectService',
@@ -9,6 +10,7 @@ angular.module('app.project').controller('CollectBeltFishTransectMethodCtrl', [
   'projectProfile',
   'transectLookups',
   function(
+    FISH_BELT_TRANSECT_TYPE,
     $controller,
     $scope,
     ProjectService,
@@ -36,7 +38,7 @@ angular.module('app.project').controller('CollectBeltFishTransectMethodCtrl', [
     $controller('CollectBaseProtocol', { $scope: $scope, $ctrl: $ctrl });
 
     $ctrl.state = 'app.project.records.collectfishbelt';
-    $ctrl.protocol = ProjectService.FISH_BELT_TRANSECT_TYPE;
+    $ctrl.protocol = FISH_BELT_TRANSECT_TYPE;
     $scope.wizardConfig = FishBeltWizardConfig;
     Object.defineProperty(fishAttributes, 'filtered', {
       get() {

@@ -1,4 +1,9 @@
 angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
+  'FISH_BELT_TRANSECT_TYPE',
+  'BENTHIC_LIT_TRANSECT_TYPE',
+  'BENTHIC_PIT_TRANSECT_TYPE',
+  'HABITAT_COMPLEXITY_TRANSECT_TYPE',
+  'BLEACHING_QC_QUADRAT_TYPE',
   '$rootScope',
   '$scope',
   '$stateParams',
@@ -9,6 +14,11 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
   'Button',
   'projectProfile',
   function(
+    FISH_BELT_TRANSECT_TYPE,
+    BENTHIC_LIT_TRANSECT_TYPE,
+    BENTHIC_PIT_TRANSECT_TYPE,
+    HABITAT_COMPLEXITY_TRANSECT_TYPE,
+    BLEACHING_QC_QUADRAT_TYPE,
     $rootScope,
     $scope,
     $stateParams,
@@ -33,11 +43,11 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       !projectProfile || projectProfile.is_admin !== true;
 
     const protocolMethods = [
-      ProjectService.FISH_BELT_TRANSECT_TYPE,
-      ProjectService.BENTHIC_LIT_TRANSECT_TYPE,
-      ProjectService.BENTHIC_PIT_TRANSECT_TYPE,
-      ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
-      ProjectService.BLEACHING_QC_QUADRAT_TYPE
+      FISH_BELT_TRANSECT_TYPE,
+      BENTHIC_LIT_TRANSECT_TYPE,
+      BENTHIC_PIT_TRANSECT_TYPE,
+      HABITAT_COMPLEXITY_TRANSECT_TYPE,
+      BLEACHING_QC_QUADRAT_TYPE
     ];
 
     const downloadFieldReport = function(reportProtocol, method) {
@@ -112,7 +122,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
           name: 'depth',
           display: 'Depth (m)',
           sortable: true,
-          sort_by: ['depth']
+          sort_by: ['sample_unit_method_depth']
         },
         {
           name: 'sample_date',
@@ -312,13 +322,16 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       }
     });
 
-    _.each(transectReports, function({ name, method, reportProtocol }) {
+    _.each(transectReports, function(transectReport) {
       const btn = new Button();
-      btn.name = name;
+      btn.name = transectReport.name;
       btn.onlineOnly = true;
       btn.enabled = true;
       btn.click = function() {
-        downloadFieldReport(reportProtocol, method);
+        downloadFieldReport(
+          transectReport.reportProtocol,
+          transectReport.method
+        );
       };
       buttons.push(btn);
     });

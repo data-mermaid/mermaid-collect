@@ -52,6 +52,19 @@
     relatedColumns: ['name']
   }
 
+  options.recordFormatter(function):
+
+    Function, if defined, is run for every record returned by table.filter(..) or table.get(..)
+  
+    Function Args:
+      record: OfflineRecord
+    Function Return:
+      OfflineRecord
+
+    options.recordFormatter: function(record) {
+    
+    }
+
 */
 
 // $watch Events
@@ -230,6 +243,7 @@ angular.module('mermaid.libs').factory('OfflineTable', [
         var tableStructure = options.offlineTableStructure || { id: String };
 
         var tableJoinSchema = parseJoinSchema(options.joinDefn || {});
+        const recordFormatter = options.recordFormatter || null;
         var deleteRecordAfterSync = options.deleteRecordAfterSync || false;
 
         // Ensure that primary key is included in indices.
@@ -520,6 +534,13 @@ angular.module('mermaid.libs').factory('OfflineTable', [
 
           return self.table.toArray(function(arr) {
             var joinPromises = [];
+
+            // Format records before in case they
+            // are used in the join.
+            if (recordFormatter) {
+              arr = _.map(arr, recordFormatter);
+            }
+
             if (tableJoinSchema) {
               _.each(tableJoinSchema, function(schema, key) {
                 if (
@@ -583,6 +604,13 @@ angular.module('mermaid.libs').factory('OfflineTable', [
 
             if (tableJoinSchema && record != null) {
               var joinPromises = [];
+
+              // Format record before in case
+              // it's used in the join.
+              if (recordFormatter) {
+                record = recordFormatter(record);
+              }
+
               _.each(tableJoinSchema, function(schema, key) {
                 if (schema.relatedRecords) {
                   joinPromises.push(
@@ -644,19 +672,6 @@ angular.module('mermaid.libs').factory('OfflineTable', [
               console.error('Create OfflineRecord:', err);
             });
         };
-
-        // Add remote record directly to local database, creates
-        // OfflineRecord but doesn't try to remotely sync.  If
-        // record already exists locally the record is overwritten.
-        // Example:
-        //
-        // var db = OfflineTable(APP_CONFIG.localDbName, 'https://test.com/records/');
-        // $http.get(offlinedb.remote_url).then(function(resp) {
-        //   angular.forEach(resp.data.results, function(rec) {
-        //     db.addRemoteRecord(rec);
-        //   });
-        // });
-        //
 
         self.addRemoteRecords = function(records) {
           if (!angular.isArray(records)) {
