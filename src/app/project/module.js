@@ -298,7 +298,8 @@ angular
         },
         resolve: {
           project: _getProject,
-          projectProfile: _getMyProjectProfile
+          projectProfile: _getMyProjectProfile,
+          choices: _getChoices
         }
       })
       .state('app.project.managements.management', {
