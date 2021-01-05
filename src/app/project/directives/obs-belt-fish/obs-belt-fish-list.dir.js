@@ -329,14 +329,6 @@ angular.module('app.project').directive('obsBeltFishList', [
           true
         );
 
-        scope.$watch('obsBeltFishes', function(val) {
-          val.map(fish => {
-            if (!fish.size) {
-              fish.changeInput = false;
-            }
-          });
-        });
-
         loadFishAttributesLookup();
       }
     };
