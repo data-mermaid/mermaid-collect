@@ -51,6 +51,10 @@ angular.module('app.project').directive('obsBeltFishList', [
         scope.editableObservationIndex = null;
         scope.validator = ValidatorService;
         scope.widthValueLookup = {};
+        scope.fish_group_sizes = [
+          { id: 1, name: '< 50' },
+          { id: 2, name: '50 +' }
+        ];
         TransectService.getWidthValueLookup().then(function(lookup) {
           scope.widthValueLookup = lookup;
         });
@@ -274,6 +278,18 @@ angular.module('app.project').directive('obsBeltFishList', [
           }
           scope.stopEditing();
         });
+
+        scope.handleFishGroupChange = function(obs) {
+          if (obs.changeInput) {
+            obs.size = obs.alt_size;
+            obs.changeInput = false;
+          } else if (obs.size >= 50) {
+            obs.alt_size = obs.size;
+            obs.changeInput = true;
+          } else {
+            obs.alt_size = obs.size;
+          }
+        };
 
         scope.$watch(
           'fishsizebin',
