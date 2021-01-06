@@ -63,7 +63,8 @@ angular
           modalBodyTemplateUrl: '=?',
           widgetChange: '&',
           widgetType: '@',
-          widgetName: '@'
+          widgetName: '@',
+          widgetReduceLast: '=?'
         },
         templateUrl: 'app/_mermaid_common/forms/directives/ddlinput.tpl.html',
 
@@ -118,6 +119,11 @@ angular
             }
             return null;
           };
+
+          if (scope.widgetReduceLast) {
+            const newChoices = scope.widgetChoices.slice(0, -1);
+            scope.widgetChoices = newChoices;
+          }
 
           scope.updateChoices = function(id, name) {
             var entry = { id: id, name: name };

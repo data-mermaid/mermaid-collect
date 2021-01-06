@@ -1618,3 +1618,9 @@ table.greyGridTable tbody td:first-child {
 .padding-left-18 {
   padding-left: 18px;
 }
+
+.dd-item {
+  margin: 5px 0;
+  padding: 5px;
+  border: 1px solid #cccccc;
+}

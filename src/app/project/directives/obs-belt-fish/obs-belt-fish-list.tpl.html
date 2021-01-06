@@ -144,7 +144,22 @@
         </td>
         <td ng-if="fishsize_choices[fishsizebin].length > 0">
           <div
-            ng-if="!obs.size || obs.size < 50"
+            ng-if="obs.changeInput"
+            ddlinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="alt_size"
+            id="size_{{getHashkey(obs)}}"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-choices="fishsize_choices[fishsizebin]"
+            widget-float-value="true"
+            widget-change="handleFishGroupChange(obs)"
+            ng-keydown="navInputs($event, obs, false, $index)"
+          ></div>
+          <div
+            ng-if="!obs.changeInput"
             ddlinput
             widget-disabled="isDisabled"
             widget-form="form"
@@ -156,10 +171,11 @@
             widget-required-hide="true"
             widget-choices="fishsize_choices[fishsizebin]"
             widget-float-value="true"
+            widget-change="handleFishGroupChange(obs)"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <div
-            ng-if="obs.size >= 50"
+            ng-if="obs.alt_size >= 50"
             numberinput
             widget-disabled="isDisabled"
             widget-form="form"
@@ -173,7 +189,6 @@
             widget-validators="decimal='5:1',minvalue='0'"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
-
           <obs-model-validation-tooltip
             requiresval
             minvalue='0:t'

@@ -136,6 +136,12 @@
 					if (e.target.state === 'redundant') {
 						console.log('There\'s a new app :)');
 						window.mermaid.hasUpdates = true;
+						try {
+							localStorage.removeItem('mermaid.mermaid_submitted_transects');
+						}
+						catch(error) {
+							console.error(error);
+						}
 					}
 				};
 			}
