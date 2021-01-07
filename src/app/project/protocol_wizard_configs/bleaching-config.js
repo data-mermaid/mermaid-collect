@@ -1,6 +1,7 @@
 angular.module('app.project').service('BleachingWizardConfig', [
   '$stateParams',
   '$q',
+  '$filter',
   'BaseWizardConfig',
   'ValidateSubmitService',
   'OfflineCommonTables',
@@ -9,6 +10,7 @@ angular.module('app.project').service('BleachingWizardConfig', [
   function(
     $stateParams,
     $q,
+    $filter,
     BaseWizardConfig,
     ValidateSubmitService,
     OfflineCommonTables,
@@ -82,6 +84,38 @@ angular.module('app.project').service('BleachingWizardConfig', [
         },
         projectProfiles: function() {
           return TransectService.getProjectProfileChoices(projectId);
+        }
+      }
+    };
+
+    service.sample_time = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/sample_time.tpl.html',
+      ignoreButtonText: function(record) {
+        return $q.resolve(
+          'Leave Sample Time as ' +
+            _.get(record.data, 'quadrat_collection.sample_time', '')
+        );
+      },
+      resolve: {
+        sampleUnit: function() {
+          return $q.resolve('quadrat_collection');
+        }
+      }
+    };
+
+    service.depth = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/depth.tpl.html',
+      ignoreButtonText: function(record) {
+        var val = $filter('null_blank')(
+          _.get(record.data, 'quadrat_collection.depth')
+        );
+        return $q.resolve('Leave Depth as ' + val);
+      },
+      resolve: {
+        sampleUnit: function() {
+          return $q.resolve('quadrat_collection');
         }
       }
     };

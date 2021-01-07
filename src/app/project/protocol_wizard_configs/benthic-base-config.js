@@ -58,6 +58,38 @@ angular.module('app.project').service('BenthicBaseWizardConfig', [
       }
     };
 
+    service.sample_time = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/sample_time.tpl.html',
+      ignoreButtonText: function(record) {
+        return $q.resolve(
+          'Leave Sample Time as ' +
+            _.get(record.data, 'benthic_transect.sample_time', '')
+        );
+      },
+      resolve: {
+        sampleUnit: function() {
+          return $q.resolve('benthic_transect');
+        }
+      }
+    };
+
+    service.depth = {
+      templateUrl:
+        'app/project/protocol_wizard_configs/partials/depth.tpl.html',
+      ignoreButtonText: function(record) {
+        var val = $filter('null_blank')(
+          _.get(record.data, 'benthic_transect.depth')
+        );
+        return $q.resolve('Leave Depth as ' + val);
+      },
+      resolve: {
+        sampleUnit: function() {
+          return $q.resolve('benthic_transect');
+        }
+      }
+    };
+
     return service;
   }
 ]);

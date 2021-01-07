@@ -1,4 +1,9 @@
 angular.module('app.project').controller('CollectRecordsCtrl', [
+  'FISH_BELT_TRANSECT_TYPE',
+  'BENTHIC_LIT_TRANSECT_TYPE',
+  'BENTHIC_PIT_TRANSECT_TYPE',
+  'HABITAT_COMPLEXITY_TRANSECT_TYPE',
+  'BLEACHING_QC_QUADRAT_TYPE',
   '$state',
   '$stateParams',
   '$q',
@@ -15,6 +20,11 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'projectProfile',
   'choices',
   function(
+    FISH_BELT_TRANSECT_TYPE,
+    BENTHIC_LIT_TRANSECT_TYPE,
+    BENTHIC_PIT_TRANSECT_TYPE,
+    HABITAT_COMPLEXITY_TRANSECT_TYPE,
+    BLEACHING_QC_QUADRAT_TYPE,
     $state,
     $stateParams,
     $q,
@@ -58,11 +68,11 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     $scope.tableControl.isDisabled = $scope.isDisabled;
 
     const protocolMethods = [
-      ProjectService.FISH_BELT_TRANSECT_TYPE,
-      ProjectService.BENTHIC_LIT_TRANSECT_TYPE,
-      ProjectService.BENTHIC_PIT_TRANSECT_TYPE,
-      ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE,
-      ProjectService.BLEACHING_QC_QUADRAT_TYPE
+      FISH_BELT_TRANSECT_TYPE,
+      BENTHIC_LIT_TRANSECT_TYPE,
+      BENTHIC_PIT_TRANSECT_TYPE,
+      HABITAT_COMPLEXITY_TRANSECT_TYPE,
+      BLEACHING_QC_QUADRAT_TYPE
     ];
     const statusChoices = [null, 'ok', 'warning', 'error'];
 
@@ -79,7 +89,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     const sizeFormat = function(value) {
       let result = '-';
       const protocol = value.protocol;
-      if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
+      if (protocol === FISH_BELT_TRANSECT_TYPE) {
         const width = _.get(value, 'fishbelt_transect.width');
         const widthFilter = $filter('matchchoice')(
           width,
@@ -93,7 +103,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           result = length ? length : widthFilter.slice(0, -1);
         }
         return result;
-      } else if (protocol === ProjectService.BLEACHING_QC_QUADRAT_TYPE) {
+      } else if (protocol === BLEACHING_QC_QUADRAT_TYPE) {
         result = _.get(value, 'quadrat_collection.quadrat_size') || '-';
         return result + 'm<sup>2</sup>';
       }
@@ -175,13 +185,13 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             let val,
               label_val = '';
             let protocol = v.protocol;
-            if (protocol === ProjectService.FISH_BELT_TRANSECT_TYPE) {
+            if (protocol === FISH_BELT_TRANSECT_TYPE) {
               val = _.get(v, 'fishbelt_transect.number', '') || '';
               label_val = _.get(v, 'fishbelt_transect.label', '') || '';
             } else if (
-              protocol === ProjectService.BENTHIC_LIT_TRANSECT_TYPE ||
-              protocol === ProjectService.BENTHIC_PIT_TRANSECT_TYPE ||
-              protocol === ProjectService.HABITAT_COMPLEXITY_TRANSECT_TYPE
+              protocol === BENTHIC_LIT_TRANSECT_TYPE ||
+              protocol === BENTHIC_PIT_TRANSECT_TYPE ||
+              protocol === HABITAT_COMPLEXITY_TRANSECT_TYPE
             ) {
               val = _.get(v, 'benthic_transect.number', '') || '';
               label_val = _.get(v, 'benthic_transect.label', '') || '';
@@ -204,7 +214,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
           }
         },
         {
-          name: 'data.sample_event.depth',
+          name: '$$sample_unit.depth',
           display: 'Depth (m)',
           sortable: true
         },
