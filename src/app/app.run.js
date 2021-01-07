@@ -102,6 +102,23 @@
 
     $transitions.onError({}, function(transition) {
       const error = transition.error();
+      const db = window.indexedDB.open('test');
+
+      db.onerror = function() {
+        console.log("Can't use indexedDB");
+        utils.showAlert(
+          `Browser can't access database in incognito mode`,
+          'Switch to Chrome Incognito or turn off incognito mode ',
+          utils.statuses.error,
+          0,
+          {
+            id: 'open-fail-indexeddb',
+            canClose: false,
+            isFooterAlert: true
+          }
+        );
+      };
+
       if (angular.isDefined(error.detail)) {
         const errorcode =
           error.detail != null ? error.detail.code || null : null;
