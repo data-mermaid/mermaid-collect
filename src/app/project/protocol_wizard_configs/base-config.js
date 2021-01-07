@@ -90,28 +90,6 @@ angular.module('app.project').service('BaseWizardConfig', [
       }
     };
 
-    service.sample_time = {
-      templateUrl:
-        'app/project/protocol_wizard_configs/partials/sample_time.tpl.html',
-      ignoreButtonText: function(record) {
-        return $q.resolve(
-          'Leave Sample Time as ' +
-            _.get(record.data, 'sample_event.sample_time', '')
-        );
-      }
-    };
-
-    service.depth = {
-      templateUrl:
-        'app/project/protocol_wizard_configs/partials/depth.tpl.html',
-      ignoreButtonText: function(record) {
-        var val = $filter('null_blank')(
-          _.get(record.data, 'sample_event.depth')
-        );
-        return $q.resolve('Leave Depth as ' + val);
-      }
-    };
-
     service.observers = {
       templateUrl:
         'app/project/protocol_wizard_configs/partials/observers.tpl.html',
