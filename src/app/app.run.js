@@ -102,20 +102,15 @@
 
     $transitions.onError({}, function(transition) {
       const error = transition.error();
-      const db = window.indexedDB.open('test');
+      const db = window.indexedDB.open('mermaid');
 
       db.onerror = function() {
-        console.log("Can't use indexedDB");
+        console.log("Can't use Indexed DB");
         utils.showAlert(
-          `Browser can't access database in incognito mode`,
-          'Switch to Chrome Incognito or turn off incognito mode ',
+          `Warning`,
+          'MERMAID will not work with this browser or in a Private Window',
           utils.statuses.error,
-          0,
-          {
-            id: 'open-fail-indexeddb',
-            canClose: false,
-            isFooterAlert: true
-          }
+          0
         );
       };
 
