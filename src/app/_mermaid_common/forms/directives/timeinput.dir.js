@@ -79,7 +79,7 @@ angular
           widgetName: '@'
         },
         templateUrl: 'app/_mermaid_common/forms/directives/timeinput.tpl.html',
-        link: function(scope, element, attrs) {
+        link: function(scope, element, attrs, formCtrl) {
           if (attrs.widgetIf == null) {
             attrs.widgetIf = true;
           }
@@ -93,6 +93,18 @@ angular
           if (attrs.widgetIf == null) {
             scope.widgetIf = true;
           }
+
+          scope.timeNavInput = function($event) {
+            if ($event.keyCode === 8) {
+              $(element)
+                .find('input.form-control')
+                .val(null);
+
+              scope.ngModel.sample_time = null;
+              formCtrl.$setDirty();
+            }
+          };
+
           scope.widgetIf = utils.truthy(scope.widgetIf);
         }
       };
