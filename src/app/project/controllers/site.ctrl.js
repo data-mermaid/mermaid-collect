@@ -54,6 +54,7 @@ angular.module('app.project').controller('SiteCtrl', [
               id: savedSite.id
             };
             $scope.site = savedSite;
+            project.update();
             $state.transitionTo('app.project.sites.site', params, {
               location: true,
               inherit: true,
@@ -61,7 +62,6 @@ angular.module('app.project').controller('SiteCtrl', [
               notify: false
             });
           }
-          project.update();
           $scope.form.$setPristine(true);
         })
         .catch(function(error) {
