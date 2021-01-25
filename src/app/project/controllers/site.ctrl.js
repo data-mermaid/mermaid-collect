@@ -12,6 +12,7 @@ angular.module('app.project').controller('SiteCtrl', [
   'logger',
   'choices',
   'site',
+  'project',
   'projectProfile',
   function(
     $rootScope,
@@ -27,6 +28,7 @@ angular.module('app.project').controller('SiteCtrl', [
     logger,
     choices,
     site,
+    project,
     projectProfile
   ) {
     'use strict';
@@ -59,6 +61,7 @@ angular.module('app.project').controller('SiteCtrl', [
               notify: false
             });
           }
+          project.update();
           $scope.form.$setPristine(true);
         })
         .catch(function(error) {
