@@ -275,6 +275,7 @@ angular
         },
         resolve: {
           checkId: _checkId(),
+          project: _getProject,
           projectProfile: _getMyProjectProfile,
           site: function($stateParams, SiteService) {
             const projectId = $stateParams.project_id;
