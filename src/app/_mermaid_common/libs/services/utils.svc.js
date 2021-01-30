@@ -44,7 +44,7 @@ angular.module('mermaid.libs').service('utils', [
         status = status || utils.statuses.info;
 
         const isFooterAlert = options.isFooterAlert || false;
-        const canClose = options.canClose === true || false;
+        const canClose = options.canClose || false;
         const alertId = options.id;
         const deferred = $q.defer();
         const popupOpts = {

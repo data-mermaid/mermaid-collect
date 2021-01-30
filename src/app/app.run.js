@@ -102,6 +102,18 @@
 
     $transitions.onError({}, function(transition) {
       const error = transition.error();
+      const db = window.indexedDB.open('mermaid');
+
+      db.onerror = function() {
+        console.log("Can't use Indexed DB");
+        utils.showAlert(
+          `Warning`,
+          'MERMAID will not work with this browser or in a Private Window',
+          utils.statuses.error,
+          0
+        );
+      };
+
       if (angular.isDefined(error.detail)) {
         const errorcode =
           error.detail != null ? error.detail.code || null : null;
