@@ -11,41 +11,45 @@ angular.module('mermaid.libs').directive('biomass', [
         transectLenSurveyed: '=?',
         transectWidth: '=?'
       },
-      template: '{{ biomassval | number : 1 }}',
+      template: '{{ biomassval | number : 1 | null_value }}',
 
       link: function(scope) {
-        var fishattribute;
-        var constant_a = null;
-        var constant_b = null;
-        var constant_c = null;
-        var width = null;
-        var length = null;
+        let fishattribute;
 
-        var _update_biomass = function() {
-          var size = Number.isFinite(scope.obs.size) ? scope.obs.size : null;
-          var count = Number.isFinite(scope.obs.count) ? scope.obs.count : null;
-          if (Number.isFinite(fishattribute.biomass_constant_a)) {
-            constant_a = fishattribute.biomass_constant_a;
-          }
+        const _update_biomass = function() {
+          const size =
+            Number.isFinite(scope.obs.size) &&
+            !(scope.obs.alt_size === 50 && scope.obs.size < 50)
+              ? scope.obs.size
+              : null;
 
-          if (Number.isFinite(fishattribute.biomass_constant_b)) {
-            constant_b = fishattribute.biomass_constant_b;
-          }
+          const count = Number.isFinite(scope.obs.count)
+            ? scope.obs.count
+            : null;
 
-          if (Number.isFinite(fishattribute.biomass_constant_c)) {
-            constant_c = fishattribute.biomass_constant_c;
-          }
+          const constant_a = Number.isFinite(fishattribute.biomass_constant_a)
+            ? fishattribute.biomass_constant_a
+            : null;
 
-          if (Number.isFinite(scope.transectLenSurveyed)) {
-            length = scope.transectLenSurveyed;
-          }
+          const constant_b = Number.isFinite(fishattribute.biomass_constant_b)
+            ? fishattribute.biomass_constant_b
+            : null;
 
-          if (scope.transectWidth != null) {
-            width = TransectService.getBeltFishWidthVal(
-              size,
-              scope.transectWidth.conditions
-            );
-          }
+          const constant_c = Number.isFinite(fishattribute.biomass_constant_c)
+            ? fishattribute.biomass_constant_c
+            : null;
+
+          const length = Number.isFinite(scope.transectLenSurveyed)
+            ? scope.transectLenSurveyed
+            : null;
+
+          const width =
+            scope.transectWidth != null
+              ? TransectService.getBeltFishWidthVal(
+                  size,
+                  scope.transectWidth.conditions
+                )
+              : null;
 
           scope.biomassval = TransectService.calcObsBiomass(
             size,
@@ -58,7 +62,7 @@ angular.module('mermaid.libs').directive('biomass', [
           );
         };
 
-        var watch_biomass_inputs = function() {
+        const watch_biomass_inputs = function() {
           if (
             angular.isDefined(fishattribute) &&
             fishattribute !== null &&
