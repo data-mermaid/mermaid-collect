@@ -96,7 +96,12 @@ angular.module('app.project').service('TransectService', [
           const biomassTotal = _.reduce(
             observations,
             function(total, obs) {
-              const size = Number.isFinite(obs.size) ? obs.size : null;
+              const size =
+                Number.isFinite(obs.size) &&
+                !(obs.alt_size === 50 && obs.size < 50)
+                  ? obs.size
+                  : 0;
+
               const count = Number.isFinite(obs.count) ? obs.count : null;
               const fishAttribute =
                 fishAttributeLookups[obs.fish_attribute] || {};

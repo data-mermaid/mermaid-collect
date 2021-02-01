@@ -12,6 +12,7 @@ angular.module('app.project').controller('SiteCtrl', [
   'logger',
   'choices',
   'site',
+  'project',
   'projectProfile',
   function(
     $rootScope,
@@ -27,6 +28,7 @@ angular.module('app.project').controller('SiteCtrl', [
     logger,
     choices,
     site,
+    project,
     projectProfile
   ) {
     'use strict';
@@ -52,6 +54,7 @@ angular.module('app.project').controller('SiteCtrl', [
               id: savedSite.id
             };
             $scope.site = savedSite;
+            project.update();
             $state.transitionTo('app.project.sites.site', params, {
               location: true,
               inherit: true,

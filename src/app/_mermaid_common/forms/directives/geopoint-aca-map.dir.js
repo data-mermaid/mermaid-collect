@@ -39,14 +39,6 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
           scope.$watchGroup(
             ['widgetLat', 'widgetLng', 'map'],
             function(n) {
-              if (n[0] == null || n[1] == null || n[0] > 90 || n[0] < -90) {
-                return;
-              }
-
-              if (_.isNaN(n[0]) || _.isNaN(n[1])) {
-                return;
-              }
-
               if (
                 (scope.markerLat && scope.markerLat !== n[0]) ||
                 (scope.markerLng && scope.markerLng !== n[1])
@@ -54,17 +46,25 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
                 recordMarker.remove();
               }
 
-              recordMarker.setLngLat([n[1], n[0]]).addTo(map);
+              if (n[0] == null || n[1] == null || n[0] > 90 || n[0] < -90) {
+                recordMarker.setLngLat(defaultCenter).addTo(map); // set default center marker when new site is being created
+              } else {
+                recordMarker.setLngLat([n[1], n[0]]).addTo(map);
+              }
+
               recordMarker.on('dragend', function() {
                 const lngLat = recordMarker.getLngLat();
                 scope.widgetLat = lngLat.lat;
                 scope.widgetLng = lngLat.lng;
               });
 
-              map.jumpTo({
-                center: [n[1], n[0]],
-                zoom: defaultZoom
-              });
+              if (n[0] !== undefined && n[1] !== undefined) {
+                map.jumpTo({
+                  center: [n[1], n[0]],
+                  zoom: defaultZoom
+                });
+              }
+
               scope.markerLat = n[0];
               scope.markerLng = n[1];
             },
