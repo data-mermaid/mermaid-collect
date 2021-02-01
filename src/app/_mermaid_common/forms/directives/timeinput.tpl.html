@@ -12,10 +12,11 @@
         ng-model="ngModel[widgetName]"
         placeholder="{{ widgetPlaceholder }}"
         type="text"
-        readonly="readonly"
         ng-required="widgetRequired === true"
         ng-disabled="widgetDisabled"
         ng-class="{false: '', true: 'disabled'}[widgetDisabled]"
+        onkeydown='return event.which === 8'
+        ng-keydown="timeNavInput($event)"
         focusinput
       >
       <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
