@@ -1,12 +1,16 @@
 angular.module('mermaid.libs').directive('legendSlider', [
   'localStorageService',
-  function(localStorageService) {
+  'utils',
+  function(localStorageService, utils) {
     'use strict';
     return {
       restrict: 'EA',
+      scope: {
+        showLegend: '=?'
+      },
       templateUrl: 'app/_mermaid_common/libs/directives/legend-slider.tpl.html',
       link: function(scope) {
-        scope.toggleNav = true;
+        scope.toggleNav = utils.truthy(scope.showLegend);
         scope.selectAllBenthic = undefined;
         scope.selectAllGeomorphic = undefined;
         scope.benthicColors = {

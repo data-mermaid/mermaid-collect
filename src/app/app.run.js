@@ -110,7 +110,12 @@
           `Warning`,
           'MERMAID will not work with this browser or in a Private Window',
           utils.statuses.error,
-          0
+          0,
+          {
+            id: 'database-not-support',
+            canClose: false,
+            isFooterAlert: true
+          }
         );
       };
 

@@ -13,8 +13,6 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
         widgetLng: '='
       },
       link: function(scope, element) {
-        scope.markerLat = null;
-        scope.markerLng = null;
         const recordMarker = new mapboxgl.Marker({ draggable: true });
 
         const defaultCenter = [0, 0];
@@ -39,13 +37,6 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
           scope.$watchGroup(
             ['widgetLat', 'widgetLng', 'map'],
             function(n) {
-              if (
-                (scope.markerLat && scope.markerLat !== n[0]) ||
-                (scope.markerLng && scope.markerLng !== n[1])
-              ) {
-                recordMarker.remove();
-              }
-
               if (n[0] == null || n[1] == null || n[0] > 90 || n[0] < -90) {
                 recordMarker.setLngLat(defaultCenter).addTo(map); // set default center marker when new site is being created
               } else {
@@ -54,6 +45,7 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
 
               recordMarker.on('dragend', function() {
                 const lngLat = recordMarker.getLngLat();
+                scope.widgetForm.$setDirty();
                 scope.widgetLat = lngLat.lat;
                 scope.widgetLng = lngLat.lng;
               });
@@ -64,9 +56,6 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
                   zoom: defaultZoom
                 });
               }
-
-              scope.markerLat = n[0];
-              scope.markerLng = n[1];
             },
             true
           );
