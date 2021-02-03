@@ -21,11 +21,11 @@ angular.module('app.project').directive('observerList', [
           });
         }
 
-        function getObserver(observer_id) {
-          var profiles = scope.projectProfiles;
-          for (var i = 0; i < profiles.length; i++) {
-            var o = profiles[i];
-            if (o.id === observer_id) {
+        function getObserver(profile_id) {
+          const projectProfiles = scope.projectProfiles;
+          for (var i = 0; i < projectProfiles.length; i++) {
+            var o = projectProfiles[i];
+            if (o.profile === profile_id) {
               return o;
             }
           }
@@ -47,12 +47,12 @@ angular.module('app.project').directive('observerList', [
           scope.observers_selected[observer.profile] = false;
         };
 
-        scope.addObserver = function(observer_id) {
+        scope.addObserver = function(profile_id) {
           if (scope.isDisabled) {
             return;
           }
 
-          var observer = getObserver(observer_id);
+          var observer = getObserver(profile_id);
           scope.observers = scope.observers || [];
           scope.observers.push(observer);
           scope.observers_selected[observer.profile] = true;
