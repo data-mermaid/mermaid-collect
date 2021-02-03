@@ -14,7 +14,7 @@
           ng-class="{true: 'pristine', false: ''}[form.observers.$valid && (!observers || observers.length === 0)]"
           ng-disabled="isDisabled"
         >
-          <option ng-disabled="observers_selected[pp.profile]" value="{{pp.id}}" ng-repeat="pp in projectProfiles">
+          <option ng-disabled="observers_selected[pp.profile]" value="{{pp.profile}}" ng-repeat="pp in projectProfiles">
             {{pp.profile_name}}
           </option>
         </select>
