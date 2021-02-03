@@ -52,8 +52,9 @@ angular.module('app.project').directive('observerList', [
             return;
           }
 
-          var observer = getObserver(profile_id);
+          const observer = getObserver(profile_id);
           scope.observers = scope.observers || [];
+          observer.id = null;
           scope.observers.push(observer);
           scope.observers_selected[observer.profile] = true;
         };
