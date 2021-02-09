@@ -109,7 +109,7 @@ angular.module('app.reference').controller('BenthicAttributesCtrl', [
       benthicAttributesTable.filter().then(function(records) {
         const content = TransectExportService.benthicAttributesReport(
           records,
-          $scope.choices
+          choicesTable
         );
 
         TransectExportService.downloadAsCSV(
