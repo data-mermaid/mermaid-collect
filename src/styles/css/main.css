@@ -1508,14 +1508,12 @@ input:checked + .slider-mermaid:before {
 .leaflet-navbar .leaflet-legend {
   opacity: 0;
   visibility: hidden;
-  /* transition: visibility 0s linear 300ms, opacity 300ms; */
 }
 
 .leaflet-navbar .leaflet-legend.open{
   background: rgba(255, 255, 255, 1);
   opacity: 1;
   visibility: visible;
-  /* transition: visibility 0s linear 0s, opacity 300ms; */
 }
 
 .leaflet-navbar .leaflet-hamburger {
