@@ -1492,18 +1492,28 @@ input:checked + .slider-mermaid:before {
 }
 
 .leaflet-navbar {
-  background: rgba(255, 255, 255, 1);
   position: absolute; 
   width: 270px;
   height: 400px;
   right: -270px;
   top: 0px;
   z-index: 1;
-  transition: .5s right;
+  transition: .5s ease-in-out;
 }
 
 .leaflet-navbar.open {
   right: 0px;
+}
+
+.leaflet-navbar .leaflet-legend {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.leaflet-navbar .leaflet-legend.open{
+  background: rgba(255, 255, 255, 1);
+  opacity: 1;
+  visibility: visible;
 }
 
 .leaflet-navbar .leaflet-hamburger {
@@ -1516,6 +1526,7 @@ input:checked + .slider-mermaid:before {
   left: -20px;
   border-right: 1px solid;
   transition: .5s right;
+  visibility: visible;
 }
 
 .leaflet-hamburger span {
