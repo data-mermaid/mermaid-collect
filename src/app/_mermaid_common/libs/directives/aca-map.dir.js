@@ -118,7 +118,7 @@ angular.module('mermaid.libs').directive('acaMap', [
         };
 
         map.on('load', function() {
-          AcaMapService.setBasicMapControl(map);
+          AcaMapService.setBasicMapControl(map, scope.mapopts);
           AcaMapService.loadACALayers(map);
           AcaMapService.loadMapMarkers(map);
           AcaMapService.setAllLayersPaintProperty(map);

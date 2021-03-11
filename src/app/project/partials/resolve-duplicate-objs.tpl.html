@@ -25,12 +25,13 @@
           ng-class="{'danger': toggledColIndex !== $index && toggledObj != null, 'error-color': !displayValueSet.isSameValues}"
         >
           <span ng-if="displayValueSet.label !== 'Map'">{{col}}</span>
-          <leaflet_map
+          <div
+            aca-map
             ng-if="displayValueSet.label === 'Map'"
             records="[{location: col}]"
-            class="map-sm"
             mapopts="mapopts"
-          ></leaflet_map>
+            class="map-sm"
+          >
         </td>
       </tr>
     </tbody>

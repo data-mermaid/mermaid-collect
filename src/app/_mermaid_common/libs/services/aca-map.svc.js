@@ -154,10 +154,10 @@ angular.module('mermaid.libs').service('AcaMapService', [
     const rasterOpacityExpression =
       rasterOpacityValue === 0 || rasterOpacityValue ? rasterOpacityValue : 1;
 
-    const setBasicMapControl = function(map) {
+    const setBasicMapControl = function(map, opts) {
       const navigation = new mapboxgl.NavigationControl({
         showCompass: false,
-        showZoom: true
+        showZoom: opts.showZoom
       });
 
       map.addControl(navigation, 'top-left');
