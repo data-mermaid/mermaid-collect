@@ -30,7 +30,7 @@ angular.module('mermaid.libs').directive('geopointAcaMap', [
         });
 
         map.on('load', function() {
-          AcaMapService.setBasicMapControl(map);
+          AcaMapService.setBasicMapControl(map, { showZoom: true });
           AcaMapService.loadACALayers(map);
           AcaMapService.setAllLayersPaintProperty(map);
 

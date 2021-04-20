@@ -118,7 +118,7 @@ angular.module('app.project').controller('ResolveDuplicateBase', [
     $scope.$modalButtons = [okBtn, cancelBtn];
     $scope.mapopts = {
       defaultZoom: 8,
-      zoomControl: false,
+      showZoom: false,
       gestureHandling: true
     };
 

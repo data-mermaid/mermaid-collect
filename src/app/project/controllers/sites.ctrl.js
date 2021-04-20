@@ -190,7 +190,8 @@ angular.module('app.project').controller('SitesCtrl', [
     $scope.mapopts = {
       project_id: project_id,
       popup: createPopup,
-      slider: true
+      slider: true,
+      showZoom: true
     };
 
     $scope.$on(ValidateDuplicationService.SITE_PAGE, function() {
