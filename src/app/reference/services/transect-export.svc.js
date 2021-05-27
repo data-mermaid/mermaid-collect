@@ -128,7 +128,7 @@ angular.module('app.reference').service('TransectExportService', [
     const sitesReport = function(records) {
       return _.map(records, function(val) {
         return [
-          val.$$countries.name,
+          `"${val.$$countries.name}"`,
           `"${val.name}"`,
           val.location.coordinates[1],
           val.location.coordinates[0],
