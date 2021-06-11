@@ -128,8 +128,8 @@ angular.module('app.reference').service('TransectExportService', [
     const sitesReport = function(records) {
       return _.map(records, function(val) {
         return [
-          val.$$countries.name,
-          val.name,
+          `"${val.$$countries.name}"`,
+          `"${val.name}"`,
           val.location.coordinates[1],
           val.location.coordinates[0],
           val.$$reeftypes.name,
@@ -176,8 +176,8 @@ angular.module('app.reference').service('TransectExportService', [
         const rules = open_access || no_take || partial_restrictions || '';
 
         return [
-          val.name,
-          val.name_secondary,
+          `"${val.name}"`,
+          `"${val.name_secondary}"`,
           val.est_year || '',
           val.size || '',
           management_parties,
