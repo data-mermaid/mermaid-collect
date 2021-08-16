@@ -58,15 +58,12 @@
             ng-model="obs"
             widget-append="%"
             widget-change="validateRow(obs, $index)"
-            widget-validators="integer,minvalue='0:t',maxvalue='100:t'"
+            widget-validators="maxvalue='100:t'"
             widget-required="true"
             widget-required-hide="true"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <obs-model-validation-tooltip
-            integer
-            requiresval
-            minvalue="0:t"
             maxvalue="100:t"
             ng-model="obs.percent_hard"
             class="obs-edit-validation-tooltip"
@@ -81,15 +78,12 @@
             ng-model="obs"
             widget-append="%"
             widget-change="validateRow(obs, $index)"
-            widget-validators="integer,minvalue='0:t',maxvalue='100:t'"
+            widget-validators="maxvalue='100:t'"
             widget-required="true"
             widget-required-hide="true"
             ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <obs-model-validation-tooltip
-            integer
-            requiresval
-            minvalue="0:t"
             maxvalue="100:t"
             ng-model="obs.percent_soft"
             class="obs-edit-validation-tooltip"
@@ -105,14 +99,11 @@
             ng-keydown="navInputs($event, obs, true, $index)"
             widget-append="%"
             widget-change="validateRow(obs, $index)"
-            widget-validators="integer,minvalue='0:t',maxvalue='100:t'"
+            widget-validators="maxvalue='100:t'"
             widget-required="true"
             widget-required-hide="true"
           ></div>
           <obs-model-validation-tooltip
-            integer
-            requiresval
-            minvalue="0:t"
             maxvalue="100:t"
             ng-model="obs.percent_algae"
             class="obs-edit-validation-tooltip"
