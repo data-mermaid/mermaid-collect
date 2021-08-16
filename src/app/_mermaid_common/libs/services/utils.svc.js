@@ -243,6 +243,11 @@ angular.module('mermaid.libs').service('utils', [
           0.0
         );
       },
+      safe_count: function() {
+        return _.filter(arguments, function(val) {
+          return val != null;
+        }).length;
+      },
       pluralize: function(val, singluar, plural) {
         if (val === 1) {
           return singluar;
