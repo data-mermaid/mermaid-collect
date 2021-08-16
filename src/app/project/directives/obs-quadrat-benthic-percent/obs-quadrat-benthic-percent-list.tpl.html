@@ -23,7 +23,7 @@
 
         <td class="readonly-cell" ng-if-start="editableObservationIndex !== $index">
           <div>
-            <small>{{::$index + 1}}</small>
+            <small>{{obs.quadrat_number}}</small>
           </div>
         </td>
 
@@ -45,9 +45,23 @@
         -->
 
         <td class="observation__row-number" ng-if-start="editableObservationIndex === $index">
-          <div>
-            <small>{{$index + 1}}</small>
-          </div>
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="quadrat_number"
+            ng-model="obs"
+            widget-validators="integer"
+            widget-required="true"
+            widget-required-hide="true"
+            ng-keydown="navInputs($event, obs, false, $index)"
+          ></div>
+          <obs-model-validation-tooltip
+            integer
+            requiresval
+            ng-model="obs.quadrat_number"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
         </td>
         <td>
           <div
