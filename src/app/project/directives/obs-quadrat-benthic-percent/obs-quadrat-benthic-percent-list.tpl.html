@@ -51,7 +51,7 @@
             widget-form="form"
             widget-name="quadrat_number"
             ng-model="obs"
-            widget-validators="integer"
+            widget-validators="minvalue='1:t',integer"
             widget-required="true"
             widget-required-hide="true"
             ng-keydown="navInputs($event, obs, false, $index)"
@@ -59,6 +59,7 @@
           <obs-model-validation-tooltip
             integer
             requiresval
+            minvalue="1:t"
             ng-model="obs.quadrat_number"
             class="obs-edit-validation-tooltip"
           ></obs-model-validation-tooltip>
