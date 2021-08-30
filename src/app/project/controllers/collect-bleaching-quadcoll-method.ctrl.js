@@ -40,19 +40,9 @@ angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
     //**************************************
 
     $controller('CollectBaseProtocol', { $scope: $scope, $ctrl: $ctrl });
-    const baseSave = $ctrl.save;
 
     $ctrl.state = 'app.project.records.collectbleaching';
     $ctrl.protocol = BLEACHING_QC_QUADRAT_TYPE;
-
-    $ctrl.save = function() {
-      TransectService.setObservationIntervals(
-        $scope.record.data.obs_quadrat_benthic_percent || [],
-        1,
-        'quadrat_number'
-      );
-      return baseSave();
-    };
 
     $scope.wizardConfig = BleachingWizardConfig;
     Object.defineProperty(benthicAttributes, 'filtered', {
