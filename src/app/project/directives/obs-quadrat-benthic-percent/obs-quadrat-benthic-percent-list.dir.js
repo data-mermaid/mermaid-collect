@@ -38,21 +38,6 @@ angular.module('app.project').directive('obsQuadratBenthicPercentList', [
           }, 30);
         };
 
-        const nextQuadratNumber = function(observations) {
-          let maxVal = 0;
-          for (let i = 0; i < observations.length; i++) {
-            const quadratNumber = observations[i].quadrat_number;
-            if (quadratNumber == null) {
-              continue;
-            }
-
-            if (maxVal == null || maxVal < observations[i].quadrat_number) {
-              maxVal = observations[i].quadrat_number;
-            }
-          }
-          return maxVal + 1;
-        };
-
         scope.navInputs = function($event, obs, isRowEnd, $index) {
           isRowEnd = isRowEnd || false;
           if (!$event) {
@@ -74,7 +59,6 @@ angular.module('app.project').directive('obsQuadratBenthicPercentList', [
           scope.obsQuadratBenthicPercent = scope.obsQuadratBenthicPercent || [];
           const nextIndex = getRowIndex($index) + 1;
           const newRecord = {
-            quadrat_number: nextQuadratNumber(scope.obsQuadratBenthicPercent),
             percent_hard: null,
             percent_soft: null,
             percent_algae: null
