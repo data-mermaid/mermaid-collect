@@ -11,3 +11,5 @@ src/auth0-variables.js
 .DS_Store
 \.vscode/launch\.json
 \.vscode/settings\.json
+
+.idea/
