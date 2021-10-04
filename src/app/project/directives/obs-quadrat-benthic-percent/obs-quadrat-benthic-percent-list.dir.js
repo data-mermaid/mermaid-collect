@@ -59,9 +59,9 @@ angular.module('app.project').directive('obsQuadratBenthicPercentList', [
           scope.obsQuadratBenthicPercent = scope.obsQuadratBenthicPercent || [];
           const nextIndex = getRowIndex($index) + 1;
           const newRecord = {
-            percent_hard: 0,
-            percent_soft: 0,
-            percent_algae: 0
+            percent_hard: null,
+            percent_soft: null,
+            percent_algae: null
           };
 
           newRecord.$$uid = utils.generateUuid();

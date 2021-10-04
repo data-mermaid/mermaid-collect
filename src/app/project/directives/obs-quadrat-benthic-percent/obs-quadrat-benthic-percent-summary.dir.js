@@ -20,15 +20,15 @@ angular.module('app.project').directive('obsQuadratBenthicPercentSummary', [
 
           scope.avg_hard_coral = utils.safe_division(
             utils.safe_sum.apply(this, _.map(obs, 'percent_hard')),
-            scope.num_quadrats
+            utils.safe_count.apply(this, _.map(obs, 'percent_hard'))
           );
           scope.avg_soft_coral = utils.safe_division(
             utils.safe_sum.apply(this, _.map(obs, 'percent_soft')),
-            scope.num_quadrats
+            utils.safe_count.apply(this, _.map(obs, 'percent_soft'))
           );
           scope.avg_macroalgae = utils.safe_division(
             utils.safe_sum.apply(this, _.map(obs, 'percent_algae')),
-            scope.num_quadrats
+            utils.safe_count.apply(this, _.map(obs, 'percent_algae'))
           );
         };
 

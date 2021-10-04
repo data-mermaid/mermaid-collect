@@ -41,7 +41,6 @@ angular.module('app.project').controller('CollectBleachingQuadCollMethodCtrl', [
 
     $controller('CollectBaseProtocol', { $scope: $scope, $ctrl: $ctrl });
     const baseSave = $ctrl.save;
-
     $ctrl.state = 'app.project.records.collectbleaching';
     $ctrl.protocol = BLEACHING_QC_QUADRAT_TYPE;
 
