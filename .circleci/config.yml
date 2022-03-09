@@ -7,8 +7,6 @@ defaults: &defaults
     - image: cimg/python:3.10.2-browsers
       environment:
         CHROME_BIN: /usr/bin/google-chrome
-  steps:
-    - browser-tools/install-browser-tools
 
 install_dependencies: &install_dependencies
   run:
@@ -30,6 +28,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - *install_dependencies
+      - browser-tools/install-browser-tools
       - run:
           name: Run lint
           command: npm run lint
@@ -52,6 +51,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - *install_dependencies
+      - browser-tools/install-browser-tools
       - run:
           name: Build
           command: |
@@ -74,6 +74,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - *install_dependencies
+      - browser-tools/install-browser-tools
       - run:
           name: Build
           command: |
