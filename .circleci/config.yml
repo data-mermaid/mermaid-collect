@@ -3,6 +3,8 @@ version: 2
 defaults: &defaults
   docker:
     - image: cimg/python:3.10.2-browsers
+      environment:
+        CHROME_BIN: /usr/bin/google-chrome
 
 install_dependencies: &install_dependencies
   run:
