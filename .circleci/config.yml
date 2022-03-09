@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: circleci/python:3.8.5-node-browsers
+    - image: cimg/python:3.10.2-node-browsers
 
 install_dependencies: &install_dependencies
   run:
