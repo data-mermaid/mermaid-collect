@@ -1,10 +1,14 @@
-version: 2
+version: '2.1'
+orbs:
+  browser-tools: circleci/browser-tools@1.2.4
 
 defaults: &defaults
   docker:
     - image: cimg/python:3.10.2-browsers
       environment:
         CHROME_BIN: /usr/bin/google-chrome
+  steps:
+    - browser-tools/install-browser-tools
 
 install_dependencies: &install_dependencies
   run:
