@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: cimg/python:3.10.2-node-browsers
+    - image: cimg/python:3.10.2-node
 
 install_dependencies: &install_dependencies
   run:
