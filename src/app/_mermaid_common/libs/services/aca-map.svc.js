@@ -1,8 +1,9 @@
 /* globals mapboxgl */
 
 angular.module('mermaid.libs').service('AcaMapService', [
+  'APP_CONFIG',
   'localStorageService',
-  function(localStorageService) {
+  function(APP_CONFIG, localStorageService) {
     'use strict';
 
     const satelliteBaseMap = {
@@ -192,20 +193,20 @@ angular.module('mermaid.libs').service('AcaMapService', [
       map.addSource('atlas-planet', {
         type: 'raster',
         tiles: [
-          'https://allencoralatlas.org/tiles/planet/visual/2019/{z}/{x}/{y}'
+          'https://allencoralatlas.org/tiles/planet/visual/2019/{z}/{x}/{y}?appid=' + APP_CONFIG.CORAL_ATLAS_APP_ID
         ]
       });
 
       map.addSource('atlas-benthic', {
         type: 'vector',
-        tiles: ['https://allencoralatlas.org/tiles/benthic/{z}/{x}/{y}'],
+        tiles: ['https://allencoralatlas.org/tiles/benthic/{z}/{x}/{y}?appid=' + APP_CONFIG.CORAL_ATLAS_APP_ID],
         minZoom: 0,
         maxZoom: 22
       });
 
       map.addSource('atlas-geomorphic', {
         type: 'vector',
-        tiles: ['https://allencoralatlas.org/tiles/geomorphic/{z}/{x}/{y}'],
+        tiles: ['https://allencoralatlas.org/tiles/geomorphic/{z}/{x}/{y}?appid=' + APP_CONFIG.CORAL_ATLAS_APP_ID],
         minZoom: 0,
         maxZoom: 22
       });
