@@ -138,7 +138,7 @@
     "leaflet-draw": "bower_components/leaflet-draw/dist/leaflet.draw.js",
     "leaflet-gesture-handling": "node_modules/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.js",
     "angular-block-ui": "bower_components/angular-block-ui/dist/angular-block-ui.min.js",
-    "angular-file-saver": "bower_components/angular-file-saver/dist/angular-file-saver.bundle.js",
+    "angular-file-saver": "node_modules/angular-file-saver/dist/angular-file-saver.bundle.min.js",
     "mapbox-gl": "node_modules/mapbox-gl/dist/mapbox-gl.js"
   }
 }
