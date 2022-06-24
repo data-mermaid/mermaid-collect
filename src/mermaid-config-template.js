@@ -17,5 +17,6 @@ var MERMAID_CONFIG = {
   // Email to use for contact forms
   SYSTEM_EMAIL: '{SYSTEM_EMAIL}',
   // Prefix to attach to IndexedDB database/tables
-  LOCAL_DB_NAME: 'mermaid'
+  LOCAL_DB_NAME: 'mermaid',
+  CORAL_ATLAS_APP_ID: '{CORAL_ATLAS_APP_ID}'
 };
