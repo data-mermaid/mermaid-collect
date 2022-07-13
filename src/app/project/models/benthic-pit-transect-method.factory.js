@@ -8,6 +8,14 @@ angular.module('app.project').factory('BenthicPitTransectMethod', [
       {
         project_pk: '@project_pk',
         id: '@id'
+      },
+      {
+        edit: {
+          method: 'PUT',
+          url:
+            APP_CONFIG.apiUrl +
+            'projects/:project_pk/benthicpittransectmethods/:id/edit/'
+        }
       }
     );
   }
