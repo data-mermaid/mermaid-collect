@@ -8,6 +8,14 @@ angular.module('app.project').factory('HabitatComplexityTransectMethod', [
       {
         project_pk: '@project_pk',
         id: '@id'
+      },
+      {
+        edit: {
+          method: 'PUT',
+          url:
+            APP_CONFIG.apiUrl +
+            'projects/:project_pk/habitatcomplexitytransectmethods/:id/edit/'
+        }
       }
     );
   }
