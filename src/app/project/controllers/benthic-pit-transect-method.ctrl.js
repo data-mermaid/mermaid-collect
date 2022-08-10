@@ -1,12 +1,13 @@
 angular.module('app.project').controller('BenthicPitTransectMethodCtrl', [
   '$scope',
   '$rootScope',
+  '$state',
   '$stateParams',
-  'connectivity',
+  'BENTHIC_PIT_TRANSECT_TYPE',
+  'blockUI',
   'ConnectivityFactory',
   'Button',
   'ProjectService',
-  'utils',
   'benthicAttributes',
   'record',
   'projectProfile',
@@ -14,12 +15,13 @@ angular.module('app.project').controller('BenthicPitTransectMethodCtrl', [
   function(
     $scope,
     $rootScope,
+    $state,
     $stateParams,
-    connectivity,
+    BENTHIC_PIT_TRANSECT_TYPE,
+    blockUI,
     ConnectivityFactory,
     Button,
     ProjectService,
-    utils,
     benthicAttributes,
     record,
     projectProfile,
@@ -28,12 +30,12 @@ angular.module('app.project').controller('BenthicPitTransectMethodCtrl', [
     'use strict';
 
     const conn = new ConnectivityFactory($scope);
-    const projectId = $stateParams.project_id;
+    const project_id = $stateParams.project_id;
     let _isRoleDisabled = ProjectService.isFormDisabled(
       projectProfile,
       ProjectService.ADMIN_ROLE
     );
-    $scope.isDisabled = _isRoleDisabled || !connectivity.isOnline;
+    $scope.isDisabled = true;
     $scope.sampleUnit = 'benthic_transect';
     $scope.choices = transectLookups.choices;
     $scope.project_profiles = transectLookups.project_profiles;
@@ -54,53 +56,49 @@ angular.module('app.project').controller('BenthicPitTransectMethodCtrl', [
     $scope.protocolObservationsForm =
       'app/project/partials/forms/benthicpitprotocol.observations.form.tpl.html';
 
-    const save = function() {
-      return $scope.record.data
-        .$update({ project_pk: projectId })
-        .then(function() {
-          utils.assignUniqueId($scope.record.data.obs_benthic_pits);
-          utils.showAlert(
-            'Success',
-            ProjectService.transect_types[2].name + ' Saved',
-            utils.statuses.success
-          );
-          $scope.form.$setPristine(true);
+    const editRecord = function() {
+      blockUI.start();
+      editRecordButton.enabled = false;
+      const transect_type = ProjectService.getTransectType(
+        BENTHIC_PIT_TRANSECT_TYPE
+      );
+      record.data
+        .$edit({ project_pk: project_id, id: record.data.id })
+        .then(function(response) {
+          const collect_record_id = response.id;
+          $state
+            .go(transect_type.state, {
+              id: collect_record_id,
+              project_pk: project_id
+            })
+            .then(function() {
+              blockUI.stop();
+            });
+        })
+        .catch(function(err) {
+          console.error(err);
+          blockUI.stop();
+        })
+        .finally(function() {
+          editRecordButton.enabled = true;
         });
     };
 
-    const saveButton = new Button();
-    saveButton.name = 'Save';
-    saveButton.enabled = false;
-    saveButton.visible = true;
-    saveButton.classes = 'btn-success';
-    saveButton.icon = 'fa fa-save';
-    saveButton.onlineOnly = false;
-    saveButton.click = save;
-    $scope.save = save;
+    const editRecordButton = new Button();
+    editRecordButton.name = 'Edit Sample Unit - move to Collecting';
+    editRecordButton.enabled = !_isRoleDisabled;
+    editRecordButton.visible = true;
+    editRecordButton.classes = 'btn-success';
+    editRecordButton.icon = 'fa fa-save';
+    editRecordButton.onlineOnly = true;
+    editRecordButton.click = editRecord;
+    $scope.save = editRecord;
 
-    $rootScope.PageHeaderButtons = [saveButton];
-
-    $scope.$watch(
-      function() {
-        return (
-          $scope.form &&
-          $scope.form.$dirty &&
-          $scope.form.$valid &&
-          $scope.record.data.observers &&
-          $scope.record.data.obs_benthic_pits
-        );
-      },
-      function(v) {
-        saveButton.enabled = v;
-      }
-    );
-
-    $scope.$watch('isDisabled', function() {
-      saveButton.visible = !$scope.isDisabled;
-    });
+    $rootScope.PageHeaderButtons = [editRecordButton];
 
     conn.on('BenthicPitTransectMethodCtrl', function(event) {
-      $scope.isDisabled = _isRoleDisabled || event.event !== 'online';
+      editRecordButton.enabled =
+        _isRoleDisabled === false && event.event === 'online';
     });
   }
 ]);
