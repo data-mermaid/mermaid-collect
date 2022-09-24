@@ -8,6 +8,7 @@ angular
   .constant('BENTHIC_PIT_TRANSECT_TYPE', 'benthicpit')
   .constant('HABITAT_COMPLEXITY_TRANSECT_TYPE', 'habitatcomplexity')
   .constant('BLEACHING_QC_QUADRAT_TYPE', 'bleachingqc')
+  .constant('BENTHIC_PQT_TYPE', 'benthicpqt')
 
   .config(function($stateProvider) {
     const _checkUuid = function($q, utils, id) {
@@ -475,6 +476,28 @@ angular
           'content@app': {
             templateUrl: 'app/project/partials/protocol.tpl.html',
             controller: 'CollectBenthicPitTransectMethodCtrl'
+          }
+        },
+        resolve: {
+          checkId: _checkId(),
+          benthicAttributes: _fetchBenthicAttributes,
+          collectRecord: _fetchCollectRecord,
+          transectLookups: _fetchTransectLookups,
+          currentUser: _fetchCurrentUser,
+          projectProfile: _getMyProjectProfile
+        }
+      })
+      .state('app.project.records.collectbenthicpqt', {
+        url: '/benthicpqt/:id',
+        onEnter: checkAuthentication,
+        data: {
+          title: 'Benthic Photo Quadrat Transect',
+          parentStates: ['app.project.records']
+        },
+        views: {
+          'content@app': {
+            templateUrl: 'app/project/partials/protocol.tpl.html',
+            controller: 'CollectBenthicPQTTransectMethodCtrl'
           }
         },
         resolve: {
