@@ -487,6 +487,38 @@ angular
           projectProfile: _getMyProjectProfile
         }
       })
+      .state('app.project.submittedtransects.benthicpqttransectmethod', {
+        url: '/benthicpqttransectmethods/:id',
+        onEnter: checkAuthentication,
+        data: {
+          title: 'Benthic Photo Quadrat',
+          parentStates: ['app.project.submittedtransects']
+        },
+        views: {
+          'content@app': {
+            templateUrl: 'app/project/partials/protocol.tpl.html',
+            controller: 'BenthicPqtTransectMethodCtrl'
+          }
+        },
+        resolve: {
+          checkId: _checkId(),
+          benthicAttributes: _fetchBenthicAttributes,
+          record: function($stateParams, utils, BenthicPqtTransectMethod) {
+            return BenthicPqtTransectMethod.get({
+              project_pk: $stateParams.project_id,
+              id: $stateParams.id
+            }).$promise.then(function(benthicPqtRecord) {
+              const record = { data: benthicPqtRecord };
+              utils.assignUniqueId(
+                _.get(record.data, 'obs_benthic_photo_quadrats') || []
+              );
+              return record;
+            });
+          },
+          transectLookups: _fetchTransectLookups,
+          projectProfile: _getMyProjectProfile
+        }
+      })
       .state('app.project.records.collectbenthicpqt', {
         url: '/benthicpqt/:id',
         onEnter: checkAuthentication,
