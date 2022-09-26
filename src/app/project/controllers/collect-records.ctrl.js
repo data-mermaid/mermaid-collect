@@ -4,6 +4,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
   'BENTHIC_PIT_TRANSECT_TYPE',
   'HABITAT_COMPLEXITY_TRANSECT_TYPE',
   'BLEACHING_QC_QUADRAT_TYPE',
+  'BENTHIC_PQT_TYPE',
   '$state',
   '$stateParams',
   '$q',
@@ -25,6 +26,7 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
     BENTHIC_PIT_TRANSECT_TYPE,
     HABITAT_COMPLEXITY_TRANSECT_TYPE,
     BLEACHING_QC_QUADRAT_TYPE,
+    BENTHIC_PQT_TYPE,
     $state,
     $stateParams,
     $q,
@@ -72,7 +74,8 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       BENTHIC_LIT_TRANSECT_TYPE,
       BENTHIC_PIT_TRANSECT_TYPE,
       HABITAT_COMPLEXITY_TRANSECT_TYPE,
-      BLEACHING_QC_QUADRAT_TYPE
+      BLEACHING_QC_QUADRAT_TYPE,
+      BENTHIC_PQT_TYPE
     ];
     const statusChoices = [null, 'ok', 'warning', 'error'];
 
@@ -106,6 +109,17 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
       } else if (protocol === BLEACHING_QC_QUADRAT_TYPE) {
         result = _.get(value, 'quadrat_collection.quadrat_size') || '-';
         return result + 'm<sup>2</sup>';
+      } else if (protocol === BENTHIC_PQT_TYPE) {
+        result = _.get(value, 'quadrat_transect.quadrat_size') || '-';
+        result += 'm<sup>2</sup>';
+
+        const len_surveyed = _.get(value, 'quadrat_transect.len_surveyed');
+        if (len_surveyed != null) {
+          result += ' / ';
+          result += len_surveyed + 'm';
+        }
+
+        return result;
       }
       result = _.get(value, 'benthic_transect.len_surveyed') || result;
       return result + 'm';
@@ -195,6 +209,9 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             ) {
               val = _.get(v, 'benthic_transect.number', '') || '';
               label_val = _.get(v, 'benthic_transect.label', '') || '';
+            } else if (protocol === BENTHIC_PQT_TYPE) {
+              val = _.get(v, 'quadrat_transect.number', '') || '';
+              label_val = _.get(v, 'quadrat_transect.label', '') || '';
             }
             if (val === '') {
               val = label_val;
@@ -307,6 +324,15 @@ angular.module('app.project').controller('CollectRecordsCtrl', [
             choice: protocolMethods[2],
             selected: checkLocalStorage(
               protocolMethods[2],
+              protocolMethods,
+              METHOD_FILTER_NAME
+            )
+          },
+          {
+            name: 'Benthic Photo Quadrat',
+            choice: protocolMethods[5],
+            selected: checkLocalStorage(
+              protocolMethods[5],
               protocolMethods,
               METHOD_FILTER_NAME
             )

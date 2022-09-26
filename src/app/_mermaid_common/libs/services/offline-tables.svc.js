@@ -4,6 +4,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
   'BENTHIC_PIT_TRANSECT_TYPE',
   'HABITAT_COMPLEXITY_TRANSECT_TYPE',
   'BLEACHING_QC_QUADRAT_TYPE',
+  'BENTHIC_PQT_TYPE',
   '$q',
   'OfflineTableUtils',
   'OfflineCommonTables',
@@ -25,6 +26,7 @@ angular.module('mermaid.libs').service('OfflineTables', [
     BENTHIC_PIT_TRANSECT_TYPE,
     HABITAT_COMPLEXITY_TRANSECT_TYPE,
     BLEACHING_QC_QUADRAT_TYPE,
+    BENTHIC_PQT_TYPE,
     $q,
     OfflineTableUtils,
     OfflineCommonTables,
@@ -401,6 +403,8 @@ angular.module('mermaid.libs').service('OfflineTables', [
                   sample_unit = 'benthic_transect';
                 } else if (protocol === BLEACHING_QC_QUADRAT_TYPE) {
                   sample_unit = 'quadrat_collection';
+                } else if (protocol === BENTHIC_PQT_TYPE) {
+                  sample_unit = 'quadrat_transect';
                 } else {
                   return record;
                 }

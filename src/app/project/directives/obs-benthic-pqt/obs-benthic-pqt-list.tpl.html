@@ -1,0 +1,160 @@
+<div class="smart-form">
+  <table class="table table-bordered obs-table" ng-if="isReady">
+    <thead>
+      <tr>
+        <th>Quadrat<span class="required"> *</span></th>
+        <th>Benthic attribute<span class="required"> *</span></th>
+        <th>Growth form</th>
+        <th>Number of points<span class="required"> *</span></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody ng-if="obsBenthicPqts.length > 0">
+      <!--
+          READ SECTION
+      -->
+      <tr
+        ng-repeat="obs in obsBenthicPqts track by obs.$$uid"
+        ng-click="startEditing($event, $index)"
+        class="cursor-pointer"
+        ng-class="{true: '', false: 'editable-row'}[editableObservationIndex !== $index]"
+      >
+        <td ng-if-start="editableObservationIndex !== $index">
+          <div style="opacity: 0.75;"><small>{{obs.quadrat_number}}</small></div>
+        </td>
+
+        <td class="readonly-cell">
+          <span class="text-left">{{obs.attribute | matchchoice:benthicAttributeChoices:"name":notFoundMessage}} </span><obs-validation-tooltip
+              validations="[
+                {
+                  'isValid': validator.requiresvalue(obs.attribute) === true,
+                  'message': 'Required'
+                }
+              ]"
+            >
+          </obs-validation-tooltip>
+        </td>
+
+        <td class="readonly-cell">
+         {{obs.growth_form | matchchoice:choices.growthforms}}
+        </td>
+
+        <td ng-if-end class="readonly-cell">
+          {{obs.num_points}}
+        </td>
+
+        <!--
+          WRITE SECTION
+        -->
+
+        <td  ng-if-start="editableObservationIndex === $index">
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="quadrat_number"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            ng-keydown="navInputs($event, obs, true, $index)"
+          ></div>
+          <obs-model-validation-tooltip
+            requiresval
+            ng-model="obs.quadrat_number"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
+        </td>
+
+        <td>
+          <autocompleteinput            
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="attribute"
+            ng-model="obs"
+            widget-required="true"
+            widget-required-hide="true"
+            widget-lazy-choices="getBenthicAttributes"
+            widget-new-record-label="Propose New Benthic Attribute..."
+            widget-new-record-modal-config="modalConfig"
+            widget-modal-trigger="modalTrigger(obs)"
+            drop-up-enabled="true"
+            widget-no-match-message="{{notFoundMessage}}"
+            ng-keydown="navInputs($event, obs, false, $index)"
+          >
+            <appendaddon>
+              <a 
+                tabindex="-1"
+                target="_blank" 
+                ui-sref="app.reference.benthicattributes.benthicattribute({id: obs.attribute})">
+                <i class="fa fa-book"></i>
+              </a>
+            </appendaddon>
+          </autocompleteinput>
+          <obs-model-validation-tooltip
+            requiresval
+            ng-model="obs.attribute"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
+        </td>
+        <td>
+          <div
+            ddlinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="growth_form"
+            ng-model="obs"
+            widget-required="false"
+            widget-choices="choices.growthforms"
+          ></div>
+        </td>
+        <td ng-if-end>
+          <div
+            numberinput
+            widget-disabled="isDisabled"
+            widget-form="form"
+            widget-name="num_points"
+            ng-model="obs"
+            widget-required="false"
+            ng-keydown="navInputs($event, obs, true, $index)"
+          ></div>
+          <obs-model-validation-tooltip
+            requiresval
+            ng-model="obs.num_points"
+            class="obs-edit-validation-tooltip"
+          ></obs-model-validation-tooltip>
+        </td>
+
+        <!-- Read/Write -->
+
+        <td
+          ng-class="{'obs-edit-del-padding': editableObservationIndex === $index}"
+        >
+          <btn
+            icon="fa-times"
+            classes="btn-xs btn-danger"
+            tab-index="-1"
+            click="deleteRow(obs)"
+            is-disabled="isDisabled"
+          ></btn>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5" class="text-left">
+          <a class="addRow" ng-if="isDisabled !== true" href="" ng-click="addRow()"><i class="fa fa-plus"></i> Add row</a>
+          <span ng-if="isDisabled === true" class="disabled"><i class="fa fa-plus"></i> Add row</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5" class="text-left">
+            <obs-benthic-summary
+              class="pull-right observation-summary"
+              observations="obsBenthicPqts"
+              benthic-attributes-lookup="benthicAttributesLookup"
+            ></obs-benthic-summary>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

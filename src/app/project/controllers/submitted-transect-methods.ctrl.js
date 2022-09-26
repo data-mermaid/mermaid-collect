@@ -2,6 +2,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
   'FISH_BELT_TRANSECT_TYPE',
   'BENTHIC_LIT_TRANSECT_TYPE',
   'BENTHIC_PIT_TRANSECT_TYPE',
+  'BENTHIC_PQT_TYPE',
   'HABITAT_COMPLEXITY_TRANSECT_TYPE',
   'BLEACHING_QC_QUADRAT_TYPE',
   '$rootScope',
@@ -17,6 +18,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
     FISH_BELT_TRANSECT_TYPE,
     BENTHIC_LIT_TRANSECT_TYPE,
     BENTHIC_PIT_TRANSECT_TYPE,
+    BENTHIC_PQT_TYPE,
     HABITAT_COMPLEXITY_TRANSECT_TYPE,
     BLEACHING_QC_QUADRAT_TYPE,
     $rootScope,
@@ -46,6 +48,7 @@ angular.module('app.project').controller('SubmittedTransectMethodsCtrl', [
       FISH_BELT_TRANSECT_TYPE,
       BENTHIC_LIT_TRANSECT_TYPE,
       BENTHIC_PIT_TRANSECT_TYPE,
+      BENTHIC_PQT_TYPE,
       HABITAT_COMPLEXITY_TRANSECT_TYPE,
       BLEACHING_QC_QUADRAT_TYPE
     ];
