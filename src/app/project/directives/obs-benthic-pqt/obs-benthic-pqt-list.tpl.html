@@ -56,7 +56,7 @@
             ng-model="obs"
             widget-required="true"
             widget-required-hide="true"
-            ng-keydown="navInputs($event, obs, true, $index)"
+            ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
           <obs-model-validation-tooltip
             requiresval
@@ -105,6 +105,7 @@
             ng-model="obs"
             widget-required="false"
             widget-choices="choices.growthforms"
+            ng-keydown="navInputs($event, obs, false, $index)"
           ></div>
         </td>
         <td ng-if-end>

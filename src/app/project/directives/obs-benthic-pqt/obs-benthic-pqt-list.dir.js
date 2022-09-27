@@ -140,7 +140,7 @@ angular.module('app.project').directive('obsBenthicPqtList', [
             scope.obsBenthicPqts.splice(nextIndex, 0, newRecord);
             formCtrl.$setDirty();
             scope.startEditing(null, nextIndex);
-            setInputFocus(nextIndex, 1);
+            setInputFocus(nextIndex, 0);
           }
         };
 
