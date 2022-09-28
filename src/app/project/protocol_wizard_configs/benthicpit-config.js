@@ -1,12 +1,10 @@
 angular.module('app.project').service('BenthicPITWizardConfig', [
-  '$stateParams',
   '$q',
   '$filter',
   'BenthicBaseWizardConfig',
   'OfflineCommonTables',
   'ValidateSubmitService',
   function(
-    $stateParams,
     $q,
     $filter,
     BenthicBaseWizardConfig,

@@ -1,0 +1,27 @@
+<div class="row">
+    <article class="col-sm-12">
+      <div jarvis-widget id="wid-id-protocol-edit3" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false" >
+        <header>
+          <h2>Observations</h2>
+        </header>
+        <div class="note help-text">Use Tab to duplicate observation, use Enter to add row</div>
+        <div>
+          <div class="widget-body no-padding">
+            <div>
+              <div class="col-xs-12 note input-validation-alert-wrap">
+                <input-validation-alert
+                  identifier="obs_benthic_photo_quadrats"
+                  identifier-validations="record.validations.results.obs_benthic_photo_quadrats"
+                />
+              </div>
+              <obs-benthic-pqt-list
+                obs-benthic-pqts="record.data.obs_benthic_photo_quadrats"
+                benthic-attribute-choices="benthicAttributes"
+                is-disabled="isDisabled"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>

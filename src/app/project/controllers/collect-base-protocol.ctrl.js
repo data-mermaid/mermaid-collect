@@ -119,6 +119,8 @@ angular.module('app.project').controller('CollectBaseProtocol', [
       $scope.sampleUnit = 'quadrat_collection';
     } else if ($scope.record.data.fishbelt_transect) {
       $scope.sampleUnit = 'fishbelt_transect';
+    } else if ($scope.record.data.quadrat_transect) {
+      $scope.sampleUnit = 'quadrat_transect';
     }
 
     if ($scope.record && detectIgnoredValidation($scope.record)) {

@@ -7,6 +7,7 @@ angular
     'BENTHIC_PIT_TRANSECT_TYPE',
     'HABITAT_COMPLEXITY_TRANSECT_TYPE',
     'BLEACHING_QC_QUADRAT_TYPE',
+    'BENTHIC_PQT_TYPE',
     '$http',
     '$q',
     '$filter',
@@ -22,6 +23,7 @@ angular
       BENTHIC_PIT_TRANSECT_TYPE,
       HABITAT_COMPLEXITY_TRANSECT_TYPE,
       BLEACHING_QC_QUADRAT_TYPE,
+      BENTHIC_PQT_TYPE,
       $http,
       $q,
       $filter,
@@ -147,6 +149,21 @@ angular
           ],
           methods: ['obscoloniesbleacheds', 'obsquadratbenthicpercents'],
           reportProtocol: 'bleachingqcs'
+        },
+        {
+          id: BENTHIC_PQT_TYPE,
+          name: 'Benthic Photo Quadrat',
+          state: 'app.project.records.collectbenthicpqt',
+          submittedState:
+            'app.project.submittedtransects.benthicpqttransectmethod',
+          fields: [
+            'data.sample_event.sample_date',
+            'data.sample_event.sample_time',
+            'data.obs_benthic_photo_quadrats'
+          ],
+          obsFields: ['data.obs_benthic_photo_quadrats'],
+          method: 'obstransectbenthicpqts',
+          reportProtocol: 'benthicpqts'
         }
       ];
 
