@@ -47,7 +47,7 @@
     "karma-jasmine": "^2.0.1",
     "karma-ng-html2js-preprocessor": "^1.0.0",
     "karma-spec-reporter": "0.0.32",
-    "lint-staged": "^8.1.0",
+    "lint-staged": "^13.1.0",
     "lodash": "^4.17.21",
     "prettier": "^1.15.3",
     "sw-precache": "^5.2.1",
