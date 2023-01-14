@@ -1072,7 +1072,7 @@ button.btn.btn-sm.btn-default.big-box-refresh {
 
 .offline-right-border {
   position : fixed;
-  height: calc(100% - 7.8em);
+  height: calc(100% - 13.8em);
   width: 3px;
   right: 0;
   background-color:#CC0A00;
@@ -1107,7 +1107,7 @@ button.btn.btn-sm.btn-default.big-box-refresh {
 
 .offline-left-border {
   position: fixed;
-  height: calc(100% - 7.8em);
+  height: calc(100% - 10.8em);
   width: 3px;
   background-color: #CC0A00;
   z-index: 1000;
