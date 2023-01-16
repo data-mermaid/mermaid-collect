@@ -1629,3 +1629,35 @@ table.greyGridTable tbody td:first-child {
 .padding-left-18 {
   padding-left: 18px;
 }
+
+/* EOL banner style */
+#banner {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 40px;
+  background: #C26565;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 905;
+}
+
+.fixed-header #header {
+  top: 40px;
+}
+
+.fixed-ribbon #ribbon {
+  top: 89px;
+}
+
+.fixed-header #main {
+  margin-top: 89px;
+}
+
+.fixed-header #left-panel {
+  top: 40px;
+  padding-bottom: 55px;
+  ;
+}
