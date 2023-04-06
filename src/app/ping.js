@@ -12,6 +12,7 @@ window.ping = function() {
       mermaidApiVersion != null && mermaidApiVersion !== apiVersion;
     if (mermaidApiVersion == null || isDiffVersion) {
       _.set(window, 'mermaid.apiVersion', apiVersion);
+      console.log('mermaid version updated');
       if (!hasUpdates) {
         window.mermaid.hasUpdates = isDiffVersion;
       }
